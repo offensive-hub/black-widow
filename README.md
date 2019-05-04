@@ -1,5 +1,5 @@
 # Black Widow
-## CTF Tool (Language: ***python3***)
+## CTF Tool (Language: [python3.7](https://www.python.org/downloads/))
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
