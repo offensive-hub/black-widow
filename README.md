@@ -1,5 +1,5 @@
 # Black Widow
-## CTF Tool
+## CTF Tool (Language: ***python3***)
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
@@ -12,7 +12,7 @@
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
 #### Modalità sviluppo:
- - Modularizzato (root: **/app**):
+ - Modularizzato (root: **/app**, eseguibile: **/main.py**):
       <ul>
         <li>|</li>
         <li>|-- /utils/</li>
@@ -25,8 +25,6 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
         <li>|</li>
         <li>|-- /attack/    &emsp;# Package per modalità di attacco</li>
         <li>|-- /defense/    &emsp;# Package per modalità di difesa</li>
-        <li>|</li>
-        <li>|-- main.py    &emsp;# Eseguibile principale</li>
      </ul>
 
 <hr/>
