@@ -15,9 +15,8 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
  - Modularizzato (root: **/app**):
       <ul>
         <li>|</li>
-        <li>|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
-        <li>|</li>
         <li>|-- /utils/</li>
+        <li>|    &emsp;|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
         <li>|    &emsp;|-- /requests/    &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)</li>
         <li>|    &emsp;|-- /history/    &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo</li>
         <li>|    &emsp;|-- /sniffing/    &emsp;# Package che fornisce metodi per sniffing in una rete</li>
