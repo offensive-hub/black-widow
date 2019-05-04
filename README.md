@@ -1,7 +1,7 @@
 # Black Widow
 ## CTF Tool
 
-##### Funzionalità:
+#### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
  - Invio automatico di flag al gaming server;
  - Invio stessa richiesta a terminali multipli (per sfruttare contemporaneamente le stesse vulnerabilità di più server);
@@ -11,8 +11,8 @@
 
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
-##### Modalità sviluppo:
- - Modularizzato (root: /app):
+#### Modalità sviluppo:
+ - Modularizzato (root: **/app**):
       <ul>
         <li>|</li>
         <li>|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
