@@ -1,4 +1,5 @@
 # black-widow
 CTF Tool
 
-#### © Link Campus University
+### [CyberChallenge.it 2019](https://www.cyberchallenge.it)
+#### [© Link Campus University](https://www.unilink.it)
