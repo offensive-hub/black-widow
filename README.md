@@ -14,7 +14,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 ##### Modalità sviluppo:
  - Modularizzato (root: /app):
         |
-        |-- /settings/      # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+        -- /settings/      # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
         |
         |-- /utils/
         |      |-- /requests/      # Package che fornisce metodi per effettuare richieste (anche multiple)
