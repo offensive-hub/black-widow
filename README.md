@@ -16,6 +16,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
       <ul>
         <li>|</li>
         <li>|-- /utils/</li>
+        <li>|    &emsp;|-- util.py    &emsp;# Contiene funzioni utili a tutta l'app</li>
         <li>|    &emsp;|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
         <li>|    &emsp;|-- /requests/    &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)</li>
         <li>|    &emsp;|-- /history/    &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo</li>
