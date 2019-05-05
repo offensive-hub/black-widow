@@ -16,12 +16,42 @@ def main():
     #env()
     #log()
     #storage()
-    flag_regex()
+    test_flow()
     exit(0)
 
+def test_flow():
+    print(colored("\nCHECK FLOW:", 'yellow'))
+    # Setto il mio IP
+    print(str(app.utils.settings.Set.my_ip('192.168.1.12')))
+    # Svuoto la lista dei server da attaccare
+    print(str(app.utils.settings.Remove.server_to_attack()))
+    # Aggiungo io da attaccare
+    print(str(app.utils.settings.Add.server_to_attack('192.168.1.1')))
+    print(str(app.utils.settings.Add.server_to_attack('192.168.1.5')))
+    print(str(app.utils.settings.Add.server_to_attack('192.168.1.7')))
+    print(str(app.utils.settings.Add.server_to_attack('192.168.1.11')))
+    print(str(app.utils.settings.Add.server_to_attack('192.168.1.13')))
+    request()
+
+def request():
+    print(colored("\nCHECK REQUESTS:", 'yellow'))
+    team_token = app.utils.settings.Get.team_token()
+    stolen_flag = 'QWERTYUIOPASDFGHJKLZXCVBNM01234='
+    data = {
+        'team_token': team_token,
+        'flag': stolen_flag,
+    }
+    # Funzione per il mapping (da <ip> a http://<ip>:80)
+    def to_http(ip): return 'http://'+str(ip)+':80/'
+    # Lista server da attaccare
+    server_to_attack = app.utils.settings.Get.server_to_attack()
+    # Creo lista del tipo http://<ip_da_attaccare>
+    urls = list(map(to_http, server_to_attack))
+    app.utils.requests.multi_request(urls, 'post', data)
 
 
 def flag_regex():
+    print(colored("\nCHECK FLAG REGEX:", 'yellow'))
     stolen_flag = 'QWERTYUIOPASDFGHJKLZXCVBNM01234='
     print("app.utils.helpers.util.regex_in_string(): " + str(app.utils.helpers.util.regex_in_string(app.env.FLAG_REGEX, stolen_flag)))
 
