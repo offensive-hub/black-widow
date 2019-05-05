@@ -2,13 +2,13 @@
 Metodi e classi utili alla gestione di file e cartelle
 """
 
-from app.env import DEBUG
+from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
 import os, shutil, re
 
 # @return true se il file contiene la stringa find
 def file_contains(find, file):
-    if (DEBUG): Log.info('CALLED: file_contains('+find+', '+file+')')
+    if (APP_DEBUG): Log.info('CALLED: file_contains('+find+', '+file+')')
     if (not os.path.isfile(file)):
         return False
     with open(file) as f:
@@ -18,7 +18,7 @@ def file_contains(find, file):
 
 # @return string il contenuto del file
 def read_file(file):
-    if (DEBUG): Log.info('CALLED: read_file('+file+')')
+    if (APP_DEBUG): Log.info('CALLED: read_file('+file+')')
     if (not os.path.isfile(file)):
         return ""
     with open(file) as f:
@@ -31,13 +31,12 @@ def read_file(file):
 
 # @return true se il file contiene l'espressione regolare regex
 def file_contains_regex(regex, file):
-    if (DEBUG): Log.info('CALLED: file_contains_regex('+regex+', '+file+')')
+    if (APP_DEBUG): Log.info('CALLED: file_contains_regex('+regex+', '+file+')')
     if (not os.path.isfile(file)):
         return False
     reg = re.compile(regex)
-    f = open(file, 'r')
-    text = f.read()
-    f.close()
+    with open(file, 'r') as f:
+        text = f.read()
     matches = re.findall(reg, text)
     return len(matches) > 0
 
@@ -48,7 +47,7 @@ def file_contains_regex(regex, file):
 # @param file il file in cui sovrascrivere find con replacer
 # @return True se trova una stringa find, False altrimenti
 def replace_in_file(find, replacer, file):
-    if (DEBUG): Log.info('CALLED: replace_in_file('+find+', '+replacer+', '+file+')')
+    if (APP_DEBUG): Log.info('CALLED: replace_in_file('+find+', '+replacer+', '+file+')')
     if (find == replacer): return False
     if (not file_contains(find, file)): return False
     # Safely write the changed content, if found in the file
@@ -67,7 +66,7 @@ def replace_in_file(find, replacer, file):
 # @return True se trova una regex equivalente ad una stringa diversa da
 #         replacer, False altrimenti
 def replace_in_file_regex(regex, replacer, file):
-    if (DEBUG): Log.info('CALLED: replace_in_file_regex('+regex+', '+replacer+', '+file+')')
+    if (APP_DEBUG): Log.info('CALLED: replace_in_file_regex('+regex+', '+replacer+', '+file+')')
     if (not os.path.isfile(file)):
         with open(file, 'a') as f:
             f.close()
@@ -81,16 +80,14 @@ def replace_in_file_regex(regex, replacer, file):
 
 # Sovrascrive il contenuto del file con content
 def overwrite_file(content, file):
-    if (DEBUG): Log.info('CALLED: overwrite_file('+content+', '+file+')')
+    if (APP_DEBUG): Log.info('CALLED: overwrite_file('+content+', '+file+')')
     with open(file, 'w') as f:
         f.write(str(content)+'\n')
-        f.close()
 
 # Appende content nel file
 def append_in_file(content, file):
     with open(file, 'a') as f:
         f.write(str(content)+'\n')
-        f.close()
 
 # Se la cartella folder non esiste, la crea
 def check_folder(folder):
@@ -99,7 +96,7 @@ def check_folder(folder):
 
 # Elimina tutti i files presenti nella cartella passata per argomento
 def clean_folder(folder):
-    if (DEBUG): Log.info('CALLED: clean_folder('+folder+')')
+    if (APP_DEBUG): Log.info('CALLED: clean_folder('+folder+')')
     if (os.path.isdir(folder)):
         for file in os.listdir(folder):
             file_path = os.path.join(folder, file)
@@ -110,7 +107,7 @@ def clean_folder(folder):
 
 # Copia il file o la cartella "src", in "dest"
 def copy(src, dest):
-    if (DEBUG): Log.info('CALLED: copy('+src+', '+dest+')')
+    if (APP_DEBUG): Log.info('CALLED: copy('+src+', '+dest+')')
     dest_parent = os.path.dirname(dest)
     check_folder(dest_parent)
     if (os.path.exists(dest)):
@@ -122,7 +119,7 @@ def copy(src, dest):
 
 # Muove il file o la cartella "src", in "dest"
 def move(src, dest):
-    if (DEBUG): Log.info('CALLED: move('+src+', '+dest+')')
+    if (APP_DEBUG): Log.info('CALLED: move('+src+', '+dest+')')
     dest_parent = os.path.dirname(dest)
     check_folder(dest_parent)
     if (os.path.exists(dest)):

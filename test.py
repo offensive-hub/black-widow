@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 TEST MODULE
 """
@@ -8,16 +9,49 @@ from termcolor import colored
 
 def main():
     app.utils.helpers.logger.Log.info(app.env.APP_NAME+' (DEBUG) started, PID='+str(os.getpid()))
-    if (not app.env.DEBUG):
-        print(colored("La modalità di DEBUG non è attiva. Modificarla in 'app/env.py'.\n", 'red'))
+    if (not app.env.APP_DEBUG):
+        print(colored("La modalità di APP_DEBUG non è attiva. Modificarla in 'app/env.py'.\n", 'red'))
         exit(1)
-    imports()
-    methods()
-    env()
-    json_settings()
-    log()
-    storage()
+    Settings.main()
+    #env()
+    #log()
+    #storage()
     exit(0)
+
+
+
+
+
+
+class Settings:
+    @staticmethod
+    def main():
+        print(colored("\nCHECK SETTINGS:", 'yellow'))
+        #Settings.imports()
+        Settings.set()
+        Settings.get()
+
+    @staticmethod
+    def imports():
+        print("app.utils.settings: " + str(dir(app.utils.settings)))
+        print("app.utils.settings.Get: " + str(dir(app.utils.settings.Get)))
+        print("app.utils.settings.Set: " + str(dir(app.utils.settings.Set)))
+
+    @staticmethod
+    def set():
+        print("app.utils.settings.Set.my_ip()")
+        print(str(app.utils.settings.Set.my_ip('127.0.0.1')))
+
+    @staticmethod
+    def get():
+        print("app.utils.settings.Get.my_ip()")
+        print(str(app.utils.settings.Get.my_ip()))
+
+
+
+
+
+
 
 def imports():
     # Check imports
@@ -25,18 +59,12 @@ def imports():
     print("app: " + str(dir(app)))
     print("app.env: " + str(dir(app.env)))
     print("app.utils: " + str(dir(app.utils)))
-    print("app.utils.util: " + str(dir(app.utils.util)))
     print("app.utils.helpers: " + str(dir(app.utils.helpers)))
     print("app.utils.helpers.logger: " + str(dir(app.utils.helpers.logger)))
 
-def methods():
-    print(colored("\nCHECK METHDOS:", 'yellow'))
-    print("app.utils.util.pexec()")
-    app.utils.util.pexec()
-
 def env():
     print(colored("\nCHECK ENVIRONMENTS:", 'yellow'))
-    print("app.env.DEBUG: " + str(app.env.DEBUG))
+    print("app.env.APP_DEBUG: " + str(app.env.APP_DEBUG))
     print("app.env.APP_PATH: " + str(app.env.APP_PATH))
     print("app.env.APP_SETTINGS: " + str(app.env.APP_SETTINGS))
 

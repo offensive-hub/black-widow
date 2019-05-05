@@ -16,13 +16,13 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
       <ul>
         <li>|</li>
         <li>|-- /utils/</li>
-        <li>|    &emsp;|-- util.py    &emsp;# Contiene funzioni utili a tutta l'app</li>
-        <li>|    &emsp;|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
-        <li>|    &emsp;|-- /requests/    &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)</li>
-        <li>|    &emsp;|-- /history/    &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo</li>
-        <li>|    &emsp;|-- /sniffing/    &emsp;# Package che fornisce metodi per sniffing in una rete</li>
         <li>|    &emsp;|-- /cluster/    &emsp;# Package che fornisce metodi per condividere e ricevere info</li>
         <li>|    &emsp;|-- /encryption/    &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests</li>
+        <li>|    &emsp;|-- /helpers/    &emsp;# Package contenente helpers generici usati in più parti del programma</li>
+        <li>|    &emsp;|-- /history/    &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo</li>
+        <li>|    &emsp;|-- /requests/    &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)</li>
+        <li>|    &emsp;|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
+        <li>|    &emsp;|-- /sniffing/    &emsp;# Package che fornisce metodi per sniffing in una rete</li>
         <li>|</li>
         <li>|-- /attack/    &emsp;# Package per modalità di attacco</li>
         <li>|-- /defense/    &emsp;# Package per modalità di difesa</li>
