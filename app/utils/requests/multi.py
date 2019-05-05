@@ -8,6 +8,8 @@ from app.env import APP_DEBUG
 
 # Effettua una richiesta verso più urls contemporaneamente
 # @param urls una lista di url
+# @param type get|post|put|patch|delete
+# @param data dizionario con parametri
 def multi(urls, type, data):
     if (APP_DEBUG): Log.info('CALLED: multi('+str(urls)+', '+str(type)+', '+str(data)+')')
     type = type.lower()
@@ -23,6 +25,9 @@ def multi(urls, type, data):
                 r = requests.patch(url, data)
             elif (type == 'delete'):
                 r = requests.delete(url, data)
+            else:
+                Log.error("tipo "+type+" non esistente")
+                return
         except requests.exceptions.ConnectionError as e:
             Log.error('Impossibile contattare '+str(url))
             continue
