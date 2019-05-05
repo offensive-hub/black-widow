@@ -43,6 +43,8 @@ class Settings:
     def set():
         print("app.utils.settings.Set.my_ip()")
         print(str(app.utils.settings.Set.my_ip('127.0.0.1')))
+        print("app.utils.settings.Set.game_server()")
+        print(str(app.utils.settings.Set.game_server('192.168.1.1')))
 
     @staticmethod
     def get():

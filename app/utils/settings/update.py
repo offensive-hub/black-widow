@@ -15,6 +15,14 @@ class Set:
         return Set.__set__(keys.MY_IP, ip)
 
     @staticmethod
+    def game_server(ip):
+        if (APP_DEBUG): Log.info('CALLED: Set.game_server('+str(ip)+')')
+        if (not validators.is_ip(ip)):
+            Log.error(str(ip)+' is not a valid ip address')
+            return False
+        return Set.__set__(keys.GAME_SERVER, ip)
+
+    @staticmethod
     def __set__(key, value):
         dictionary = get_json(APP_SETTINGS)
         dictionary[key] = value
@@ -60,6 +68,11 @@ class Remove:
         return Set.__set__(keys.MY_IP, None)
 
     @staticmethod
+    def game_server():
+        if (APP_DEBUG): Log.info('CALLED: Remove.game_server()')
+        return Set.__set__(keys.GAME_SERVER, None)
+
+    @staticmethod
     def server_to_attack(ip='*'):
         if (APP_DEBUG): Log.info('CALLED: Remove.server_to_attack('+str(ip)+')')
         if (ip != '*' and not validators.is_ip(ip)):
@@ -79,6 +92,7 @@ class Remove:
     @staticmethod
     def __remove__(key, element):
         dictionary = get_json(APP_SETTINGS)
+        if (dictionary.get(key) == None): return True
         if (element == '*'):
             # Rimuove tutti gli elementi
             dictionary[key] = []
@@ -102,6 +116,11 @@ class Get:
     def my_ip():
         if (APP_DEBUG): Log.info('CALLED: Get.my_ip()')
         return Get.__get__(keys.MY_IP)
+
+    @staticmethod
+    def game_server():
+        if (APP_DEBUG): Log.info('CALLED: Get.game_server()')
+        return Get.__get__(keys.GAME_SERVER)
 
     @staticmethod
     def server_to_attack():
