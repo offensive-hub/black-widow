@@ -2,7 +2,7 @@
 ## CTF Tool (Language: [python3.7](https://www.python.org/downloads/))
 
 #### Dipendenze:
- - [pypcapfile](https://github.com/kisom/pypcapfile): `pip install pypcapfile`
+ - [pyshark](https://pypi.org/project/pyshark/): `pip3 install pyshark`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;

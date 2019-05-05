@@ -15,6 +15,11 @@ class Set:
         return Set.__set__(keys.MY_IP, ip)
 
     @staticmethod
+    def my_interface(interface):
+        if (APP_DEBUG): Log.info('CALLED: Set.my_interface('+str(interface)+')')
+        return Set.__set__(keys.MY_INTERFACE, interface)
+
+    @staticmethod
     def team_token(token):
         if (APP_DEBUG): Log.info('CALLED: Set.team_token('+str(token)+')')
         return Set.__set__(keys.TEAM_TOKEN, token)
@@ -94,6 +99,11 @@ class Remove:
         return Set.__set__(keys.MY_IP, None)
 
     @staticmethod
+    def my_interface():
+        if (APP_DEBUG): Log.info('CALLED: Remove.my_interface()')
+        return Set.__set__(keys.MY_INTERFACE, None)
+
+    @staticmethod
     def team_token():
         if (APP_DEBUG): Log.info('CALLED: Remove.team_token()')
         return Set.__set__(keys.TEAM_TOKEN, None)
@@ -112,7 +122,7 @@ class Remove:
     def flag_regex():
         if (APP_DEBUG): Log.info('CALLED: Remove.flag_regex()')
         return Set.__set__(keys.FLAG_REGEX, None)
-    
+
     @staticmethod
     def server_to_attack(ip='*'):
         if (APP_DEBUG): Log.info('CALLED: Remove.server_to_attack('+str(ip)+')')
@@ -165,6 +175,11 @@ class Get:
     def my_ip():
         if (APP_DEBUG): Log.info('CALLED: Get.my_ip()')
         return Get.__get__(keys.MY_IP)
+
+    @staticmethod
+    def my_interface():
+        if (APP_DEBUG): Log.info('CALLED: Get.my_interface()')
+        return Get.__get__(keys.MY_INTERFACE)
 
     @staticmethod
     def team_token():

@@ -16,13 +16,22 @@ def main():
     #log()
     #storage()
     #test_flow()
-    request()
+    pcap()
     exit(0)
+
+def pcap():
+    test_pcap = app.env.APP_STORAGE+'/network_dump.pcap'
+    filter1='http'
+    filter2='udp.port eq 53 or tcp.port eq 53'
+    app.utils.sniffing.sniff_pcap(src_file=test_pcap, filter=filter2)
+
 
 def test_flow():
     print(colored("\nCHECK FLOW:", 'yellow'))
     # Setto il mio IP
     print(str(app.utils.settings.Set.my_ip('192.168.1.12')))
+    # Setto l'interfaccia d'ascolto
+    print(str(app.utils.settings.Set.my_interface('eth0')))
     # Svuoto la lista dei server da attaccare
     print(str(app.utils.settings.Remove.server_to_attack()))
     # Aggiungo io da attaccare
@@ -31,6 +40,7 @@ def test_flow():
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.7')))
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.11')))
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.13')))
+
 
 def request():
     print(colored("\nCHECK REQUESTS:", 'yellow'))
@@ -156,7 +166,5 @@ def storage():
     app.utils.helpers.storage.copy(file1, file1_copy)
     app.utils.helpers.storage.copy(app.env.APP_TMP, '/tmp/'+app.env.APP_PROC+'_copy')
     app.utils.helpers.storage.move('/tmp/'+app.env.APP_PROC+'_copy', '/tmp/'+app.env.APP_PROC+'_copy2')
-
-
 
 main()
