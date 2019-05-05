@@ -1,3 +1,1 @@
-from . import keys
-from .set import Set
-from .get import Get
+from .update import Set, Get, Add, Remove

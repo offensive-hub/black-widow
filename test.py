@@ -29,7 +29,9 @@ class Settings:
         print(colored("\nCHECK SETTINGS:", 'yellow'))
         #Settings.imports()
         Settings.set()
+        Settings.add()
         Settings.get()
+        Settings.remove()
 
     @staticmethod
     def imports():
@@ -46,6 +48,24 @@ class Settings:
     def get():
         print("app.utils.settings.Get.my_ip()")
         print(str(app.utils.settings.Get.my_ip()))
+        print("app.utils.settings.Get.server_to_attack()")
+        print(str(app.utils.settings.Get.server_to_attack()))
+        print("app.utils.settings.Get.all()")
+        print(str(app.utils.settings.Get.all()))
+
+    @staticmethod
+    def add():
+        print("app.utils.settings.Add.server_to_attack()")
+        print(str(app.utils.settings.Add.server_to_attack('8.8.8.8')))
+        print(str(app.utils.settings.Add.server_to_attack('8.8.4.4')))
+        print("app.utils.settings.Add.server_to_defend()")
+        print(str(app.utils.settings.Add.server_to_defend('192.168.1.50')))
+        print(str(app.utils.settings.Add.server_to_defend('192.168.1.51')))
+
+    def remove():
+        print("app.utils.settings.Remove.server_to_attack()")
+        print(str(app.utils.settings.Remove.server_to_attack('8.8.8.8')))
+
 
 
 
