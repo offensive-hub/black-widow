@@ -4,10 +4,12 @@ Metodi per effettuare richieste multiple
 
 import requests, json
 from app.utils.helpers.logger import Log
+from app.env import APP_DEBUG
 
 # Effettua una richiesta verso più urls contemporaneamente
 # @param urls una lista di url
-def multi_request(urls, type, data):
+def multi(urls, type, data):
+    if (APP_DEBUG): Log.info('CALLED: multi('+str(urls)+', '+str(type)+', '+str(data)+')')
     type = type.lower()
     for url in urls:
         try:
@@ -25,10 +27,13 @@ def multi_request(urls, type, data):
             Log.error('Impossibile contattare '+str(url))
             continue
         Log.info('Request to '+str(url))
-        print('status_code: '+str(r.status_code))
-        print('headers: '+str(r.headers))
-        print('encoding: '+str(r.encoding))
-        try:
-            print(r.json())
-        except json.decoder.JSONDecodeError:
-            print(r.text)
+        Log.info('      |--- status_code: '+str(r.status_code))
+        Log.info('      |--- encoding: '+str(r.encoding))
+        Log.info('      |--- headers:')
+        for header in r.headers.keys():
+            Log.info('              |--- '+header+': '+str(r.headers.get(header)))
+        if (APP_DEBUG):
+            try:
+                print(r.json())
+            except json.decoder.JSONDecodeError:
+                print(r.text)

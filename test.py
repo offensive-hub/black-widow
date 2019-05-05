@@ -10,13 +10,13 @@ from termcolor import colored
 def main():
     app.utils.helpers.logger.Log.info(app.env.APP_NAME+' (DEBUG) started, PID='+str(os.getpid()))
     if (not app.env.APP_DEBUG):
-        print(colored("La modalità di APP_DEBUG non è attiva. Modificarla in 'app/env.py'.\n", 'red'))
-        exit(1)
+        print(colored("La modalità di APP_DEBUG non è attiva. Per debug approfondito, modificarla in 'app/env.py'.\n", 'red'))
     #Settings.main()
     #env()
     #log()
     #storage()
-    test_flow()
+    #test_flow()
+    request()
     exit(0)
 
 def test_flow():
@@ -31,7 +31,6 @@ def test_flow():
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.7')))
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.11')))
     print(str(app.utils.settings.Add.server_to_attack('192.168.1.13')))
-    request()
 
 def request():
     print(colored("\nCHECK REQUESTS:", 'yellow'))
@@ -47,7 +46,7 @@ def request():
     server_to_attack = app.utils.settings.Get.server_to_attack()
     # Creo lista del tipo http://<ip_da_attaccare>
     urls = list(map(to_http, server_to_attack))
-    app.utils.requests.multi_request(urls, 'post', data)
+    app.utils.requests.multi(urls, 'post', data)
 
 
 def flag_regex():

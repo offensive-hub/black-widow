@@ -1,1 +1,1 @@
-from .multi import multi_request
+from .multi import multi

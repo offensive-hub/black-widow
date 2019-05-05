@@ -37,7 +37,8 @@ class Log:
     def __log__(self, msg, type, color):
         self.__check_log_file__()
         msg_log = self.__get_log_header__()+' '+colored(type, color)+' : '+msg.rstrip()
-        if (APP_DEBUG): print(msg_log)
+        if (APP_DEBUG):
+            print(msg_log)
         storage.append_in_file(msg_log, APP_LOGFILE)
 
     def __check_log_file__(self):
