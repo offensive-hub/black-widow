@@ -27,7 +27,7 @@ class Settings:
     @staticmethod
     def main():
         print(colored("\nCHECK SETTINGS:", 'yellow'))
-        #Settings.imports()
+        Settings.imports()
         Settings.set()
         Settings.add()
         Settings.get()
@@ -63,10 +63,15 @@ class Settings:
         print("app.utils.settings.Add.server_to_defend()")
         print(str(app.utils.settings.Add.server_to_defend('192.168.1.50')))
         print(str(app.utils.settings.Add.server_to_defend('192.168.1.51')))
+        print("app.utils.settings.Add.team_player()")
+        print(str(app.utils.settings.Add.team_player('192.168.1.155')))
+        print(str(app.utils.settings.Add.team_player('192.168.1.78')))
 
     def remove():
         print("app.utils.settings.Remove.server_to_attack()")
         print(str(app.utils.settings.Remove.server_to_attack('8.8.8.8')))
+        print("app.utils.settings.Remove.team_player()")
+        print(str(app.utils.settings.Remove.team_player('192.168.1.78')))
 
 
 

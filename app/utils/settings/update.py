@@ -48,6 +48,14 @@ class Add:
             return False
         return Add.__add__(keys.SERVER_TO_DEFEND, ip)
 
+    @staticmethod
+    def team_player(ip):
+        if (APP_DEBUG): Log.info('CALLED: Add.team_player('+str(ip)+')')
+        if (not validators.is_ip(ip)):
+            Log.error(str(ip)+' is not a valid ip address')
+            return False
+        return Add.__add__(keys.TEAM_PLAYER, ip)
+
     # Aggiunge un elemento da una lista
     @staticmethod
     def __add__(key, element):
@@ -87,6 +95,14 @@ class Remove:
             Log.error(str(ip)+' is not a valid ip address')
             return False
         return Remove.__remove__(keys.SERVER_TO_DEFEND, ip)
+
+    @staticmethod
+    def team_player(ip='*'):
+        if (APP_DEBUG): Log.info('CALLED: Remove.team_player('+str(ip)+')')
+        if (ip != '*' and not validators.is_ip(ip)):
+            Log.error(str(ip)+' is not a valid ip address')
+            return False
+        return Remove.__remove__(keys.TEAM_PLAYER, ip)
 
     # Rimuove un elemento da una lista
     @staticmethod
