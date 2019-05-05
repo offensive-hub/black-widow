@@ -2,16 +2,13 @@
 
 import app
 
-def main_debug():
+def main():
     if (not app.env.DEBUG):
         print("La modalità di DEBUG non è attiva. Modificarla in 'app/env.py'.")
         exit(1)
-    start()
-    exit(0)
-
-def start():
     imports()
     methods()
+    exit(0)
 
 def imports():
     # Check imports
@@ -24,4 +21,4 @@ def methods():
     print("app.utils.util.pexec()")
     app.utils.util.pexec()
 
-main_debug()
+main()
