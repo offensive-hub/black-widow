@@ -1,13 +1,13 @@
 # Importo le variabili d'ambiente necessarie
-from app.env import DEBUG
+from app.env import DEBUG, APP_LOGFILE
+from app.utils.helpers.logger import Log
 
-# TODO: Implementare classe Log, con: Log.info(...), Log.error(...)
+# Metodi
 
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args cmd [argomenti]
 def pexec(*args):
-    if (DEBUG):
-        print('CALLED: pexec(*args)')
+    if (DEBUG): Log.info('CALLED: pexec'+str(args))
     return
     """
     try:
