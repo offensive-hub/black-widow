@@ -2,7 +2,7 @@
 Funzioni generiche, utili in tutte le parti del software.
 """
 
-import json
+import json, re
 from . import storage
 from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
@@ -17,6 +17,13 @@ def get_json(file):
 # @param dictionary dict Il dizionario da scrivere nel file in formato json
 def set_json(dictionary, file):
     return storage.overwrite_file(json.dumps(dictionary), file)
+
+# @return True se string contiene regex
+def regex_in_string(regex, string):
+    if (APP_DEBUG): Log.info('CALLED: regex_in_string('+str(regex)+', '+str(string)+')')
+    reg = re.compile(regex)
+    matches = re.findall(reg, string)
+    return len(matches) > 0
 
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"

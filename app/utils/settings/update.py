@@ -15,12 +15,30 @@ class Set:
         return Set.__set__(keys.MY_IP, ip)
 
     @staticmethod
+    def team_token(token):
+        if (APP_DEBUG): Log.info('CALLED: Set.team_token('+str(token)+')')
+        return Set.__set__(keys.TEAM_TOKEN, token)
+
+    @staticmethod
+    def submit_url(url):
+        if (APP_DEBUG): Log.info('CALLED: Set.submit_url('+str(url)+')')
+        if (not validators.is_url(url)):
+            Log.error(str(url)+' is not a valid url')
+            return False
+        return Set.__set__(keys.SUBMIT_URL, url)
+
+    @staticmethod
     def game_server(ip):
         if (APP_DEBUG): Log.info('CALLED: Set.game_server('+str(ip)+')')
         if (not validators.is_ip(ip)):
             Log.error(str(ip)+' is not a valid ip address')
             return False
         return Set.__set__(keys.GAME_SERVER, ip)
+
+    @staticmethod
+    def flag_regex(regex):
+        if (APP_DEBUG): Log.info('CALLED: Set.flag_regex('+str(regex)+')')
+        return Set.__set__(keys.FLAG_REGEX, regex)
 
     @staticmethod
     def __set__(key, value):
@@ -76,10 +94,25 @@ class Remove:
         return Set.__set__(keys.MY_IP, None)
 
     @staticmethod
+    def team_token():
+        if (APP_DEBUG): Log.info('CALLED: Remove.team_token()')
+        return Set.__set__(keys.TEAM_TOKEN, None)
+
+    @staticmethod
     def game_server():
         if (APP_DEBUG): Log.info('CALLED: Remove.game_server()')
         return Set.__set__(keys.GAME_SERVER, None)
 
+    @staticmethod
+    def submit_url():
+        if (APP_DEBUG): Log.info('CALLED: Remove.submit_url()')
+        return Set.__set__(keys.SUBMIT_URL, None)
+
+    @staticmethod
+    def flag_regex():
+        if (APP_DEBUG): Log.info('CALLED: Remove.flag_regex()')
+        return Set.__set__(keys.FLAG_REGEX, None)
+    
     @staticmethod
     def server_to_attack(ip='*'):
         if (APP_DEBUG): Log.info('CALLED: Remove.server_to_attack('+str(ip)+')')
@@ -134,14 +167,29 @@ class Get:
         return Get.__get__(keys.MY_IP)
 
     @staticmethod
+    def team_token():
+        if (APP_DEBUG): Log.info('CALLED: Get.team_token()')
+        return Get.__get__(keys.TEAM_TOKEN)
+
+    @staticmethod
     def game_server():
         if (APP_DEBUG): Log.info('CALLED: Get.game_server()')
         return Get.__get__(keys.GAME_SERVER)
 
     @staticmethod
+    def submit_url():
+        if (APP_DEBUG): Log.info('CALLED: Get.submit_url()')
+        return Get.__get__(keys.SUBMIT_URL)
+
+    @staticmethod
     def server_to_attack():
         if (APP_DEBUG): Log.info('CALLED: Get.server_to_attack()')
         return Get.__get__(keys.SERVER_TO_ATTACK)
+
+    @staticmethod
+    def flag_regex():
+        if (APP_DEBUG): Log.info('CALLED: Get.flag_regex()')
+        return Get.__get__(keys.FLAG_REGEX)
 
     @staticmethod
     def __get__(key=None):

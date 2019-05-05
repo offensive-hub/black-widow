@@ -12,15 +12,18 @@ def main():
     if (not app.env.APP_DEBUG):
         print(colored("La modalità di APP_DEBUG non è attiva. Modificarla in 'app/env.py'.\n", 'red'))
         exit(1)
-    Settings.main()
+    #Settings.main()
     #env()
     #log()
     #storage()
+    flag_regex()
     exit(0)
 
 
 
-
+def flag_regex():
+    stolen_flag = 'QWERTYUIOPASDFGHJKLZXCVBNM01234='
+    print("app.utils.helpers.util.regex_in_string(): " + str(app.utils.helpers.util.regex_in_string(app.env.FLAG_REGEX, stolen_flag)))
 
 
 class Settings:
@@ -67,6 +70,7 @@ class Settings:
         print(str(app.utils.settings.Add.team_player('192.168.1.155')))
         print(str(app.utils.settings.Add.team_player('192.168.1.78')))
 
+    @staticmethod
     def remove():
         print("app.utils.settings.Remove.server_to_attack()")
         print(str(app.utils.settings.Remove.server_to_attack('8.8.8.8')))

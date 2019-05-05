@@ -8,3 +8,5 @@ APP_PATH=dirname(realpath(__file__))                # /path/to/app
 APP_SETTINGS=APP_PATH+'/storage/settings.json'
 APP_TMP='/tmp/black-widow'
 APP_LOGFILE=APP_TMP+'/black-widow.log'
+
+FLAG_REGEX='[A-Z0-9]{31}='                          # Default flag regex
