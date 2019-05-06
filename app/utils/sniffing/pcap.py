@@ -24,8 +24,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                     field = bytes.fromhex(dirty_field.replace(":", "")).decode('utf-8')
                 except ValueError or UnicodeDecodeError or TypeError as e:
                     field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
-                field = field.replace('\\xa', '\n')
-                field = field.replace('\\x9', '\t')
+                field = field.replace('\\xa', '\n').replace('\\x9', '\t')
                 if (len(field) > limit_length):
                     Log.info('Truncated too long field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
                     field = '[truncated]' + str(field[0:limit_length])
