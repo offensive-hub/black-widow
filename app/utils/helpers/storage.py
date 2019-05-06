@@ -4,6 +4,7 @@ Metodi e classi utili alla gestione di file e cartelle
 
 from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
+from .util import replace_regex
 import os, shutil, re
 
 # @return true se il file contiene la stringa find
@@ -59,20 +60,20 @@ def replace_in_file(find, replacer, file):
     return  True
 
 
-# Esegue il replace della regex che trova, con la stringa replacer
+# Esegue il replace della regex che trova, con la stringa replace
 # @param regex l'espressione regolare da trovare
-# @param replacer la stringa che andra' a sostituire la regex trovata
-# @param file il file in cui sovrascrivere regex con replacer
+# @param replace la stringa che andra' a sostituire la regex trovata
+# @param file il file in cui sovrascrivere regex con replace
 # @return True se trova una regex equivalente ad una stringa diversa da
-#         replacer, False altrimenti
-def replace_in_file_regex(regex, replacer, file):
-    if (APP_DEBUG): Log.info('CALLED: replace_in_file_regex('+regex+', '+replacer+', '+file+')')
+#         replace, False altrimenti
+def replace_in_file_regex(regex, replace, file):
+    if (APP_DEBUG): Log.info('CALLED: replace_in_file_regex('+regex+', '+replace+', '+file+')')
     if (not os.path.isfile(file)):
         with open(file, 'a') as f:
             f.close()
     with open(file, 'r') as f:
         content = f.read()
-    content_new = re.sub(regex, replacer, content, flags = re.M)
+    content_new = replace_regex(regex, replace, content)   #re.sub(regex, replace, content, flags = re.M)
     if (content != content_new):
         overwrite_file(content_new, file)
         return True

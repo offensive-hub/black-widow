@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 """
 TEST MODULE
@@ -16,10 +17,12 @@ def main():
     #log()
     #storage()
     #test_flow()
+    #flag_regex()
     pcap()
     exit(0)
 
 def pcap():
+    print(colored("\nCHECK PCAP:", 'yellow'))
     test_pcap = app.env.APP_STORAGE+'/network_dump.pcap'
     test_pcap2 = app.env.APP_STORAGE+'/ironx_dump.pcap'
     test_pcap_out = app.env.APP_STORAGE+'/network_dump_out.pcap'
@@ -29,7 +32,7 @@ def pcap():
     filter4='http and ip.addr==217.182.10.133'
     filter5='tcp.port eq 443 or udp.port eq 443'
     filter6='http.request.uri matches "www.beniculturali.it"'
-    app.utils.sniffing.sniff_pcap(src_file=test_pcap2, dest_file=test_pcap_out, filter=filter5, limit_length=2000)
+    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=1000)
 
 
 def test_flow():
@@ -69,6 +72,7 @@ def flag_regex():
     print(colored("\nCHECK FLAG REGEX:", 'yellow'))
     stolen_flag = 'QWERTYUIOPASDFGHJKLZXCVBNM01234='
     print("app.utils.helpers.util.regex_in_string(): " + str(app.utils.helpers.util.regex_in_string(app.env.FLAG_REGEX, stolen_flag)))
+    print("app.utils.helpers.util.replace_regex(): " + str(app.utils.helpers.util.replace_regex(app.env.FLAG_REGEX, 'TEST', stolen_flag)))
 
 
 class Settings:

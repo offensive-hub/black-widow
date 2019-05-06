@@ -25,6 +25,13 @@ def regex_in_string(regex, string):
     matches = re.findall(reg, string)
     return len(matches) > 0
 
+# @return la string passata per argomento (find), con la sostituzione
+# @param regex la regex da trovare in string
+# @param replace la stringa con cui sostituire la regex
+# @param string la stringa in cui trovare la regex
+def replace_regex(regex, replace, string):
+    return re.sub(regex, replace, string, flags = re.M)
+
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"
 def pexec(*args):
