@@ -18,7 +18,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 
 #### Modalità sviluppo:
 * Modularizzato (root: **/app**, eseguibile: **/main.py**):
-  * Item 2a
+  * |
       <ul>
         <li>|-- /utils/</li>
         <li>|    &emsp;|-- /cluster/    &emsp;# Package che fornisce metodi per condividere e ricevere info</li>
