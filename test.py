@@ -18,7 +18,7 @@ def main():
     #storage()
     #test_flow()
     #flag_regex()
-    pcap()
+    #pcap()
     exit(0)
 
 def pcap_callback(pkt_dict):

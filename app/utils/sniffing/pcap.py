@@ -16,6 +16,7 @@ import pyshark, numpy, codecs
 # @param interface L'interfaccia da cui ascoltare (o None)
 # @param limit_length Il limite che i campi dei pacchetti devono avere per non essere troncati (o None)
 # @param callback La funzione che prende un dizionario del pacchetto come argomento (o None)
+# @return void
 def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
     def __pcap_callback__(pkt):
         Log.info('Analyzing packet number '+str(pkt.number))
