@@ -34,7 +34,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |    |    |
   |    |    |-- cluster/        # Package che fornisce metodi per condividere e ricevere info
   |    |    |-- encryption/     # Package per criptare/decriptare stringhe/files
-  |    |    |-- exceptions/     # Contine eventuali eccezioni personalizzate
+  |    |    |-- exceptions/     # Eventuali eccezioni personalizzate
   |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
   |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
   |    |    |-- requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
@@ -43,6 +43,9 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |    |    |-- sql/            # Package che fornisce metodi per sql injection
   |    |
   |    |-- env.py          # Variabili d'ambiente
+  |
+  |-- main.py   # Eseguibile principale
+  |-- test.py   # Eseguibile di testing
 ```
 
 
