@@ -19,23 +19,30 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 
 #### Directories:
 ```
-  /app      # Package principale dell'applicazione
-    |
-    |-- /attack/        # Package per modalità di attacco
-    |-- /defense/       # Package per modalità di difesa
-    |
-    |-- /utils/
-    |      |
-    |      |-- /cluster/        # Package che fornisce metodi per condividere e ricevere info
-    |      |-- /encryption/     # Package per criptare/decriptare stringhe/files
-    |      |-- /exceptions/     # Contine eventuali eccezioni personalizzate
-    |      |-- /helpers/        # Package contenente helpers generici usati in più parti del programma
-    |      |-- /history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-    |      |-- /requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
-    |      |-- /settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-    |      |-- /sniffing/       # Package che fornisce metodi per sniffing in una rete
-    |      |-- /sql/            # Package che fornisce metodi per sql injection
-    |
+[root]
+  |
+  |-- app/      # Package principale dell'applicazione
+  |    |
+  |    |-- attack/         # Package per modalità di attacco
+  |    |-- defense/        # Package per modalità di difesa
+  |    |
+  |    |-- gui/            # Package per la grafica dell'applicazione
+  |    |
+  |    |-- storage/        # Package per salvare i files (settings, output, ...)
+  |    |
+  |    |-- utils/
+  |    |    |
+  |    |    |-- cluster/        # Package che fornisce metodi per condividere e ricevere info
+  |    |    |-- encryption/     # Package per criptare/decriptare stringhe/files
+  |    |    |-- exceptions/     # Contine eventuali eccezioni personalizzate
+  |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
+  |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+  |    |    |-- requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
+  |    |    |-- settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+  |    |    |-- sniffing/       # Package che fornisce metodi per sniffing in una rete
+  |    |    |-- sql/            # Package che fornisce metodi per sql injection
+  |    |
+  |    |-- env.py          # Variabili d'ambiente
 ```
 
 
