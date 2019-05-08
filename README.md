@@ -20,13 +20,13 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 * Modularizzato (root: **/app**, eseguibile: **/main.py**):
   * |
   * |-- /utils/
-  * |&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
-  * |&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests
-  * |&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
-  * |&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-  * |&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
-  * |&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-  * |&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
+  * |&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
+  * |&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests
+  * |&emsp;&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
+  * |&emsp;&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+  * |&emsp;&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
+  * |&emsp;&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+  * |&emsp;&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
   * |
   * |-- /attack/                &emsp;# Package per modalità di attacco
   * |-- /defense/               &emsp;# Package per modalità di difesa
