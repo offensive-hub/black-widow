@@ -25,14 +25,14 @@ def pcap():
     print(colored("\nCHECK PCAP:", 'yellow'))
     test_pcap = app.env.APP_STORAGE+'/network_dump.pcap'
     test_pcap2 = app.env.APP_STORAGE+'/ironx_dump.pcap'
-    test_pcap_out = app.env.APP_STORAGE+'/network_dump_out.pcap'
+    test_pcap_out = app.env.APP_STORAGE_OUT+'/network_dump_out.pcap'
     filter1='http'
     filter2='udp.port eq 53 or tcp.port eq 53'
     filter3='tcp.port eq 25 or icmp'
     filter4='http and ip.addr==217.182.10.133'
     filter5='tcp.port eq 443 or udp.port eq 443'
     filter6='http.request.uri matches "www.beniculturali.it"'
-    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=1000)
+    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=10000)
 
 
 def test_flow():
