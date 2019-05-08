@@ -24,7 +24,9 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             #print('Layer: '+str(layer.layer_name))
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
+
                 dirty_field = layer.get_field(field_name).rstrip()
+
                 try:
                     # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
                     field = bytes.fromhex(dirty_field.replace(":", " ")).decode('utf-8', 'ignore')
@@ -40,24 +42,27 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
 
                 # Verifico lunghezza campo decodificato
                 if (len(field) > limit_length):
-                    Log.info('Truncated too long decoded field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
+                    #Log.info('Truncated too long decoded field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
                     field = '[truncated]' + str(field[0:limit_length])
                     layer_field_dict['decoded_truncated'] = field
 
                 # Verifico lunghezza campo originale
                 if (len(dirty_field) > limit_length):
-                    Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+', new_length='+str(limit_length)+')')
+                    #Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+', new_length='+str(limit_length)+')')
                     dirty_field = '[truncated]' + str(dirty_field[0:limit_length])
-                    layer_field_dict['decoded_truncated'] = dirty_field
+                    layer_field_dict['original_truncated'] = dirty_field
 
                 # Se il risultato della codifica è troppo corto, è probabilissimo che la decodifica
                 # non abbia dato un valore sensato: consiglio di visualizzare il valore originale
                 if (len(field) <= 5): layer_field_dict['best'] = 'original'
                 else: layer_field_dict['best'] = 'decoded'
+
                 #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field))
                 #print('   |-- Field (decoded):  '+str(field_name)+' -> '+str(field))
                 layer_fields[field_name] = layer_field_dict
+
             layers_dict[layer.layer_name] = layer_fields
+
         pkt_dict = {
             'number': pkt.number,
             'captured_length': pkt.captured_length,
@@ -70,7 +75,8 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'transport_layer': pkt.transport_layer,
             'layers': layers_dict
         }
-        if (callback != None): callback(pkt_dict)
+        if (callback != None): callback(pkt_dict)   # chiamo la callback
+
     if (interface == None): interface = settings.Get.my_interface()
     if (src_file != None): capture = pyshark.FileCapture(src_file, display_filter=filter, output_file=dest_file)
     else: capture = pyshark.LiveCapture(interface, display_filter=filter, output_file=dest_file)
