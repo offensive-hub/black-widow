@@ -22,12 +22,16 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
         Log.info('Analyzing packet number '+str(pkt.number))
         Log.info('Layers: '+str(pkt.layers))
         layers_dict = {}
-        #pkt.pretty_print()     # Printa il pacchetto in modo comprensibile
+        #pkt.pretty_print()     # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica nulla)
         for layer in pkt.layers:
             layer_fields = {}
+
+            # Ripasso Layers:
             # Layers: ["2. Data Link (mac)",    "3. Network (ip)", "4. Transport (tcp/udp)", "5-6-7. *data"]
             # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
-            #print('Layer: '+str(layer.layer_name))
+
+            #print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
+
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
 
@@ -63,12 +67,14 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 if (len(field) <= 5): layer_field_dict['best'] = 'original'
                 else: layer_field_dict['best'] = 'decoded'
 
-                #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field))
-                #print('   |-- Field (decoded):  '+str(field_name)+' -> '+str(field))
+                #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field)) # Decommentare per printare stile albero
+                #print('   |-- Field (decoded):  '+str(field_name)+' -> '+str(field))       # Decommentare per printare stile albero
+
                 layer_fields[field_name] = layer_field_dict
 
             layers_dict[layer.layer_name] = layer_fields
 
+        # Creo un dizionario con le informazioni sul pacchetto catturato
         pkt_dict = {
             'number': pkt.number,
             'captured_length': pkt.captured_length,
@@ -79,7 +85,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'sniff_time': pkt.sniff_time,
             'sniff_timestamp': pkt.sniff_timestamp,
             'transport_layer': pkt.transport_layer,
-            'layers': layers_dict
+            'layers': layers_dict   # Il dizionario dei livelli creato nel sovrastante loop
         }
 
         if (callback != None): callback(pkt_dict)   # chiamo la callback
