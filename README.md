@@ -17,7 +17,7 @@
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
 #### Modalità sviluppo:
- - Modularizzato (root: **/app**, eseguibile: **/main.py**):
+* Modularizzato (root: **/app**, eseguibile: **/main.py**):
   * Item 2a
       <ul>
         <li>|-- /utils/</li>
