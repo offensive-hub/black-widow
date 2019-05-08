@@ -35,7 +35,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
 
-                dirty_field = layer.get_field(field_name).rstrip()
+                dirty_field = layer.get_field(field_name).strip()
 
                 try:
                     # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
@@ -44,7 +44,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                     # Decodifico in utf-8 (il doc non era in esadecimale)
                     field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
                 # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
-                field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n', '\n').rstrip()
+                field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n', '\n').strip()
 
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field

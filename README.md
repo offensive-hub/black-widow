@@ -5,6 +5,7 @@
 
 #### Dipendenze:
  - [pyshark](https://pypi.org/project/pyshark/): `pip3 install pyshark`
+ - [PyQt5](https://pypi.org/project/PyQt5/): `pip3 install PyQt5`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;

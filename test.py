@@ -18,11 +18,13 @@ def main():
     #storage()
     #test_flow()
     #flag_regex()
-    #pcap()
+    pcap()
+    #request()
     exit(0)
 
 def pcap_callback(pkt_dict):
-    pprint.pprint(pkt_dict)
+    #pprint.pprint(pkt_dict)
+    return
 
 def pcap():
     print(colored("\nCHECK PCAP:", 'yellow'))
