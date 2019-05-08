@@ -5,7 +5,7 @@
 TEST MODULE
 """
 
-import os, app
+import os, app, pprint
 from termcolor import colored
 
 def main():
@@ -21,6 +21,9 @@ def main():
     pcap()
     exit(0)
 
+def pcap_callback(pkt_dict):
+    pprint.pprint(pkt_dict)
+
 def pcap():
     print(colored("\nCHECK PCAP:", 'yellow'))
     test_pcap = app.env.APP_STORAGE+'/network_dump.pcap'
@@ -32,7 +35,7 @@ def pcap():
     filter4='http and ip.addr==217.182.10.133'
     filter5='tcp.port eq 443 or udp.port eq 443'
     filter6='http.request.uri matches "www.beniculturali.it"'
-    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=10000)
+    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=10000, callback=pcap_callback)
 
 
 def test_flow():
