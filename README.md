@@ -17,20 +17,25 @@
 
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
-#### Modalità sviluppo:
-* Modularizzato (root: **/app**, eseguibile: **/main.py**):
-  * |
-  * |-- /utils/
-  * |&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
-  * |&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests
-  * |&emsp;&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
-  * |&emsp;&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-  * |&emsp;&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
-  * |&emsp;&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-  * |&emsp;&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
-  * |
-  * |-- /attack/                &emsp;# Package per modalità di attacco
-  * |-- /defense/               &emsp;# Package per modalità di difesa
+#### Directories:
+  * |-- /app            &emsp;# Package principale dell'applicazione
+    * |
+    * |&emsp;&emsp;|-- /attack/                &emsp;# Package per modalità di attacco
+    * |&emsp;&emsp;|-- /defense/               &emsp;# Package per modalità di difesa
+    * |&emsp;&emsp;|-- /utils/
+      * |&emsp;&emsp;|
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare stringhe/files
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /exceptions/     &emsp;# Contine eventuali eccezioni personalizzate
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
+      * |&emsp;&emsp;|&emsp;&emsp;|-- /sql/            &emsp;# Package che fornisce metodi per sql injection
+    * |&emsp;&emsp;
+
+
 
 <hr/>
 
