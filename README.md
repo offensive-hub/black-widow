@@ -20,10 +20,10 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 #### Directories:
   * |-- /app            &emsp;# Package principale dell'applicazione
     * |
-    * |&emsp;&emsp;|-- /attack/                &emsp;# Package per modalità di attacco
-    * |&emsp;&emsp;|-- /defense/               &emsp;# Package per modalità di difesa
-    * |&emsp;&emsp;|-- /utils/
-      * |&emsp;&emsp;|
+    * |-- /attack/                &emsp;# Package per modalità di attacco
+    * |-- /defense/               &emsp;# Package per modalità di difesa
+    * |-- /utils/
+    * |
       * |&emsp;&emsp;|&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
       * |&emsp;&emsp;|&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare stringhe/files
       * |&emsp;&emsp;|&emsp;&emsp;|-- /exceptions/     &emsp;# Contine eventuali eccezioni personalizzate
