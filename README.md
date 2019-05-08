@@ -18,8 +18,8 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 
 #### Modalità sviluppo:
  - Modularizzato (root: **/app**, eseguibile: **/main.py**):
+        - |
       <ul>
-        <li>|</li>
         <li>|-- /utils/</li>
         <li>|    &emsp;|-- /cluster/    &emsp;# Package che fornisce metodi per condividere e ricevere info</li>
         <li>|    &emsp;|-- /encryption/    &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests</li>
