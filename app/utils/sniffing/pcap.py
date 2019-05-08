@@ -8,9 +8,14 @@ from app.env import APP_DEBUG
 from app.utils import settings
 from app.utils.helpers.util import replace_regex, regex_in_string
 from app.utils.helpers.logger import Log
-import pyshark, zlib, numpy, codecs
+import pyshark, numpy, codecs
 
 # @param filter https://wiki.wireshark.org/DisplayFilters
+# @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
+# @param dest_file Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
+# @param interface L'interfaccia da cui ascoltare (o None)
+# @param limit_length Il limite che i campi dei pacchetti devono avere per non essere troncati (o None)
+# @param callback La funzione che prende un dizionario del pacchetto come argomento (o None)
 def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
     def __pcap_callback__(pkt):
         Log.info('Analyzing packet number '+str(pkt.number))
@@ -75,6 +80,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'transport_layer': pkt.transport_layer,
             'layers': layers_dict
         }
+
         if (callback != None): callback(pkt_dict)   # chiamo la callback
 
     if (interface == None): interface = settings.Get.my_interface()
