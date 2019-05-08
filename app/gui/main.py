@@ -1,5 +1,7 @@
 from PyQt5.QtWidgets import *
 
-main = QApplication([])
-label = QLabel('Black Widow')
-label.show()
+def main():
+    main_gui = QApplication([])
+    label = QLabel('Black Widow')
+    label.show()
+    main_gui.exec_()

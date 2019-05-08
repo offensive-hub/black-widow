@@ -24,7 +24,7 @@ def main():
     exit(0)
 
 def gui():
-    app.gui.main.exec_()
+    app.gui.main()
 
 def pcap_callback(pkt_dict):
     #pprint.pprint(pkt_dict)
