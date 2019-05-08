@@ -19,19 +19,17 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 #### Modalità sviluppo:
 * Modularizzato (root: **/app**, eseguibile: **/main.py**):
   * |
-      <ul>
-        <li>|-- /utils/</li>
-        <li>|    &emsp;|-- /cluster/    &emsp;# Package che fornisce metodi per condividere e ricevere info</li>
-        <li>|    &emsp;|-- /encryption/    &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests</li>
-        <li>|    &emsp;|-- /helpers/    &emsp;# Package contenente helpers generici usati in più parti del programma</li>
-        <li>|    &emsp;|-- /history/    &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo</li>
-        <li>|    &emsp;|-- /requests/    &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)</li>
-        <li>|    &emsp;|-- /settings/    &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)</li>
-        <li>|    &emsp;|-- /sniffing/    &emsp;# Package che fornisce metodi per sniffing in una rete</li>
-        <li>|</li>
-        <li>|-- /attack/    &emsp;# Package per modalità di attacco</li>
-        <li>|-- /defense/    &emsp;# Package per modalità di difesa</li>
-     </ul>
+  * |-- /utils/
+  * |&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
+  * |&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare, utilizzato anche dal package @requests
+  * |&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
+  * |&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+  * |&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
+  * |&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+  * |&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
+  * |
+  * |-- /attack/                &emsp;# Package per modalità di attacco
+  * |-- /defense/               &emsp;# Package per modalità di difesa
 
 <hr/>
 
