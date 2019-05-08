@@ -18,11 +18,12 @@
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
 #### Directories:
-  * |-- /app            &emsp;# Package principale dell'applicazione
-    * |
-    * |-- /attack/                &emsp;# Package per modalità di attacco
-    * |-- /defense/               &emsp;# Package per modalità di difesa
-    * |-- /utils/
+```
+  /app            &emsp;# Package principale dell'applicazione
+    |
+    |-- /attack/                &emsp;# Package per modalità di attacco
+    |-- /defense/               &emsp;# Package per modalità di difesa
+    |-- /utils/
     * |&emsp;&emsp;|
     * |&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
     * |&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare stringhe/files
@@ -34,7 +35,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
     * |&emsp;&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
     * |&emsp;&emsp;|-- /sql/            &emsp;# Package che fornisce metodi per sql injection
     * |
-
+```
 
 
 <hr/>
