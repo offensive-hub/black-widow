@@ -19,22 +19,23 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 
 #### Directories:
 ```
-  /app            &emsp;# Package principale dell'applicazione
+  /app      # Package principale dell'applicazione
     |
-    |-- /attack/                &emsp;# Package per modalità di attacco
-    |-- /defense/               &emsp;# Package per modalità di difesa
+    |-- /attack/        # Package per modalità di attacco
+    |-- /defense/       # Package per modalità di difesa
+    |
     |-- /utils/
-    * |&emsp;&emsp;|
-    * |&emsp;&emsp;|-- /cluster/        &emsp;# Package che fornisce metodi per condividere e ricevere info
-    * |&emsp;&emsp;|-- /encryption/     &emsp;# Package per criptare/decriptare stringhe/files
-    * |&emsp;&emsp;|-- /exceptions/     &emsp;# Contine eventuali eccezioni personalizzate
-    * |&emsp;&emsp;|-- /helpers/        &emsp;# Package contenente helpers generici usati in più parti del programma
-    * |&emsp;&emsp;|-- /history/        &emsp;# Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-    * |&emsp;&emsp;|-- /requests/       &emsp;# Package che fornisce metodi per effettuare richieste (anche multiple)
-    * |&emsp;&emsp;|-- /settings/       &emsp;# Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-    * |&emsp;&emsp;|-- /sniffing/       &emsp;# Package che fornisce metodi per sniffing in una rete
-    * |&emsp;&emsp;|-- /sql/            &emsp;# Package che fornisce metodi per sql injection
-    * |
+    |      |
+    |      |-- /cluster/        # Package che fornisce metodi per condividere e ricevere info
+    |      |-- /encryption/     # Package per criptare/decriptare stringhe/files
+    |      |-- /exceptions/     # Contine eventuali eccezioni personalizzate
+    |      |-- /helpers/        # Package contenente helpers generici usati in più parti del programma
+    |      |-- /history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+    |      |-- /requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
+    |      |-- /settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
+    |      |-- /sniffing/       # Package che fornisce metodi per sniffing in una rete
+    |      |-- /sql/            # Package che fornisce metodi per sql injection
+    |
 ```
 
 
