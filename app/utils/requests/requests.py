@@ -29,7 +29,9 @@ def print_request(request):
     try:
         Log.info('      |-- data: '+str(request.json()))
     except json.decoder.JSONDecodeError:
-        Log.info('      |-- data: '+str(request.text))
+        data = str(request.text)
+        if (len(data) > 100): data = '[truncated]'+data[0:100]
+        Log.info('      |-- data: '+data)
 
 # Effettua una richiesta verso l'url passato
 # @param url un url

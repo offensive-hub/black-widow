@@ -21,9 +21,15 @@ def main():
     #pcap()
     #request()
     #gui()
-    Crypto.main()
+    #Crypto.main()
+    html()
     exit(0)
 
+def html():
+    url_with_form_1 = 'https://www.fabriserver.party/login'
+    url_with_form_2 = 'https://www.fabriserver.party/register'
+    print(str(app.utils.html.relevant_parse(url_with_form_2)))
+    #print(str(app.utils.html.parse(url_with_form_1)))
 
 
 class Crypto:

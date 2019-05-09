@@ -30,7 +30,7 @@ class md5:
             try:
                 r_json = r.json()
             except json.decoder.JSONDecodeError:
-                return None
+                continue
             # Chiamo la funzione per prelevare dati dalla risposta
             result = api['get_result'](r_json)
             if (result != None): return result
