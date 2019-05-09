@@ -30,11 +30,14 @@ class Crypto:
     @staticmethod
     def main():
         print(colored("\nCHECK CRYPTO:", 'yellow'))
-        strings = ['123 PROVA pRoVa','user','admin','Admin','website']
+        strings = ['123 PROVA pRoVa','user','admin','Admin','website', 'password', 'Password']
         def test(string):
             print('')
             encrypted = Crypto.md5encrypt(string)
             decrypted = Crypto.md5decrypt(encrypted)
+            print('')
+            encoded = Crypto.b64encode(string)
+            decoded = Crypto.b64decode(encoded)
         for string in strings: test(string)
 
     @staticmethod
@@ -48,6 +51,16 @@ class Crypto:
         print('md5decrypt('+string+'): ' + str(result))
         return result
 
+    @staticmethod
+    def b64encode(string):
+        result = app.utils.crypto.base64.encrypt(string)
+        print('b64encode('+string+'): ' + str(result))
+        return result
+    @staticmethod
+    def b64decode(string):
+        result = app.utils.crypto.base64.decrypt(string)
+        print('b64decode('+string+'): ' + str(result))
+        return result
 
 
 def gui():

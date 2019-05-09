@@ -33,9 +33,9 @@ class md5:
 
 class base64:
     @staticmethod
-    def encode(string):
-        return b64encode(string)
+    def encrypt(string):
+        return b64encode(bytes(string, encoding='utf-8')).decode('utf-8')
 
     @staticmethod
-    def decode(string):
-        return b64decode(string)
+    def decrypt(string):
+        return b64decode(string).decode('utf-8')

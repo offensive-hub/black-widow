@@ -4,17 +4,45 @@ Metodi per effettuare richieste multiple
 
 import requests, json
 from app.utils.helpers.logger import Log
+from app.utils.helpers.validators import is_url
 from app.env import APP_DEBUG
 
+# Request Types
 class Type:
     GET='get'
     POST='get'
     PUT='put'
     PATCH='patch'
     DELETE='delete'
+    @staticmethod
+    def all():
+        return (Type.GET, Type.POST, Type.PUT, Type.PATCH, Type.DELETE)
 
+def print_request(request):
+    Log.info(str(request.url))
+    Log.info('      |--- status_code: '+str(request.status_code))
+    Log.info('      |--- encoding: '+str(request.encoding))
+    Log.info('      |--- headers:')
+    for key,value in request.headers.items():
+        Log.info('      |       |--- '+str(key)+': '+str(value))
+    Log.info('      |')
+    try:
+        Log.info('      |-- data: '+str(request.json()))
+    except json.decoder.JSONDecodeError:
+        Log.info('      |-- data: '+str(request.text))
+
+# Effettua una richiesta verso l'url passato
+# @param url un url
+# @param type get|post|put|patch|delete
+# @param data dizionario con parametri
 def request(url, type, data={}):
     type = type.lower()
+    if (not is_url(url)):
+        Log.error(str(url)+' is not a valid url!')
+        return None
+    if (type not in Type.all()):
+        Log.error(str(type)+' is not a valid request type!')
+        return None
     try:
         if (type == Type.GET):
             r = requests.get(url, data)
@@ -26,9 +54,7 @@ def request(url, type, data={}):
             r = requests.patch(url, data)
         elif (type == Type.DELETE):
             r = requests.delete(url, data)
-        else:
-            Log.error("tipo "+type+" non esistente")
-            return None
+        if (APP_DEBUG): print_request(r)
         return r
     except requests.exceptions.ConnectionError as e:
         Log.error('Impossibile contattare '+str(url))
@@ -45,12 +71,6 @@ def multi_request(urls, type, data):
     for url in urls:
         r = request(url, type, data)
         if (r == None): continue
-        Log.info('Request to '+str(url))
-        Log.info('      |--- status_code: '+str(r.status_code))
-        Log.info('      |--- encoding: '+str(r.encoding))
-        Log.info('      |--- headers:')
-        for header in r.headers.keys():
-            Log.info('              |--- '+header+': '+str(r.headers.get(header)))
         if (APP_DEBUG):
             try:
                 print(r.json())
