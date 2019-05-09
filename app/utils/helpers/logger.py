@@ -22,23 +22,31 @@ class Log:
         if (Log.logger == None): Log.logger = Log()
         Log.logger.err(str(msg))
 
+    @staticmethod
+    def warning(msg):
+        if (Log.logger == None): Log.logger = Log()
+        Log.logger.war(str(msg))
+
     # info
     def inf(self, msg):
-        self.__log__(msg, 'INFO ', 'cyan')
+        self.__log__(msg, 'INFO', 'cyan')
 
     # error
     def err(self, msg):
         self.__log__(msg, 'ERROR', 'red')
 
+    # warning
+    def war(self, msg):
+        self.__log__(msg, 'WARNING', 'yellow')
+
     # success
     def suc(self, msg):
-        self.__log__(msg, 'DONE ', 'green')
+        self.__log__(msg, 'DONE', 'green')
 
     def __log__(self, msg, type, color):
         self.__check_log_file__()
-        msg_log = self.__get_log_header__()+' '+colored(type, color)+' : '+msg.rstrip()
-        if (APP_DEBUG):
-            print(msg_log)
+        msg_log = self.__get_log_header__()+' '+colored(type, color)+': '+msg.rstrip()
+        if (APP_DEBUG): print(msg_log)
         storage.append_in_file(msg_log, APP_LOGFILE)
 
     def __check_log_file__(self):
@@ -46,8 +54,7 @@ class Log:
         # Se il file di log pesa almeno 5 MB, lo sovrascrivo
         if (os.path.isfile(APP_LOGFILE)):
             size_file_mb = os.stat(APP_LOGFILE).st_size / 1000000.0
-            if size_file_mb >= 5:
-                storage.delete(APP_LOGFILE)
+            if size_file_mb >= 5: storage.delete(APP_LOGFILE)
 
     def __get_timestamp__(self):
         now_month = int(datetime.datetime.now().strftime("%m"))

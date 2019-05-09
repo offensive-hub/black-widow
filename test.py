@@ -32,11 +32,10 @@ class Crypto:
         print(colored("\nCHECK CRYPTO:", 'yellow'))
         strings = ['123 PROVA pRoVa','user','admin','Admin','website']
         def test(string):
+            print('')
             encrypted = Crypto.md5encrypt(string)
             decrypted = Crypto.md5decrypt(encrypted)
-        for string in strings:
-            print('')
-            test(string)
+        for string in strings: test(string)
 
     @staticmethod
     def md5encrypt(string):

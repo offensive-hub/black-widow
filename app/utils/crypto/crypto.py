@@ -28,6 +28,7 @@ class md5:
         if (result == None):
             Log.info('md5 decryption: 2nd attempt')
             result = attempt(md5.api_url_2)
+        if (result == None): Log.error('md5 decryption: unable to decrypt: '+str(string))
         return result
 
 class base64:
