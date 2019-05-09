@@ -4,12 +4,17 @@ from app.utils.requests import request, Type as RequestType
 from app.utils.helpers.logger import Log
 
 class md5:
+    # Api per richieste a siti che mappano molti md5
     class Api:
-        def url_1_result(json): return json.get('result')
-        def url_2_result(json): return json[0].get('decrypted')
-        url_1 = {'url':'https://md5.pinasthika.com/api/decrypt?value=', 'get_result': url_1_result}
-        url_2 = {'url':'https://www.md5.ovh/index.php?result=json&md5=', 'get_result': url_2_result}
-        def all(): return (md5.Api.url_1, md5.Api.url_2)
+        # Metodo per prelevare dati dalla risposta dell'api 1
+        def api_1_result(json): return json.get('result')
+        api_1 = {'url':'https://md5.pinasthika.com/api/decrypt?value=', 'get_result': api_1_result}
+
+        # Metodo per prelevare dati dalla risposta dell'api 2
+        def api_2_result(json): return json[0].get('decrypted')
+        api_2 = {'url':'https://www.md5.ovh/index.php?result=json&md5=', 'get_result': api_2_result}
+
+        def all(): return (md5.Api.api_1, md5.Api.api_2)
 
     @staticmethod
     def encrypt(string):
@@ -26,6 +31,7 @@ class md5:
                 r_json = r.json()
             except json.decoder.JSONDecodeError:
                 return None
+            # Chiamo la funzione per prelevare dati dalla risposta
             result = api['get_result'](r_json)
             if (result != None): return result
         Log.error('md5: unable to decrypt: '+str(string))
