@@ -1,5 +1,5 @@
 # Black Widow
-![image](https://www.relativeuniverse.net/black-widow.jpeg)
+![image](resources/black-widow.jpeg)
 
 ## CTF Tool (Language: [python3.7](https://www.python.org/downloads/))
 
