@@ -20,16 +20,42 @@ def main():
     #flag_regex()
     #pcap()
     #request()
-    gui()
+    #gui()
+    Crypto.main()
     exit(0)
+
+
+
+class Crypto:
+    @staticmethod
+    def main():
+        print(colored("\nCHECK CRYPTO:", 'yellow'))
+        strings = ['123 PROVA pRoVa','user','admin','Admin','website']
+        def test(string):
+            encrypted = Crypto.md5encrypt(string)
+            decrypted = Crypto.md5decrypt(encrypted)
+        for string in strings:
+            print('')
+            test(string)
+
+    @staticmethod
+    def md5encrypt(string):
+        result = app.utils.crypto.md5.encrypt(string)
+        print('md5encrypt('+string+'): ' + str(result))
+        return result
+    @staticmethod
+    def md5decrypt(string):
+        result = app.utils.crypto.md5.decrypt(string)
+        print('md5decrypt('+string+'): ' + str(result))
+        return result
+
+
 
 def gui():
     app.gui.main.open()
 
-
-
 def pcap_callback(pkt_dict):
-    #pprint.pprint(pkt_dict)
+    pprint.pprint(pkt_dict)
     return
 
 def pcap():
@@ -76,7 +102,7 @@ def request():
     server_to_attack = app.utils.settings.Get.server_to_attack()
     # Creo lista del tipo http://<ip_da_attaccare>
     urls = list(map(to_http, server_to_attack))
-    app.utils.requests.multi(urls, 'post', data)
+    app.utils.requests.multi_request(urls, app.utils.requests.Type.GET, data)
 
 
 def flag_regex():

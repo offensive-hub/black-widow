@@ -7,7 +7,7 @@ from app.utils.helpers.logger import Log
 from .util import replace_regex
 import os, shutil, re
 
-# @return true se il file contiene la stringa find
+# @return true se il file contiene la stringa find, False altrimenti
 def file_contains(find, file):
     if (APP_DEBUG): Log.info('CALLED: file_contains('+find+', '+file+')')
     if (not os.path.isfile(file)):
@@ -30,7 +30,7 @@ def read_file(file):
     return ""
 
 
-# @return true se il file contiene l'espressione regolare regex
+# @return True se il file contiene l'espressione regolare regex, False altrimenti
 def file_contains_regex(regex, file):
     if (APP_DEBUG): Log.info('CALLED: file_contains_regex('+regex+', '+file+')')
     if (not os.path.isfile(file)):
@@ -42,20 +42,20 @@ def file_contains_regex(regex, file):
     return len(matches) > 0
 
 
-# Esegue il replace della stringa che trova, con la stringa replacer
+# Esegue il replace della stringa che trova, con la stringa replace
 # @param find la stringa da trovare
-# @param replacer la stringa che andra' a sostituire la stringa trovata
-# @param file il file in cui sovrascrivere find con replacer
+# @param replace la stringa che andra' a sostituire la stringa trovata
+# @param file il file in cui sovrascrivere find con replace
 # @return True se trova una stringa find, False altrimenti
-def replace_in_file(find, replacer, file):
-    if (APP_DEBUG): Log.info('CALLED: replace_in_file('+find+', '+replacer+', '+file+')')
-    if (find == replacer): return False
+def replace_in_file(find, replace, file):
+    if (APP_DEBUG): Log.info('CALLED: replace_in_file('+find+', '+replace+', '+file+')')
+    if (find == replace): return False
     if (not file_contains(find, file)): return False
     # Safely write the changed content, if found in the file
     with open(file, 'r') as f:
         t = f.read()
     with open(file, 'w') as f:
-        s = t.replace(find, replacer)
+        s = t.replace(find, replace)
         f.write(s)
     return  True
 

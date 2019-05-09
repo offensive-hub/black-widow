@@ -33,7 +33,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |    |-- utils/
   |    |    |
   |    |    |-- cluster/        # Package che fornisce metodi per condividere e ricevere info
-  |    |    |-- encryption/     # Package per criptare/decriptare stringhe/files
+  |    |    |-- crypto/         # Package per criptare/decriptare/codificare/decodificare stringhe e files
   |    |    |-- exceptions/     # Eventuali eccezioni personalizzate
   |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
   |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo

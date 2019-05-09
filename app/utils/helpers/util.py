@@ -7,10 +7,14 @@ from . import storage
 from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
 
-# @return dict Il json in formato dict
+# @return dict Il json nel file in formato dict
 def get_json(file):
+    return get_json_str(storage.read_file(file))
+
+# @return dict Il json in formato dict
+def get_json_str(string):
     try:
-        return json.loads(storage.read_file(file))
+        return json.loads(string)
     except json.decoder.JSONDecodeError:
         return dict()
 
