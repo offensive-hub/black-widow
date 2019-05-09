@@ -22,14 +22,20 @@ def main():
     #request()
     #gui()
     #Crypto.main()
-    html()
+    html_parsing()
     exit(0)
 
-def html():
+def html_parsing():
+    print(colored("\nCHECK HTML PARSING:", 'yellow'))
     url_with_form_1 = 'https://www.fabriserver.party/login'
     url_with_form_2 = 'https://www.fabriserver.party/register'
-    print(str(app.utils.html.relevant_parse(url_with_form_2)))
-    #print(str(app.utils.html.parse(url_with_form_1)))
+    url_docker = 'http://172.17.0.2/'
+    url_router = 'http://192.168.1.1/main.cgi?page=login.html'
+    url_libero = 'https://login.libero.it/'
+    url_relativeuniverse = 'https://www.relativeuniverse.net/'
+    url_oleificio = 'https://dev.oleificiotulipano.com/products'
+    result = app.utils.html.relevant_parse(url_oleificio)
+    app.utils.html.print_parsed(result)
 
 
 class Crypto:
