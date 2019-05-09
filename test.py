@@ -20,11 +20,13 @@ def main():
     #flag_regex()
     #pcap()
     #request()
-    #gui()
+    gui()
     exit(0)
 
 def gui():
-    app.gui.main()
+    app.gui.main.open()
+
+
 
 def pcap_callback(pkt_dict):
     #pprint.pprint(pkt_dict)

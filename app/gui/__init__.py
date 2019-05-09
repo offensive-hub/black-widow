@@ -1,3 +1,3 @@
 # Graphical User Interface
 
-from .main import main
+from . import main
