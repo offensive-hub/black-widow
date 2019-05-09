@@ -20,7 +20,7 @@ def main():
     #flag_regex()
     #pcap()
     #request()
-    gui()
+    #gui()
     exit(0)
 
 def gui():
