@@ -4,8 +4,12 @@ from app.utils.requests import request, Type as RequestType
 from app.utils.helpers.logger import Log
 
 class md5:
-    api_url_1 = 'https://md5.pinasthika.com/api/decrypt?value='
-    api_url_2 = 'https://www.md5.ovh/index.php?result=json&md5='
+    class Api:
+        def url_1_result(json): return json.get('result')
+        def url_2_result(json): return json[0].get('decrypted')
+        url_1 = {'url':'https://md5.pinasthika.com/api/decrypt?value=', 'get_result': url_1_result}
+        url_2 = {'url':'https://www.md5.ovh/index.php?result=json&md5=', 'get_result': url_2_result}
+        def all(): return (md5.Api.url_1, md5.Api.url_2)
 
     @staticmethod
     def encrypt(string):
@@ -15,21 +19,17 @@ class md5:
 
     @staticmethod
     def decrypt(string):
-        def attempt(api_url):
-            r = request(api_url+string, RequestType.GET)
-            if (r == None): return None
-            r_json = r.json()
-            if (api_url == md5.api_url_1):
-                return r_json.get('result')
-            elif (api_url == md5.api_url_2):
-                return r_json[0].get('decrypted')
-            return None
-        result = attempt(md5.api_url_1)
-        if (result == None):
-            Log.info('md5 decryption: 2nd attempt')
-            result = attempt(md5.api_url_2)
-        if (result == None): Log.error('md5 decryption: unable to decrypt: '+str(string))
-        return result
+        for api in md5.Api.all():
+            r = request(api['url']+string, RequestType.GET)
+            if (r == None): continue
+            try:
+                r_json = r.json()
+            except json.decoder.JSONDecodeError:
+                return None
+            result = api['get_result'](r_json)
+            if (result != None): return result
+        Log.error('md5: unable to decrypt: '+str(string))
+        return None
 
 class base64:
     @staticmethod
