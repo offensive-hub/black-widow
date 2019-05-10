@@ -6,6 +6,7 @@ from app.utils.helpers.validators import is_url
 
 # Black Widow HTML Parser
 class Parser(HTMLParser):
+
     # Tags rilevanti
     relevant_tags = {
         'a': ['href'],                      # { 'href': 'https://...' }
@@ -30,8 +31,10 @@ class Parser(HTMLParser):
         'html': [],
         'body': []
     }
+
     # Attributi contenenti url
     url_attrs = ['href', 'src', 'action']
+
     # Tag non chiuse (ignorare handle_endtag)
     not_closed_tags = ['input', 'link', 'meta']
 
@@ -44,6 +47,8 @@ class Parser(HTMLParser):
         self.queue_form = []
 
     # inserisce la tag passata per argomento, dentro l'ultima della coda
+    # @param tag_dict Un dizionario contenente una parsed tag
+    # @return void
     def __nest_tag__(self, tag_dict):
         tag = tag_dict.get('tag')
         if (len(self.queue_tag) == 0): parent = self.tags
@@ -55,6 +60,10 @@ class Parser(HTMLParser):
         if (len(self.queue_tag) == 0): self.tags = parent
         else: self.queue_tag[-1] = parent
 
+    # Handler inizio tag
+    # @param tag str La tag di apertura
+    # @param attrs list[tuple{2}] Gli attributi della tag
+    # @return void
     def handle_starttag(self, tag, attrs):
         tag = str(tag).lower()
         if ((not self.relevant) or tag in Parser.relevant_tags.keys()):
@@ -75,6 +84,9 @@ class Parser(HTMLParser):
             if (tag in Parser.not_closed_tags): self.handle_endtag(tag)
         else: self.queue_tag_ignored.append(tag)
 
+    # Handler chiusura tag
+    # @param tag str La tag di chiusura
+    # @return void
     def handle_endtag(self, tag):
         tag = str(tag).lower()
         if (len(self.queue_tag_ignored) > 0 and tag == self.queue_tag_ignored[-1]):
@@ -84,6 +96,9 @@ class Parser(HTMLParser):
         cur_tag = self.queue_tag.pop()
         if (tag == cur_tag.get('tag')): self.__nest_tag__(cur_tag)
 
+    # Handler contenuto di tag
+    # @param data str Il contenuto dell'ultima tag aperta
+    # @return void
     def handle_data(self, data):
         if (len(self.queue_tag) == 0): return
         cur_tag = self.queue_tag[-1]
@@ -113,19 +128,32 @@ class Parser(HTMLParser):
         self.feed(html)
         return self.tags
 
+# Esegue un parsing di un url/html
+# @param url str L'url di cui fare il parsing (o None)
+# @param html str La stringa html di cui fare il parsing (o None)
+# @param bool relevant True se salvare solo tag rilevanti, False altrimenti
+# @return dict Un html parsed
 def __parse__(url, html, relevant):
     parser = Parser(relevant)
     return parser.parse(url)
 
 # Esegue un parsing di tutte le tag
+# @param url str L'url di cui fare il parsing (o None)
+# @param html str La stringa html di cui fare il parsing (o None)
+# @return dict Un html parsed
 def parse(url=None, html=None):
     return __parse__(url, html, False)
 
 # Esegue un parsing solo delle tag rilevanti
+# @param url str L'url di cui fare il parsing (o None)
+# @param html str La stringa html di cui fare il parsing (o None)
+# @return dict Un html parsed
 def relevant_parse(url=None, html=None):
     return __parse__(url, html, True)
 
 # cerca degli input dentro ad un parsed html (dict)
+# @param dict parsed un html parsed
+# @return dict {'input[name]': {'attr1': 'attr1_val' ...}}
 def find_inputs(parsed):
     inputs = {}
     if (parsed == None): return inputs
@@ -143,6 +171,8 @@ def find_inputs(parsed):
     return inputs
 
 # Cerca i form dentro un parsed html (dict)
+# @param parsed dict un html parsed
+# @return list Lista form dentro l'html parsed
 def find_forms(parsed):
     forms = []
     if (parsed == None): return forms
@@ -163,6 +193,9 @@ def find_forms(parsed):
     return forms
 
 # Printa il risultato delle funzioni @parse e @relevant_parse
+# @param parsed dict un html parsed
+# @param depth Attuale profondità
+# @return void
 def print_parsed(parsed, depth=0):
     space = ' ' * depth
     if (type(parsed) == dict):
