@@ -160,6 +160,13 @@ def parse(url=None, html=None):
 def relevant_parse(url=None, html=None):
     return __parse__(url, html, True)
 
+# Esegue un parsing solo delle tag attinenti a form (form, input, textarea)
+# @param url str L'url di cui fare il parsing (o None)
+# @param html str La stringa html di cui fare il parsing (o None)
+# @return dict Un html parsed
+def form_parse(url=None, html=None):
+    return find_forms(relevant_parse(url, html))
+
 # cerca degli input dentro ad un parsed html (dict)
 # @param dict parsed un html parsed
 # @return dict {'input[name]': {'attr1': 'attr1_val' ...}}

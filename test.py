@@ -18,26 +18,35 @@ def main():
     #storage()
     #test_flow()
     #flag_regex()
-    pcap()
+    #pcap()
     #request()
     #gui()
     #Crypto.main()
     #html_parsing()
+    sql()
     exit(0)
+
+
+url_with_form_1 = 'https://www.fabriserver.party/login'
+url_with_form_2 = 'https://www.fabriserver.party/register'
+url_docker = 'http://172.17.0.2/forgot.php' # crymemail
+url_router = 'http://192.168.1.1/main.cgi?page=login.html'
+url_libero = 'https://login.libero.it/'
+url_relativeuniverse = 'https://www.relativeuniverse.net/'
+url_oleificio = 'https://dev.oleificiotulipano.com/products'
+url_cloudflare = 'https://dash.cloudflare.com/login'
+url_genndi = 'https://account.genndi.com/login'
+url_spectra = 'https://my.spectra.co/'
+url_myspace = 'https://myspace.com/'
+
+
+def sql():
+    print(colored("\nCHECK SQL INJECTION:", 'yellow'))
+    app.utils.sql.inject_form(url_docker)
+
 
 def html_parsing():
     print(colored("\nCHECK HTML PARSING:", 'yellow'))
-    url_with_form_1 = 'https://www.fabriserver.party/login'
-    url_with_form_2 = 'https://www.fabriserver.party/register'
-    url_docker = 'http://172.17.0.2/forgot.php' # crymemail
-    url_router = 'http://192.168.1.1/main.cgi?page=login.html'
-    url_libero = 'https://login.libero.it/'
-    url_relativeuniverse = 'https://www.relativeuniverse.net/'
-    url_oleificio = 'https://dev.oleificiotulipano.com/products'
-    url_cloudflare = 'https://dash.cloudflare.com/login'
-    url_genndi = 'https://account.genndi.com/login'
-    url_spectra = 'https://my.spectra.co/'
-    url_myspace = 'https://myspace.com/'
     #print("HTML (all):")
     #all = app.utils.html.parse(url_docker)
     #app.utils.html.print_parsed(all)
