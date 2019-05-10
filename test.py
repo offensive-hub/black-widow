@@ -35,8 +35,18 @@ def html_parsing():
     url_relativeuniverse = 'https://www.relativeuniverse.net/'
     url_oleificio = 'https://dev.oleificiotulipano.com/products'
     url_cloudflare = 'https://dash.cloudflare.com/login'
-    result = app.utils.html.relevant_parse(url_with_form_2)
+    url_genndi = 'https://account.genndi.com/login'
+    url_spectra = 'https://my.spectra.co/'
+    url_myspace = 'https://myspace.com/'
+    print("HTM (relevant):")
+    result = app.utils.html.relevant_parse(url_myspace)
     app.utils.html.print_parsed(result)
+    print("HTML (FORMS):")
+    forms = app.utils.html.find_forms(result)
+    app.utils.html.print_parsed(forms)
+    #print("HTML (INPUTS):")
+    #inputs = app.utils.html.find_inputs(result)
+    #app.utils.html.print_parsed(inputs)
 
 
 class Crypto:
@@ -79,12 +89,11 @@ class Crypto:
 def gui():
     app.gui.main.open()
 
-def pcap_callback(pkt_dict):
-    pprint.pprint(pkt_dict)
-    return
-
 def pcap():
     print(colored("\nCHECK PCAP:", 'yellow'))
+    def pcap_callback(pkt_dict):
+        pprint.pprint(pkt_dict)
+        return
     test_pcap = app.env.APP_STORAGE+'/network_dump.pcap'
     test_pcap2 = app.env.APP_STORAGE+'/ironx_dump.pcap'
     test_pcap_out = app.env.APP_STORAGE_OUT+'/network_dump_out.pcap'
