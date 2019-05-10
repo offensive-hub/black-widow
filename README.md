@@ -37,9 +37,10 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |    |    |-- exceptions/     # Eventuali eccezioni personalizzate
   |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
   |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
+  |    |    |-- html/           # Package che fornisce metodi per fare il parsing di un html
   |    |    |-- requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
   |    |    |-- settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-  |    |    |-- sniffing/         # Package che fornisce metodi per sniffing in una rete
+  |    |    |-- sniffing/       # Package che fornisce metodi per sniffing in una rete
   |    |    |-- sql/            # Package che fornisce metodi per sql injection
   |    |
   |    |-- env.py          # Variabili d'ambiente

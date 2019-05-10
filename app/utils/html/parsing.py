@@ -91,24 +91,28 @@ class Parser(HTMLParser):
 
     # Fa il parsing della risposta dell'url passato per argomento
     # @param url L'url del quale fare il parsing della risposta
-    def parse(self, url):
-        r = request(url, RequestType.GET)
-        if (r == None): return None
-        try:
-            r_result = r.json()
-            Log.warning('Trying to parse a json with HTML parser!')
-        except json.decoder.JSONDecodeError:
-            r_result = r.text
-        self.feed(r_result)
+    # @param html L'html di cui ottenere il parsing
+    def parse(self, url=None, html=None):
+        if (url != None):
+            r = request(url, RequestType.GET)
+            if (r == None): return None
+            try:
+                html = r.json()
+                Log.warning('Trying to parse a json with HTML parser!')
+            except json.decoder.JSONDecodeError:
+                html = r.text
+        self.feed(html)
         return self.tags
 
-def parse(url):
-    parser = Parser()
+def __parse__(url, html, relevant):
+    parser = Parser(relevant)
     return parser.parse(url)
 
-def relevant_parse(url):
-    parser = Parser(True)
-    return parser.parse(url)
+def parse(url=None, html=None):
+    return __parse__(url, html, False)
+
+def relevant_parse(url=None, html=None):
+    return __parse__(url, html, True)
 
 # Printa il risultato delle funzioni @parse(url) e @relevant_parse(url)
 def print_parsed(parsed, depth=0):

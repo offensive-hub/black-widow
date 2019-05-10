@@ -34,7 +34,7 @@ def html_parsing():
     url_libero = 'https://login.libero.it/'
     url_relativeuniverse = 'https://www.relativeuniverse.net/'
     url_oleificio = 'https://dev.oleificiotulipano.com/products'
-    result = app.utils.html.relevant_parse(url_oleificio)
+    result = app.utils.html.relevant_parse(url_docker)
     app.utils.html.print_parsed(result)
 
 
