@@ -18,10 +18,10 @@ def main():
     #storage()
     #test_flow()
     #flag_regex()
-    #pcap()
+    pcap()
     #request()
     #gui()
-    Crypto.main()
+    #Crypto.main()
     #html_parsing()
     exit(0)
 
@@ -29,7 +29,7 @@ def html_parsing():
     print(colored("\nCHECK HTML PARSING:", 'yellow'))
     url_with_form_1 = 'https://www.fabriserver.party/login'
     url_with_form_2 = 'https://www.fabriserver.party/register'
-    url_docker = 'http://172.17.0.2/'
+    url_docker = 'http://172.17.0.2/forgot.php' # crymemail
     url_router = 'http://192.168.1.1/main.cgi?page=login.html'
     url_libero = 'https://login.libero.it/'
     url_relativeuniverse = 'https://www.relativeuniverse.net/'
@@ -38,12 +38,15 @@ def html_parsing():
     url_genndi = 'https://account.genndi.com/login'
     url_spectra = 'https://my.spectra.co/'
     url_myspace = 'https://myspace.com/'
-    print("HTM (relevant):")
-    result = app.utils.html.relevant_parse(url_myspace)
+    #print("HTML (all):")
+    #all = app.utils.html.parse(url_docker)
+    #app.utils.html.print_parsed(all)
+    print("HTML (relevant):")
+    result = app.utils.html.relevant_parse(url_docker)
     app.utils.html.print_parsed(result)
-    print("HTML (FORMS):")
-    forms = app.utils.html.find_forms(result)
-    app.utils.html.print_parsed(forms)
+    #print("HTML (FORMS):")
+    #forms = app.utils.html.find_forms(result)
+    #app.utils.html.print_parsed(forms)
     #print("HTML (INPUTS):")
     #inputs = app.utils.html.find_inputs(result)
     #app.utils.html.print_parsed(inputs)
@@ -103,7 +106,8 @@ def pcap():
     filter4='http and ip.addr==217.182.10.133'
     filter5='tcp.port eq 443 or udp.port eq 443'
     filter6='http.request.uri matches "www.beniculturali.it"'
-    app.utils.sniffing.sniff_pcap(src_file=None, dest_file=test_pcap_out, filter=filter1, limit_length=10000, callback=pcap_callback)
+    interface='docker0' # None for default
+    app.utils.sniffing.sniff_pcap(src_file=None, interface=interface, dest_file=test_pcap_out, filter=filter1, limit_length=10000, callback=pcap_callback)
 
 
 def test_flow():

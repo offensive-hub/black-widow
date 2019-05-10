@@ -1,6 +1,8 @@
 import json
 from html.parser import HTMLParser
 from urllib.parse import urlparse
+from tidylib import tidy_document
+from app.utils.helpers.logger import Log
 from app.utils.requests import request, Type as RequestType
 from app.utils.helpers.validators import is_url
 
@@ -36,7 +38,7 @@ class Parser(HTMLParser):
     url_attrs = ['href', 'src', 'action']
 
     # Tag non chiuse (ignorare handle_endtag)
-    not_closed_tags = ['input', 'link', 'meta']
+    not_closed_tags = ['input', 'link', 'meta', 'hr', 'img']
 
     def __init__(self, relevant=False):
         HTMLParser.__init__(self)
@@ -51,14 +53,16 @@ class Parser(HTMLParser):
     # @return void
     def __nest_tag__(self, tag_dict):
         tag = tag_dict.get('tag')
-        if (len(self.queue_tag) == 0): parent = self.tags
+        queue_tag_len = len(self.queue_tag)
+        if (queue_tag_len == 0): parent = self.tags
         else: parent = self.queue_tag[-1]
         parent_children = parent.get('children')
         if (parent_children == None): parent_children = []
         parent_children.append(tag_dict)
         parent['children'] = parent_children
-        if (len(self.queue_tag) == 0): self.tags = parent
+        if (queue_tag_len == 0): self.tags = parent
         else: self.queue_tag[-1] = parent
+
 
     # Handler inizio tag
     # @param tag str La tag di apertura
@@ -94,7 +98,10 @@ class Parser(HTMLParser):
             return
         if (len(self.queue_tag) == 0): return
         cur_tag = self.queue_tag.pop()
-        if (tag == cur_tag.get('tag')): self.__nest_tag__(cur_tag)
+        self.__nest_tag__(cur_tag)
+        # Controllo obsoleto e difettoso:
+        #if (tag == cur_tag.get('tag')): self.__nest_tag__(cur_tag)
+        #else: Log.error(tag+' != '+str(cur_tag.get('tag')))
 
     # Handler contenuto di tag
     # @param data str Il contenuto dell'ultima tag aperta
@@ -125,7 +132,9 @@ class Parser(HTMLParser):
         else:
             self.url = None
             self.base_url = None
-        self.feed(html)
+        # ordino l'html (fixando anche errori)
+        sorted_html, errors = tidy_document(html)
+        self.feed(sorted_html)
         return self.tags
 
 # Esegue un parsing di un url/html
@@ -202,7 +211,7 @@ def print_parsed(parsed, depth=0):
         print(space + '{')
         for key, value in parsed.items():
             if (key == 'children'): print_parsed(value, depth+1)
-            else: print((space*2) + str(key) + ': ' + str(value))
+            else: print((space+'  ') + str(key) + ': ' + str(value))
         print(space + '}')
     elif (type(parsed) == list):
         for value in parsed: print_parsed(value, depth+1)
