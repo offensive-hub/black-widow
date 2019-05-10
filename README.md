@@ -7,14 +7,14 @@
  - [pyshark](https://pypi.org/project/pyshark/): `pip3 install pyshark`
  - [PyQt5](https://pypi.org/project/PyQt5/): `pip3 install PyQt5`
  - [PyTidyLib](https://pypi.org/project/pytidylib/): `pip3 install pytidylib`
- - [Sqlmap](https://pypi.org/project/sqlmap/) (Python 2): `pip install sqlmap`
+ - [Sqlmap](https://pypi.org/project/sqlmap/) **[Python 2]**: `pip install sqlmap`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
  - Invio automatico di flag al gaming server;
  - Invio stessa richiesta a terminali multipli (per sfruttare contemporaneamente le stesse vulnerabilità di più server);
  - Storico mappa {server -> vulnerabilità} sfruttate (condiviso) per evitare ripetizione attacchi già andati a buon fine;
- - Cluster per evitare di effettuare stessi attacchi contemporaneamente;
+ - Cluster per evitare di effettuare stessi attacchi contemporaneamente e per velocizzare ad esempio il bruteforce;
  - Il tool di ogni macchina comunicherà in modo criptato e autenticato (RSA) con gli altri tool nella rete;
 
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
