@@ -125,6 +125,7 @@ def parse(url=None, html=None):
 def relevant_parse(url=None, html=None):
     return __parse__(url, html, True)
 
+# cerca degli input dentro ad un parsed html (dict)
 def find_inputs(parsed):
     inputs = {}
     if (parsed == None): return inputs
@@ -141,6 +142,7 @@ def find_inputs(parsed):
     else: Log.error(str(parsed)+' is not a valid parsed content!')
     return inputs
 
+# Cerca i form dentro un parsed html (dict)
 def find_forms(parsed):
     forms = []
     if (parsed == None): return forms
@@ -159,8 +161,6 @@ def find_forms(parsed):
         for value in parsed: forms += find_forms(value)
     else: Log.error(str(parsed)+' is not a valid parsed content!')
     return forms
-
-
 
 # Printa il risultato delle funzioni @parse e @relevant_parse
 def print_parsed(parsed, depth=0):
