@@ -21,8 +21,8 @@ def main():
     #pcap()
     #request()
     #gui()
-    #Crypto.main()
-    html_parsing()
+    Crypto.main()
+    #html_parsing()
     exit(0)
 
 def html_parsing():

@@ -1,4 +1,6 @@
 # Task Lists
 
-- [ ] Creare metodi per decriptare stringhe in molti modi diversi
-- [ ] Capire quale stringa decriptata è sensata
+- [x] Criptazione/Decriptazione md5 (decriptazione con API)
+- [x] Criptazione/Decriptazione base64
+- [ ] Criptazione/Decriptazione PGP
+- [ ] Funzione per capire se una stringa decriptata è sensata
