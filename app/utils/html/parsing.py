@@ -48,13 +48,9 @@ class Parser(HTMLParser):
         parent['children'] = parent_children
         if (len(self.queue_tag) == 0): self.tags = parent
         else: self.queue_tag[-1] = parent
-        #print('\n\n\nparent:')
-        #print('len(self.queue_tag) = '+str(len(self.queue_tag)))
-        #print(parent)
 
     def handle_starttag(self, tag, attrs):
         tag = str(tag).lower()
-        #print(tag+' (start)')
         if ((not self.relevant) or tag in Parser.relevant_tags.keys()):
             tag_attrs={}
             for attr in attrs:
@@ -64,23 +60,18 @@ class Parser(HTMLParser):
                     tag_attrs[attr_key] = attr_value
             cur_tag = {'tag': tag, 'attrs': tag_attrs}
             self.queue_tag.append(cur_tag)
-            #print('APPEND '+str(tag))
             if (tag in Parser.not_closed_tags): self.handle_endtag(tag)
         else:
             self.queue_tag_ignored.append(tag)
 
     def handle_endtag(self, tag):
         tag = str(tag).lower()
-        #print(tag+' (end)')
         if (len(self.queue_tag_ignored) > 0 and tag == self.queue_tag_ignored[-1]):
             self.queue_tag_ignored.pop()
             return
         if (len(self.queue_tag) == 0): return
         cur_tag = self.queue_tag.pop()
-        if (tag == cur_tag.get('tag')):
-            self.__nest_tag__(cur_tag)
-            #if (self.tags.get(tag) == None): self.tags[tag] = []
-            #self.tags[tag].append(cur_tag)
+        if (tag == cur_tag.get('tag')): self.__nest_tag__(cur_tag)
 
     def handle_data(self, data):
         if (len(self.queue_tag) == 0): return
@@ -108,13 +99,15 @@ def __parse__(url, html, relevant):
     parser = Parser(relevant)
     return parser.parse(url)
 
+# Esegue un parsing di tutte le tag
 def parse(url=None, html=None):
     return __parse__(url, html, False)
 
+# Esegue un parsing solo delle tag rilevanti
 def relevant_parse(url=None, html=None):
     return __parse__(url, html, True)
 
-# Printa il risultato delle funzioni @parse(url) e @relevant_parse(url)
+# Printa il risultato delle funzioni @parse e @relevant_parse
 def print_parsed(parsed, depth=0):
     space = ' ' * depth
     if (type(parsed) == dict):
@@ -128,4 +121,4 @@ def print_parsed(parsed, depth=0):
     elif (type(parsed) == list):
         for value in parsed: print_parsed(value, depth+1)
     else:
-        raise('Invalid Argument: '+str(parsed))
+        Log.error(str(parsed)+' is not a valid parsed content!')
