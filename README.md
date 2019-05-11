@@ -7,7 +7,7 @@
  - [pyshark](https://pypi.org/project/pyshark/): `pip3 install pyshark`
  - [PyQt5](https://pypi.org/project/PyQt5/): `pip3 install PyQt5`
  - [PyTidyLib](https://pypi.org/project/pytidylib/): `pip3 install pytidylib`
- - [Sqlmap](https://pypi.org/project/sqlmap/) **[Python 2]**: `pip install sqlmap`
+ - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo apt-get install sqlmap`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
