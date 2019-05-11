@@ -3,8 +3,8 @@ from app.utils.html import form_parse
 from app.utils.helpers.logger import Log
 
 
-# Cerca un form all'interno della pagina ritornata dall'url passato come parametro
-# e tenta l'injection sui form trovati all'interno dell'html
+# Cerca dei form all'interno della pagina ritornata dall'url passato come parametro
+# e li sfrutta tentando l'injection.
 # @param url str L'url che restituisce l'html in cui trovare i form
 # @param html str L'html in cui trovare i form
 # @return
@@ -14,7 +14,7 @@ def inject_form(url=None, html=None):
 
 # Cerca un form all'interno della pagina ritornata dall'url passato come parametro
 # Se non lo trova, cerca un form in tutti i link con lo stesso dominio, presenti
-# nella pagina ritornata dall'url
+# nella pagina ritornata dall'url. Tenta un'injection su tutti i form che trova.
 # @param url str L'url che restituisce l'html in cui trovare i form
 # @return
 def deep_inject_form(url):
