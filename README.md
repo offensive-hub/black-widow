@@ -51,7 +51,11 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |-- test.py   # Eseguibile di testing
 ```
 
-
+<hr/>
+GitHub repository:
+`git@github.com:FabrizioFubelli/black-widow.git`
+Private repository
+`secret`
 <hr/>
 
 ### [CyberChallenge.it 2019](https://www.cyberchallenge.it)
