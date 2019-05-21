@@ -1,15 +1,6 @@
 from threading import Thread
 
 
-my_list = []
-
-for i in xrange(0,threads):
-    my_list.append([])
-
-def func(count, mylist):
-    for i in range(count):
-        mylist.append(random.random())
-
 def multithreaded():
     jobs = []
     for i in xrange(0, threads):

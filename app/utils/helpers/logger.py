@@ -1,5 +1,7 @@
 import os, datetime, calendar
 from termcolor import colored
+from threading import current_thread
+from multiprocessing.process import current_process
 from . import storage
 from app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
 
@@ -45,7 +47,14 @@ class Log:
 
     def __log__(self, msg, type, color):
         self.__check_log_file__()
-        msg_log = self.__get_log_header__()+' '+colored(type, color)+': '+msg.rstrip()
+        msg_log = self.__get_log_header__()+' '+colored(type, color)
+        curr_process = current_process()
+        curr_thread = current_thread()
+        if ('Main' not in curr_thread.name):
+            msg_log += ' ['+curr_thread.name+']'
+        if ('Main' not in curr_process.name):
+            msg_log += ' ['+curr_process.name+']'
+        msg_log += ': '+msg.rstrip()
         if (APP_DEBUG): print(msg_log)
         storage.append_in_file(msg_log, APP_LOGFILE)
 

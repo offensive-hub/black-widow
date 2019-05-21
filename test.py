@@ -14,7 +14,7 @@ def main():
         print(colored("La modalità di APP_DEBUG non è attiva. Per debug approfondito, modificarla in 'app/env.py'.\n", 'red'))
     #Settings.main()
     #env()
-    #log()
+    log()
     #storage()
     #test_flow()
     #flag_regex()
@@ -24,8 +24,7 @@ def main():
     #Crypto.main()
     #html_parsing()
     #sql()
-    #multithreading()
-    multiprocessing()
+    multitasking()
     exit(0)
 
 
@@ -42,18 +41,16 @@ url_spectra = 'https://my.spectra.co/'
 url_myspace = 'https://myspace.com/'
 
 
-def multithreading():
-    print(colored("\nCHECK MULTITHREADING:", 'yellow'))
-    app.utils.helpers.multithread
-
-def multiprocessing():
-    print(colored("\nCHECK MULTIPROCESSING:", 'yellow'))
-    def target_multiprocessing(my_list_or_dict, my_number):
-        app.utils.helpers.logger.Log.info('['+str(os.getpid())+']'+' my_number: ' + str(my_number))
+def multitasking():
+    print(colored("\nCHECK MULTITASKING:", 'yellow'))
+    def target_multitasking(my_list_or_dict, my_number):
+        app.utils.helpers.logger.Log.info('my_number: ' + str(my_number))
         for el in my_list_or_dict:
-            app.utils.helpers.logger.Log.info('['+str(os.getpid())+']'+' ' + str(el) + ': ' + my_list_or_dict[el])
-    print('CPU: ' + str(app.utils.helpers.multiprocess.CPU))
-    my_list = range(1000000)
+            if (type(my_list_or_dict) == dict):
+                app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
+            else:
+                app.utils.helpers.logger.Log.info('el: ' + str(el))
+    my_list = range(60)
     my_dict = {
         1: 'a',
         2: 'b',
@@ -67,7 +64,21 @@ def multiprocessing():
         10: 'j',
     }
     my_number = 195
-    app.utils.helpers.multiprocess.start(target=target_multiprocessing, args=(my_dict, my_number), asynchronous=True, cpu=8)
+    my_number_2 = 22349123
+    # Info: Invertendo l'ordine, quindi eseguendo prima i MultiProcess e poi i
+    # MultiThread, si causa attesa indefinita
+    print(colored("\nCHECK MULTI PROCESSING:", 'yellow'))
+    print('FLAG 1')
+    app.utils.helpers.MultiProcess.start(target=target_multitasking, args=(my_list, my_number_2), asynchronous=True, cpu=4)
+    print('FLAG 2')
+    app.utils.helpers.MultiProcess.start(target=target_multitasking, args=(my_dict, my_number), asynchronous=True, cpu=5)
+    print('FLAG 3')
+    print(colored("\nCHECK MULTI THREADING:", 'yellow'))
+    print('FLAG 4')
+    app.utils.helpers.MultiThread.start(target=target_multitasking, args=(my_list, my_number_2), asynchronous=True, cpu=4)
+    print('FLAG 5')
+    app.utils.helpers.MultiThread.start(target=target_multitasking, args=(my_dict, my_number), asynchronous=False, cpu=2)
+    print('FLAG 6')
 
 def sql():
     print(colored("\nCHECK SQL INJECTION:", 'yellow'))
