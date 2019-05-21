@@ -45,6 +45,7 @@ class __MultiTask__:
             Log.info(tag + 'started')
             if (target != None): target(*args)
             Log.info(tag + 'end')
+            #os._exit(0)
         for i in range(0, cpu):
             task_args = ()
             for arg in args:

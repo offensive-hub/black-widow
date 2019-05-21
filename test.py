@@ -14,7 +14,7 @@ def main():
         print(colored("La modalità di APP_DEBUG non è attiva. Per debug approfondito, modificarla in 'app/env.py'.\n", 'red'))
     #Settings.main()
     #env()
-    log()
+    #log()
     #storage()
     #test_flow()
     #flag_regex()
@@ -40,7 +40,6 @@ url_genndi = 'https://account.genndi.com/login'
 url_spectra = 'https://my.spectra.co/'
 url_myspace = 'https://myspace.com/'
 
-
 def multitasking():
     print(colored("\nCHECK MULTITASKING:", 'yellow'))
     def target_multitasking(my_list_or_dict, my_number):
@@ -50,7 +49,7 @@ def multitasking():
                 app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
             else:
                 app.utils.helpers.logger.Log.info('el: ' + str(el))
-    my_list = range(60)
+    my_list = range(100000)
     my_dict = {
         1: 'a',
         2: 'b',
@@ -65,6 +64,80 @@ def multitasking():
     }
     my_number = 195
     my_number_2 = 22349123
+
+
+
+    # Testo thread generati da sottoprocessi
+    def target_multiprocessing(my_list_or_dict, my_number):
+        def my_target_multitasking(my_list_or_dict, my_number):
+            app.utils.helpers.logger.Log.info('my_number: ' + str(my_number))
+            for el in my_list_or_dict:
+                if (type(my_list_or_dict) == dict):
+                    app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
+                else:
+                    app.utils.helpers.logger.Log.info('el: ' + str(el))
+        # Ogni sottoprocesso creerà 2 threads, a cui passerà la propria lista
+        app.utils.helpers.MultiProcess.start(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=5)
+
+    # Quando due o più processi creano threads concorrenti che sfruttano le
+    # stesse risorse, non si verifica la "deadlock" (o "attesa indefinita"),
+    # in quanto le risorse "condivise", vengono duplicate nella memoria.
+    # Esempio esecuzione:
+    #       [Process-1] creato
+    #           |-----[Thread-1] creato
+    #           |-----[Thread-2] creato
+    #           ...
+    #       [Process-2] creato
+    #           |...
+    #       [Process-2] terminato
+    #       [Process-1] terminato
+    #           |...
+    #
+    # La risorsa bloccante è la vera e propria funzione "target_multiprocessing"
+    # che essendo un oggetto complesso, quando passato come argomento, non viene
+    # duplicato nella memoria (come accade con gli array o con i numeri), ma il
+    # compilatore si limita a passare il puntatore di questa, come argomento.
+    app.utils.helpers.MultiProcess.start(target=target_multiprocessing, args=(my_list, my_number_2), cpu=20)
+
+    print('DONE 1!')
+
+    # Testo processi generati da sottothreads
+    def target_multithreading(my_list_or_dict, my_number):
+        def my_target_multitasking(my_list_or_dict, my_number):
+            app.utils.helpers.logger.Log.info('my_number: ' + str(my_number))
+            for el in my_list_or_dict:
+                if (type(my_list_or_dict) == dict):
+                    app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
+                else:
+                    app.utils.helpers.logger.Log.info('el: ' + str(el))
+        # Ogni sottothread creerà 2 processi, a cui passerà la propria lista
+        # asynchronous deve essere False, per evitare l'attesa indefinita
+        app.utils.helpers.MultiProcess.start(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=3)
+
+    # Quando due o più threads creano processi concorrenti che sfruttano le
+    # stesse risorse, puù verificarsi la "deadlock" (o "attesa indefinita").
+    # Per questo motivo, in questo caso va passato il parametro
+    # asynchronous=False. Ma questo implica la creazione sequenziale (quindi
+    # non parallela), dei threads:
+    #       [Thread-1] creato
+    #           |-----[Process-1] creato
+    #           |-----[Process-2] creato
+    #           |...
+    #           |-----Esecuzione processi in modo concorrente
+    #       [Thread-1] terminato
+    #       [Thread-2] creato
+    #           |...
+    #
+    # La risorsa bloccante è la vera e propria funzione "my_target_multitasking"
+    # che essendo un oggetto complesso, quando passato come argomento, non viene
+    # duplicato nella memoria (come accade con gli array o con i numeri), ma il
+    # compilatore si limita a passare il puntatore di questa, come argomento.
+    #app.utils.helpers.MultiThread.start(target=target_multithreading, args=(my_list, my_number_2), cpu=3)
+
+    print('DONE 2!')
+
+    return
+
     # Info: Invertendo l'ordine, quindi eseguendo prima i MultiProcess e poi i
     # MultiThread, si causa attesa indefinita
     print(colored("\nCHECK MULTI PROCESSING:", 'yellow'))

@@ -5,7 +5,7 @@ Metodi e classi utili alla gestione di file e cartelle
 from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
 from .util import replace_regex
-import os, shutil, re
+import os, shutil, re, time
 
 # @return true se il file contiene la stringa find, False altrimenti
 def file_contains(find, file):

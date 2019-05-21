@@ -50,10 +50,10 @@ class Log:
         msg_log = self.__get_log_header__()+' '+colored(type, color)
         curr_process = current_process()
         curr_thread = current_thread()
-        if ('Main' not in curr_thread.name):
-            msg_log += ' ['+curr_thread.name+']'
         if ('Main' not in curr_process.name):
             msg_log += ' ['+curr_process.name+']'
+        if ('Main' not in curr_thread.name):
+            msg_log += ' ('+curr_thread.name+')'
         msg_log += ': '+msg.rstrip()
         if (APP_DEBUG): print(msg_log)
         storage.append_in_file(msg_log, APP_LOGFILE)
