@@ -23,7 +23,9 @@ def main():
     #gui()
     #Crypto.main()
     #html_parsing()
-    sql()
+    #sql()
+    #multithreading()
+    multiprocessing()
     exit(0)
 
 
@@ -39,6 +41,33 @@ url_genndi = 'https://account.genndi.com/login'
 url_spectra = 'https://my.spectra.co/'
 url_myspace = 'https://myspace.com/'
 
+
+def multithreading():
+    print(colored("\nCHECK MULTITHREADING:", 'yellow'))
+    app.utils.helpers.multithread
+
+def multiprocessing():
+    print(colored("\nCHECK MULTIPROCESSING:", 'yellow'))
+    def target_multiprocessing(my_list_or_dict, my_number):
+        app.utils.helpers.logger.Log.info('['+str(os.getpid())+']'+' my_number: ' + str(my_number))
+        for el in my_list_or_dict:
+            app.utils.helpers.logger.Log.info('['+str(os.getpid())+']'+' ' + str(el) + ': ' + my_list_or_dict[el])
+    print('CPU: ' + str(app.utils.helpers.multiprocess.CPU))
+    my_list = range(1000000)
+    my_dict = {
+        1: 'a',
+        2: 'b',
+        3: 'c',
+        4: 'd',
+        5: 'e',
+        6: 'f',
+        7: 'g',
+        8: 'h',
+        9: 'i',
+        10: 'j',
+    }
+    my_number = 195
+    app.utils.helpers.multiprocess.start(target=target_multiprocessing, args=(my_dict, my_number), asynchronous=True, cpu=8)
 
 def sql():
     print(colored("\nCHECK SQL INJECTION:", 'yellow'))
