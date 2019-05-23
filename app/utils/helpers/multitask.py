@@ -146,6 +146,7 @@ class MultiTask:
 # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
 #                     tutti i threads, False altrimenti
 # @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+# @return Il risultato della funzione target
 def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_THREADING)
     # Gli argomenti da passare alla funzione multitask.start
@@ -162,6 +163,7 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
 # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
 #                     tutti i processi, False altrimenti
 # @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+# @return Il risultato della funzione target
 def multiprocess(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_PROCESSING)
     return multitask.start(target, args, asynchronous, cpu)
