@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 ---- Multiprocessing ----
 
@@ -95,6 +97,7 @@ class MultiTask:
         for i in range(0, cpu):
             task_args = ()
             for arg in args:
+                Log.info('Argument type: '+str(type(arg)))
                 if (type(arg) in multiargs):
                     # Divido gli elementi in 1/cpu parti
                     p_list_len = (len(arg) / cpu) + (len(arg) % cpu)
@@ -103,7 +106,8 @@ class MultiTask:
                         task_args += (dict(itertools.islice(iterator, int((i*p_list_len)), int((i+1)*p_list_len))),)
                     else:
                         task_args += (arg[int((i*p_list_len)):int(((i+1)*p_list_len))],)
-                else: task_args += (arg,)
+                else:
+                    task_args += (arg,)
             task = self.Multitask(target=task_target, args=task_args)
             self.tasks.append(task)
 
@@ -126,6 +130,7 @@ class MultiTask:
             result = storage.read_file(self.resfile)
             # Elimino l'eventuale file con i pid
             storage.delete(self.pidfile)
+            storage.delete(self.resfile)
             Log.info('MultiTask -> result: '+str(result))
             return result
 

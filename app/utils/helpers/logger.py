@@ -1,9 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import os, datetime, calendar
 from termcolor import colored
 from threading import current_thread
 from multiprocessing.process import current_process
-from . import storage
 from app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
+from app.utils.helpers import storage
 
 # Logger
 class Log:

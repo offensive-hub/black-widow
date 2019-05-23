@@ -3,7 +3,7 @@ Funzioni generiche, utili in tutte le parti del software.
 """
 
 import json, re
-from . import storage
+from app.utils.helpers import storage
 from app.env import APP_DEBUG
 from app.utils.helpers.logger import Log
 
