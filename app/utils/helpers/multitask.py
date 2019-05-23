@@ -13,7 +13,7 @@ ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
 (come accade spesso in software provvisti di grafica)
 """
 
-import multiprocessing, threading, itertools, os, signal, ctypes
+import multiprocessing, threading, itertools, os, signal
 from app.utils.helpers.logger import Log
 from app.utils.helpers import storage
 from app.env import APP_TMP
