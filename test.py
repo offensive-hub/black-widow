@@ -46,10 +46,15 @@ def multitasking():
         app.utils.helpers.logger.Log.info('my_number: ' + str(my_number))
         for el in my_list_or_dict:
             if (type(my_list_or_dict) == dict):
-                app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
+                pass
+                #app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
             else:
-                app.utils.helpers.logger.Log.info('el: ' + str(el))
-    my_list = range(100000)
+                if (el == 780085555): return True
+                pass
+                #app.utils.helpers.logger.Log.info('el: ' + str(el))
+        return None
+
+    my_list = range(1000000000)
     my_dict = {
         1: 'a',
         2: 'b',
@@ -73,11 +78,14 @@ def multitasking():
             app.utils.helpers.logger.Log.info('my_number: ' + str(my_number))
             for el in my_list_or_dict:
                 if (type(my_list_or_dict) == dict):
-                    app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
+                    pass
+                    #app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
                 else:
-                    app.utils.helpers.logger.Log.info('el: ' + str(el))
-        # Ogni sottoprocesso creerà 2 threads, a cui passerà la propria lista
-        app.utils.helpers.MultiProcess.start(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=5)
+                    pass
+                    #app.utils.helpers.logger.Log.info('el: ' + str(el))
+            return True
+        # Ogni sottoprocesso creerà 3 threads, a cui passerà la propria lista.
+        app.utils.helpers.multithread(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=3)
 
     # Quando due o più processi creano threads concorrenti che sfruttano le
     # stesse risorse, non si verifica la "deadlock" (o "attesa indefinita"),
@@ -97,9 +105,9 @@ def multitasking():
     # che essendo un oggetto complesso, quando passato come argomento, non viene
     # duplicato nella memoria (come accade con gli array o con i numeri), ma il
     # compilatore si limita a passare il puntatore di questa, come argomento.
-    app.utils.helpers.MultiProcess.start(target=target_multiprocessing, args=(my_list, my_number_2), cpu=20)
+    #app.utils.helpers.multiprocess(target=target_multiprocessing, args=(my_list, my_number_2), cpu=20)
 
-    print('DONE 1!')
+    #print('DONE 1!')
 
     # Testo processi generati da sottothreads
     def target_multithreading(my_list_or_dict, my_number):
@@ -110,9 +118,10 @@ def multitasking():
                     app.utils.helpers.logger.Log.info(str(el) + ': ' + my_list_or_dict[el])
                 else:
                     app.utils.helpers.logger.Log.info('el: ' + str(el))
+            return True
         # Ogni sottothread creerà 2 processi, a cui passerà la propria lista
         # asynchronous deve essere False, per evitare l'attesa indefinita
-        app.utils.helpers.MultiProcess.start(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=3)
+        app.utils.helpers.multiprocess(target=my_target_multitasking, args=(my_list_or_dict, my_number), cpu=3)
 
     # Quando due o più threads creano processi concorrenti che sfruttano le
     # stesse risorse, puù verificarsi la "deadlock" (o "attesa indefinita").
@@ -132,26 +141,26 @@ def multitasking():
     # che essendo un oggetto complesso, quando passato come argomento, non viene
     # duplicato nella memoria (come accade con gli array o con i numeri), ma il
     # compilatore si limita a passare il puntatore di questa, come argomento.
-    #app.utils.helpers.MultiThread.start(target=target_multithreading, args=(my_list, my_number_2), cpu=3)
+    #app.utils.helpers.multithread(target=target_multithreading, args=(my_list, my_number_2), cpu=3)
 
-    print('DONE 2!')
+    #print('DONE TEST!')
 
-    return
+    #return
 
     # Info: Invertendo l'ordine, quindi eseguendo prima i MultiProcess e poi i
     # MultiThread, si causa attesa indefinita
-    print(colored("\nCHECK MULTI PROCESSING:", 'yellow'))
-    print('FLAG 1')
-    app.utils.helpers.MultiProcess.start(target=target_multitasking, args=(my_list, my_number_2), asynchronous=True, cpu=4)
-    print('FLAG 2')
-    app.utils.helpers.MultiProcess.start(target=target_multitasking, args=(my_dict, my_number), asynchronous=True, cpu=5)
-    print('FLAG 3')
+    #print(colored("\nCHECK MULTI PROCESSING:", 'yellow'))
+    #print('FLAG 1')
+    #app.utils.helpers.multiprocess(target=target_multitasking, args=(my_list, my_number_2))
+    #print('FLAG 2')
+    #app.utils.helpers.multiprocess(target=target_multitasking, args=(my_dict, my_number), asynchronous=True, cpu=5)
+    #print('FLAG 3')
     print(colored("\nCHECK MULTI THREADING:", 'yellow'))
     print('FLAG 4')
-    app.utils.helpers.MultiThread.start(target=target_multitasking, args=(my_list, my_number_2), asynchronous=True, cpu=4)
+    app.utils.helpers.multithread(target=target_multitasking, args=(my_list, my_number_2))
     print('FLAG 5')
-    app.utils.helpers.MultiThread.start(target=target_multitasking, args=(my_dict, my_number), asynchronous=False, cpu=2)
-    print('FLAG 6')
+    #app.utils.helpers.multithread(target=target_multitasking, args=(my_dict, my_number), asynchronous=False, cpu=2)
+    #print('FLAG 6')
 
 def sql():
     print(colored("\nCHECK SQL INJECTION:", 'yellow'))

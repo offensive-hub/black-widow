@@ -13,39 +13,81 @@ ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
 (come accade spesso in software provvisti di grafica)
 """
 
-import multiprocessing, threading, itertools, os
+import multiprocessing, threading, itertools, os, signal, ctypes
+from time import time
 from app.utils.helpers.logger import Log
+from app.utils.helpers import storage
+from app.env import APP_TMP
 
 CPU = multiprocessing.cpu_count()
 
 # Classe astratta, sfruttata sia da MultiThreading che da MultiProcessing
-class __MultiTask__:
+class MultiTask:
     MULTI_THREADING='MULTI_THREADING'
     MULTI_PROCESSING='MULTI_PROCESSING'
+    tasks_types=(MULTI_THREADING, MULTI_PROCESSING)
+
+    # @param tasks_type in MultiTask.tasks_types
+    def __init__(self, tasks_type):
+        if (tasks_type not in MultiTask.tasks_types):
+            tasks_type = MultiTask.MULTI_PROCESSING
+            Log.error(str(tasks_type)+' is not a valid tasks type!')
+        self.tasks_type = tasks_type
+        if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+            self.Multitask = multiprocessing.Process
+            self.tag = 'Process '
+        else:
+            self.Multitask = threading.Thread
+            self.tag = 'Thread '
+        self.tasks = []
+        self.pidfile = APP_TMP + '/multitask.'+str(time())+'.pids'
+        self.result = None
 
     # Sfrutta il multiprocessing o il multitasking per effettuare la stessa
     # operazione sugli elementi di un/una lista|tupla|dizionario|range.
     # Si assume che tutti gli argomenti di tipo lista|tupla|dizionario|range
     # debbano essere smistati ai vari processi
-    # @param tasks_type __MultiTask__.MULTI_THREADING|__MultiTask__.MULTI_PROCESSING
     # @param target La funzione che i processi chiameranno
     # @param args Gli argomenti che verranno passati alla funzione
     # @param asynchronous True, se non bisogna attendere la fine dell'
     #                     esecuzione di tutti i tasks, False altrimenti
-    # @param cpu Il numero di cpu da usare (default: il numero di cpu
-    #            disponibili)
-    def __start__(tasks_type, target=None, args=(), asynchronous=False, cpu=CPU):
+    # @param cpu Il numero di cpu da usare
+    def start(self, target, args, asynchronous, cpu):
+        self.tasks = []
         multiargs = (list, tuple, dict, range)  # I tipi di argomenti da dividere
-        tasks = []
+
         def task_target(*args):
-            if (tasks_type == __MultiTask__.MULTI_PROCESSING):
-                tag = 'Process '
+            result = None
+            if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+                curr_task = multiprocessing.process.current_process()
+                Log.info(self.tag + 'started (PID='+str(curr_task.pid)+')')
             else:
-                tag = 'Thread '
-            Log.info(tag + 'started')
-            if (target != None): target(*args)
-            Log.info(tag + 'end')
-            #os._exit(0)
+                curr_task = threading.current_thread()
+                Log.info(self.tag + 'started')
+            if (target != None): result = target(*args)
+            if (result != None):
+                # Termino tutti gli altri threads/processi
+                Log.info("Done! result: "+str(result))
+                if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+                    Log.info('Killing other processes')
+                    pids = storage.read_file(self.pidfile).split(', ')
+                    for pid in pids:
+                        pid = int(pid)
+                        if (pid == curr_task.pid): continue
+                        try:
+                            os.kill(pid, signal.SIGKILL)
+                            Log.info('Process '+str(pid)+' killed!')
+                        except Exception as e:
+                            Log.error(str(e))
+                    # Elimino il file contenente i pid dei processi killati
+                    storage.delete(self.pidfile)
+                else:
+                    Log.info('Ignoring other threads')
+                    # Killa se stesso
+                    pid = multiprocessing.process.current_process().pid
+                    os.kill(pid, signal.SIGKILL)
+            Log.info(self.tag + 'end')
+
         for i in range(0, cpu):
             task_args = ()
             for arg in args:
@@ -58,42 +100,55 @@ class __MultiTask__:
                     else:
                         task_args += (arg[int((i*p_list_len)):int(((i+1)*p_list_len))],)
                 else: task_args += (arg,)
-            if (tasks_type == __MultiTask__.MULTI_PROCESSING):
-                task = multiprocessing.Process(target=task_target, args=task_args)
-            else:
-                task = threading.Thread(target=task_target, args=task_args)
-            task.start()
-            tasks.append(task)
+            task = self.Multitask(target=task_target, args=task_args)
+            self.tasks.append(task)
+
+        if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+            pids = []
+            for task in self.tasks:
+                task.start()
+                pids.append(task.pid)
+            storage.overwrite_file(str(pids).strip('[]'), self.pidfile)
+        else:
+            for task in self.tasks: task.start()
+
         if (not asynchronous):
             # Attende la fine dell'esecuzione di tutti i tasks
-            for task in tasks: task.join()
+            for task in self.tasks:
+                task.join()
+                Log.info('Task '+str(task.name)+' joined')
 
-# Classe per il Multi Threading
-class MultiThread(__MultiTask__):
-    # Sfrutta il multithreading per effettuare la stessa operazione
-    # sugli elementi di un/una lista|tupla|dizionario|range.
-    # Si assume che tutti gli argomenti di tipo lista|tupla|dizionario|range
-    # debbano essere smistati ai vari processi
-    # @param target La funzione che i processi chiameranno
-    # @param args Gli argomenti che verranno passati alla funzione
-    # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
-    #                     tutti i processi, False altrimenti
-    # @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
-    @staticmethod
-    def start(target=None, args=(), asynchronous=False, cpu=CPU):
-        __MultiTask__.__start__(__MultiTask__.MULTI_THREADING, target, args, asynchronous, cpu)
 
-# Classe per il Multi Processing
-class MultiProcess(__MultiTask__):
-    # Sfrutta il multiprocessing per effettuare la stessa operazione
-    # sugli elementi di un/una lista|tupla|dizionario|range.
-    # Si assume che tutti gli argomenti di tipo lista|tupla|dizionario|range
-    # debbano essere smistati ai vari processi
-    # @param target La funzione che i processi chiameranno
-    # @param args Gli argomenti che verranno passati alla funzione
-    # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
-    #                     tutti i processi, False altrimenti
-    # @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
-    @staticmethod
-    def start(target=None, args=(), asynchronous=False, cpu=CPU):
-        __MultiTask__.__start__(__MultiTask__.MULTI_PROCESSING, target, args, asynchronous, cpu)
+# Crea un sottoprocesso che a sua volta genera n(=cpu) threads.
+# La creazione del sottoprocesso è essenziale, in quanto il primo thread che
+# riesce a trovare la soluzione, killerà il suo stesso processo, per interrompere
+# anche tutti gli altri thread ed evitare attesa inutile.
+# Sfrutta il multithreading per effettuare la stessa operazione
+# sugli elementi di un/una lista|tupla|dizionario|range.
+# Si assume che tutti gli argomenti di tipo lista|tupla|dizionario|range
+# debbano essere smistati ai vari threads
+# @param target La funzione che i threads chiameranno: se questa ritorna un valore
+#               diverso da None, allora tutti i threads concorrenti verranno stoppati
+# @param args Gli argomenti che verranno passati alla funzione
+# @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
+#                     tutti i threads, False altrimenti
+# @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
+    multitask = MultiTask(MultiTask.MULTI_THREADING)
+    # Gli argomenti da passare alla funzione multitask.start
+    multithread_args = (target, args, asynchronous, cpu)
+    multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
+
+# Sfrutta il multiprocessing per effettuare la stessa operazione
+# sugli elementi di un/una lista|tupla|dizionario|range.
+# Si assume che tutti gli argomenti di tipo lista|tupla|dizionario|range
+# debbano essere smistati ai vari processi
+# @param target La funzione che i processi chiameranno: se questa ritorna un valore
+#               diverso da None, allora tutti i processi concorrenti verranno stoppati
+# @param args Gli argomenti che verranno passati alla funzione
+# @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
+#                     tutti i processi, False altrimenti
+# @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+def multiprocess(target=None, args=(), asynchronous=False, cpu=CPU):
+    multitask = MultiTask(MultiTask.MULTI_PROCESSING)
+    multitask.start(target, args, asynchronous, cpu)

@@ -62,8 +62,12 @@ class Log:
         storage.check_folder(os.path.dirname(APP_LOGFILE))
         # Se il file di log pesa almeno 5 MB, lo sovrascrivo
         if (os.path.isfile(APP_LOGFILE)):
-            size_file_mb = os.stat(APP_LOGFILE).st_size / 1000000.0
-            if size_file_mb >= 5: storage.delete(APP_LOGFILE)
+            try:
+                size_file_mb = os.stat(APP_LOGFILE).st_size / 1000000.0
+                if size_file_mb >= 5: storage.delete(APP_LOGFILE)
+            except FileNotFoundError as e:
+                # Un altro thread o processo ha già eliminato il file
+                return
 
     def __get_timestamp__(self):
         now_month = int(datetime.datetime.now().strftime("%m"))
