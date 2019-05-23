@@ -14,7 +14,6 @@ ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
 """
 
 import multiprocessing, threading, itertools, os, signal, ctypes
-from time import time
 from app.utils.helpers.logger import Log
 from app.utils.helpers import storage
 from app.env import APP_TMP
@@ -40,8 +39,11 @@ class MultiTask:
             self.Multitask = threading.Thread
             self.tag = 'Thread '
         self.tasks = []
-        self.pidfile = APP_TMP + '/multitask.'+str(time())+'.pids'
-        self.result = None
+        pid = str(multiprocessing.process.current_process().pid)
+        # File con pids (se multiprocessing)
+        self.pidfile = APP_TMP + '/multitask.'+pid+'.pids'
+        # File con result
+        self.resfile = APP_TMP + '/multitask.'+pid+'.res'
 
     # Sfrutta il multiprocessing o il multitasking per effettuare la stessa
     # operazione sugli elementi di un/una lista|tupla|dizionario|range.
@@ -66,8 +68,11 @@ class MultiTask:
                 Log.info(self.tag + 'started')
             if (target != None): result = target(*args)
             if (result != None):
-                # Termino tutti gli altri threads/processi
                 Log.info("Done! result: "+str(result))
+                # Scrivo il risultato nel file
+                Log.info('Writing result in '+str(self.resfile))
+                storage.overwrite_file(str(result), self.resfile)
+                # Termino tutti gli altri threads/processi
                 if (self.tasks_type == MultiTask.MULTI_PROCESSING):
                     Log.info('Killing other processes')
                     pids = storage.read_file(self.pidfile).split(', ')
@@ -79,14 +84,13 @@ class MultiTask:
                             Log.info('Process '+str(pid)+' killed!')
                         except Exception as e:
                             Log.error(str(e))
-                    # Elimino il file contenente i pid dei processi killati
-                    storage.delete(self.pidfile)
+                    Log.info(self.tag + 'end')
                 else:
                     Log.info('Ignoring other threads')
                     # Killa se stesso
                     pid = multiprocessing.process.current_process().pid
+                    Log.info(self.tag + 'end')
                     os.kill(pid, signal.SIGKILL)
-            Log.info(self.tag + 'end')
 
         for i in range(0, cpu):
             task_args = ()
@@ -117,6 +121,15 @@ class MultiTask:
             for task in self.tasks:
                 task.join()
                 Log.info('Task '+str(task.name)+' joined')
+            Log.info('Reading result in '+str(self.resfile))
+            # Prendo il risultato dal file
+            result = storage.read_file(self.resfile)
+            # Elimino l'eventuale file con i pid
+            storage.delete(self.pidfile)
+            Log.info('MultiTask -> result: '+str(result))
+            return result
+
+        return None
 
 
 # Crea un sottoprocesso che a sua volta genera n(=cpu) threads.
@@ -137,7 +150,7 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_THREADING)
     # Gli argomenti da passare alla funzione multitask.start
     multithread_args = (target, args, asynchronous, cpu)
-    multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
+    return multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
 
 # Sfrutta il multiprocessing per effettuare la stessa operazione
 # sugli elementi di un/una lista|tupla|dizionario|range.
@@ -151,4 +164,4 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
 # @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
 def multiprocess(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_PROCESSING)
-    multitask.start(target, args, asynchronous, cpu)
+    return multitask.start(target, args, asynchronous, cpu)

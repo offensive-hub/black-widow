@@ -149,16 +149,20 @@ def multitasking():
 
     # Info: Invertendo l'ordine, quindi eseguendo prima i MultiProcess e poi i
     # MultiThread, si causa attesa indefinita
+
     #print(colored("\nCHECK MULTI PROCESSING:", 'yellow'))
     #print('FLAG 1')
-    #app.utils.helpers.multiprocess(target=target_multitasking, args=(my_list, my_number_2))
-    #print('FLAG 2')
+    #res = app.utils.helpers.multiprocess(target=target_multitasking, args=(my_list, my_number_2))
+    #print('FLAG 2 -> result: '+str(res))
+
     #app.utils.helpers.multiprocess(target=target_multitasking, args=(my_dict, my_number), asynchronous=True, cpu=5)
     #print('FLAG 3')
-    print(colored("\nCHECK MULTI THREADING:", 'yellow'))
-    print('FLAG 4')
-    app.utils.helpers.multithread(target=target_multitasking, args=(my_list, my_number_2))
-    print('FLAG 5')
+
+    #print(colored("\nCHECK MULTI THREADING:", 'yellow'))
+    #print('FLAG 4')
+    #res = app.utils.helpers.multithread(target=target_multitasking, args=(my_list, my_number_2))
+    #print('FLAG 5 -> result: '+str(res))
+
     #app.utils.helpers.multithread(target=target_multitasking, args=(my_dict, my_number), asynchronous=False, cpu=2)
     #print('FLAG 6')
 
