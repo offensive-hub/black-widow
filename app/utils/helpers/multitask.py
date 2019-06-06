@@ -18,6 +18,7 @@ ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
 import multiprocessing, threading, itertools, os, signal
 from app.utils.helpers.logger import Log
 from app.utils.helpers import storage
+from app.utils.helpers.util import is_listable
 from app.env import APP_TMP
 
 CPU = multiprocessing.cpu_count()
@@ -58,7 +59,6 @@ class MultiTask:
     # @param cpu Il numero di cpu da usare
     def start(self, target, args, asynchronous, cpu):
         self.tasks = []
-        multiargs = (list, tuple, dict, range)  # I tipi di argomenti da dividere
 
         def task_target(*args):
             result = None
@@ -70,7 +70,7 @@ class MultiTask:
                 Log.info(self.tag + 'started')
             if (target != None): result = target(*args)
             if (result != None):
-                Log.info("Done! result: "+str(result))
+                Log.success("Result: "+str(result))
                 # Scrivo il risultato nel file
                 Log.info('Writing result in '+str(self.resfile))
                 storage.overwrite_file(str(result), self.resfile)
@@ -98,7 +98,7 @@ class MultiTask:
             task_args = ()
             for arg in args:
                 Log.info('Argument type: '+str(type(arg)))
-                if (type(arg) in multiargs):
+                if (is_listable(arg)):
                     # Divido gli elementi in 1/cpu parti
                     p_list_len = (len(arg) / cpu) + (len(arg) % cpu)
                     if (type(arg) == dict):
@@ -130,8 +130,9 @@ class MultiTask:
             result = storage.read_file(self.resfile)
             # Elimino l'eventuale file con i pid
             storage.delete(self.pidfile)
+            # Elimino il file con il risultato
             storage.delete(self.resfile)
-            Log.info('MultiTask -> result: '+str(result))
+            Log.success('MultiTask -> result: '+str(result))
             return result
 
         return None
@@ -147,10 +148,10 @@ class MultiTask:
 # debbano essere smistati ai vari threads
 # @param target La funzione che i threads chiameranno: se questa ritorna un valore
 #               diverso da None, allora tutti i threads concorrenti verranno stoppati
-# @param args Gli argomenti che verranno passati alla funzione
+# @param args Gli argomenti che verranno passati alla funzione target
 # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
 #                     tutti i threads, False altrimenti
-# @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+# @param cpu Il numero di threads da creare (default: il numero di cpu disponibili)
 # @return Il risultato della funzione target
 def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_THREADING)
@@ -164,10 +165,10 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
 # debbano essere smistati ai vari processi
 # @param target La funzione che i processi chiameranno: se questa ritorna un valore
 #               diverso da None, allora tutti i processi concorrenti verranno stoppati
-# @param args Gli argomenti che verranno passati alla funzione
+# @param args Gli argomenti che verranno passati alla funzione target
 # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
 #                     tutti i processi, False altrimenti
-# @param cpu Il numero di cpu da usare (default: il numero di cpu disponibili)
+# @param cpu Il numero di processi da creare (default: il numero di cpu disponibili)
 # @return Il risultato della funzione target
 def multiprocess(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_PROCESSING)

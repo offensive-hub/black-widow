@@ -1,3 +1,3 @@
 # Graphical User Interface
 
-from . import main
+from . import main, MusicSort

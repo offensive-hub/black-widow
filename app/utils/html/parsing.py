@@ -2,9 +2,10 @@ import json
 from html.parser import HTMLParser
 from urllib.parse import urlparse
 from tidylib import tidy_document
-from app.utils.helpers.logger import Log
 from app.utils.requests import request, Type as RequestType
+from app.utils.helpers.logger import Log
 from app.utils.helpers.validators import is_url
+from app.utils.helpers.util import is_listable
 
 # Black Widow HTML Parser
 class Parser(HTMLParser):
@@ -12,7 +13,7 @@ class Parser(HTMLParser):
     # Tags rilevanti
     relevant_tags = {
         'a': ['href'],                      # { 'href': 'https://...' }
-        'form': ['action', 'method'],       # { 'action': 'https://...', 'method': 'GET', 'inputs': {'name': ['attr1', 'attr2']} }
+        'form': ['id', 'action', 'method'],       # { 'action': 'https://...', 'method': 'GET', 'inputs': {'name': ['attr1', 'attr2']} }
         'input': [
             'id','name','type',
             'min','max',
@@ -47,6 +48,8 @@ class Parser(HTMLParser):
         self.queue_tag_ignored = []
         self.queue_tag = []
         self.queue_form = []
+        self.url = None
+        self.base_url = None
 
     # inserisce la tag passata per argomento, dentro l'ultima della coda
     # @param tag_dict Un dizionario contenente una parsed tag
@@ -165,7 +168,7 @@ def relevant_parse(url=None, html=None):
 # @param html str La stringa html di cui fare il parsing (o None)
 # @return dict Un html parsed
 def form_parse(url=None, html=None):
-    return find_forms(relevant_parse(url, html))
+    return find_forms(relevant_parse(url, html), url)
 
 # cerca degli input dentro ad un parsed html (dict)
 # @param dict parsed un html parsed
@@ -188,23 +191,26 @@ def find_inputs(parsed):
 
 # Cerca i form dentro un parsed html (dict)
 # @param parsed dict un html parsed
+# @param url L'url in cui si trova il form
 # @return list Lista form dentro l'html parsed
-def find_forms(parsed):
+def find_forms(parsed, url=None):
     forms = []
     if (parsed == None): return forms
     if (type(parsed) == dict):
         if ('form' == parsed.get('tag')):
             attrs = parsed.get('attrs')
+            action = attrs.get('action')
+            if (action == None): action = url
             form = {
                 'method': attrs.get('method'),
-                'action': attrs.get('action'),
+                'action': action,
                 'inputs': find_inputs(parsed.get('children'))
             }
             forms.append(form)
-        forms += find_forms(parsed.get('children'))
+        forms += find_forms(parsed.get('children'), url)
         return forms
     elif (type(parsed) == list):
-        for value in parsed: forms += find_forms(value)
+        for value in parsed: forms += find_forms(value, url)
     else: Log.error(str(parsed)+' is not a valid parsed content!')
     return forms
 
@@ -218,6 +224,13 @@ def print_parsed(parsed, depth=0):
         print(space + '{')
         for key, value in parsed.items():
             if (key == 'children'): print_parsed(value, depth+1)
+            elif (is_listable(value)):
+                print((space+'  ') + str(key) + ':')
+                print_parsed(value, depth+2)
+                #print((space+'  ') + str(key) + ':')
+                #subspace = ' ' * (depth+1)
+                #for el in dict:
+                #  if (is_listable(el)):
             else: print((space+'  ') + str(key) + ': ' + str(value))
         print(space + '}')
     elif (type(parsed) == list):

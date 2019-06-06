@@ -37,7 +37,7 @@ def print_request(request):
 # @param url un url
 # @param type get|post|put|patch|delete
 # @param data dizionario con parametri
-def request(url, type, data={}):
+def request(url, type=Type.GET, data={}):
     type = type.lower()
     if (not is_url(url)):
         Log.error(str(url)+' is not a valid url!')
@@ -60,6 +60,7 @@ def request(url, type, data={}):
         return r
     except requests.exceptions.ConnectionError as e:
         Log.error('Impossibile contattare '+str(url))
+        Log.error('Eccezzione: '+str(e))
     return None
 
 

@@ -1,5 +1,5 @@
 from app.env import APP_DEBUG
-from app.utils.html import form_parse
+from app.utils.html import form_parse, print_parsed
 from app.utils.helpers.logger import Log
 
 
@@ -9,7 +9,10 @@ from app.utils.helpers.logger import Log
 # @param html str L'html in cui trovare i form
 # @return
 def inject_form(url=None, html=None):
-    Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
+    parsed_form = form_parse(url, html)
+    Log.success('\n\n\nParsed Form:')
+    print_parsed(parsed_form)
+    #Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
 
 
 # Cerca un form all'interno della pagina ritornata dall'url passato come parametro

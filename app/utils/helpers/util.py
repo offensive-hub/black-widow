@@ -29,12 +29,17 @@ def regex_in_string(regex, string):
     matches = re.findall(reg, string)
     return len(matches) > 0
 
-# @return la string passata per argomento (find), con la sostituzione
 # @param regex la regex da trovare in string
 # @param replace la stringa con cui sostituire la regex
 # @param string la stringa in cui trovare la regex
+# @return la string passata per argomento (find), con la sostituzione
 def replace_regex(regex, replace, string):
     return re.sub(regex, replace, string, flags = re.M)
+
+# @param element Un oggetto
+# @return True se element è un elemento listabile, False altrimenti
+def is_listable(object):
+    return type(object) in (list, tuple, dict, range)
 
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"

@@ -11,4 +11,6 @@ APP_SETTINGS=APP_STORAGE+'/settings.json'
 APP_TMP='/tmp/black-widow'
 APP_LOGFILE=APP_TMP+'/black-widow.log'
 
+RES_PATH=APP_PATH=dirname(APP_PATH)+'/resources'
+
 FLAG_REGEX='[A-Z0-9]{31}='                          # Default flag regex
