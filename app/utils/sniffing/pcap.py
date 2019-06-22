@@ -8,14 +8,18 @@ from app.env import APP_DEBUG
 from app.utils import settings
 from app.utils.helpers.util import replace_regex, regex_in_string
 from app.utils.helpers.logger import Log
+from pprint import pprint
 import pyshark, numpy, codecs
+
+def print_pcap(pkts_dict):
+    pprint(pkts_dict)
 
 # @param filter https://wiki.wireshark.org/DisplayFilters
 # @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
 # @param dest_file Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
 # @param interface L'interfaccia da cui ascoltare (o None)
 # @param limit_length Il limite che i campi dei pacchetti devono avere per non essere troncati (o None)
-# @param callback La funzione che prende un dizionario del pacchetto come argomento (o None)
+# @param callback La funzione che prende un dizionario del pacchetto come argomento (o None). Se None, printa l'output
 # @return void
 def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
     def __pcap_callback__(pkt):
@@ -30,7 +34,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             # Layers: ["2. Data Link (mac)",    "3. Network (ip)", "4. Transport (tcp/udp)", "5-6-7. *data"]
             # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
 
-            #print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
+            if (callback == None): print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
 
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
@@ -67,10 +71,11 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 if (len(field) <= 5): layer_field_dict['best'] = 'original'
                 else: layer_field_dict['best'] = 'decoded'
 
-                #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field)) # Decommentare per printare stile albero
-                #print('   |-- Field (decoded):  '+str(field_name)+' -> '+str(field))       # Decommentare per printare stile albero
-
                 layer_fields[field_name] = layer_field_dict
+
+                if (callback == None):
+                    #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field))
+                    print('   |--[ '+str(field_name)+' ] = '+str(layer_field_dict[layer_field_dict['best']])) # Printa stile albero
 
             layers_dict[layer.layer_name] = layer_fields
 
@@ -88,7 +93,9 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'layers': layers_dict   # Il dizionario dei livelli creato nel sovrastante loop
         }
 
-        if (callback != None): callback(pkt_dict)   # chiamo la callback
+        # chiamo la callback
+        if (callback != None): callback(pkt_dict)
+        #else: print_pcap(pkt_dict)
 
     if (interface == None): interface = settings.Get.my_interface()
     if (src_file != None): capture = pyshark.FileCapture(src_file, display_filter=filter, output_file=dest_file)

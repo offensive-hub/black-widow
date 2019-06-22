@@ -64,7 +64,7 @@ def get_arguments():
     if (args.help or not arg_set):
         # Print help
         parser.print_help()
-        print()
+        print() # print newline
         parser.exit(0)
 
     global usage
@@ -79,28 +79,28 @@ def init(app_type):
 
 
 # Main function for GUI app
-def main_gui():
+def main_gui(arguments):
     init(AppType.GUI)
     # Ignore arguments
     app.gui.main.open()
 
 
 # Main function for command line app
-def main_cmd():
+def main_cmd(arguments):
     init(AppType.CMD)
     if (arguments.sniff):
-        import pprint
-        def pcap_callback(pkt_dict):
-            pprint.pprint(pkt_dict)
-        app.utils.sniffing.sniff_pcap(src_file=None, interface=interface, dest_file=test_pcap_out, filter=filter, limit_length=10000, callback=pcap_callback)
+        if (arguments.pcap_int == None):
+            print('Please, specific an interface! (ex. --pcap-int=wlan0)\n');
+            sys.exit(1)
+        limit_length=10000  # The max package fields length (the bigger fields will be truncated)
+        app.utils.sniffing.sniff_pcap(src_file=arguments.pcap_src, interface=arguments.pcap_int, dest_file=arguments.pcap_dest, filter=arguments.pcap_filters, limit_length=limit_length)
 
 
 # Main function generic app
 def main():
     arguments = get_arguments()
-    if (not arguments.gui): main_cmd()
-    else: main_gui()
-    return()
+    if (not arguments.gui): main_cmd(arguments)
+    else: main_gui(arguments)
 
 if __name__ == "__main__":
     main()
