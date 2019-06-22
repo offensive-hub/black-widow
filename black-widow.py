@@ -6,7 +6,7 @@ VERSION = '1.0.0#alpha'
 
 
 class AppType:
-    CMD=''
+    CMD='CMD'
     GUI='GUI'
 
 # Creates the argument parser and return the parsed input arguments
@@ -26,10 +26,13 @@ def get_arguments():
                          action="store_true")
     options.add_argument("-v", "--version", help="Show program's version number and exit",
                          action="store_true")
+    options.add_argument("-g", "--gui", help="Run "+app.env.APP_NAME+" with GUI",
+                         action="store_true")
 
     # Sniffing
     options_pcap = options.add_argument_group("Sniffing")
     options_pcap.add_argument("--sniff", help="Sniff Packages", action="store_true")
+    options_pcap.add_argument("--src", help="The .pcap source file", type=str, metavar='FILE')
     options_pcap.add_argument("--dest", help="The .pcap destination file", type=str, metavar='FILE')
     options_pcap.add_argument("--int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
     options_pcap.add_argument("--filters", help="Wireshark-Like filters", type=str, metavar='FILTERS')
@@ -69,30 +72,34 @@ def get_arguments():
 
     return args
 
+
 # Startup
-def boot(app_type):
+def init(app_type):
     app.utils.helpers.logger.Log.info(app.env.APP_NAME+' '+str(app_type)+' GUI started, PID='+str(os.getpid()))
 
 
 # Main function for GUI app
 def main_gui():
-    boot(AppType.GUI)
+    init(AppType.GUI)
+    # Ignore arguments
     app.gui.main.open()
 
 
 # Main function for command line app
 def main_cmd():
-    boot(AppType.CMD)
+    init(AppType.CMD)
+    if (arguments.sniff):
+        import pprint
+        def pcap_callback(pkt_dict):
+            pprint.pprint(pkt_dict)
+        app.utils.sniffing.sniff_pcap(src_file=None, interface=interface, dest_file=test_pcap_out, filter=filter, limit_length=10000, callback=pcap_callback)
 
 
 # Main function generic app
 def main():
     arguments = get_arguments()
-    if (arguments.sniff):
-        import pprint
-        def pcap_callback(pkt_dict):
-            pprint.pprint(pkt_dict)
-    #app.utils.sniffing.sniff_pcap(src_file=None, interface=interface, dest_file=test_pcap_out, filter=filter7, limit_length=10000, callback=pcap_callback)
+    if (not arguments.gui): main_cmd()
+    else: main_gui()
     return()
 
 if __name__ == "__main__":
