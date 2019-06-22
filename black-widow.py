@@ -32,16 +32,16 @@ def get_arguments():
     # Sniffing
     options_pcap = options.add_argument_group("Sniffing")
     options_pcap.add_argument("--sniff", help="Sniff Packages", action="store_true")
-    options_pcap.add_argument("--src", help="The .pcap source file", type=str, metavar='FILE')
-    options_pcap.add_argument("--dest", help="The .pcap destination file", type=str, metavar='FILE')
-    options_pcap.add_argument("--int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
-    options_pcap.add_argument("--filters", help="Wireshark-Like filters", type=str, metavar='FILTERS')
+    options_pcap.add_argument("--pcap-src", help="The .pcap source file", type=str, metavar='FILE')
+    options_pcap.add_argument("--pcap-dest", help="The .pcap destination file", type=str, metavar='FILE')
+    options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str, metavar='FILTERS')
 
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
     options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
-    options_sql.add_argument("--url", help="The url where search for forms", type=str)
-    options_sql.add_argument("--deep", help="Crawl the website", choices=['1', '0'])
+    options_sql.add_argument("--sql-url", help="The url where search for forms", type=str,  metavar='URL')
+    options_sql.add_argument("--sql-deep", help="Crawl the website", choices=['1', '0'])
 
     try:
         args = parser.parse_args()

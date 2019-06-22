@@ -10,6 +10,10 @@ def get_spaced_line(line, depth=0):
 # @class _CapitalisedHelpFormatter Extension of argparse.HelpFormatter
 class _CapitalisedHelpFormatter(argparse.HelpFormatter):
 
+    # max_help_position
+    def __init__(self, prog, indent_increment=2, max_help_position=36, width=None):
+        argparse.HelpFormatter.__init__(self, prog, indent_increment, max_help_position, width)
+
     # CamelCase prefix
     def add_usage(self, usage, actions, groups, prefix=None):
         if prefix is None: prefix = 'Usage: '
