@@ -18,9 +18,7 @@ def get_arguments():
         print('\n' + header_ascii + '\n')
 
     #--- Parser ---#
-    parser = plugins.args.ArgumentParser()
-    #print(dir(parser))
-    #exit(0)
+    parser = plugins.args.ArgumentParser(usage=sys.argv[0]+' [Options]')
 
     #--- Options ---#
     options = parser.add_argument_group("Options")
@@ -29,12 +27,18 @@ def get_arguments():
     options.add_argument("-v", "--version", help="Show program's version number and exit",
                          action="store_true")
 
+    # Sniffing
     options_pcap = options.add_argument_group("Sniffing")
-    options_pcap.add_argument("--sniff", help="Sniff Packages", type=str, metavar='FILTERS')
-    options_pcap.add_argument("--int", help="Interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--sniff", help="Sniff Packages", action="store_true")
+    options_pcap.add_argument("--dest", help="The .pcap destination file", type=str, metavar='FILE')
+    options_pcap.add_argument("--int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--filters", help="Wireshark-Like filters", type=str, metavar='FILTERS')
 
+    # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
-    options_sql.add_argument("--sql", help="Try injection in a website. Avilable settings: url=https://example.com deep=true", type=str, metavar='[SETTINGS]')
+    options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
+    options_sql.add_argument("--url", help="The url where search for forms", type=str)
+    options_sql.add_argument("--deep", help="Crawl the website", choices=['1', '0'])
 
     try:
         args = parser.parse_args()
@@ -84,7 +88,6 @@ def main_cmd():
 # Main function generic app
 def main():
     arguments = get_arguments()
-    # TODO: ask interface, [dest_file], [filter]
     if (arguments.sniff):
         import pprint
         def pcap_callback(pkt_dict):
