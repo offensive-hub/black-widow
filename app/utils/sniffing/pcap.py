@@ -11,9 +11,6 @@ from app.utils.helpers.logger import Log
 from pprint import pprint
 import pyshark, numpy, codecs
 
-def print_pcap(pkts_dict):
-    pprint(pkts_dict)
-
 # @param filter https://wiki.wireshark.org/DisplayFilters
 # @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
 # @param dest_file Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
@@ -74,8 +71,11 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 layer_fields[field_name] = layer_field_dict
 
                 if (callback == None):
-                    #print('   |-- Field (original): '+str(field_name)+' -> '+str(dirty_field))
-                    print('   |--[ '+str(field_name)+' ] = '+str(layer_field_dict[layer_field_dict['best']])) # Printa stile albero
+                    key = layer_field_dict['best']
+                    truncated_key = key+'_truncated'
+                    if (truncated_key in layer_field_dict): field = layer_field_dict[truncated_key]
+                    else: field = layer_field_dict[key]
+                    print('   |--[ '+str(field_name)+' ] = '+str(field)) # Printa stile albero
 
             layers_dict[layer.layer_name] = layer_fields
 
@@ -93,9 +93,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'layers': layers_dict   # Il dizionario dei livelli creato nel sovrastante loop
         }
 
-        # chiamo la callback
         if (callback != None): callback(pkt_dict)
-        #else: print_pcap(pkt_dict)
 
     if (interface == None): interface = settings.Get.my_interface()
     if (src_file != None): capture = pyshark.FileCapture(src_file, display_filter=filter, output_file=dest_file)

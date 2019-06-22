@@ -32,8 +32,8 @@ def get_arguments():
     # Sniffing
     options_pcap = options.add_argument_group("Sniffing")
     options_pcap.add_argument("--sniff", help="Sniff Packages", action="store_true")
-    options_pcap.add_argument("--pcap-src", help="The .pcap source file", type=str, metavar='FILE')
-    options_pcap.add_argument("--pcap-dest", help="The .pcap destination file", type=str, metavar='FILE')
+    options_pcap.add_argument("--pcap-src", help="The .pcap source file", type=plugins.args.argparse.FileType('r'), metavar='FILE')
+    options_pcap.add_argument("--pcap-dest", help="The .pcap destination file", type=plugins.args.argparse.FileType('w'), metavar='FILE')
     options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
     options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str, metavar='FILTERS')
 
@@ -75,7 +75,7 @@ def get_arguments():
 
 # Startup
 def init(app_type):
-    app.utils.helpers.logger.Log.info(app.env.APP_NAME+' '+str(app_type)+' GUI started, PID='+str(os.getpid()))
+    app.utils.helpers.logger.Log.info(app.env.APP_NAME+' '+str(app_type)+' started, PID='+str(os.getpid()))
 
 
 # Main function for GUI app
@@ -92,8 +92,12 @@ def main_cmd(arguments):
         if (arguments.pcap_int == None):
             print('Please, specific an interface! (ex. --pcap-int=wlan0)\n');
             sys.exit(1)
+        if (arguments.pcap_src != None): src_file = arguments.pcap_src.name
+        else: src_file = None
+        if (arguments.pcap_dest != None): dest_file = arguments.pcap_dest.name
+        else: dest_file = None
         limit_length=10000  # The max package fields length (the bigger fields will be truncated)
-        app.utils.sniffing.sniff_pcap(src_file=arguments.pcap_src, interface=arguments.pcap_int, dest_file=arguments.pcap_dest, filter=arguments.pcap_filters, limit_length=limit_length)
+        app.utils.sniffing.sniff_pcap(src_file=src_file, interface=arguments.pcap_int, dest_file=dest_file, filter=arguments.pcap_filters, limit_length=limit_length)
 
 
 # Main function generic app
