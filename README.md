@@ -9,6 +9,7 @@
  - [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/): `sudo pip3 install PyQtWebEngine`
  - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
  - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
+ - [Sqlmap](https://pypi.org/project/argparse/): `sudo pip3 install argparse`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;

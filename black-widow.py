@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, sys, getopt, lib, app
+import os, sys, getopt, plugins, app
 
 VERSION = '1.0.0#alpha'
 
@@ -8,13 +8,6 @@ VERSION = '1.0.0#alpha'
 class AppType:
     CMD=''
     GUI='GUI'
-
-
-class CapitalisedHelpFormatter(lib.args.argparse.HelpFormatter):
-    def add_usage(self, usage, actions, groups, prefix=None):
-        if prefix is None: prefix = 'Usage: '
-        return super(CapitalisedHelpFormatter, self).add_usage(
-        usage, actions, groups, prefix)
 
 # Creates the argument parser and return the parsed input arguments
 def get_arguments():
@@ -25,25 +18,23 @@ def get_arguments():
         print('\n' + header_ascii + '\n')
 
     #--- Parser ---#
-    parser = lib.args.Arguments()
-    print(dir(parser))
-    exit(0)
+    parser = plugins.args.ArgumentParser()
+    #print(dir(parser))
+    #exit(0)
 
     #--- Options ---#
-    options = parser.add_argument_group("General Options")
+    options = parser.add_argument_group("Options")
     options.add_argument("-h", "--help", help="Show this help message and exit",
                          action="store_true")
     options.add_argument("-v", "--version", help="Show program's version number and exit",
                          action="store_true")
 
-    options_pcap = parser.add_argument_group("Sniffing Options")
+    options_pcap = options.add_argument_group("Sniffing")
     options_pcap.add_argument("--sniff", help="Sniff Packages", type=str, metavar='FILTERS')
+    options_pcap.add_argument("--int", help="Interface (ex: eth0)", type=str, metavar='INTERFACE')
 
-    options_sql = parser.add_argument_group("SQL Options")
+    options_sql = options.add_argument_group("SQL Injection")
     options_sql.add_argument("--sql", help="Try injection in a website. Avilable settings: url=https://example.com deep=true", type=str, metavar='[SETTINGS]')
-
-    print(dir(options))
-    exit(0)
 
     try:
         args = parser.parse_args()
