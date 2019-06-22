@@ -4,10 +4,11 @@
 ## CTF Tool (Language: [python3.7](https://www.python.org/downloads/))
 
 #### Dipendenze:
- - [pyshark](https://pypi.org/project/pyshark/): `pip3 install pyshark`
- - [PyQt5](https://pypi.org/project/PyQt5/): `pip3 install PyQt5`
- - [PyTidyLib](https://pypi.org/project/pytidylib/): `pip3 install pytidylib`
- - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo apt-get install sqlmap`
+ - [pyshark](https://pypi.org/project/pyshark/): `sudo pip3 install pyshark`
+ - [PyQt5](https://pypi.org/project/PyQt5/): `sudo pip3 install PyQt5`
+ - [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/): `sudo pip3 install PyQtWebEngine`
+ - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
+ - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
