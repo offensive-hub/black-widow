@@ -8,8 +8,8 @@ from app.env import APP_DEBUG
 from app.utils import settings
 from app.utils.helpers.util import replace_regex, regex_in_string
 from app.utils.helpers.logger import Log
-from pprint import pprint
-import pyshark, numpy, codecs
+from io import StringIO
+import pyshark, numpy, codecs, gzip
 
 # @param filter https://wiki.wireshark.org/DisplayFilters
 # @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
@@ -32,6 +32,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
 
             if (callback == None): print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
+            content_encoding = None
 
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
@@ -51,17 +52,26 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
 
-                # Verifico lunghezza campo decodificato
-                if (len(field) > limit_length):
-                    #Log.info('Truncated too long decoded field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
-                    field = '[truncated]' + str(field[0:limit_length])
-                    layer_field_dict['decoded_truncated'] = field
+                if (field_name == 'data'):
+                    if (content_encoding == 'gzip'):
+                        print('GZIP FIELD !!!!!!!!!!!!!!!!!!!!!!!!!!')
+                        print(dirty_field)
+                        #field = gzip.decompress(field.encode()).decode('utf-8')
+                        #print(field)
+                        exit(0) # TODO: gzip
 
-                # Verifico lunghezza campo originale
-                if (len(dirty_field) > limit_length):
-                    #Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+', new_length='+str(limit_length)+')')
-                    dirty_field = '[truncated]' + str(dirty_field[0:limit_length])
-                    layer_field_dict['original_truncated'] = dirty_field
+                if (limit_length != None):
+                    # Verifico lunghezza campo decodificato
+                    if (len(field) > limit_length):
+                        #Log.info('Truncated too long decoded field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
+                        field = '[truncated]' + str(field[0:limit_length])
+                        layer_field_dict['decoded_truncated'] = field
+
+                    # Verifico lunghezza campo originale
+                    if (len(dirty_field) > limit_length):
+                        #Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+', new_length='+str(limit_length)+')')
+                        dirty_field = '[truncated]' + str(dirty_field[0:limit_length])
+                        layer_field_dict['original_truncated'] = dirty_field
 
                 # Se il risultato della codifica è troppo corto, è probabilissimo che la decodifica
                 # non abbia dato un valore sensato: consiglio di visualizzare il valore originale
@@ -70,12 +80,14 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
 
                 layer_fields[field_name] = layer_field_dict
 
-                if (callback == None):
-                    key = layer_field_dict['best']
-                    truncated_key = key+'_truncated'
-                    if (truncated_key in layer_field_dict): field = layer_field_dict[truncated_key]
-                    else: field = layer_field_dict[key]
-                    print('   |--[ '+str(field_name)+' ] = '+str(field)) # Printa stile albero
+                key = layer_field_dict['best']
+                truncated_key = key+'_truncated'
+                if (truncated_key in layer_field_dict): field = layer_field_dict[truncated_key]
+                else: field = layer_field_dict[key]
+
+                if (field_name == 'content_encoding'): content_encoding = field
+
+                if (callback == None): print('   |--[ '+str(field_name)+' ] = '+str(field)) # Printa stile albero
 
             layers_dict[layer.layer_name] = layer_fields
 

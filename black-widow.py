@@ -36,6 +36,7 @@ def get_arguments():
     options_pcap.add_argument("--pcap-dest", help="The .pcap destination file", type=plugins.args.argparse.FileType('w'), metavar='FILE')
     options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
     options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str, metavar='FILTERS')
+    options_pcap.add_argument("--pcap-limit", help="Max field lengths of each packet", type=int, metavar='INTEGER')
 
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
@@ -96,8 +97,8 @@ def main_cmd(arguments):
         else: src_file = None
         if (arguments.pcap_dest != None): dest_file = arguments.pcap_dest.name
         else: dest_file = None
-        limit_length=10000  # The max package fields length (the bigger fields will be truncated)
-        app.utils.sniffing.sniff_pcap(src_file=src_file, interface=arguments.pcap_int, dest_file=dest_file, filter=arguments.pcap_filters, limit_length=limit_length)
+        limit_length=2000  # The max package fields length (the bigger fields will be truncated)
+        app.utils.sniffing.sniff_pcap(src_file=src_file, interface=arguments.pcap_int, dest_file=dest_file, filter=arguments.pcap_filters, limit_length=arguments.pcap_limit)
 
 
 # Main function generic app
