@@ -9,7 +9,7 @@ from app.utils import settings
 from app.utils.helpers.util import replace_regex, regex_in_string
 from app.utils.helpers.logger import Log
 from io import StringIO
-import pyshark, numpy, codecs, gzip
+import pyshark, numpy, codecs       #gzip
 
 # @param filter https://wiki.wireshark.org/DisplayFilters
 # @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
@@ -32,7 +32,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
 
             if (callback == None): print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
-            content_encoding = None
+            #content_encoding = None
 
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
@@ -52,13 +52,12 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
 
-                if (field_name == 'data'):
-                    if (content_encoding == 'gzip'):
-                        print('GZIP FIELD !!!!!!!!!!!!!!!!!!!!!!!!!!')
-                        print(dirty_field)
+                #if (field_name == 'data'):
+                    #if (content_encoding == 'gzip'):
+                        #print(dirty_field)
                         #field = gzip.decompress(field.encode()).decode('utf-8')
                         #print(field)
-                        exit(0) # TODO: gzip
+                        # TODO: gzip
 
                 if (limit_length != None):
                     # Verifico lunghezza campo decodificato
@@ -85,7 +84,7 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 if (truncated_key in layer_field_dict): field = layer_field_dict[truncated_key]
                 else: field = layer_field_dict[key]
 
-                if (field_name == 'content_encoding'): content_encoding = field
+                #if (field_name == 'content_encoding'): content_encoding = field
 
                 if (callback == None): print('   |--[ '+str(field_name)+' ] = '+str(field)) # Printa stile albero
 

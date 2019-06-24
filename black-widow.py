@@ -41,8 +41,8 @@ def get_arguments():
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
     options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
+    options_sql.add_argument("--sql-deep", help="Crawl the website in search for forms", action="store_true")
     options_sql.add_argument("--sql-url", help="The url where search for forms", type=str,  metavar='URL')
-    options_sql.add_argument("--sql-deep", help="Crawl the website", choices=['1', '0'])
 
     try:
         args = parser.parse_args()
