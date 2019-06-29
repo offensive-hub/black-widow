@@ -43,8 +43,16 @@ def create_parser():
 
 # Creates the argument parser and return the parsed input arguments
 def get_arguments(app_version):
+    """
+    Get the CLI arguments
+    :param app_version:
+    :return:
+    """
     # --- Header image ---#
     def print_header():
+        """
+        Print the software header
+        """
         header_ascii = app.utils.helpers.storage.read_file(
             app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt')
         header_ascii = header_ascii.replace('{version}', app_version)
@@ -76,15 +84,18 @@ def get_arguments(app_version):
     return args
 
 
-# Prepend the space
-# @param depth The number of spaces to insert
 def get_spaced_line(line, depth=0):
+    """
+    Prepend a line with certain space
+    :param line: the line to edit
+    :param depth: the number of spaces to insert
+    :return: the prepended line
+    """
     if type(line) == str:
         return (' ' * depth) + str(line)
     return line
 
 
-# @class _CapitalisedHelpFormatter Extension of argparse.HelpFormatter
 class _CapitalisedHelpFormatter(argparse.HelpFormatter):
 
     # max_help_position
@@ -112,7 +123,6 @@ class _CapitalisedHelpFormatter(argparse.HelpFormatter):
 
 
 # Better subgroup managing (with depth)
-# @class ArgumentParser Extension of argparse.ArgumentParser
 class ArgumentParser(argparse.ArgumentParser):
     # noinspection PyDefaultArgument
     def __init__(self,
@@ -120,7 +130,6 @@ class ArgumentParser(argparse.ArgumentParser):
                  usage=None,
                  description=None,
                  epilog=None,
-                 version=None,
                  parents=[],
                  formatter_class=_CapitalisedHelpFormatter,
                  prefix_chars='-',
@@ -141,7 +150,6 @@ class ArgumentParser(argparse.ArgumentParser):
                                          argument_default=argument_default,
                                          conflict_handler=conflict_handler,
                                          add_help=add_help)
-        self.version = version
 
     # Overwrite Parent.format_help
     def format_help(self, depth=0):
@@ -163,11 +171,15 @@ class ArgumentParser(argparse.ArgumentParser):
 
         return formatter.format_help()
 
-    # Manage correctly the subgroups depth
-    # @method fill_formatter
     # noinspection PyProtectedMember
     @staticmethod
     def fill_formatter(argument, formatter, depth=0):
+        """
+        Manage correctly the subgroups depth
+        :param argument: The argument to format
+        :param formatter: The formatter to fill
+        :param depth: The initial depth of the printed params
+        """
         actions = argument._action_groups
         if hasattr(argument, '_group_actions'):
             actions += argument._group_actions

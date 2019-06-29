@@ -4,26 +4,33 @@
 Packet Capture (pcap)
 """
 
-from app.env import APP_DEBUG
-from app.utils import settings
-from app.utils.helpers.util import replace_regex, regex_in_string
-from app.utils.helpers.logger import Log
-from io import StringIO
-import pyshark, numpy, codecs       #gzip
+# from io import StringIO
+import codecs  # gzip
+import numpy
+import pyshark
 
-# @param filter https://wiki.wireshark.org/DisplayFilters
-# @param src_file Il file .pcap da cui leggere i pacchett ascoltati (o None, per Live sniffing)
-# @param dest_file Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
-# @param interface L'interfaccia da cui ascoltare (o None)
-# @param limit_length Il limite che i campi dei pacchetti devono avere per non essere troncati (o None)
-# @param callback La funzione che prende un dizionario del pacchetto come argomento (o None). Se None, printa l'output
-# @return void
-def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
+# from app.env import APP_DEBUG
+from app.utils import settings
+# from app.utils.helpers.util import replace_regex, regex_in_string
+from app.utils.helpers.logger import Log
+
+
+def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
+    """
+    Packet capture method
+    :param filters: https://wiki.wireshark.org/DisplayFilters
+    :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
+    :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
+    :param interface: L'interfaccia da cui ascoltare (o None)
+    :param limit_length: The limit length of each packet field (they will be truncated), or None
+    :param callback: The callback method to call (or None)
+    """
+
     def __pcap_callback__(pkt):
-        Log.info('Analyzing packet number '+str(pkt.number))
-        Log.info('Layers: '+str(pkt.layers))
+        Log.info('Analyzing packet number ' + str(pkt.number))
+        Log.info('Layers: ' + str(pkt.layers))
         layers_dict = {}
-        #pkt.pretty_print()     # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica nulla)
+        # pkt.pretty_print() # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
         for layer in pkt.layers:
             layer_fields = {}
 
@@ -31,8 +38,8 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             # Layers: ["2. Data Link (mac)",    "3. Network (ip)", "4. Transport (tcp/udp)", "5-6-7. *data"]
             # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
 
-            if (callback == None): print('Layer: '+str(layer.layer_name))     # Decommentare per printare stile albero
-            #content_encoding = None
+            if callback is None:
+                print('Layer: ' + str(layer.layer_name))
 
             for field_name in numpy.unique(layer.field_names):
                 layer_field_dict = {}
@@ -42,51 +49,59 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
                 try:
                     # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
                     field = bytes.fromhex(dirty_field.replace(":", " ")).decode('utf-8', 'ignore')
-                except ValueError or UnicodeDecodeError or TypeError as e:
+                except ValueError or UnicodeDecodeError or TypeError:
                     # Decodifico in utf-8 (il doc non era in esadecimale)
                     field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
                 # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
-                field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n', '\n').strip()
+                field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
+                                                                                                        '\n').strip()
 
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
 
-                #if (field_name == 'data'):
-                    #if (content_encoding == 'gzip'):
-                        #print(dirty_field)
-                        #field = gzip.decompress(field.encode()).decode('utf-8')
-                        #print(field)
-                        # TODO: gzip
+                # if (field_name == 'data'):
+                # if (content_encoding == 'gzip'):
+                # print(dirty_field)
+                # field = gzip.decompress(field.encode()).decode('utf-8')
+                # print(field)
+                # TODO: gzip
 
-                if (limit_length != None):
+                if limit_length is not None:
                     # Verifico lunghezza campo decodificato
-                    if (len(field) > limit_length):
-                        #Log.info('Truncated too long decoded field (old_length='+str(len(field))+', new_length='+str(limit_length)+')')
+                    if len(field) > limit_length:
+                        # Log.info('Truncated too long decoded field (old_length='+str(len(field))+',
+                        # new_length='+str(limit_length)+')')
                         field = '[truncated]' + str(field[0:limit_length])
                         layer_field_dict['decoded_truncated'] = field
 
                     # Verifico lunghezza campo originale
-                    if (len(dirty_field) > limit_length):
-                        #Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+', new_length='+str(limit_length)+')')
+                    if len(dirty_field) > limit_length:
+                        # Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+',
+                        # new_length='+str(limit_length)+')')
                         dirty_field = '[truncated]' + str(dirty_field[0:limit_length])
                         layer_field_dict['original_truncated'] = dirty_field
 
                 # Se il risultato della codifica è troppo corto, è probabilissimo che la decodifica
                 # non abbia dato un valore sensato: consiglio di visualizzare il valore originale
-                if (len(field) <= 5): layer_field_dict['best'] = 'original'
-                else: layer_field_dict['best'] = 'decoded'
+                if len(field) <= 5:
+                    layer_field_dict['best'] = 'original'
+                else:
+                    layer_field_dict['best'] = 'decoded'
 
                 layer_fields[field_name] = layer_field_dict
 
                 key = layer_field_dict['best']
-                truncated_key = key+'_truncated'
-                if (truncated_key in layer_field_dict): field = layer_field_dict[truncated_key]
-                else: field = layer_field_dict[key]
+                truncated_key = key + '_truncated'
+                if truncated_key in layer_field_dict:
+                    field = layer_field_dict[truncated_key]
+                else:
+                    field = layer_field_dict[key]
 
-                #if (field_name == 'content_encoding'): content_encoding = field
+                # if (field_name == 'content_encoding'): content_encoding = field
 
-                if (callback == None): print('   |--[ '+str(field_name)+' ] = '+str(field)) # Printa stile albero
+                if callback is None:
+                    print('   |--[ ' + str(field_name) + ' ] = ' + str(field))  # Printa stile albero
 
             layers_dict[layer.layer_name] = layer_fields
 
@@ -101,12 +116,16 @@ def sniff_pcap(filter=None, src_file=None, dest_file=None, interface=None, limit
             'sniff_time': pkt.sniff_time,
             'sniff_timestamp': pkt.sniff_timestamp,
             'transport_layer': pkt.transport_layer,
-            'layers': layers_dict   # Il dizionario dei livelli creato nel sovrastante loop
+            'layers': layers_dict  # Il dizionario dei livelli creato nel sovrastante loop
         }
 
-        if (callback != None): callback(pkt_dict)
+        if callback is not None:
+            callback(pkt_dict)
 
-    if (interface == None): interface = settings.Get.my_interface()
-    if (src_file != None): capture = pyshark.FileCapture(src_file, display_filter=filter, output_file=dest_file)
-    else: capture = pyshark.LiveCapture(interface, display_filter=filter, output_file=dest_file)
+    if interface is None:
+        interface = settings.Get.my_interface()
+    if src_file is not None:
+        capture = pyshark.FileCapture(src_file, display_filter=filters, output_file=dest_file)
+    else:
+        capture = pyshark.LiveCapture(interface, display_filter=filters, output_file=dest_file)
     capture.apply_on_packets(__pcap_callback__, timeout=None)
