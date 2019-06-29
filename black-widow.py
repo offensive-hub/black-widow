@@ -5,6 +5,7 @@ import os
 import plugins
 import sys
 
+
 VERSION = '1.0.0#alpha'
 
 
@@ -47,10 +48,10 @@ def main_cmd(arguments):
 # Main function generic app
 def main():
     arguments = plugins.args.get_arguments(VERSION)
-    if not arguments.gui:
-        main_cmd(arguments)
-    else:
+    if arguments.gui:
         main_gui()
+    else:
+        main_cmd(arguments)
 
 
 if __name__ == "__main__":
