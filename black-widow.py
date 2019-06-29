@@ -13,15 +13,7 @@ class AppType:
     GUI = 'GUI'
 
 
-# Creates the argument parser and return the parsed input arguments
-def get_arguments():
-    # --- Header image ---#
-    def print_header():
-        header_ascii = app.utils.helpers.storage.read_file(
-            app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt')
-        header_ascii = header_ascii.replace('{version}', VERSION)
-        print('\n' + header_ascii + '\n')
-
+def create_parser():
     # --- Parser ---#
     parser = plugins.args.ArgumentParser(usage=sys.argv[0] + ' [Options]')
 
@@ -51,6 +43,20 @@ def get_arguments():
     options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
     options_sql.add_argument("--sql-deep", help="Crawl the website in search for forms", action="store_true")
     options_sql.add_argument("--sql-url", help="The url where search for forms", type=str, metavar='URL')
+
+    return parser
+
+
+# Creates the argument parser and return the parsed input arguments
+def get_arguments():
+    # --- Header image ---#
+    def print_header():
+        header_ascii = app.utils.helpers.storage.read_file(
+            app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt')
+        header_ascii = header_ascii.replace('{version}', VERSION)
+        print('\n' + header_ascii + '\n')
+
+    parser = create_parser()
     args = parser.parse_args()
 
     if args.version:
