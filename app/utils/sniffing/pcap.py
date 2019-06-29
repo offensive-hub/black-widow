@@ -55,17 +55,9 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
                 # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
                 field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
                                                                                                         '\n').strip()
-
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
-
-                # if (field_name == 'data'):
-                # if (content_encoding == 'gzip'):
-                # print(dirty_field)
-                # field = gzip.decompress(field.encode()).decode('utf-8')
-                # print(field)
-                # TODO: gzip
 
                 if limit_length is not None:
                     # Verifico lunghezza campo decodificato
