@@ -49,13 +49,14 @@ def file_contains_regex(regex, file):
 
 def replace_in_file(find, replace, file):
     """
-    Esegue il replace della stringa che trova, con la stringa replace
+    Esegue il replace della stringa che trova, con la stringa nel parametro replace
     :param find: la stringa da trovare
     :param replace: la stringa che andra' a sostituire la stringa trovata
     :param file: il file in cui sovrascrivere find con replace
     :return: True se trova una stringa find, False altrimenti
     """
-    if APP_DEBUG: Log.info('CALLED: replace_in_file(' + find + ', ' + replace + ', ' + file + ')')
+    if APP_DEBUG:
+        Log.info('CALLED: replace_in_file(' + find + ', ' + replace + ', ' + file + ')')
     if find == replace:
         return False
     if not file_contains(find, file):
