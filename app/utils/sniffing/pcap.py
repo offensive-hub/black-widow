@@ -4,12 +4,10 @@
 Packet Capture (pcap)
 """
 
-# from io import StringIO
 import codecs  # gzip
 import numpy
 import pyshark
 
-# from app.env import APP_DEBUG
 from app.utils import settings
 # from app.utils.helpers.util import replace_regex, regex_in_string
 from app.utils.helpers.logger import Log
