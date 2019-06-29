@@ -1,4 +1,79 @@
+import sys
 import argparse
+import app
+
+
+def create_parser():
+    """
+    Set the expected arguments
+    :return: The created ArgumentParser
+    """
+    # --- Parser ---#
+    parser = ArgumentParser(usage=sys.argv[0] + ' [Options]')
+
+    # --- Options ---#
+    options = parser.add_argument_group("Options")
+    options.add_argument("-h", "--help", help="Show this help message and exit",
+                         action="store_true")
+    options.add_argument("-v", "--version", help="Show program's version number and exit",
+                         action="store_true")
+    options.add_argument("-g", "--gui", help="Run " + app.env.APP_NAME + " with GUI",
+                         action="store_true")
+
+    # Sniffing
+    options_pcap = options.add_argument_group("Sniffing")
+    options_pcap.add_argument("--pcap", help="Sniff Packages", action="store_true")
+    options_pcap.add_argument("--pcap-src", help="The .pcap source file", type=argparse.FileType('r'),
+                              metavar='FILE')
+    options_pcap.add_argument("--pcap-dest", help="The .pcap destination file",
+                              type=argparse.FileType('w'), metavar='FILE')
+    options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str,
+                              metavar='FILTERS')
+    options_pcap.add_argument("--pcap-limit", help="Max field lengths of each packet", type=int, metavar='INTEGER')
+
+    # SQL Injection
+    options_sql = options.add_argument_group("SQL Injection")
+    options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
+    options_sql.add_argument("--sql-deep", help="Crawl the website in search for forms", action="store_true")
+    options_sql.add_argument("--sql-url", help="The url where search for forms", type=str, metavar='URL')
+
+    return parser
+
+
+# Creates the argument parser and return the parsed input arguments
+def get_arguments(app_version):
+    # --- Header image ---#
+    def print_header():
+        header_ascii = app.utils.helpers.storage.read_file(
+            app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt')
+        header_ascii = header_ascii.replace('{version}', app_version)
+        print('\n' + header_ascii + '\n')
+
+    parser = create_parser()
+    args = parser.parse_args()
+
+    if args.version:
+        print(app_version)
+        sys.exit(0)
+
+    print_header()
+
+    # Check if at least one argument is set
+    arg_set = False
+    # noinspection PyProtectedMember
+    for arg in args._get_kwargs():
+        arg_set = arg[1] or arg_set
+    if args.help or not arg_set:
+        # Print help
+        parser.print_help()
+        print()  # print newline
+        sys.exit(0)
+
+    # global usage
+    # usage = parser.print_help
+
+    return args
 
 
 # Prepend the space
