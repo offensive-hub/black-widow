@@ -56,9 +56,6 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 ##### GitHub repository:
 `git@github.com:FabrizioFubelli/black-widow.git`
 
-##### Private Fabrizio Fubelli's repository:
-`secret`
-
 <hr/>
 
 #### [© Fabrizio Fubelli](https://fabrizio.fubelli.org)
