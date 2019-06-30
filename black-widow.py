@@ -42,7 +42,7 @@ def main_cmd(arguments):
         else:
             dest_file = None
         app.utils.sniffing.sniff_pcap(src_file=src_file, interface=arguments.pcap_int, dest_file=dest_file,
-                                      filter=arguments.pcap_filters, limit_length=arguments.pcap_limit)
+                                      filters=arguments.pcap_filters, limit_length=arguments.pcap_limit)
 
 
 # Main function generic app
