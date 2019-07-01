@@ -28,10 +28,6 @@ def deep_inject_form(url):
     out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
 
     def _deep_inject_form(href):
-        if len(parsed_forms) % 10 == 0:
-            Log.info('Writing result in ' + out_file + '...')
-            set_json(parsed_forms, out_file)
-
         # Check the domain
         if href in parsed_forms or urlparse(href).netloc != base_url:
             return
@@ -42,6 +38,10 @@ def deep_inject_form(url):
 
         # Find adjacent links
         links = find_links(parsed_relevant)
+
+        if len(parsed_forms) % 10 == 0:
+            Log.info('Writing result in ' + out_file + '...')
+            set_json(parsed_forms, out_file)
 
         # Visit adjacent links
         for link in links:
