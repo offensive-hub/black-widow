@@ -38,6 +38,7 @@ def deep_inject_form(url):
 
         # Visit adjacent links
         for link in links:
+            # print('link: '+link)
             _deep_inject_form(link)
 
     _deep_inject_form(url)

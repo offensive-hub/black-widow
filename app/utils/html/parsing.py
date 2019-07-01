@@ -258,9 +258,6 @@ def find_links(parsed):
             elif 'a' == parsed.get('tag'):
                 url = attrs.get('href')
             if url is not None:
-                url_parsed = urlparse(url)
-                url_scheme = str(url_parsed.scheme)
-                url = url_scheme + '://' + str(url_parsed.netloc) + str(url_parsed.path)
                 links.add(url)
         links = links.union(find_links(parsed.get('children')))
     elif type(parsed) == list:

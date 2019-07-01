@@ -15,27 +15,33 @@ ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
 (come accade spesso in software provvisti di grafica)
 """
 
-import multiprocessing, threading, itertools, os, signal
-from app.utils.helpers.logger import Log
-from app.utils.helpers import storage
-from app.utils.helpers.util import is_listable
+import itertools
+import multiprocessing
+import os
+import signal
+import threading
+
 from app.env import APP_TMP
+from app.utils.helpers import storage
+from app.utils.helpers.logger import Log
+from app.utils.helpers.util import is_listable
 
 CPU = multiprocessing.cpu_count()
 
+
 # Classe astratta, sfruttata sia da MultiThreading che da MultiProcessing
 class MultiTask:
-    MULTI_THREADING='MULTI_THREADING'
-    MULTI_PROCESSING='MULTI_PROCESSING'
-    tasks_types=(MULTI_THREADING, MULTI_PROCESSING)
+    MULTI_THREADING = 'MULTI_THREADING'
+    MULTI_PROCESSING = 'MULTI_PROCESSING'
+    tasks_types = (MULTI_THREADING, MULTI_PROCESSING)
 
     # @param tasks_type in MultiTask.tasks_types
     def __init__(self, tasks_type):
-        if (tasks_type not in MultiTask.tasks_types):
+        if tasks_type not in MultiTask.tasks_types:
             tasks_type = MultiTask.MULTI_PROCESSING
-            Log.error(str(tasks_type)+' is not a valid tasks type!')
+            Log.error(str(tasks_type) + ' is not a valid tasks type!')
         self.tasks_type = tasks_type
-        if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+        if self.tasks_type == MultiTask.MULTI_PROCESSING:
             self.Multitask = multiprocessing.Process
             self.tag = 'Process '
         else:
@@ -44,9 +50,9 @@ class MultiTask:
         self.tasks = []
         pid = str(multiprocessing.process.current_process().pid)
         # File con pids (se multiprocessing)
-        self.pidfile = APP_TMP + '/multitask.'+pid+'.pids'
+        self.pidfile = APP_TMP + '/multitask.' + pid + '.pids'
         # File con result
-        self.resfile = APP_TMP + '/multitask.'+pid+'.res'
+        self.resfile = APP_TMP + '/multitask.' + pid + '.res'
 
     # Sfrutta il multiprocessing o il multitasking per effettuare la stessa
     # operazione sugli elementi di un/una lista|tupla|dizionario|range.
@@ -60,30 +66,32 @@ class MultiTask:
     def start(self, target, args, asynchronous, cpu):
         self.tasks = []
 
-        def task_target(*args):
+        def task_target(*arguments):
             result = None
-            if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+            if self.tasks_type == MultiTask.MULTI_PROCESSING:
                 curr_task = multiprocessing.process.current_process()
-                Log.info(self.tag + 'started (PID='+str(curr_task.pid)+')')
+                Log.info(self.tag + 'started (PID=' + str(curr_task.pid) + ')')
             else:
                 curr_task = threading.current_thread()
                 Log.info(self.tag + 'started')
-            if (target != None): result = target(*args)
-            if (result != None):
-                Log.success("Result: "+str(result))
+            if target is not None:
+                result = target(*arguments)
+            if result is not None:
+                Log.success("Result: " + str(result))
                 # Scrivo il risultato nel file
-                Log.info('Writing result in '+str(self.resfile))
+                Log.info('Writing result in ' + str(self.resfile))
                 storage.overwrite_file(str(result), self.resfile)
                 # Termino tutti gli altri threads/processi
-                if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+                if self.tasks_type == MultiTask.MULTI_PROCESSING:
                     Log.info('Killing other processes')
-                    pids = storage.read_file(self.pidfile).split(', ')
-                    for pid in pids:
+                    running_pids = storage.read_file(self.pidfile).split(', ')
+                    for pid in running_pids:
                         pid = int(pid)
-                        if (pid == curr_task.pid): continue
+                        if pid == curr_task.pid:
+                            continue
                         try:
                             os.kill(pid, signal.SIGKILL)
-                            Log.info('Process '+str(pid)+' killed!')
+                            Log.info('Process ' + str(pid) + ' killed!')
                         except Exception as e:
                             Log.error(str(e))
                     Log.info(self.tag + 'end')
@@ -97,43 +105,47 @@ class MultiTask:
         for i in range(0, cpu):
             task_args = ()
             for arg in args:
-                Log.info('Argument type: '+str(type(arg)))
-                if (is_listable(arg)):
+                Log.info('Argument type: ' + str(type(arg)))
+                if is_listable(arg):
                     # Divido gli elementi in 1/cpu parti
                     p_list_len = (len(arg) / cpu) + (len(arg) % cpu)
-                    if (type(arg) == dict):
+                    if type(arg) == dict:
                         iterator = iter(arg.items())
-                        task_args += (dict(itertools.islice(iterator, int((i*p_list_len)), int((i+1)*p_list_len))),)
+                        task_args += (
+                            dict(itertools.islice(iterator, int((i * p_list_len)), int((i + 1) * p_list_len))),
+                        )
                     else:
-                        task_args += (arg[int((i*p_list_len)):int(((i+1)*p_list_len))],)
+                        task_args += (arg[int((i * p_list_len)):int(((i + 1) * p_list_len))],)
                 else:
                     task_args += (arg,)
             task = self.Multitask(target=task_target, args=task_args)
             self.tasks.append(task)
 
-        if (self.tasks_type == MultiTask.MULTI_PROCESSING):
+        if self.tasks_type == MultiTask.MULTI_PROCESSING:
             pids = []
             for task in self.tasks:
                 task.start()
+                # noinspection PyUnresolvedReferences
                 pids.append(task.pid)
             storage.overwrite_file(str(pids).strip('[]'), self.pidfile)
         else:
-            for task in self.tasks: task.start()
+            for task in self.tasks:
+                task.start()
 
-        if (not asynchronous):
+        if not asynchronous:
             # Attende la fine dell'esecuzione di tutti i tasks
             for task in self.tasks:
                 task.join()
-                Log.info('Task '+str(task.name)+' joined')
-            Log.info('Reading result in '+str(self.resfile))
+                Log.info('Task ' + str(task.name) + ' joined')
+            Log.info('Reading result in ' + str(self.resfile))
             # Prendo il risultato dal file
-            result = storage.read_file(self.resfile)
+            res = storage.read_file(self.resfile)
             # Elimino l'eventuale file con i pid
             storage.delete(self.pidfile)
             # Elimino il file con il risultato
             storage.delete(self.resfile)
-            Log.success('MultiTask -> result: '+str(result))
-            return result
+            Log.success('MultiTask -> result: ' + str(res))
+            return res
 
         return None
 
@@ -158,6 +170,7 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     # Gli argomenti da passare alla funzione multitask.start
     multithread_args = (target, args, asynchronous, cpu)
     return multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
+
 
 # Sfrutta il multiprocessing per effettuare la stessa operazione
 # sugli elementi di un/una lista|tupla|dizionario|range.
