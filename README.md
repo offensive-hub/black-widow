@@ -18,7 +18,7 @@
  - Mapping **{server -> vulnerabilities}**
  - Cluster between **black-widow** that are running within the same network
  - Encrypted communications between others **black-widow**
- - Useful features for CTF challenges
+ - Useful features for **CTF** challenges
 
 ##### Suggest you other features!
 

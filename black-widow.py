@@ -31,7 +31,7 @@ def main_cmd(arguments):
     init(AppType.CMD)
     if arguments.pcap:
         if arguments.pcap_int is None:
-            print('Please, specific an interface! (ex. --pcap-int=wlan0)\n')
+            print('Please, specify an interface! (ex. --pcap-int=wlan0)\n')
             sys.exit(1)
         if arguments.pcap_src is not None:
             src_file = arguments.pcap_src.name
@@ -43,6 +43,10 @@ def main_cmd(arguments):
             dest_file = None
         app.utils.sniffing.sniff_pcap(src_file=src_file, interface=arguments.pcap_int, dest_file=dest_file,
                                       filters=arguments.pcap_filters, limit_length=arguments.pcap_limit)
+    elif arguments.sql:
+        if arguments.sql_url is None:
+            print('Please, specify an url! (ex. --sql-url=https://black-widow.io)\n')
+            sys.exit(1)
 
 
 # Main function generic app
