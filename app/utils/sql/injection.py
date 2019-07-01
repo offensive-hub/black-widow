@@ -1,6 +1,8 @@
 from urllib.parse import urlparse
 from app.utils.html import form_parse, print_parsed, relevant_parse, find_forms, find_links
 from app.utils.helpers.logger import Log
+from app.utils.helpers.util import now, set_json
+from app.env import APP_STORAGE_OUT
 
 
 # Cerca dei form all'interno della pagina ritornata dall'url passato come parametro
@@ -10,7 +12,7 @@ from app.utils.helpers.logger import Log
 # @return
 def inject_form(url=None, html=None):
     parsed_forms = form_parse(url, html)
-    Log.success('Parsed Forms:')
+    Log.success('Parsed Forms!')
     print_parsed(parsed_forms)
     Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
 
@@ -43,8 +45,11 @@ def deep_inject_form(url):
 
     _deep_inject_form(url)
 
-    Log.success('Parsed Deep Forms:')
-    print_parsed(parsed_forms)
+    Log.success('Parsed Deep Forms!')
+    out_file = APP_STORAGE_OUT + '/' + now() + '_deep_' + base_url + '.json'
+    Log.info('Writing result in ' + out_file + '...')
+    set_json(parsed_forms, url)
+    # print_parsed(parsed_forms)
 
     Log.error('NOT IMPLEMENTED: deep_inject_form('+str(url)+')')
 

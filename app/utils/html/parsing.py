@@ -264,7 +264,6 @@ def find_links(parsed):
         for value in parsed:
             links = links.union(find_links(value))
     else:
-        Log.error(str(type(parsed)) + ' is not a valid parsed content!')
         Log.error(str(parsed) + ' is not a valid parsed content!')
     return links
 
