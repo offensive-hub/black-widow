@@ -1,6 +1,7 @@
 from os.path import dirname, realpath
 
 # Variabili d'ambiente
+APP_VERSION = '1.0.0#alpha'
 APP_DEBUG = True
 APP_NAME = 'Black Widow'
 APP_PROC = 'black-widow'

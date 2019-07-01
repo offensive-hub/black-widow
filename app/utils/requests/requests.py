@@ -6,7 +6,7 @@ import json
 import requests
 import simplejson
 
-from app.env import APP_DEBUG
+from app.env import APP_DEBUG, APP_VERSION, APP_NAME
 from app.utils.helpers.logger import Log
 from app.utils.helpers.validators import is_url
 
@@ -47,6 +47,9 @@ def print_request(_request):
 # @param request_type get|post|put|patch|delete
 # @param data dizionario con parametri
 def request(url, request_type=Type.GET, data=None):
+    headers = {
+        'User-Agent': str(APP_NAME)+' '+str(APP_VERSION)
+    }
     if data is None:
         data = {}
     request_type = request_type.lower()
@@ -55,15 +58,15 @@ def request(url, request_type=Type.GET, data=None):
         return None
     try:
         if request_type == Type.GET:
-            r = requests.get(url, data)
+            r = requests.get(url, data, headers=headers)
         elif request_type == Type.POST:
-            r = requests.post(url, data)
+            r = requests.post(url, data, headers=headers)
         elif request_type == Type.PUT:
-            r = requests.put(url, data)
+            r = requests.put(url, data, headers=headers)
         elif request_type == Type.PATCH:
-            r = requests.patch(url, data)
+            r = requests.patch(url, data, headers=headers)
         elif request_type == Type.DELETE:
-            r = requests.delete(url)
+            r = requests.delete(url, headers=headers)
         else:
             Log.error(str(request_type) + ' is not a valid request type!')
             return None

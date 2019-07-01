@@ -14,9 +14,6 @@ import plugins
 import sys
 
 
-VERSION = '1.0.0#alpha'
-
-
 class AppType:
     CMD = 'CMD'
     GUI = 'GUI'
@@ -63,7 +60,7 @@ def main_cmd(arguments):
 
 # Main function generic app
 def main():
-    arguments = plugins.args.get_arguments(VERSION)
+    arguments = plugins.args.get_arguments()
     if arguments.gui:
         main_gui()
     else:

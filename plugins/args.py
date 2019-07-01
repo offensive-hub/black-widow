@@ -42,10 +42,9 @@ def create_parser():
 
 
 # Creates the argument parser and return the parsed input arguments
-def get_arguments(app_version):
+def get_arguments():
     """
     Get the CLI arguments
-    :param app_version:
     :return:
     """
     # --- Header image ---#
@@ -54,15 +53,16 @@ def get_arguments(app_version):
         Print the software header
         """
         header_ascii = app.utils.helpers.storage.read_file(
-            app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt')
-        header_ascii = header_ascii.replace('{version}', app_version)
+            app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt'
+        )
+        header_ascii = header_ascii.replace('{version}', app.env.APP_VERSION)
         print('\n' + header_ascii + '\n')
 
     parser = create_parser()
     args = parser.parse_args()
 
     if args.version:
-        print(app_version)
+        print(app.env.APP_VERSION)
         sys.exit(0)
 
     print_header()
