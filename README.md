@@ -28,13 +28,9 @@
  - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
 
 
-### Main dependencies:
- - [PyShark](https://pypi.org/project/pyshark/): `sudo pip3 install pyshark`
- - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
- - [Argparse](https://pypi.org/project/argparse/): `sudo pip3 install argparse`
- - [PyQt5](https://pypi.org/project/PyQt5/): `sudo pip3 install PyQt5`
- - [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/): `sudo pip3 install PyQtWebEngine`
- - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
+### Thanks to:
+ - [PyShark](https://github.com/KimiNewt/pyshark)
+ - [Sqlmap](https://github.com/sqlmapproject/sqlmap)
 
 
 ### Installation:
