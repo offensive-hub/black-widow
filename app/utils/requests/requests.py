@@ -70,7 +70,7 @@ def request(url, request_type=Type.GET, data=None):
         if APP_DEBUG:
             print_request(r)
         return r
-    except requests.exceptions.ConnectionError as e:
+    except requests.exceptions.ConnectionError or requests.exceptions.TooManyRedirects as e:
         Log.error('Unable to connect to ' + str(url))
         Log.error('Exception: ' + str(e))
     return None

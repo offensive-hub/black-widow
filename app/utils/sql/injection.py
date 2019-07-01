@@ -25,8 +25,13 @@ def inject_form(url=None, html=None):
 def deep_inject_form(url):
     base_url = urlparse(url).netloc
     parsed_forms = dict()
+    out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
 
     def _deep_inject_form(href):
+        if len(parsed_forms) % 10 == 0:
+            Log.info('Writing result in ' + out_file + '...')
+            set_json(parsed_forms, out_file)
+
         # Check the domain
         if href in parsed_forms or urlparse(href).netloc != base_url:
             return
@@ -46,7 +51,7 @@ def deep_inject_form(url):
     _deep_inject_form(url)
 
     Log.success('Parsed Deep Forms!')
-    out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
+
     Log.info('Writing result in ' + out_file + '...')
     set_json(parsed_forms, out_file)
 
