@@ -2,7 +2,7 @@
 
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE)
 
-![image](resources/black-widow.jpeg)
+![image](resources/black-widow.png)
 
 
 ## Offensive penetration testing tool (Open Source)
