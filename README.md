@@ -37,6 +37,11 @@
  - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
 
 
+### Installation:
+ 1) Install dependencies: `sudo pip3 install -r requirements.txt`
+ 2) Run **black-widow**: `sudo ./black-widow.py`
+
+
 ### Directories:
 ```
 [root]
