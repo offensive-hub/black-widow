@@ -109,3 +109,6 @@ venv.bak/
 # ctf
 ctf
 ctf.py
+
+# old files
+*.old.*

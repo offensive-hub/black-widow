@@ -4,23 +4,31 @@
 
 ![image](resources/black-widow.jpeg)
 
-## CTF Tool (Language: [python3.x](https://www.python.org/downloads/))
 
-#### Funzionalità:
- - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
- - Invio automatico di flag al gaming server;
- - Invio stessa richiesta a terminali multipli (per sfruttare contemporaneamente le stesse vulnerabilità di più server);
- - Storico mappa {server -> vulnerabilità} sfruttate (condiviso) per evitare ripetizione attacchi già andati a buon fine;
- - Cluster per evitare di effettuare stessi attacchi contemporaneamente e per velocizzare ad esempio il bruteforce;
- - Il tool di ogni macchina comunicherà in modo criptato e autenticato (RSA) con gli altri tool nella rete;
+## Offensive penetration testing tool (Open Source)
 
-Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
 
-#### Links:
+### Features:
+ - Sniffing
+ - SQL Injection
+ - Injected-database management
+ - Website parser
+ - Website crawler
+ - Multiple targets managing
+ - Mapping **{server -> vulnerabilities}**
+ - Cluster between **black-widow** that are running within the same network
+ - Encrypted communications between others **black-widow**
+ - Useful features for CTF challenges
+
+##### Suggest you other features!
+
+
+### Links:
  - Homepage: [https://black-widow.io](https://black-widow.io)
  - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
 
-#### Principali Dipendenze:
+
+### Main dependencies:
  - [PyShark](https://pypi.org/project/pyshark/): `sudo pip3 install pyshark`
  - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
  - [Argparse](https://pypi.org/project/argparse/): `sudo pip3 install argparse`
@@ -29,7 +37,7 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
  - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
 
 
-#### Directories:
+### Directories:
 ```
 [root]
   |
@@ -61,11 +69,10 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |-- test.py   # Eseguibile di testing
 ```
 
-#### Useful commands:
+
+### Useful commands:
  - Update dependencies: `pip3 freeze > requirements.txt`
 
 
-<hr/>
-
-
-#### [© Fabrizio Fubelli](https://fabrizio.fubelli.org)
+### Authors:
+ -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
