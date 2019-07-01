@@ -47,6 +47,10 @@ def main_cmd(arguments):
         if arguments.sql_url is None:
             print('Please, specify an url! (ex. --sql-url=https://black-widow.io)\n')
             sys.exit(1)
+        if arguments.sql_deep:
+            app.utils.sql.deep_inject_form(arguments.sql_url)
+        else:
+            app.utils.sql.inject_form(arguments.sql_url)
 
 
 # Main function generic app
