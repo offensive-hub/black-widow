@@ -9,7 +9,7 @@ from app.utils.helpers.logger import Log
 # @return
 def inject_form(url=None, html=None):
     parsed_form = form_parse(url, html)
-    Log.success('\n\n\nParsed Form:')
+    Log.success('\n\nParsed Forms:')
     print_parsed(parsed_form)
     # Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
 

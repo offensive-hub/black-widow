@@ -33,8 +33,9 @@ def print_request(_request):
         Log.info('      |       |--- ' + str(key) + ': ' + str(value))
     Log.info('      |')
     try:
-        Log.info('      |-- data: ' + str(_request.json()))
-    except json.decoder.JSONDecodeError or simplejson.errors.JSONDecodeError:
+        json_body = _request.json()
+        Log.info('      |-- data: ' + str(json_body))
+    except ValueError:
         data = str(_request.text)
         if len(data) > 100:
             data = '[truncated]' + data[0:100]
@@ -90,5 +91,5 @@ def multi_request(urls, request_type, data):
         if APP_DEBUG:
             try:
                 print(r.json())
-            except json.decoder.JSONDecodeError:
+            except json.decoder.JSONDecodeError or simplejson.errors.JSONDecodeError:
                 print(r.text)

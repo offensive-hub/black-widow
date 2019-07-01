@@ -2,6 +2,8 @@ import json
 from abc import ABC
 from html.parser import HTMLParser
 from urllib.parse import urlparse
+
+import simplejson
 from tidylib import tidy_document
 from app.utils.requests import request, Type as RequestType
 from app.utils.helpers.logger import Log
@@ -143,7 +145,7 @@ class Parser(HTMLParser, ABC):
             try:
                 html = r.json()
                 Log.warning('Trying to parse a json with HTML parser!')
-            except json.decoder.JSONDecodeError:
+            except ValueError:
                 html = r.text
         else:
             self.url = None
