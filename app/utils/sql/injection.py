@@ -1,4 +1,5 @@
-from app.utils.html import form_parse, print_parsed
+from urllib.parse import urlparse
+from app.utils.html import form_parse, print_parsed, relevant_parse, find_forms, find_links
 from app.utils.helpers.logger import Log
 
 
@@ -8,10 +9,10 @@ from app.utils.helpers.logger import Log
 # @param html str L'html in cui trovare i form
 # @return
 def inject_form(url=None, html=None):
-    parsed_form = form_parse(url, html)
-    Log.success('\n\nParsed Forms:')
-    print_parsed(parsed_form)
-    # Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
+    parsed_forms = form_parse(url, html)
+    Log.success('Parsed Forms:')
+    print_parsed(parsed_forms)
+    Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
 
 
 # Cerca un form all'interno della pagina ritornata dall'url passato come parametro
@@ -20,4 +21,30 @@ def inject_form(url=None, html=None):
 # @param url str L'url che restituisce l'html in cui trovare i form
 # @return
 def deep_inject_form(url):
+    base_url = urlparse(url).netloc
+    parsed_forms = dict()
+
+    def _deep_inject_form(href):
+        # Check the domain
+        if href in parsed_forms or urlparse(href).netloc != base_url:
+            return
+
+        # Visit the current href
+        parsed_relevant = relevant_parse(href)
+        parsed_forms[href] = find_forms(parsed_relevant, href)
+
+        # Find adjacent links
+        links = find_links(parsed_relevant)
+
+        # Visit adjacent links
+        for link in links:
+            _deep_inject_form(link)
+
+    _deep_inject_form(url)
+
+    Log.success('Parsed Deep Forms:')
+    print_parsed(parsed_forms)
+
     Log.error('NOT IMPLEMENTED: deep_inject_form('+str(url)+')')
+
+    return parsed_forms

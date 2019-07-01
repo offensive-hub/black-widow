@@ -233,13 +233,43 @@ def find_forms(parsed, url=None):
             }
             forms.append(form)
         forms += find_forms(parsed.get('children'), url)
-        return forms
     elif type(parsed) == list:
         for value in parsed:
             forms += find_forms(value, url)
     else:
         Log.error(str(parsed) + ' is not a valid parsed content!')
     return forms
+
+
+# Cerca i links dentro un parsed html (dict)
+# @param parsed dict un html parsed
+# @param url L'url in cui si trova il form
+# @return set Lista links dentro l'html parsed
+def find_links(parsed):
+    links = set()
+    if parsed is None:
+        return links
+    if type(parsed) == dict:
+        attrs = parsed.get('attrs')
+        if attrs is not None:
+            url = None
+            if 'form' == parsed.get('tag'):
+                url = attrs.get('action')
+            elif 'a' == parsed.get('tag'):
+                url = attrs.get('href')
+            if url is not None:
+                url_parsed = urlparse(url)
+                url_scheme = str(url_parsed.scheme)
+                url = url_scheme + '://' + str(url_parsed.netloc) + str(url_parsed.path)
+                links.add(url)
+        links = links.union(find_links(parsed.get('children')))
+    elif type(parsed) == list:
+        for value in parsed:
+            links = links.union(find_links(value))
+    else:
+        Log.error(str(type(parsed)) + ' is not a valid parsed content!')
+        Log.error(str(parsed) + ' is not a valid parsed content!')
+    return links
 
 
 # Printa il risultato delle funzioni @parse e @relevant_parse
