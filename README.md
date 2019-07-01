@@ -1,15 +1,10 @@
 # Black Widow
+
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE)
+
 ![image](resources/black-widow.jpeg)
 
-## CTF Tool (Language: [python3.7](https://www.python.org/downloads/))
-
-#### Principali Dipendenze:
- - [PyShark](https://pypi.org/project/pyshark/): `sudo pip3 install pyshark`
- - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
- - [Argparse](https://pypi.org/project/argparse/): `sudo pip3 install argparse`
- - [PyQt5](https://pypi.org/project/PyQt5/): `sudo pip3 install PyQt5`
- - [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/): `sudo pip3 install PyQtWebEngine`
- - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
+## CTF Tool (Language: [python3.x](https://www.python.org/downloads/))
 
 #### Funzionalità:
  - Sniffing (anche con regex sul contenuto delle richieste/risposte) per rubare flag catturate da altri;
@@ -20,6 +15,19 @@
  - Il tool di ogni macchina comunicherà in modo criptato e autenticato (RSA) con gli altri tool nella rete;
 
 Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienza sulle CTF).
+
+#### Links:
+ - Homepage: [https://black-widow.io](https://black-widow.io)
+ - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
+
+#### Principali Dipendenze:
+ - [PyShark](https://pypi.org/project/pyshark/): `sudo pip3 install pyshark`
+ - [Sqlmap](https://pypi.org/project/sqlmap/): `sudo pip3 install sqlmap`
+ - [Argparse](https://pypi.org/project/argparse/): `sudo pip3 install argparse`
+ - [PyQt5](https://pypi.org/project/PyQt5/): `sudo pip3 install PyQt5`
+ - [PyQtWebEngine](https://pypi.org/project/PyQtWebEngine/): `sudo pip3 install PyQtWebEngine`
+ - [PyTidyLib](https://pypi.org/project/pytidylib/): `sudo pip3 install pytidylib`
+
 
 #### Directories:
 ```
@@ -53,16 +61,11 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
   |-- test.py   # Eseguibile di testing
 ```
 
-##### GitHub repository:
-`git@github.com:FabrizioFubelli/black-widow.git`
+#### Useful commands:
+ - Update dependencies: `pip3 freeze > requirements.txt`
+
 
 <hr/>
-
-##### Useful commands:
-> Update dependencies: `pip3 freeze > requirements.txt`
-
-<hr/>
-
 
 
 #### [© Fabrizio Fubelli](https://fabrizio.fubelli.org)
