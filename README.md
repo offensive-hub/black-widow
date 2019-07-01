@@ -14,7 +14,7 @@
  - Injected-database management
  - Website parser
  - Website crawler
- - Multiple targets managing
+ - Multiple targets management
  - Mapping **{server -> vulnerabilities}**
  - Cluster between **black-widow** that are running within the same network
  - Encrypted communications between others **black-widow**
