@@ -58,4 +58,11 @@ Suggerite voi altre funzionalità (comunque ci verranno in mente con l'esperienz
 
 <hr/>
 
+##### Useful commands:
+> Update dependencies: `pip3 freeze > requirements.txt`
+
+<hr/>
+
+
+
 #### [© Fabrizio Fubelli](https://fabrizio.fubelli.org)
