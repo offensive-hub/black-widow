@@ -46,10 +46,11 @@ def deep_inject_form(url):
     _deep_inject_form(url)
 
     Log.success('Parsed Deep Forms!')
-    out_file = APP_STORAGE_OUT + '/' + now() + '_deep_' + base_url + '.json'
+    out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
     Log.info('Writing result in ' + out_file + '...')
-    set_json(parsed_forms, url)
-    # print_parsed(parsed_forms)
+    set_json(parsed_forms, out_file)
+
+    print_parsed(parsed_forms)
 
     Log.error('NOT IMPLEMENTED: deep_inject_form('+str(url)+')')
 

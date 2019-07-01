@@ -7,14 +7,14 @@ import re
 import shutil
 import time
 
-from app.env import APP_DEBUG
-from app.utils.helpers.logger import Log
+# from app.env import APP_DEBUG
+# from app.utils.helpers.logger import Log
 from .util import replace_regex
 
 
 # @return true se il file contiene la stringa find, False altrimenti
 def file_contains(find, file):
-    if APP_DEBUG: Log.info('CALLED: file_contains(' + find + ', ' + file + ')')
+    # if APP_DEBUG: Log.info('CALLED: file_contains(' + find + ', ' + file + ')')
     if not os.path.isfile(file):
         return False
     with open(file) as f:
@@ -24,7 +24,7 @@ def file_contains(find, file):
 
 # @return string il contenuto del file
 def read_file(file):
-    if APP_DEBUG: Log.info('CALLED: read_file(' + file + ')')
+    # if APP_DEBUG: Log.info('CALLED: read_file(' + file + ')')
     if not os.path.isfile(file):
         return ""
     with open(file) as f:
@@ -37,7 +37,7 @@ def read_file(file):
 
 # @return True se il file contiene l'espressione regolare regex, False altrimenti
 def file_contains_regex(regex, file):
-    if APP_DEBUG: Log.info('CALLED: file_contains_regex(' + regex + ', ' + file + ')')
+    # if APP_DEBUG: Log.info('CALLED: file_contains_regex(' + regex + ', ' + file + ')')
     if not os.path.isfile(file):
         return False
     reg = re.compile(regex)
@@ -55,8 +55,8 @@ def replace_in_file(find, replace, file):
     :param file: il file in cui sovrascrivere find con replace
     :return: True se trova una stringa find, False altrimenti
     """
-    if APP_DEBUG:
-        Log.info('CALLED: replace_in_file(' + find + ', ' + replace + ', ' + file + ')')
+    # if APP_DEBUG:
+    #    Log.info('CALLED: replace_in_file(' + find + ', ' + replace + ', ' + file + ')')
     if find == replace:
         return False
     if not file_contains(find, file):
@@ -77,14 +77,15 @@ def replace_in_file(find, replace, file):
 # @return True se trova una regex equivalente ad una stringa diversa da
 #         replace, False altrimenti
 def replace_in_file_regex(regex, replace, file):
-    if (APP_DEBUG): Log.info('CALLED: replace_in_file_regex(' + regex + ', ' + replace + ', ' + file + ')')
-    if (not os.path.isfile(file)):
+    # if APP_DEBUG:
+    #    Log.info('CALLED: replace_in_file_regex(' + regex + ', ' + replace + ', ' + file + ')')
+    if not os.path.isfile(file):
         with open(file, 'a') as f:
             f.close()
     with open(file, 'r') as f:
         content = f.read()
     content_new = replace_regex(regex, replace, content)  # re.sub(regex, replace, content, flags = re.M)
-    if (content != content_new):
+    if content != content_new:
         overwrite_file(content_new, file)
         return True
     return False
@@ -92,7 +93,8 @@ def replace_in_file_regex(regex, replace, file):
 
 # Sovrascrive il contenuto del file con content
 def overwrite_file(content, file):
-    if (APP_DEBUG): Log.info('CALLED: overwrite_file(' + content + ', ' + file + ')')
+    # if APP_DEBUG:
+    #    Log.info('CALLED: overwrite_file(' + content + ', ' + file + ')')
     with open(file, 'w') as f:
         f.write(str(content) + '\n')
 
@@ -105,17 +107,18 @@ def append_in_file(content, file):
 
 # Se la cartella folder non esiste, la crea
 def check_folder(folder):
-    if (not os.path.isdir(folder)):
+    if not os.path.isdir(folder):
         os.makedirs(folder)
 
 
 # Elimina tutti i files presenti nella cartella passata per argomento
 def clean_folder(folder):
-    if (APP_DEBUG): Log.info('CALLED: clean_folder(' + folder + ')')
-    if (os.path.isdir(folder)):
+    # if APP_DEBUG:
+    #    Log.info('CALLED: clean_folder(' + folder + ')')
+    if os.path.isdir(folder):
         for file in os.listdir(folder):
             file_path = os.path.join(folder, file)
-            if (file_path != folder):
+            if file_path != folder:
                 delete(file_path)
         return True
     return False
@@ -123,12 +126,13 @@ def clean_folder(folder):
 
 # Copia il file o la cartella "src", in "dest"
 def copy(src, dest):
-    if (APP_DEBUG): Log.info('CALLED: copy(' + src + ', ' + dest + ')')
+    # if APP_DEBUG:
+    #    Log.info('CALLED: copy(' + src + ', ' + dest + ')')
     dest_parent = os.path.dirname(dest)
     check_folder(dest_parent)
-    if (os.path.exists(dest)):
+    if os.path.exists(dest):
         delete(dest)
-    if (os.path.isdir(src)):
+    if os.path.isdir(src):
         shutil.copytree(src, dest)
     else:
         shutil.copy2(src, dest)
@@ -136,17 +140,18 @@ def copy(src, dest):
 
 # Muove il file o la cartella "src", in "dest"
 def move(src, dest):
-    if (APP_DEBUG): Log.info('CALLED: move(' + src + ', ' + dest + ')')
+    # if (APP_DEBUG): Log.info('CALLED: move(' + src + ', ' + dest + ')')
     dest_parent = os.path.dirname(dest)
     check_folder(dest_parent)
-    if (os.path.exists(dest)):
+    if os.path.exists(dest):
         delete(dest)
     shutil.move(src, dest)
 
 
 # Elimina il file o la cartella passato per argomento
+# noinspection PyBroadException
 def delete(file):
-    while (os.path.exists(file)):
+    while os.path.exists(file):
         try:
             if os.path.isfile(file):
                 os.remove(file)
@@ -157,6 +162,6 @@ def delete(file):
             elif os.path.isdir(file):
                 shutil.rmtree(file)
                 return True
-        except:
+        except Exception or IOError:
             time.sleep(0.5)
     return False
