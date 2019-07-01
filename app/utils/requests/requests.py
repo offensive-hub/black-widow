@@ -86,12 +86,12 @@ def request(url, request_type=Type.GET, data=None, headers=None):
 # @param urls una lista di url
 # @param request_type get|post|put|patch|delete
 # @param data dizionario con parametri
-def multi_request(urls, request_type, data):
+def multi_request(urls, request_type=Type.GET, data=None, headers=None):
     if APP_DEBUG:
-        Log.info('CALLED: multi(' + str(urls) + ', ' + str(request_type) + ', ' + str(data) + ')')
+        Log.info('CALLED: multi_request(' + str(urls) + ', ' + str(request_type) + ', ' + str(data) + ')')
     request_type = request_type.lower()
     for url in urls:
-        r = request(url, request_type, data)
+        r = request(url, request_type, data, headers)
         if r is None:
             continue
         if APP_DEBUG:
