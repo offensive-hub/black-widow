@@ -46,10 +46,13 @@ def print_request(_request):
 # @param url un url
 # @param request_type get|post|put|patch|delete
 # @param data dizionario con parametri
-def request(url, request_type=Type.GET, data=None):
-    headers = {
+def request(url, request_type=Type.GET, data=None, headers=None):
+    if headers is None:
+        headers = {}
+    req_headers = {
         'User-Agent': str(APP_NAME)+' '+str(APP_VERSION)
     }
+    req_headers.update(headers)
     if data is None:
         data = {}
     request_type = request_type.lower()
@@ -58,15 +61,15 @@ def request(url, request_type=Type.GET, data=None):
         return None
     try:
         if request_type == Type.GET:
-            r = requests.get(url, data, headers=headers)
+            r = requests.get(url, data, headers=req_headers)
         elif request_type == Type.POST:
-            r = requests.post(url, data, headers=headers)
+            r = requests.post(url, data, headers=req_headers)
         elif request_type == Type.PUT:
-            r = requests.put(url, data, headers=headers)
+            r = requests.put(url, data, headers=req_headers)
         elif request_type == Type.PATCH:
-            r = requests.patch(url, data, headers=headers)
+            r = requests.patch(url, data, headers=req_headers)
         elif request_type == Type.DELETE:
-            r = requests.delete(url, headers=headers)
+            r = requests.delete(url, headers=req_headers)
         else:
             Log.error(str(request_type) + ' is not a valid request type!')
             return None
