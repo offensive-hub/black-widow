@@ -4,8 +4,8 @@
 ---- Multiprocessing ----
 
 Il multiprocessing in Python è molto più veloce del multithreading, ma
-occupa più risorse hardware, in quanto va a caricare in RAM molte parti del
-programma uguali più volte (in base ai processi avviati)
+occupa più risorse hardware, in quanto va a caricare in RAM le stesse parti del
+programma più volte
 
 
 ---- Multithreading ----
