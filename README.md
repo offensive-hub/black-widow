@@ -17,7 +17,7 @@
  - Multiple targets management
  - Mapping **{server -> vulnerabilities}**
  - Cluster between **black-widow** that are running inside the same network
- - Encrypted communications between others **black-widow**
+ - Encrypted communications between other **black-widows**
  - Useful features for **CTF** challenges
 
 ##### Suggest you other features!
