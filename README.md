@@ -16,7 +16,7 @@
  - Website crawler
  - Multiple targets management
  - Mapping **{server -> vulnerabilities}**
- - Cluster between **black-widow** that are running within the same network
+ - Cluster between **black-widow** that are running inside the same network
  - Encrypted communications between others **black-widow**
  - Useful features for **CTF** challenges
 
