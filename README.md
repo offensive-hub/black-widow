@@ -12,7 +12,7 @@
  - Sniffing
  - SQL Injection
  - Injected-database management
- - Website parser
+ - Web page parser
  - Website crawler
  - Multiple targets management
  - Mapping **{server -> vulnerabilities}**
