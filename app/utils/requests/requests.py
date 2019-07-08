@@ -24,7 +24,7 @@ class Type:
         return Type.GET, Type.POST, Type.PUT, Type.PATCH, Type.DELETE
 
 
-def print_request(_request):
+def print_request(_request, limit=1000):
     Log.info(str(_request.url))
     Log.info('      |--- status_code: ' + str(_request.status_code))
     Log.info('      |--- encoding: ' + str(_request.encoding))
@@ -37,8 +37,8 @@ def print_request(_request):
         Log.info('      |-- data: ' + str(json_body))
     except ValueError:
         data = str(_request.text)
-        if len(data) > 100:
-            data = '[truncated]' + data[0:100]
+        if len(data) > limit:
+            data = '[truncated]' + data[0:limit]
         Log.info('      |-- data: ' + data)
 
 
