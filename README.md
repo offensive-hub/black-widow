@@ -32,7 +32,7 @@
 
 > ### <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
 > 1) If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
-> 2) `docker run --rm black-widow <arguments>`
+> 2) `docker run --rm f4br1z10fu8ell1/black-widow <arguments>`
 
 <br/>
 
