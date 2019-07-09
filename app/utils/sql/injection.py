@@ -50,13 +50,10 @@ def deep_inject_form(url):
 
     _deep_inject_form(url)
 
-    Log.success('Parsed Deep Forms!')
-
     Log.info('Writing result in ' + out_file + '...')
     set_json(parsed_forms, out_file)
-
     print_parsed(parsed_forms)
-
+    Log.success('Result wrote in ' + out_file)
+    Log.success('Parsed Deep Forms!')
     Log.error('NOT IMPLEMENTED: deep_inject_form('+str(url)+')')
-
     return parsed_forms

@@ -8,8 +8,8 @@ COPY requirements.txt ./
 RUN ln -s /usr/src/black-widow/black-widow.py /usr/local/bin/black-widow
 
 # Install required packages
-RUN apt update
-RUN apt install -y tidy
+RUN apt -qq update
+RUN apt install -qq -y tidy
 
 # Install required pip3 modules
 RUN pip install --no-cache-dir -r requirements.txt 2> /dev/null
