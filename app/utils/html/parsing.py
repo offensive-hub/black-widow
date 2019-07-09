@@ -228,7 +228,7 @@ def find_forms(parsed, url=None):
             if action is None:
                 action = url
             if method is None:
-                method = 'post'
+                method = RequestType.POST
             form = {
                 'method': method,
                 'action': action,
