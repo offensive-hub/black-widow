@@ -31,7 +31,7 @@
 ### Docker Installation:
  1) If you haven't docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
  2) Build Docker: `docker build -t black-widow .`
- 3) Run **black-widow**: `docker run -ti black-widow <arguments>`
+ 3) Run **black-widow**: `docker run black-widow <arguments>`
 
 
 ### Default Installation:
