@@ -7,7 +7,7 @@ from app.utils.helpers.multitask import multithread
 class SqlmapClient:
     _client = None
 
-    def __init__(self, host='127.0.0.1', port=8775):
+    def __init__(self, host='0.0.0.0', port=8775):
         self.host = host
         self.port = port
         # Start the sqlmap-api server in a parallel thread
