@@ -31,7 +31,7 @@
 <br/>
 
 > ### <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
-> 1) If you haven't docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
+> 1) If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 > 2) Build Docker: `docker build -t black-widow .`
 > 3) Run **black-widow**: `docker run --rm black-widow <arguments>`
 
