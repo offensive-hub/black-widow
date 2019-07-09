@@ -28,14 +28,15 @@
  - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
 
 
-### Thanks to:
- - [PyShark](https://github.com/KimiNewt/pyshark)
- - [Sqlmap](https://github.com/sqlmapproject/sqlmap)
+### Docker Installation:
+ 1) If you haven't docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
+ 2) Build Docker: `docker build -t black-widow .`
+ 3) Run **black-widow**: `docker run -ti black-widow <arguments>`
 
 
-### Installation:
+### Default Installation:
  1) Install dependencies: `sudo pip3 install -r requirements.txt`
- 2) Run **black-widow**: `sudo ./black-widow.py`
+ 2) Run **black-widow**: `sudo ./black-widow.py <arguments>`
 
 
 ### Directories:
@@ -77,3 +78,8 @@
 
 ### Authors:
  -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
+ 
+
+### Thanks to:
+ - [PyShark](https://github.com/KimiNewt/pyshark)
+ - [Sqlmap](https://github.com/sqlmapproject/sqlmap)
