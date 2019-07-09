@@ -40,7 +40,7 @@
 > 1. `sudo apt-get update && sudo apt-get install tidy`
 > 2. `git clone git@github.com:FabrizioFubelli/black-widow.git`
 > 3. `cd black-widow`
-> 4. `sudo pip3 install -r requirements.txt`
+> 4. `sudo pip3 install -U -r requirements.txt`
 > 5. `sudo ./black-widow.py <arguments>`
 
 <br/>
