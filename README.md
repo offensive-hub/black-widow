@@ -22,22 +22,26 @@
 > 
 > ##### Suggest you other features!
 
+<br/>
 
 > ### Links:
 > - Homepage: [https://black-widow.io](https://black-widow.io)
 > - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
 
+<br/>
 
 > ### <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
 > 1) If you haven't docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 > 2) Build Docker: `docker build -t black-widow .`
 > 3) Run **black-widow**: `docker run --rm black-widow <arguments>`
 
+<br/>
 
 > ### Default Installation:
 > 1) Install dependencies: `sudo pip3 install -r requirements.txt`
 > 2) Run **black-widow**: `sudo ./black-widow.py <arguments>`
 
+<br/>
 
 > ### Directories:
 > ```
@@ -71,14 +75,17 @@
 >   |-- test.py   # Eseguibile di testing
 > ```
 
+<br/>
 
 > ### Useful commands:
 >  - Update dependencies: `pip3 freeze > requirements.txt`
 
+<br/>
 
 > ### Authors:
 >  -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
- 
+
+<br/>
 
 > ### Thanks to:
 >  - [PyShark](https://github.com/KimiNewt/pyshark)
