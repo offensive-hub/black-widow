@@ -32,14 +32,15 @@
 
 > ### <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
 > 1) If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
-> 2) Build Docker: `docker build -t black-widow .`
-> 3) Run **black-widow**: `docker run --rm black-widow <arguments>`
+> 2) `docker run --rm black-widow <arguments>`
 
 <br/>
 
 > ### Default Installation:
-> 1) Install dependencies: `sudo pip3 install -r requirements.txt`
-> 2) Run **black-widow**: `sudo ./black-widow.py <arguments>`
+> 1) `git clone git@github.com:FabrizioFubelli/black-widow.git`
+> 2) `cd black-widow`
+> 3) `sudo pip3 install -r requirements.txt`
+> 4) `sudo ./black-widow.py <arguments>`
 
 <br/>
 
