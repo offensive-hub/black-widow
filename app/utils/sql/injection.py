@@ -23,6 +23,7 @@ def deep_inject_form(url, max_depth=5):
     If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
     :type url: str The url to visit
     :type max_depth: int The max depth during the visit
+    :return A dictionary of parsed forms like { '<url_visited>': [ form_1, form_2, ... }
     """
     base_url = urlparse(url).netloc
     parsed_forms = dict()
@@ -30,8 +31,7 @@ def deep_inject_form(url, max_depth=5):
 
     def _deep_inject_form(href, depth=1):
         # Check the domain
-        if href in parsed_forms or urlparse(href).netloc != base_url\
-                or depth > max_depth:
+        if href in parsed_forms or urlparse(href).netloc != base_url or depth > max_depth:
             return
 
         # Visit the current href
