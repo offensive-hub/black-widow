@@ -79,11 +79,6 @@
 
 <br/>
 
-> ### Useful commands:
->  - Update dependencies: `pip3 freeze > requirements.txt`
-
-<br/>
-
 > ### Authors:
 >  -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
 
