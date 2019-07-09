@@ -17,19 +17,21 @@ def inject_form(url=None, html=None):
     Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
 
 
-# Cerca un form all'interno della pagina ritornata dall'url passato come parametro
-# Se non lo trova, cerca un form in tutti i link con lo stesso dominio, presenti
-# nella pagina ritornata dall'url. Tenta un'injection su tutti i form che trova.
-# @param url str L'url che restituisce l'html in cui trovare i form
-# @return
-def deep_inject_form(url):
+def deep_inject_form(url, max_depth=5):
+    """
+    Search a form in the page returned by url.
+    If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
+    :type url: str The url to visit
+    :type max_depth: int The max depth during the visit
+    """
     base_url = urlparse(url).netloc
     parsed_forms = dict()
     out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
 
-    def _deep_inject_form(href):
+    def _deep_inject_form(href, depth=1):
         # Check the domain
-        if href in parsed_forms or urlparse(href).netloc != base_url:
+        if href in parsed_forms or urlparse(href).netloc != base_url\
+                or depth > max_depth:
             return
 
         # Visit the current href
@@ -46,7 +48,7 @@ def deep_inject_form(url):
         # Visit adjacent links
         for link in links:
             # print('link: '+link)
-            _deep_inject_form(link)
+            _deep_inject_form(link, depth+1)
 
     _deep_inject_form(url)
 
