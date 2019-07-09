@@ -5,12 +5,13 @@ from app.utils.helpers.util import now, set_json
 from app.env import APP_STORAGE_OUT
 
 
-# Cerca dei form all'interno della pagina ritornata dall'url passato come parametro
-# e li sfrutta tentando l'injection.
-# @param url str L'url che restituisce l'html in cui trovare i form
-# @param html str L'html in cui trovare i form
-# @return
 def inject_form(url=None, html=None):
+    """
+    Search a form in the page returned by url (or inside the html).
+    :param url: str The url to visit (or None)
+    :param html: str the html code to analyze (or None)
+    :return A list of parsed forms like [ form_1, form_2 ]
+    """
     parsed_forms = form_parse(url, html)
     Log.success('Parsed Forms!')
     print_parsed(parsed_forms)
@@ -21,8 +22,8 @@ def deep_inject_form(url, max_depth=5):
     """
     Search a form in the page returned by url.
     If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
-    :type url: str The url to visit
-    :type max_depth: int The max depth during the visit
+    :param url: str The url to visit
+    :param max_depth: int The max depth during the visit
     :return A dictionary of parsed forms like { '<url_visited>': [ form_1, form_2, ... }
     """
     base_url = urlparse(url).netloc
