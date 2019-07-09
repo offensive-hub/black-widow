@@ -28,7 +28,8 @@ def init(app_type):
 def main_gui():
     init(AppType.GUI)
     # Ignore arguments
-    app.gui.main.open()
+    app.utils.helpers.logger.Log.error()
+    # app.gui.main.open()
 
 
 # Main function for command line app
