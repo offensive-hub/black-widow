@@ -10,8 +10,8 @@
 
 import app
 import os
-import plugins
 import sys
+from app_plugins import args
 
 
 class AppType:
@@ -61,7 +61,7 @@ def main_cmd(arguments):
 
 # Main function generic app
 def main():
-    arguments = plugins.args.get_arguments()
+    arguments = args.get_arguments()
     if arguments.gui:
         main_gui()
     else:

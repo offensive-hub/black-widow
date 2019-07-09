@@ -3,6 +3,7 @@ from app.utils.html import form_parse, print_parsed, relevant_parse, find_forms,
 from app.utils.helpers.logger import Log
 from app.utils.helpers.util import now, set_json
 from app.env import APP_STORAGE_OUT
+from app.utils.sql.sqlmapcli import SqlmapClient
 
 
 def inject_form(url=None, html=None):
@@ -12,10 +13,11 @@ def inject_form(url=None, html=None):
     :param html: str the html code to analyze (or None)
     :return A list of parsed forms like [ form_1, form_2 ]
     """
-    parsed_forms = form_parse(url, html)
-    Log.success('Parsed Forms!')
+    parsed_forms = dict()
+    parsed_forms[url] = form_parse(url, html)
+    Log.success('Forms parsed!')
     print_parsed(parsed_forms)
-    Log.error('NOT IMPLEMENTED: inject_form('+str(url)+', '+str(html)+')')
+    SqlmapClient.try_inject(parsed_forms)
 
 
 def deep_inject_form(url, max_depth=5):
@@ -58,5 +60,5 @@ def deep_inject_form(url, max_depth=5):
     print_parsed(parsed_forms)
     Log.success('Result wrote in ' + out_file)
     Log.success('Parsed Deep Forms!')
-    Log.error('NOT IMPLEMENTED: deep_inject_form('+str(url)+')')
+    SqlmapClient.try_inject(parsed_forms)
     return parsed_forms

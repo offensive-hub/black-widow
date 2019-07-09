@@ -167,7 +167,12 @@ class MultiTask:
 # @return Il risultato della funzione target
 def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_THREADING)
-    # Gli argomenti da passare alla funzione multitask.start
+
+    if cpu == 1:
+        # If only one thread is required, the parent process is not needed
+        return multitask.start(target, args, asynchronous, cpu)
+
+    # The arguments to pass at the parent process
     multithread_args = (target, args, asynchronous, cpu)
     return multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
 
