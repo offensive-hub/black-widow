@@ -57,8 +57,8 @@ class Log:
         self.__log__(msg, 'DONE', 'green')
 
     def __log__(self, msg, _type, color):
-        self.__check_log_file__()
-        msg_log = self.__get_log_header__() + ' ' + colored(_type, color)
+        self._check_log_file()
+        msg_log = self._get_log_header() + ' ' + colored(_type, color)
         curr_process = current_process()
         curr_thread = current_thread()
         if 'Main' not in curr_process.name:
@@ -70,11 +70,11 @@ class Log:
             print(msg_log)
         storage.append_in_file(msg_log, APP_LOGFILE)
 
-    def __get_log_header__(self):
-        return self.__get_timestamp__() + ' ' + APP_PROC
+    def _get_log_header(self):
+        return self._get_timestamp() + ' ' + APP_PROC
 
     @staticmethod
-    def __check_log_file__():
+    def _check_log_file():
         storage.check_folder(os.path.dirname(APP_LOGFILE))
         # Se il file di log pesa almeno 5 MB, lo sovrascrivo
         if os.path.isfile(APP_LOGFILE):
@@ -87,7 +87,7 @@ class Log:
                 return
 
     @staticmethod
-    def __get_timestamp__():
+    def _get_timestamp():
         now_month = int(datetime.datetime.now().strftime("%m"))
         timestamp = calendar.month_abbr[now_month] + ' ' + datetime.datetime.now().strftime("%d %H:%M:%S")
         return timestamp

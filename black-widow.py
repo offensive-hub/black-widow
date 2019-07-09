@@ -28,7 +28,7 @@ def init(app_type):
 def main_gui():
     init(AppType.GUI)
     # Ignore arguments
-    app.utils.helpers.logger.Log.error()
+    app.utils.helpers.logger.Log.error("Not implemented")
     # app.gui.main.open()
 
 
