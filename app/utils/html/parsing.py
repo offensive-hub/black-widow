@@ -131,7 +131,11 @@ class Parser(HTMLParser, ABC):
     # Fa il parsing della risposta dell'url passato per argomento
     # @param url L'url del quale fare il parsing della risposta
     # @param html L'html di cui ottenere il parsing
+    # @return (dict, str) Html parsed and request cookies
     def parse(self, url=None, html=None):
+        self.url = None
+        self.base_url = None
+        cookies = ''
         if url is not None:
             self.url = url
             url_parsed = urlparse(url)
@@ -145,20 +149,23 @@ class Parser(HTMLParser, ABC):
                 Log.warning('Trying to parse a json with HTML parser!')
             except ValueError:
                 html = r.text
-        else:
-            self.url = None
-            self.base_url = None
-        # ordino l'html (fixando anche errori)
+            if r.headers is not None:
+                for k in r.headers.keys():
+                    if k == 'Set-Cookie' or k == 'set-cookie' or k == 'Set-cookie':
+                        cookies = r.headers.get('Set-Cookie')
+                        print('cookies: '+str(cookies))
+                        break
+        # Sort html (and fix errors)
         sorted_html, errors = tidy_document(html)
         self.feed(sorted_html)
-        return self.tags
+        return self.tags, cookies
 
 
 # Esegue un parsing di un url/html
 # @param url str L'url di cui fare il parsing (o None)
 # @param html str La stringa html di cui fare il parsing (o None)
 # @param bool relevant True se salvare solo tag rilevanti, False altrimenti
-# @return dict Un html parsed
+# @return dict, str Un html parsed e i cookies
 def __parse__(url, html, relevant):
     parser = Parser(relevant)
     return parser.parse(url, html)
@@ -167,7 +174,7 @@ def __parse__(url, html, relevant):
 # Esegue un parsing di tutte le tag
 # @param url str L'url di cui fare il parsing (o None)
 # @param html str La stringa html di cui fare il parsing (o None)
-# @return dict Un html parsed
+# @return (dict, str) Un html parsed e i cookies
 def parse(url=None, html=None):
     return __parse__(url, html, False)
 
@@ -175,7 +182,7 @@ def parse(url=None, html=None):
 # Esegue un parsing solo delle tag rilevanti
 # @param url str L'url di cui fare il parsing (o None)
 # @param html str La stringa html di cui fare il parsing (o None)
-# @return dict Un html parsed
+# @return (dict, str) Un html parsed e i cookies
 def relevant_parse(url=None, html=None):
     return __parse__(url, html, True)
 
@@ -185,7 +192,8 @@ def relevant_parse(url=None, html=None):
 # @param html str La stringa html di cui fare il parsing (o None)
 # @return dict Un html parsed
 def form_parse(url=None, html=None):
-    return find_forms(relevant_parse(url, html), url)
+    parsed_html, cookies = relevant_parse(url, html)
+    return find_forms(parsed_html, url), cookies
 
 
 # cerca degli input dentro ad un parsed html (dict)

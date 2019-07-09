@@ -21,4 +21,4 @@ COPY . .
 ENTRYPOINT [ "black-widow" ]
 
 # Default arguments
-CMD [ "-h" ]
+CMD []

@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from app.utils.html import form_parse, print_parsed, relevant_parse, find_forms, find_links
+from app.utils.html import form_parse, relevant_parse, find_forms, find_links
 from app.utils.helpers.logger import Log
 from app.utils.helpers.util import now, set_json
 from app.env import APP_STORAGE_OUT
@@ -14,10 +14,9 @@ def inject_form(url=None, html=None):
     :return A list of parsed forms like [ form_1, form_2 ]
     """
     parsed_forms = dict()
-    parsed_forms[url] = form_parse(url, html)
-    Log.success('Forms parsed!')
-    print_parsed(parsed_forms)
-    SqlmapClient.try_inject(parsed_forms)
+    parsed_forms[url], cookies = form_parse(url, html)
+    Log.success('Html parsed! Found '+str(len(parsed_forms[url]))+' forms')
+    SqlmapClient.try_inject(parsed_forms, cookies)
 
 
 def deep_inject_form(url, max_depth=5):
@@ -38,7 +37,7 @@ def deep_inject_form(url, max_depth=5):
             return
 
         # Visit the current href
-        parsed_relevant = relevant_parse(href)
+        parsed_relevant, request_cookies = relevant_parse(href)
         parsed_forms[href] = find_forms(parsed_relevant, href)
 
         # Find adjacent links
@@ -53,12 +52,16 @@ def deep_inject_form(url, max_depth=5):
             # print('link: '+link)
             _deep_inject_form(link, depth+1)
 
-    _deep_inject_form(url)
+        return request_cookies
+
+    cookies = _deep_inject_form(url)
 
     Log.info('Writing result in ' + out_file + '...')
     set_json(parsed_forms, out_file)
-    print_parsed(parsed_forms)
     Log.success('Result wrote in ' + out_file)
-    Log.success('Parsed Deep Forms!')
-    SqlmapClient.try_inject(parsed_forms)
+
+    Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')
+
+    SqlmapClient.try_inject(parsed_forms, cookies)
+
     return parsed_forms
