@@ -224,10 +224,13 @@ def find_forms(parsed, url=None):
         if 'form' == parsed.get('tag'):
             attrs = parsed.get('attrs')
             action = attrs.get('action')
+            method = attrs.get('method')
             if action is None:
                 action = url
+            if method is None:
+                method = 'post'
             form = {
-                'method': attrs.get('method'),
+                'method': method,
                 'action': action,
                 'inputs': find_inputs(parsed.get('children'))
             }
