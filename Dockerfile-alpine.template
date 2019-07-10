@@ -19,7 +19,7 @@ RUN echo "**** install Python ****" && \
 COPY requirements.txt ./
 
 # Install required pip modules
-RUN pip install --no-cache-dir -r requirements-alpine.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all project files
 COPY . .

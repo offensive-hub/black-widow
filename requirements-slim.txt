@@ -1,9 +1,0 @@
-numpy
-pyshark
-pytidylib
-requests
-simplejson
-sqlmap
-termcolor
-tinytag
-urllib3

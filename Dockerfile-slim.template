@@ -17,6 +17,9 @@ COPY . .
 # Create a symbolic link in a global environments folder
 RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
 
+# Clean
+RUN rm -rf ~/.cache/pip
+
 # Default executed script
 ENTRYPOINT [ "black-widow" ]
 
