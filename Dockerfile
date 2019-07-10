@@ -1,4 +1,5 @@
-FROM python:3
+FROM python:3-slim
+LABEL maintainer="Fabrizio Fubelli <fabri.fubels@gmail.com>"
 
 WORKDIR /usr/src/black-widow
 
@@ -9,7 +10,7 @@ RUN ln -s /usr/src/black-widow/black-widow.py /usr/local/bin/black-widow
 
 # Install required packages
 RUN apt update
-RUN apt install -y tidy
+RUN apt install -qq -y build-essential tidy --no-install-recommends
 
 # Install required pip3 modules
 RUN pip install --no-cache-dir -r requirements.txt 2> /dev/null
