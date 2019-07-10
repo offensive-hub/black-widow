@@ -3,20 +3,19 @@ LABEL maintainer="Fabrizio Fubelli <fabri.fubels@gmail.com>"
 
 WORKDIR /usr/share/black-widow
 
-COPY requirements.txt ./
-
-# Create a symbolic link in a global environments folder
-RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
-
 # Install required packages
-RUN apt update
-RUN apt install -qq -y tidy --no-install-recommends
+RUN apt update && apt install -qq -y tidy --no-install-recommends
+
+COPY requirements.txt ./
 
 # Install required pip3 modules
 RUN pip install --no-cache-dir -r requirements.txt 2> /dev/null
 
 # Copy all project files
 COPY . .
+
+# Create a symbolic link in a global environments folder
+RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
 
 # Default executed script
 ENTRYPOINT [ "black-widow" ]
