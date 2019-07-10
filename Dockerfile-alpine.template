@@ -1,8 +1,10 @@
+# Docker image of 162MB
+
 FROM alpine:latest
 
 LABEL maintainer="Fabrizio Fubelli <fabri.fubels@gmail.com>"
 
-WORKDIR /usr/src/black-widow
+WORKDIR /usr/share/black-widow
 
 # Install required packages
 RUN apk --no-cache --update upgrade && apk --no-cache add ca-certificates tidyhtml python3 py3-numpy py3-lxml
@@ -26,7 +28,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create a symbolic link in a global environments folder
-RUN ln -s /usr/src/black-widow/black-widow.py /usr/bin/black-widow
+RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
 
 # Clean
 RUN rm -rf ~/.cache/pip
