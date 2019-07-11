@@ -1,6 +1,6 @@
 # Black Widow
 
-[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE)  [![Image Size](https://img.shields.io/microbadger/image-size/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Image Size](https://img.shields.io/microbadger/image-size/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
 ![image](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/black-widow-img.png)
 
@@ -37,7 +37,7 @@
 > 2. `docker run --rm offensive/black-widow [arguments]`
 >
 > ### Docker Registry:
-> [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow/dockerfile)
+> [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 
 <br/>
 
