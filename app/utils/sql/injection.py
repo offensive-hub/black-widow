@@ -51,7 +51,7 @@ def deep_inject_form(url, max_depth):
         for link in links:
             # print('link: '+link)
             child_request_cookies = _deep_inject_form(link, depth+1)
-            if request_cookies == '':
+            if (request_cookies == '' or type(request_cookies) != str) and type(child_request_cookies) == str:
                 request_cookies = child_request_cookies
 
         return request_cookies
