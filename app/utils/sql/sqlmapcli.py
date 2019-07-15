@@ -26,7 +26,7 @@ class SqlmapClient:
         """
         if SqlmapClient._client is None:
             SqlmapClient._client = SqlmapClient()
+        pprint(forms)
         Log.info('Trying injection with cookies: '+str(cookies))
         Log.error("try_inject: Not Implemented")
-        pprint(forms)
         # TODO: Use sqlmap-api server to inject all forms
