@@ -19,7 +19,7 @@ def inject_form(url=None, html=None):
     SqlmapClient.try_inject(parsed_forms, cookies)
 
 
-def deep_inject_form(url, max_depth=5):
+def deep_inject_form(url, max_depth):
     """
     Search a form in the page returned by url.
     If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
@@ -33,7 +33,7 @@ def deep_inject_form(url, max_depth=5):
 
     def _deep_inject_form(href, depth=1):
         # Check the domain
-        if href in parsed_forms or urlparse(href).netloc != base_url or depth > max_depth:
+        if href in parsed_forms or urlparse(href).netloc != base_url or (max_depth is not None and depth > max_depth):
             return
 
         # Visit the current href
