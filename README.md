@@ -1,6 +1,6 @@
 # Black Widow
 
-[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE)
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Image Size](https://img.shields.io/microbadger/image-size/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
 ![image](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/black-widow-img.png)
 
@@ -30,9 +30,14 @@
 
 <br/>
 
-> ### <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
+> <img src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/>
+> 
+> ### Docker Installation:
 > 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 > 2. `docker run --rm offensive/black-widow [arguments]`
+>
+> ### Docker Registry:
+> [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 
 <br/>
 
