@@ -174,6 +174,7 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
 
     # The arguments to pass at the parent process
     multithread_args = (target, args, asynchronous, cpu)
+    # Creates a process (cpu=1) that runs all the threads
     return multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
 
 
