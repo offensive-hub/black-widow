@@ -50,7 +50,9 @@ def deep_inject_form(url, max_depth):
         # Visit adjacent links
         for link in links:
             # print('link: '+link)
-            _deep_inject_form(link, depth+1)
+            child_request_cookies = _deep_inject_form(link, depth+1)
+            if request_cookies == '':
+                request_cookies = child_request_cookies
 
         return request_cookies
 
