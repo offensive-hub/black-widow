@@ -155,6 +155,8 @@ class Parser(HTMLParser, ABC):
                         cookies = r.headers.get('Set-Cookie')
                         print('cookies: '+str(cookies))
                         break
+        if type(cookies) != str:
+            cookies = ''
         # Sort html (and fix errors)
         sorted_html, errors = tidy_document(html)
         self.feed(sorted_html)
