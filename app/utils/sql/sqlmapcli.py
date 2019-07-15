@@ -1,4 +1,5 @@
 from sqlmap import sqlmapapi
+from pprint import pprint
 
 from app.utils.helpers.logger import Log
 from app.utils.helpers.multitask import multithread
@@ -27,5 +28,5 @@ class SqlmapClient:
             SqlmapClient._client = SqlmapClient()
         Log.info('Trying injection with cookies: '+str(cookies))
         Log.error("try_inject: Not Implemented")
-        print(forms)
+        pprint(forms)
         # TODO: Use sqlmap-api server to inject all forms
