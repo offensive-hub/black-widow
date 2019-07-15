@@ -34,7 +34,7 @@ def deep_inject_form(url, max_depth):
     def _deep_inject_form(href, depth=1):
         # Check the domain
         if href in parsed_forms or urlparse(href).netloc != base_url or (max_depth is not None and depth > max_depth):
-            return
+            return ''
 
         # Visit the current href
         parsed_relevant, request_cookies = relevant_parse(href)
