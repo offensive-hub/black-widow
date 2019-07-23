@@ -30,6 +30,7 @@ def main_gui():
     # Ignore arguments
     app.utils.helpers.logger.Log.error("Not implemented")
     # app.gui.main.open()
+    app.gui.django()
 
 
 # Main function for command line app

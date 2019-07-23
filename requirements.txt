@@ -7,3 +7,4 @@ sqlmap
 termcolor
 tinytag
 urllib3
+django

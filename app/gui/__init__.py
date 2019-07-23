@@ -1,3 +1,1 @@
-# Graphical User Interface
-
-from . import main
+from .manage import django
