@@ -26,25 +26,22 @@ def _get_preferred_ip():
 def django_gui():
     host = _get_preferred_ip()
 
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
-
-    print("Starting the django web-server in a parallel thread")
-
-    pid = os.fork()
-    if pid == 0:
-        print("Django web-server PID: {}".format(os.getpid()))
+    def _run_django():
         # django_setup()
         django_server = simple_server.make_server(host, APP_WEB_PORT, application)
+        Log.success("Django web-server started!")
         django_server.serve_forever()
-        Log.success("Started the django web-server in parallel thread!")
         # management.call_command('runserver', '--noreload')
-        exit(0)
 
-    print("Django web-server started!")
-    print("Host: " + str(host))
-    print("Port: " + str(APP_WEB_PORT))
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
+
+    Log.info("Starting the django web-server in a parallel thread")
+    multiprocess(_run_django, (), True, 1)
+
+    Log.info("Host: " + str(host))
+    Log.info("Port: " + str(APP_WEB_PORT))
+
     webbrowser.open(host + ':' + str(APP_WEB_PORT), new=2)
-    exit(0)
 
 
 def django_cmd(args):
