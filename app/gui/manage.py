@@ -17,6 +17,8 @@ def run_server():
     # Start the django web-server in a parallel thread
     multithread(app_server.serve_forever, (), True, 1)
     Log.success("Django web-server started!")
+    Log.info("Host: " + str(APP_WEB_HOST))
+    Log.info("Port: " + str(APP_WEB_PORT))
     webbrowser.open(APP_WEB_HOST + ':' + str(APP_WEB_PORT), new=2)
 
 
