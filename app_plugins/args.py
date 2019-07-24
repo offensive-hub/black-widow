@@ -17,6 +17,8 @@ def create_parser():
                          action="store_true")
     options.add_argument("-v", "--version", help="Show program's version number and exit",
                          action="store_true")
+    options.add_argument("-t", "--test", help="Execute a test",
+                         action="store_true")
     options.add_argument("-g", "--gui", help="Run " + app.env.APP_NAME + " with GUI",
                          action="store_true")
     options.add_argument("--django", help="Run django manager (ex. `--django 'help'`)",

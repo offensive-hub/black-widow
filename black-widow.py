@@ -24,6 +24,13 @@ def init(app_type):
     app.utils.helpers.logger.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
 
 
+# Main function for TEST app
+def main_test():
+    init(AppType.CMD)
+    ip = app.utils.helpers.network.get_ip_address()
+    print('ip: ' + str(ip))
+
+
 # Main function for GUI app
 def main_gui():
     init(AppType.GUI)
@@ -65,6 +72,8 @@ def main():
     arguments = args.get_arguments()
     if arguments.gui:
         main_gui()
+    elif arguments.test:
+        main_test()
     else:
         main_cmd(arguments)
 
