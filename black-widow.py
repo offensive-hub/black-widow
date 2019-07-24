@@ -34,7 +34,7 @@ def main_test():
 # Main function for GUI app
 def main_gui():
     init(AppType.GUI)
-    app.gui.run_server()
+    app.gui.django_gui()
 
 
 # Main function for command line app
