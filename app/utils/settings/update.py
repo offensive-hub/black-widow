@@ -1,5 +1,6 @@
 # APP_SETTINGS è il file json contenente i settings
-from app.env import APP_SETTINGS, APP_DEBUG
+from app.env import APP_SETTINGS
+from app.env_local import APP_DEBUG
 from app.utils.helpers import util, validators
 from app.utils.helpers.logger import Log
 from app.utils.helpers.util import set_json, get_json

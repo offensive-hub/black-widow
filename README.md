@@ -46,7 +46,8 @@
 > 2. `git clone git@github.com:FabrizioFubelli/black-widow.git`
 > 3. `cd black-widow`
 > 4. `sudo pip3 install -U -r requirements.txt`
-> 5. `sudo ./black-widow.py <arguments>`
+> 5. `cp ./app/env_local_dist.py ./app/env_local.py`
+> 6. `sudo ./black-widow.py <arguments>`
 
 <br/>
 

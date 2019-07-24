@@ -6,7 +6,8 @@ import json
 import requests
 import simplejson
 
-from app.env import APP_DEBUG, APP_VERSION, APP_NAME
+from app.env import APP_VERSION, APP_NAME
+from app.env_local import APP_DEBUG
 from app.utils.helpers.logger import Log
 from app.utils.helpers.validators import is_url
 

@@ -3,7 +3,8 @@ import webbrowser
 
 from django.core.servers.basehttp import simple_server
 
-from app.env import APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH
+from app.env_local import APP_WEB_HOST, APP_WEB_PORT
+from app.env import EXEC_PATH
 from app.utils.helpers.logger import Log
 from app.utils.helpers.network import get_ip_address
 from app.utils.helpers.multitask import multithread

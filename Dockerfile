@@ -27,6 +27,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy all project files
 COPY . .
 
+# Copy dist env to local env
+RUN cp app/env_local_dist.py app/env_local.py
+
 # Create a symbolic link in a global environments folder
 RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
 
@@ -36,7 +39,7 @@ RUN rm -rf ~/.cache/pip
 # Default executed script
 ENTRYPOINT [ "black-widow" ]
 
-EXPOSE 8000
+EXPOSE 80
 
 # Default arguments
 CMD []

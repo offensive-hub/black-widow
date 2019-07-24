@@ -34,9 +34,6 @@ def main_test():
 # Main function for GUI app
 def main_gui():
     init(AppType.GUI)
-    # Ignore arguments
-    app.utils.helpers.logger.Log.error("Not implemented")
-    # app.gui.main.open()
     app.gui.run_server()
 
 

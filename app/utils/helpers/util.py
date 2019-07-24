@@ -7,7 +7,7 @@ import re
 
 from datetime import datetime
 
-from app.env import APP_DEBUG
+from app.env_local import APP_DEBUG
 from app.utils.helpers import storage
 from app.utils.helpers.logger import Log
 
