@@ -1,7 +1,7 @@
 import os
 import webbrowser
 
-from django import setup as django_setup
+# from django import setup as django_setup
 from django.core import management
 from django.core.servers.basehttp import simple_server
 
@@ -12,6 +12,7 @@ from app.utils.helpers.network import get_ip_address
 from app.utils.helpers.multitask import multithread
 from app.gui.web.wsgi import WEB_PACKAGE
 from app.gui.web.wsgi import application
+
 
 def _get_preferred_ip():
     host = APP_WEB_HOST
