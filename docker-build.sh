@@ -2,9 +2,18 @@
 
 # This script build a local docker for tests
 
+local_docker="black-widow:local"
+
 # Remove current docker image
-docker rmi black-widow:local
+docker rmi "${local_docker}"
 # Build new docker image
-docker build -t black-widow:local .
+docker build -t "${local_docker}" .
 # Run new docker image and than, remove it
-docker run --rm black-widow:local
+echo
+echo
+echo "Done!"
+echo
+echo "To run the new docker image, launch:"
+echo
+echo "    docker run --rm ${local_docker}"
+echo
