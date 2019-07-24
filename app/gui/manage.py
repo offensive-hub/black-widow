@@ -26,7 +26,7 @@ def django_gui():
     host = _get_preferred_ip()
 
     def _run_django():
-        django_setup()
+        # django_setup()
         django_server = simple_server.make_server(host, APP_WEB_PORT, application)
         django_server.serve_forever()
         # management.call_command('runserver', '--noreload')

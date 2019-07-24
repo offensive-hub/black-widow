@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from app.gui.web.wsgi import WEB_PACKAGE
 
@@ -23,3 +24,5 @@ urlpatterns = [
     path('', include(WEB_PACKAGE + '.black_widow.urls')),
     url(r'^admin/', admin.site.urls),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
