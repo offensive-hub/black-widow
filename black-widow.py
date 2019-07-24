@@ -22,6 +22,7 @@ class AppType:
 # Startup
 def init(app_type):
     app.utils.helpers.logger.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
+    app.utils.helpers.logger.Log.info('DEBUG is ' + str(app.env_local.APP_DEBUG))
 
 
 # Main function for TEST app

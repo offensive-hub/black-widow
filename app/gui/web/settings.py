@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-from app.env import APP_STORAGE
+from app.env import APP_STORAGE, APP_WEB
 from app.env_local import APP_DEBUG
 from app.utils.helpers.network import get_ip_address
 from app.gui.web.wsgi import WEB_PACKAGE
@@ -59,7 +59,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(os.path.realpath(os.path.dirname(__file__)), 'black_widow/templates')
+            os.path.join(APP_WEB, 'templates')
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -124,3 +124,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(APP_WEB, 'static')
