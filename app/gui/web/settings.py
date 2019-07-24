@@ -15,11 +15,10 @@ import os
 from app.env import APP_STORAGE
 from app.env_local import APP_DEBUG
 from app.utils.helpers.network import get_ip_address
+from app.gui.web.wsgi import WEB_PACKAGE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = APP_STORAGE
-
-WEB_PACKAGE = 'app.gui.web'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -59,7 +58,9 @@ ROOT_URLCONF = WEB_PACKAGE + '.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(os.path.realpath(os.path.dirname(__file__)), 'black_widow/templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

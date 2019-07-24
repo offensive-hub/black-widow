@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
 
-from app.gui.web.settings import WEB_PACKAGE
+from app.gui.web.wsgi import WEB_PACKAGE
 
 urlpatterns = [
     path('', include(WEB_PACKAGE + '.black_widow.urls')),

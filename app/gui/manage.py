@@ -3,14 +3,15 @@ import webbrowser
 
 from django import setup as django_setup
 from django.core import management
+from django.core.servers.basehttp import simple_server
 
 from app.env_local import APP_WEB_HOST, APP_WEB_PORT
 from app.env import EXEC_PATH
 from app.utils.helpers.logger import Log
 from app.utils.helpers.network import get_ip_address
 from app.utils.helpers.multitask import multithread
-from app.gui.web.settings import WEB_PACKAGE
-
+from app.gui.web.wsgi import WEB_PACKAGE
+from app.gui.web.wsgi import application
 
 def _get_preferred_ip():
     host = APP_WEB_HOST
@@ -22,14 +23,20 @@ def _get_preferred_ip():
 
 
 def django_gui():
+    host = _get_preferred_ip()
+
+    def _run_django():
+        django_setup()
+        django_server = simple_server.make_server(host, APP_WEB_PORT, application)
+        django_server.serve_forever()
+        # management.call_command('runserver', '--noreload')
+
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
 
     Log.info("Starting the django web-server in a parallel thread")
-    django_setup()
-    multithread(management.call_command, ('runserver', '--noreload'), True, 1)
+    multithread(_run_django, (), True, 1)
     Log.success("Django web-server started!")
 
-    host = _get_preferred_ip()
     Log.info("Host: " + str(host))
     Log.info("Port: " + str(APP_WEB_PORT))
 
