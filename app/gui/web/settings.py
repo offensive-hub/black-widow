@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 from app.env import APP_STORAGE
+from app.utils.helpers.network import get_ip_address
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = APP_STORAGE
@@ -28,7 +29,7 @@ SECRET_KEY = '2-2+=!(i*_ute^&^j=7*t&mgaamgod+=l*8c#w84jxm@!qgp^g'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', get_ip_address()]
 
 
 # Application definition

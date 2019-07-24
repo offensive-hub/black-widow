@@ -5,21 +5,25 @@ from django.core.servers.basehttp import simple_server
 
 from app.env import APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH
 from app.utils.helpers.logger import Log
+from app.utils.helpers.network import get_ip_address
+from app.utils.helpers.multitask import multithread
 from app.gui.web.wsgi import application
 from app.gui.web.settings import WEB_PACKAGE
-from app.utils.helpers.multitask import multithread
 
 
 def run_server():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     Log.info("Starting the django web-server in a parallel thread")
-    app_server = simple_server.make_server(APP_WEB_HOST, APP_WEB_PORT, application)
+    host = get_ip_address()
+    if host is None:
+        host = APP_WEB_HOST
+    app_server = simple_server.make_server(host, APP_WEB_PORT, application)
     # Start the django web-server in a parallel thread
     multithread(app_server.serve_forever, (), True, 1)
     Log.success("Django web-server started!")
-    Log.info("Host: " + str(APP_WEB_HOST))
+    Log.info("Host: " + str(host))
     Log.info("Port: " + str(APP_WEB_PORT))
-    webbrowser.open(APP_WEB_HOST + ':' + str(APP_WEB_PORT), new=2)
+    webbrowser.open(host + ':' + str(APP_WEB_PORT), new=2)
 
 
 def django_cmd(args):
