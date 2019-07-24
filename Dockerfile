@@ -29,6 +29,7 @@ COPY . .
 
 # Copy dist env to local env
 RUN cp app/env_local_dist.py app/env_local.py
+RUN ./black-widow.py --django migrate
 
 # Create a symbolic link in a global environments folder
 RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
