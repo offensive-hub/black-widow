@@ -3,14 +3,15 @@ import webbrowser
 
 from django.core.servers.basehttp import simple_server
 
-from app.env import APP_WEB_PACKAGE, APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH, ROOT_PATH
+from app.env import APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH
 from app.utils.helpers.logger import Log
 from app.gui.web.wsgi import application
+from app.gui.web.settings import WEB_PACKAGE
 from app.utils.helpers.multitask import multithread
 
 
 def run_server():
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", APP_WEB_PACKAGE + ".settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     Log.info("Starting the django web-server in a parallel thread")
     app_server = simple_server.make_server(APP_WEB_HOST, APP_WEB_PORT, application)
     # Start the django web-server in a parallel thread
@@ -21,8 +22,9 @@ def run_server():
 
 def django_cmd(args):
     # Go to "web" directory
-    os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", APP_WEB_PACKAGE + ".settings")
+    if 'runserver' not in args:
+        os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError:

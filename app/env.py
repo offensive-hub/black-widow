@@ -13,7 +13,6 @@ APP_SETTINGS = APP_STORAGE + '/settings.json'
 APP_TMP = '/tmp/black-widow'
 APP_LOGFILE = APP_TMP + '/black-widow.log'
 
-APP_WEB_PACKAGE = 'app.gui.web'
 APP_WEB_HOST = '0.0.0.0'
 APP_WEB_PORT = 8000
 

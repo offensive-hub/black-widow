@@ -12,10 +12,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-from app.env import APP_STORAGE, APP_WEB_PACKAGE
+from app.env import APP_STORAGE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = APP_STORAGE
+
+WEB_PACKAGE = 'app.gui.web'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -50,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = APP_WEB_PACKAGE + '.urls'
+ROOT_URLCONF = WEB_PACKAGE + '.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = APP_WEB_PACKAGE + '.wsgi.application'
+WSGI_APPLICATION = WEB_PACKAGE + '.wsgi.application'
 
 
 # Database

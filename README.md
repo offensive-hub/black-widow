@@ -50,6 +50,14 @@
 
 <br/>
 
+> ### Debug:
+> - Run django (examples):
+>   - `./black-widow --django runserver`
+>   - `./black-widow --django help`
+>   - `./black-widow --django "help createsuperuser"`
+
+<br/>
+
 > ### Directories:
 > ```
 > [root]
