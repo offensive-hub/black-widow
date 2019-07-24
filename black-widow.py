@@ -30,13 +30,19 @@ def main_gui():
     # Ignore arguments
     app.utils.helpers.logger.Log.error("Not implemented")
     # app.gui.main.open()
-    app.gui.django()
+    app.gui.run_server()
 
 
 # Main function for command line app
 def main_cmd(arguments):
     init(AppType.CMD)
-    if arguments.pcap:
+    if arguments.django:
+        app.utils.helpers.logger.Log.info('Django manager executed')
+        app.utils.helpers.logger.Log.info('Django argument: '+str(arguments.django))
+        app.gui.django_cmd(arguments.django)
+        sys.exit(0)
+
+    elif arguments.pcap:
         if arguments.pcap_int is None:
             print('Please, specify an interface! (ex. --pcap-int=wlan0)\n')
             sys.exit(1)

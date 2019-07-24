@@ -1,1 +1,1 @@
-from .manage import django
+from .manage import run_server, django_cmd

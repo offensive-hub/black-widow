@@ -1,4 +1,5 @@
 from pprint import pprint
+from sqlmap.lib.utils.api import server as sqlmap_server
 
 from app.utils.helpers.logger import Log
 from app.utils.helpers.multitask import multithread
@@ -11,9 +12,8 @@ class SqlmapClient:
         self.host = host
         self.port = port
         # Start the sqlmap-api server in a parallel thread
-        Log.info("Starting sqlmap-api server")
-        # noinspection PyUnresolvedReferences
-        multithread(sqlmap.sqlmapapi.server, (self.host, self.port), True, 1)
+        Log.info("Starting sqlmap-api server in a parallel thread")
+        multithread(sqlmap_server, (self.host, self.port), True, 1)
         Log.success("Sqlmap-api server started!")
 
     @staticmethod
