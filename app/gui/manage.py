@@ -3,7 +3,7 @@ import webbrowser
 
 from django.core.servers.basehttp import simple_server
 
-from app.env import APP_WEB_PACKAGE, APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH
+from app.env import APP_WEB_PACKAGE, APP_WEB_HOST, APP_WEB_PORT, EXEC_PATH, ROOT_PATH
 from app.utils.helpers.logger import Log
 from app.gui.web.wsgi import application
 from app.utils.helpers.multitask import multithread
@@ -19,7 +19,9 @@ def run_server():
     webbrowser.open(APP_WEB_HOST + ':' + str(APP_WEB_PORT), new=2)
 
 
-def django_cmd(arg):
+def django_cmd(args):
+    # Go to "web" directory
+    os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", APP_WEB_PACKAGE + ".settings")
     try:
         from django.core.management import execute_from_command_line
@@ -36,4 +38,4 @@ def django_cmd(arg):
                 "forget to activate a virtual environment?"
             )
         raise
-    execute_from_command_line([EXEC_PATH + ' --django', arg])
+    execute_from_command_line([EXEC_PATH + ' --django', ] + args)

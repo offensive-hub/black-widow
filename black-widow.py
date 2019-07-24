@@ -37,9 +37,10 @@ def main_gui():
 def main_cmd(arguments):
     init(AppType.CMD)
     if arguments.django:
+        django_args = str.split(arguments.django)
         app.utils.helpers.logger.Log.info('Django manager executed')
-        app.utils.helpers.logger.Log.info('Django argument: '+str(arguments.django))
-        app.gui.django_cmd(arguments.django)
+        app.utils.helpers.logger.Log.info('Django arguments: '+str(django_args))
+        app.gui.django_cmd(django_args)
         sys.exit(0)
 
     elif arguments.pcap:
