@@ -53,9 +53,9 @@
 
 > ### Debug:
 > - Run django (examples):
->   - `./black-widow --django runserver`
->   - `./black-widow --django help`
->   - `./black-widow --django "help createsuperuser"`
+>   - `./black-widow.py --django runserver`
+>   - `./black-widow.py --django help`
+>   - `./black-widow.py --django "help createsuperuser"`
 
 <br/>
 

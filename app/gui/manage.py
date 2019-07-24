@@ -15,9 +15,11 @@ from app.gui.web.settings import WEB_PACKAGE
 def run_server():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     Log.info("Starting the django web-server in a parallel thread")
-    host = get_ip_address()
+    host = APP_WEB_HOST
     if host is None:
-        host = APP_WEB_HOST
+        host = get_ip_address()
+    if host is None:
+        host = '0.0.0.0'
     app_server = simple_server.make_server(host, APP_WEB_PORT, application)
     # Start the django web-server in a parallel thread
     multithread(app_server.serve_forever, (), True, 1)
