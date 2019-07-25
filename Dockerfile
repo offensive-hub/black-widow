@@ -40,7 +40,7 @@ RUN rm -rf ~/.cache/pip
 # Default executed script
 ENTRYPOINT [ "black-widow" ]
 
-EXPOSE 80
+EXPOSE 8095
 
 # Default arguments
 CMD []

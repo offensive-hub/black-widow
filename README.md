@@ -34,7 +34,9 @@
 > 
 > ### Docker Installation:
 > 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
-> 2. `docker run --rm offensive/black-widow [arguments]`
+> 2. Run docker:
+>   - Command line: `docker run --rm offensive/black-widow [arguments]`
+>   - GUI: `docker run -d -p 8095:8095 --rm offensive/black-widow -g`
 >
 > ### Docker Registry:
 > [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)

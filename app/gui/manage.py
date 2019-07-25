@@ -38,10 +38,10 @@ def django_gui():
     Log.info("Starting the django web-server in a parallel thread")
     multiprocess(_run_django, (), True, 1)
 
-    Log.info("Host: " + str(host))
-    Log.info("Port: " + str(APP_WEB_PORT))
+    url = "http://" + str(host) + ':' + str(APP_WEB_PORT)
+    Log.info("Visit: " + url)
 
-    webbrowser.open(host + ':' + str(APP_WEB_PORT), new=2)
+    webbrowser.open(url, new=2)
 
 
 def django_cmd(args):
