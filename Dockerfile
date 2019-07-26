@@ -33,7 +33,7 @@ RUN ./black-widow.py --django migrate
 
 # Create a symbolic link in a global environments folder
 # RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
-RUN ln -s /usr/share/black-widow/black-widow.sh /usr/bin/black-widow
+RUN ln -s /usr/share/black-widow/docker/black-widow.sh /usr/bin/black-widow
 
 # Clean
 RUN rm -rf ~/.cache/pip

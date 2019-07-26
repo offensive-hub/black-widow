@@ -2,8 +2,7 @@
 
 if [ "$1" = '-g' ] || [ "$1" = '--gui' ];then
     cd app/gui
-    gunicorn web.wsgi 127.0.0.1:80
-    exit 0
+    gunicorn -b :80 web.wsgi:application
+else
+    ./black-widow.py $@
 fi
-
-./black-widow.py $@
