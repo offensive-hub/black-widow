@@ -32,5 +32,8 @@ def django_cmd(args):
     # Go to "web" directory
     if 'runserver' not in args:
         os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
+    elif len(args) <= 1:
+        bind_host = _get_bind_socket()
+        args.append(bind_host)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     management.execute_from_command_line([EXEC_PATH + ' --django', ] + args)
