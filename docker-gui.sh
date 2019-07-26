@@ -7,5 +7,5 @@ host='127.0.0.1'
 port='8095'
 
 # Usage "-p": <port_localhost>:<port_docker>
-docker run -d -p "${host}:${port}" --rm "${local_docker}" -g
+docker run -d -p "${port}:80" --rm "${local_docker}" -g
 echo "Listening on http://${host}:${port}"
