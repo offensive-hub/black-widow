@@ -77,5 +77,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print('BLACK WIDOW MAIN')
     main()
