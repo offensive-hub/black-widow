@@ -32,7 +32,8 @@ RUN cp app/env_local_dist.py app/env_local.py
 RUN ./black-widow.py --django migrate
 
 # Create a symbolic link in a global environments folder
-RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
+# RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
+RUN ln -s /usr/share/black-widow/black-widow.sh /usr/bin/black-widow
 
 # Clean
 RUN rm -rf ~/.cache/pip
@@ -40,7 +41,7 @@ RUN rm -rf ~/.cache/pip
 # Default executed script
 ENTRYPOINT [ "black-widow" ]
 
-EXPOSE 8095
+EXPOSE 80
 
 # Default arguments
 CMD []
