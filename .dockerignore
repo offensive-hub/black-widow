@@ -112,3 +112,10 @@ ctf.py
 
 # old files
 *.old.*
+
+# Git
+.git
+.gitignore
+
+# Docker scripts
+docker-*.sh
