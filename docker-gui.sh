@@ -4,5 +4,4 @@
 
 local_docker="black-widow:local"
 
-# -d
-docker run -p 8095:8095 --rm "${local_docker}" -g
+docker run -d -p 8000:80 --rm "${local_docker}" -g
