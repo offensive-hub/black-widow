@@ -50,7 +50,7 @@ def create_parser():
 def get_arguments():
     """
     Get the CLI arguments
-    :return:
+    :return: dict The arguments
     """
     # --- Header image ---#
     def print_header():
@@ -82,9 +82,6 @@ def get_arguments():
         parser.print_help()
         print()  # print newline
         sys.exit(0)
-
-    # global usage
-    # usage = parser.print_help
 
     return args
 
