@@ -73,12 +73,12 @@
               <p>Icons</p>
             </a>
           </li>
-          <li class="nav-item {% if request.path == '/map' %}active{% endif %}">
+          <!--li class="nav-item {% if request.path == '/map' %}active{% endif %}">
             <a class="nav-link" href="/map">
               <i class="material-icons">location_ons</i>
               <p>Maps</p>
             </a>
-          </li>
+          </li-->
           <li class="nav-item {% if request.path == '/notifications' %}active{% endif %}">
             <a class="nav-link" href="/notifications">
               <i class="material-icons">notifications</i>
@@ -113,7 +113,7 @@
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-default btn-round btn-just-icon">
                   <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
+                  <span class="ripple-container"></span>
                 </button>
               </div>
             </form>
