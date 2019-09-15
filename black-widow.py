@@ -1,17 +1,33 @@
 #!/usr/bin/env python3
 
-"""
-🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️
-
-🕷️️  🕷️️  🕷️️  Black Widow  🕷️️  🕷️️  🕷️️
-
-🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️  🕷️️
-"""
-
 import app
 import os
 import sys
 from app_plugins import args
+
+""" ************************  🕷️  Black-Widow  🕷️  *********************** """
+"""                                                                       """
+""" black-widow.py -- This file is the main executable of the program.    """
+"""                                                                       """
+"""                                                                       """
+""" **************** IMPORTANT BLACK-WIDOW LICENSE TERMS **************** """
+"""                                                                       """
+""" This file is part of Black-Widow.                                     """
+"""                                                                       """
+""" Black-Widow is free software: you can redistribute it and/or modify   """
+""" it under the terms of the GNU General Public License as published by  """
+""" the Free Software Foundation, either version 3 of the License, or     """
+""" (at your option) any later version.                                   """
+"""                                                                       """
+""" Black-Widow is distributed in the hope that it will be useful,        """
+""" but WITHOUT ANY WARRANTY; without even the implied warranty of        """
+""" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         """
+""" GNU General Public License for more details.                          """
+"""                                                                       """
+""" You should have received a copy of the GNU General Public License     """
+""" along with Black-Widow.  If not, see <http://www.gnu.org/licenses/>.  """
+"""                                                                       """
+""" ********************************************************************* """
 
 
 class AppType:
@@ -44,7 +60,7 @@ def main_cmd(arguments):
     if arguments.django:
         django_args = str.split(arguments.django)
         app.utils.helpers.logger.Log.info('Django manager executed')
-        app.utils.helpers.logger.Log.info('Django arguments: '+str(django_args))
+        app.utils.helpers.logger.Log.info('Django arguments: ' + str(django_args))
         app.gui.django_cmd(django_args)
         sys.exit(0)
 

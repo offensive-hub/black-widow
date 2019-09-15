@@ -1,16 +1,36 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""
-TEST MODULE
-"""
 
 import os, app, pprint
 from termcolor import colored
 
+""" **************************** TEST MODULE **************************** """
+"""                                                                       """
+""" test.py -- This file contains just some simple test                   """
+"""                                                                       """
+"""                                                                       """
+""" **************** IMPORTANT BLACK-WIDOW LICENSE TERMS **************** """
+"""                                                                       """
+""" This file is part of Black-Widow.                                     """
+"""                                                                       """
+""" Black-Widow is free software: you can redistribute it and/or modify   """
+""" it under the terms of the GNU General Public License as published by  """
+""" the Free Software Foundation, either version 3 of the License, or     """
+""" (at your option) any later version.                                   """
+"""                                                                       """
+""" Black-Widow is distributed in the hope that it will be useful,        """
+""" but WITHOUT ANY WARRANTY; without even the implied warranty of        """
+""" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         """
+""" GNU General Public License for more details.                          """
+"""                                                                       """
+""" You should have received a copy of the GNU General Public License     """
+""" along with Black-Widow.  If not, see <http://www.gnu.org/licenses/>.  """
+"""                                                                       """
+""" ********************************************************************* """
+
+
 def main():
     app.utils.helpers.logger.Log.info(app.env.APP_NAME+' (DEBUG) started, PID='+str(os.getpid()))
-    if (not app.env.APP_DEBUG):
+    if (not app.env_local.APP_DEBUG):
         print(colored("La modalità di APP_DEBUG non è attiva. Per debug approfondito, modificarla in 'app/env.py'.\n", 'red'))
     #Settings.main()
     #env()
