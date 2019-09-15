@@ -58,6 +58,10 @@ def notifications(request):
     return render(request, 'notifications.html')
 
 
+def upgrade(request):
+    return render(request, 'upgrade.html')
+
+
 def static(request, path):
     """
     Manage requested static file (for non-DEBUG mode compatibility without web-server)
