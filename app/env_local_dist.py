@@ -23,7 +23,7 @@
 *********************************************************************************
 """
 
-APP_DEBUG = True
+APP_DEBUG = False
 
 APP_WEB_HOST = '0.0.0.0'           # if None: automatic find ip address
 APP_WEB_PORT = 80

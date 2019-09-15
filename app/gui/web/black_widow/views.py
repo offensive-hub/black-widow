@@ -23,7 +23,14 @@
 *********************************************************************************
 """
 
+import os
+
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
+
+from app.gui.web.settings import STATICFILES_DIRS
+from app.utils.helpers.storage import read_file
+
 
 # Create your views here.
 
@@ -50,3 +57,14 @@ def icons(request):
 
 def notifications(request):
     return render(request, 'notifications.html')
+
+
+def static(request, path):
+    for directory in STATICFILES_DIRS:
+        static_file = os.path.join(directory, path)
+        data = read_file(static_file)
+        if data != "":
+            response = HttpResponse()
+            response.write(data)
+            return response
+    return HttpResponseNotFound()

@@ -23,8 +23,9 @@
 *********************************************************************************
 """
 
-from django.urls import path
+from django.urls import path, re_path
 
+from app.gui.web.settings import STATIC_URL
 from . import views
 
 urlpatterns = [
@@ -34,4 +35,8 @@ urlpatterns = [
     path('typography', views.typography, name='typography'),
     path('icons', views.icons, name='icons'),
     path('notifications', views.notifications, name='notifications'),
+    path('notifications', views.notifications, name='notifications'),
+
+    # static (non debug compatibility without web server)
+    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', views.static, name='static'),
 ]

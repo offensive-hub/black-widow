@@ -36,12 +36,16 @@
 *********************************************************************************
 """
 
+import re
+
 # from django.conf.urls import url
 # from django.contrib import admin
 from django.urls import include, path
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.urls import re_path
+from django.views.static import serve
 
 from app.gui.web.wsgi import WEB_PACKAGE
+from app.gui.web.settings import STATIC_URL
 
 
 urlpatterns = [
@@ -49,4 +53,4 @@ urlpatterns = [
     # url(r'^admin/', admin.site.urls),
 ]
 
-urlpatterns += staticfiles_urlpatterns()
+# urlpatterns += staticfiles_urlpatterns()
