@@ -1,18 +1,39 @@
 # -*- coding: utf-8 -*-
 
 """
----- Multiprocessing ----
-
-Il multiprocessing in Python è molto più veloce del multithreading, ma
-occupa più risorse hardware, in quanto va a caricare in RAM le stesse parti del
-programma più volte
-
-
----- Multithreading ----
-
-Il multithreading in Python occupa meno risorse hardware del multiprocessing,
-ma è più lento, in quanto forza un unico processo ad eseguire task paralleli
-(come accade spesso in software provvisti di grafica)
+*********************************************************************************
+*                                                                               *
+* multitask.py -- Classes and methods to take advantage of multitasking.        *
+*                                                                               *
+* ---- Multi-processing ----                                                    *
+*                                                                               *
+* The multi-processing is very faster then multi-threading, but needs more      *
+* hardware resources, because load in RAM multiple copy of the same part of the *
+* program.                                                                      *
+*                                                                               *
+* ---- Multi-threading ----                                                     *
+*                                                                               *
+* The multi-threading is lower than multi-processing because forces the same    *
+* process to perform multiple jobs simultaneously.                              *
+*                                                                               *
+********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
+*                                                                               *
+* This file is part of black-widow.                                             *
+*                                                                               *
+* black-widow is free software: you can redistribute it and/or modify           *
+* it under the terms of the GNU General Public License as published by          *
+* the Free Software Foundation, either version 3 of the License, or             *
+* (at your option) any later version.                                           *
+*                                                                               *
+* black-widow is distributed in the hope that it will be useful,                *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+* GNU General Public License for more details.                                  *
+*                                                                               *
+* You should have received a copy of the GNU General Public License             *
+* along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
+*                                                                               *
+*********************************************************************************
 """
 
 import itertools
@@ -25,6 +46,7 @@ from app.env import APP_TMP
 from app.utils.helpers import storage
 from app.utils.helpers.logger import Log
 from app.utils.helpers.util import is_listable
+
 
 CPU = multiprocessing.cpu_count()
 
