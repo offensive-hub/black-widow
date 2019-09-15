@@ -112,3 +112,6 @@ ctf.py
 
 # old files
 *.old.*
+
+# docker useful scripts
+docker/docker-*.sh
