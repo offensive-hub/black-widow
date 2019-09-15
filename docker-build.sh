@@ -2,10 +2,10 @@
 
 # This script build a local docker for tests
 
-find . -name *.pyc -exec rm -rf {} \;
-find . -name __pycache__ -exec rm -rf {} \;
+find . -name *.pyc -exec rm -rf {} \; 2> /dev/null
+find . -name __pycache__ -exec rm -rf {} \; 2> /dev/null
 
-local_docker="black-widow:local"
+local_docker="black-widow:local" 2> /dev/null
 
 # Remove current docker image
 docker rmi "${local_docker}"
@@ -18,5 +18,6 @@ echo "Done!"
 echo
 echo "To run the new docker image, launch:"
 echo
-echo "    docker run --rm ${local_docker}"
+echo "    [GUI]: ./docker-gui.sh"
+echo "    [CMD]: ./docker-cmd.sh"
 echo
