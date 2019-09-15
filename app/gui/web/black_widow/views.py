@@ -25,11 +25,10 @@
 
 import os
 
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponseNotFound, FileResponse
 from django.shortcuts import render
 
 from app.gui.web.settings import STATICFILES_DIRS
-from app.utils.helpers.storage import read_file
 
 
 # Create your views here.
@@ -60,11 +59,13 @@ def notifications(request):
 
 
 def static(request, path):
+    """
+    Manage requested static file (for non-DEBUG mode compatibility without web-server)
+    :type path: str
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    """
     for directory in STATICFILES_DIRS:
         static_file = os.path.join(directory, path)
-        data = read_file(static_file)
-        if data != "":
-            response = HttpResponse()
-            response.write(data)
-            return response
+        if os.path.isfile(static_file):
+            return FileResponse(open(static_file, 'rb'), as_attachment=False)
     return HttpResponseNotFound()
