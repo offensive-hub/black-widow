@@ -16540,7 +16540,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
   border-radius: 30px;
 }
 
-.fixed-plugin .button-container .btn:not(.btn-facebook):not(.btn-twitter) {
+.fixed-plugin .button-container .btn:not(.btn-facebook):not(.btn-twitter):not(.btn-instagram) {
   display: block;
 }
 
@@ -16965,6 +16965,10 @@ label {
   transition: all 150ms ease-in;
 }
 
+
+
+/* Facebook */
+
 .btn.btn-facebook {
   color: #ffffff;
   background-color: #3b5998;
@@ -17055,6 +17059,12 @@ label {
   color: #3b5998;
 }
 
+/* End Facebook */
+
+
+
+/* Twitter */
+
 .btn.btn-twitter {
   color: #ffffff;
   background-color: #55acee;
@@ -17144,6 +17154,106 @@ label {
   background-color: transparent;
   color: #55acee;
 }
+
+/* End Twitter */
+
+
+
+/* Instagram */
+
+.btn.btn-instagram {
+  color: #ffffff;
+  background-color: #d62976;
+  border-color: #962fbf;
+  box-shadow: 0 2px 2px 0 rgba(238, 85, 226, 0.14), 0 3px 1px -2px rgba(172, 85, 238, 0.2), 0 1px 5px 0 rgba(179, 85, 238, 0.12);
+}
+
+.btn.btn-instagram:hover {
+  color: #ffffff;
+  background-color: #ff006a;
+  border-color: #6e00a7;
+}
+
+.btn.btn-instagram:focus,
+.btn.btn-instagram.focus,
+.btn.btn-instagram:hover {
+  color: #ffffff;
+  background-color: #ff006a;
+  border-color: #6e00a7;
+}
+
+.btn.btn-instagram:active,
+.btn.btn-instagram.active,
+.open>.btn.btn-instagram.dropdown-toggle,
+.show>.btn.btn-instagram.dropdown-toggle {
+  color: #ffffff;
+  background-color: #ff006a;
+  border-color: #1d91e8;
+  box-shadow: 0 2px 2px 0 rgba(238, 85, 226, 0.14), 0 3px 1px -2px rgba(172, 85, 238, 0.2), 0 1px 5px 0 rgba(179, 85, 238, 0.12);
+}
+
+.btn.btn-instagram:active:hover,
+.btn.btn-instagram:active:focus,
+.btn.btn-instagram:active.focus,
+.btn.btn-instagram.active:hover,
+.btn.btn-instagram.active:focus,
+.btn.btn-instagram.active.focus,
+.open>.btn.btn-instagram.dropdown-toggle:hover,
+.open>.btn.btn-instagram.dropdown-toggle:focus,
+.open>.btn.btn-instagram.dropdown-toggle.focus,
+.show>.btn.btn-instagram.dropdown-toggle:hover,
+.show>.btn.btn-instagram.dropdown-toggle:focus,
+.show>.btn.btn-instagram.dropdown-toggle.focus {
+  color: #ffffff;
+  background-color: #47a5ed;
+  border-color: #126db2;
+}
+
+.open>.btn.btn-instagram.dropdown-toggle.bmd-btn-icon {
+  color: inherit;
+  background-color: #55acee;
+}
+
+.open>.btn.btn-instagram.dropdown-toggle.bmd-btn-icon:hover {
+  background-color: #47a5ed;
+}
+
+.btn.btn-instagram.disabled:focus,
+.btn.btn-instagram.disabled.focus,
+.btn.btn-instagram:disabled:focus,
+.btn.btn-instagram:disabled.focus {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.btn.btn-instagram.disabled:hover,
+.btn.btn-instagram:disabled:hover {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.btn.btn-instagram:focus,
+.btn.btn-instagram:active,
+.btn.btn-instagram:hover {
+  box-shadow: 0 14px 26px -12px rgba(85, 172, 238, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(85, 172, 238, 0.2);
+}
+
+.btn.btn-instagram.btn-link {
+  background-color: transparent;
+  color: #55acee;
+  box-shadow: none;
+}
+
+.btn.btn-instagram.btn-link:hover,
+.btn.btn-instagram.btn-link:focus,
+.btn.btn-instagram.btn-link:active {
+  background-color: transparent;
+  color: #55acee;
+}
+
+/* End Instagram */
+
+
 
 .card {
   border: 0;
@@ -20221,6 +20331,10 @@ Copyright (c) 2015 Daniel Eden
   color: #fff;
 }
 
+
+
+/* Facebook */
+
 .dark-edition .btn.btn-facebook {
   color: #ffffff;
   background-color: #3b5998;
@@ -20311,6 +20425,12 @@ Copyright (c) 2015 Daniel Eden
   color: #3b5998;
 }
 
+/* End Facebook */
+
+
+
+/* Twitter */
+
 .dark-edition .btn.btn-twitter {
   color: #ffffff;
   background-color: #55acee;
@@ -20400,6 +20520,106 @@ Copyright (c) 2015 Daniel Eden
   background-color: transparent;
   color: #55acee;
 }
+
+/* End Twitter */
+
+
+
+/* Instagram */
+
+.dark-edition .btn.btn-instagram {
+  color: #ffffff;
+  background-color: #d62976;
+  border-color: #d62976;
+  box-shadow: 0 2px 2px 0 rgba(238, 85, 226, 0.14), 0 3px 1px -2px rgba(172, 85, 238, 0.2), 0 1px 5px 0 rgba(179, 85, 238, 0.12);
+}
+
+.dark-edition .btn.btn-instagram:hover {
+  color: #ffffff;
+  background-color: #ff00d4;
+  border-color: #b21290;
+}
+
+.dark-edition .btn.btn-instagram:focus,
+.dark-edition .btn.btn-instagram.focus,
+.dark-edition .btn.btn-instagram:hover {
+  color: #ffffff;
+  background-color: #ff00d4;
+  border-color: #b21290;
+}
+
+.dark-edition .btn.btn-instagram:active,
+.dark-edition .btn.btn-instagram.active,
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle,
+.show>.dark-edition .btn.btn-instagram.dropdown-toggle {
+  color: #ffffff;
+  background-color: #ff00d4;
+  border-color: #b21290;
+  box-shadow: 0 2px 2px 0 rgba(85, 172, 238, 0.14), 0 3px 1px -2px rgba(85, 172, 238, 0.2), 0 1px 5px 0 rgba(85, 172, 238, 0.12);
+}
+
+.dark-edition .btn.btn-instagram:active:hover,
+.dark-edition .btn.btn-instagram:active:focus,
+.dark-edition .btn.btn-instagram:active.focus,
+.dark-edition .btn.btn-instagram.active:hover,
+.dark-edition .btn.btn-instagram.active:focus,
+.dark-edition .btn.btn-instagram.active.focus,
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle:hover,
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle:focus,
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle.focus,
+.show>.dark-edition .btn.btn-instagram.dropdown-toggle:hover,
+.show>.dark-edition .btn.btn-instagram.dropdown-toggle:focus,
+.show>.dark-edition .btn.btn-instagram.dropdown-toggle.focus {
+  color: #ffffff;
+  background-color: #e469d3;
+  border-color: #fce1ef;
+}
+
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle.bmd-btn-icon {
+  color: inherit;
+  background-color: #55acee;
+}
+
+.open>.dark-edition .btn.btn-instagram.dropdown-toggle.bmd-btn-icon:hover {
+  background-color: #47a5ed;
+}
+
+.dark-edition .btn.btn-instagram.disabled:focus,
+.dark-edition .btn.btn-instagram.disabled.focus,
+.dark-edition .btn.btn-instagram:disabled:focus,
+.dark-edition .btn.btn-instagram:disabled.focus {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.dark-edition .btn.btn-instagram.disabled:hover,
+.dark-edition .btn.btn-instagram:disabled:hover {
+  background-color: #55acee;
+  border-color: #55acee;
+}
+
+.dark-edition .btn.btn-instagram:focus,
+.dark-edition .btn.btn-instagram:active,
+.dark-edition .btn.btn-instagram:hover {
+  box-shadow: 0 14px 26px -12px rgba(85, 172, 238, 0.42), 0 4px 23px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(85, 172, 238, 0.2);
+}
+
+.dark-edition .btn.btn-instagram.btn-link {
+  background-color: transparent;
+  color: #55acee;
+  box-shadow: none;
+}
+
+.dark-edition .btn.btn-instagram.btn-link:hover,
+.dark-edition .btn.btn-instagram.btn-link:focus,
+.dark-edition .btn.btn-instagram.btn-link:active {
+  background-color: transparent;
+  color: #55acee;
+}
+
+/* End Instagram */
+
+
 
 .dark-edition .sidebar[data-color="purple"] li.active>a {
   background: linear-gradient(60deg, #7b1fa2, #913f9e);
