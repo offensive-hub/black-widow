@@ -334,11 +334,13 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
     -->
     <!-- Chartist JS -->
-    <script src="../../static/js/plugins/chartist.min.js"></script>
+    <script src="{% static 'js/plugins/chartist.min.js' %}"></script>
     <!--  Notifications Plugin    -->
-    <script src="../../static/js/plugins/bootstrap-notify.js"></script>
+    <script src="{% static 'js/plugins/bootstrap-notify.js' %}"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../../static/js/material-dashboard.js?v=2.1.0"></script>
+    <script src="{% static 'js/material-dashboard.js' %}"></script>
+    <!-- Black Widow -->
+      <script src="{% static 'js/black-widow.js' %}" type="application/javascript"></script>
     <script type="application/javascript">
     $(document).ready(function() {
       $().ready(function() {
