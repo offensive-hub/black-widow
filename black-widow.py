@@ -67,14 +67,14 @@ def main_cmd(arguments):
 
     elif arguments.pcap:
         if arguments.pcap_int is None:
-            print('Please, specify an interface! (ex. --pcap-int=wlan0)\n')
+            print('Please, specify an interface! (eg. --pcap-int=wlan0)\n')
             sys.exit(1)
         app.utils.sniffing.sniff_pcap(src_file=arguments.pcap_src, interface=arguments.pcap_int,
                                       dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
                                       limit_length=arguments.pcap_limit)
     elif arguments.sql:
         if arguments.sql_url is None:
-            print('Please, specify an url! (ex. --sql-url=https://black-widow.io)\n')
+            print('Please, specify an url! (eg. --sql-url=https://black-widow.io)\n')
             sys.exit(1)
         if arguments.sql_deep:
             app.utils.sql.deep_inject_form(arguments.sql_url, arguments.sql_depth)

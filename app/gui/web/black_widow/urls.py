@@ -31,6 +31,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('user', views.user, name='user'),
+    path('sniffing', views.sniffing, name='sniffing'),
     path('tables', views.tables, name='tables'),
     path('typography', views.typography, name='typography'),
     path('icons', views.icons, name='icons'),

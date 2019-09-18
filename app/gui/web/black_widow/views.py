@@ -38,6 +38,10 @@ def index(request):
     return render(request, 'index.html')
 
 
+def sniffing(request):
+    return render(request, 'sniffing.html')
+
+
 def user(request):
     return render(request, 'user.html')
 

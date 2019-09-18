@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <!--
-*********************************************************************************
-*                                                                               *
-* base.html -- HTML file.                                                       *
-*                                                                               *
 ************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
 *                                                                               *
 * =========================================================                     *
@@ -39,9 +35,7 @@
 *                                                                               *
 *********************************************************************************
 -->
-
 {% load static %}
-
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -66,15 +60,23 @@
 
             Tip 2: you can also add an image using data-image tag
         -->
-        <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-          Creative Tim
-        </a></div>
+        <div class="logo">
+          <a target="_blank" href="https://www.black-widow.io" class="simple-text logo-normal">
+            Black Widow
+          </a>
+        </div>
         <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item {% if request.path == '/' %}active{% endif %}">
             <a class="nav-link" href="/">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item {% if request.path == '/sniffing' %}active{% endif %}">
+            <a class="nav-link" href="/sniffing">
+              <i class="material-icons">remove_red_eye</i>
+              <p>Sniffing</p>
             </a>
           </li>
           <li class="nav-item {% if request.path == '/user' %}active{% endif %}">
@@ -194,10 +196,16 @@
           <nav class="float-left">
             <ul>
               <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
+                <a target="_blank" href="https://github.com/FabrizioFubelli/black-widow">
+                  GitHub
                 </a>
               </li>
+              <li>
+                <a target="_blank" href="https://hub.docker.com/r/offensive/black-widow">
+                  Docker
+                </a>
+              </li>
+              <!--
               <li>
                 <a href="https://creative-tim.com/presentation">
                   About Us
@@ -208,16 +216,17 @@
                   Blog
                 </a>
               </li>
+              -->
               <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
+                <a target="_blank" href="https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE">
+                  License
                 </a>
               </li>
             </ul>
           </nav>
           <div class="copyright float-right" id="date">
             , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+            <a href="https://fabrizio.fubelli.org" target="_blank">Fabrizio Fubelli</a> for White Hats.
           </div>
         </div>
       </footer>
@@ -269,26 +278,43 @@
           </a>
         </li>
         <li class="button-container">
-          <a href="https://www.creative-tim.com/product/material-dashboard-dark" target="_blank" class="btn btn-primary btn-block">Free Download</a>
+          <a href="https://github.com/FabrizioFubelli/black-widow" target="_blank" class="btn btn-primary btn-block">
+            GitHub
+          </a>
         </li>
-        <!-- <li class="header-title">Want more components?</li>
-            <li class="button-container">
-                <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                  Get the pro version
-                </a>
-            </li> -->
         <li class="button-container">
-          <a href="https://demos.creative-tim.com/material-dashboard-dark/docs/2.0/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
+          <a href="https://hub.docker.com/r/offensive/black-widow" target="_blank" class="btn btn-warning btn-block">
+            Docker
+          </a>
+        </li>
+        <!--
+        <li class="button-container">
+          <a href="" target="_blank" class="btn btn-default btn-block">
             View Documentation
           </a>
         </li>
+        -->
+        <!--
         <li class="button-container github-star">
           <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard/tree/dark-edition" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
         </li>
+        -->
+        <!--
         <li class="header-title">Thank you for 95 shares!</li>
-        <li class="button-container text-center">
-          <button id="twitter" class="btn btn-round btn-twitter"><i class="fa fa-twitter"></i> &middot; 45</button>
-          <button id="facebook" class="btn btn-round btn-facebook"><i class="fa fa-facebook-f"></i> &middot; 50</button>
+        -->
+        <li class="button-container text-center" style="display: flex;">
+          <div style="margin-left: auto; margin-right: 5px;">
+            <a id="instagram" class="btn btn-round btn-twitter"
+               target="_blank" href="https://www.instagram.com/8l4ck_w1d0w">
+              <i class="fa fa-instagram"></i>
+            </a>
+          </div>
+          <div style="margin-right: auto; margin-left: 5px;">
+            <a id="facebook" class="btn btn-round btn-facebook"
+               target="_blank" href="https://fb.me/offensive.black.widow">
+              <i class="fa fa-facebook-f"></i>
+            </a>
+          </div>
           <br>
           <br>
         </li>
