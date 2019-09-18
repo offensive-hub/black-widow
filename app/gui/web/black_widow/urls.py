@@ -29,7 +29,7 @@ from app.gui.web.settings import STATIC_URL
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index, name='black widow'),
     path('user', views.user, name='user'),
     path('sniffing', views.sniffing, name='sniffing'),
     path('tables', views.tables, name='tables'),
