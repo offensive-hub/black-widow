@@ -340,7 +340,8 @@
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="{% static 'js/material-dashboard.js' %}"></script>
     <!-- Black Widow -->
-      <script src="{% static 'js/black-widow.js' %}" type="application/javascript"></script>
+    <script src="{% static 'js/black-widow.js' %}" type="application/javascript"></script>
+    <!-- Embed Javascript -->
     <script type="application/javascript">
     $(document).ready(function() {
       $().ready(function() {
@@ -501,13 +502,7 @@
 
         });
       });
-    });
-    </script>
-    <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-
     });
     </script>
 </body>

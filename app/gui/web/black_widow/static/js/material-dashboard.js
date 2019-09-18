@@ -311,7 +311,6 @@ md = {
     $sidebar_wrapper = $('.sidebar-wrapper');
 
     if (!mobile_menu_initialized) {
-      console.log('intra');
       $navbar = $('nav').find('.navbar-collapse').children('.navbar-nav');
 
       mobile_menu_content = '';
