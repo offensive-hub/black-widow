@@ -39,6 +39,10 @@ def index(request):
 
 
 def sniffing(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    """
+    print(request.resolver_match.url_name)
     return render(request, 'sniffing.html')
 
 
