@@ -7,7 +7,8 @@ LABEL maintainer="Fabrizio Fubelli <fabri.fubels@gmail.com>"
 WORKDIR /usr/share/black-widow
 
 # Install required packages
-RUN apk --no-cache --update upgrade && apk --no-cache add ca-certificates tidyhtml python3 py3-numpy py3-lxml py3-netifaces
+RUN apk --no-cache --update upgrade
+RUN apk --no-cache add ca-certificates tidyhtml python3 py3-numpy py3-lxml py3-netifaces tshark
 
 # Link python3 >> python
 RUN if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi
