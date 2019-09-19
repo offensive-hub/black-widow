@@ -61,9 +61,7 @@ class Sniffing:
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             """
-            return render(request, self.template_name, {
-                'network_interfaces': network.get_interfaces()
-            })
+            return render(request, self.template_name)
 
 
 def user(request):
