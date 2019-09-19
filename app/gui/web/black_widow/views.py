@@ -27,10 +27,11 @@ import os
 
 from django.http import HttpResponseNotFound, FileResponse
 from django.shortcuts import render
+from django.views.generic import TemplateView
 
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
-
+# from .abstract_class import AbstractView
 
 # Create your views here.
 
@@ -39,13 +40,30 @@ def index(request):
     return render(request, 'index.html')
 
 
-def sniffing(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    """
-    return render(request, 'sniffing.html', {
-        'network_interfaces': network.get_interfaces()
-    })
+class Sniffing:
+    name = 'sniffing'
+
+    class InterfaceView(TemplateView):
+        template_name = 'sniffing/interface.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            """
+            return render(request, self.template_name, {
+                'network_interfaces': network.get_interfaces()
+            })
+
+    class FilterView(TemplateView):
+        template_name = 'sniffing/filter.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            """
+            return render(request, self.template_name, {
+                'network_interfaces': network.get_interfaces()
+            })
 
 
 def user(request):
@@ -65,10 +83,18 @@ def icons(request):
 
 
 def notifications(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :return: django.http.HttpResponse
+    """
     return render(request, 'notifications.html')
 
 
 def upgrade(request):
+    """
+    :param request:
+    :return: django.http.HttpResponse
+    """
     return render(request, 'upgrade.html')
 
 

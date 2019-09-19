@@ -30,8 +30,12 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='black widow'),
+
+    # --- SNIFFING --- #
+    path('sniffing', views.Sniffing.InterfaceView.as_view(), name='sniffing'),
+    path('sniffing/filter', views.Sniffing.FilterView.as_view(), name='sniffing'),
+
     path('user', views.user, name='user'),
-    path('sniffing', views.sniffing, name='sniffing'),
     path('tables', views.tables, name='tables'),
     path('typography', views.typography, name='typography'),
     path('icons', views.icons, name='icons'),
