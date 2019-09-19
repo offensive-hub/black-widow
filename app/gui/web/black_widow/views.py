@@ -29,6 +29,7 @@ from django.http import HttpResponseNotFound, FileResponse
 from django.shortcuts import render
 
 from app.gui.web.settings import STATICFILES_DIRS
+from app.utils.helpers import network
 
 
 # Create your views here.
@@ -42,8 +43,9 @@ def sniffing(request):
     """
     :type request: django.core.handlers.wsgi.WSGIRequest
     """
-    print(request.resolver_match.url_name)
-    return render(request, 'sniffing.html')
+    return render(request, 'sniffing.html', {
+        'network_interfaces': network.get_interfaces()
+    })
 
 
 def user(request):

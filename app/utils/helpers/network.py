@@ -26,12 +26,14 @@
 import netifaces as ni
 
 
-INTERFACES = ['eth0', 'wlan0', 'usb0']
+def get_interfaces():
+    return ni.interfaces()
 
 
 def get_ip_address():
     ip = None
-    for interface in INTERFACES:
+    interfaces = get_interfaces()
+    for interface in interfaces:
         try:
             ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
             break
