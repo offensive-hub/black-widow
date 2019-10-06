@@ -1,6 +1,7 @@
-/********************************************************************************
+"""
+*********************************************************************************
 *                                                                               *
-* black-widow.css -- Main black-widow stylesheet                                *
+* abstract_view.py -- Abstract view of black-widow.                             *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -19,42 +20,47 @@
 * You should have received a copy of the GNU General Public License             *
 * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
 *                                                                               *
-********************************************************************************/
+*********************************************************************************
+"""
 
-/**
- *   [ INDEX ]
- *
- *  0) GLOBAL
- *       |
-*        |-- 0.1) Cards
- *
- *  1) base.html
- *
-*/
+from django.views.generic import TemplateView
+
+from app.utils.helpers.util import is_listable
 
 
+class AbstractView(TemplateView):
+    """
+    Abstract view extended by application views
+    """
+    name = None
 
-/*********** 0) GLOBAL ************/
+    def session_put(self, session, value):
+        """
+        :type session: django.contrib.sessions.backends.db.SessionStore
+        :type value: object
+        """
+        session[self.name] = value
 
-
-/*** 0.1) Cards ***/
-
-.card [class*="card-header-"] .card-title+.card-category .material-icons {
-  font-size: 16px;
-}
-
-/******************/
-
-
-/**********************************/
-
-
-
-/********** 1) base.html **********/
-
-#page-title {
-  text-transform: capitalize;
-  pointer-events: none;
-}
-
-/**********************************/
+    def session_get(self, session, params):
+        """
+        :type session: django.contrib.sessions.backends.db.SessionStore
+        :type params: dict
+        """
+        session_params = session.get(self.name)
+        if session_params is None:
+            session_params = dict()
+        return_params = session_params
+        for key, values in params.items():
+            session_value = session_params.get(key)
+            if is_listable(values):
+                return_values = dict()
+                for value in values:
+                    return_values[value] = (value == session_value)
+                return_params[key] = return_values
+            else:
+                return_params[key] = {
+                    {
+                        values: (session_value is not None)
+                    }
+                }
+        return return_params

@@ -42,73 +42,84 @@
 -->
 {% endcomment %}
 {% block content %}
-    <!-- Interfaces -->
-    <div class="row">
-        <div class="col-lg-5 col-md-5">
-            <div class="card">
-                <div class="card-header card-header-primary">
-                    <h4 class="card-title ">Interfaces</h4>
-                    <p class="card-category"> Chose the interfaces to sniff</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+             <!-- Interfaces -->
+            <div class="col-lg-4 col-md-5">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Interfaces *</h4>
+                        <p class="card-category"> Chose the interface to sniff</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="interfaces">
+                                <table class="table">
+                                    <tbody>
+                                    {% for interface,checked in interfaces.items %}
+                                        <tr>
+                                            <td>
+                                                <div class="form-check form-check-radio">
+                                                    <label class="form-check-label">
+                                                        <input {% if checked %}checked{% endif %} required class="form-check-input" type="radio" name="interfaces" value="{{interface}}">
+                                                        {{interface}}
+                                                        <span class="circle">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                     <!-- [old code in loop]
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                                <button type="button" rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm">
+                                                    <i class="material-icons">close</i>
+                                                </button>
+                                            </td>
+                                    -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="interfaces">
-                            <table class="table">
-                                <tbody>
-                                {% for network_interface in network_interfaces %}
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" value="{{network_interface}}" name="interface"> <!-- checked -->
-                                                    <span class="form-check-sign"><span class="check"></span></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>{{network_interface}}</td>
-                                    </tr>
-                                {% endfor %}
-                                 <!-- [old code in loop]
-                                        <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                            <button type="button" rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm">
-                                                <i class="material-icons">close</i>
-                                            </button>
-                                        </td>
-                                -->
-                                </tbody>
-                            </table>
+            </div>
+
+            <!-- Filters -->
+            <div class="col-lg-8 col-md-7">
+                <div class="card">
+                    <div class="card-header card-header-primary">
+                        <h4 class="card-title ">Filters</h4>
+                        <div class="card-category"> Available filters:
+                            <a target="_blank" title="Available filters" href="https://wiki.wireshark.org/DisplayFilters">
+                               <strong>Wireshark display filters <i class="material-icons">open_in_new</i></strong>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="filters">
+                                <div class="form-group">
+                                    <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
+                                    <input value="{{filters}}" type="text" class="form-control" id="filters-input" name="filters">
+                                    <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
+                              </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="col-lg-7 col-md-7">
-            <div class="card">
-                <div class="card-header card-header-primary">
-                    <h4 class="card-title ">Filters</h4>
-                    <div class="card-category"> Available filters:
-                        <a target="_blank" title="Available filters" href="https://wiki.wireshark.org/DisplayFilters">
-                           <strong>Wireshark display filters <i class="material-icons">open_in_new</i></strong>
-                        </a>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="filters">
-                            <div class="form-group">
-                                <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
-                                <input type="text" class="form-control" id="filters-input" name="filters">
-                                <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
-                          </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row">
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Start</button>
             </div>
         </div>
-    </div>
+    </form>
 {% endblock %}

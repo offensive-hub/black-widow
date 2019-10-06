@@ -25,13 +25,13 @@
 
 import os
 
-from django.http import HttpResponseNotFound, FileResponse
+from django.http import HttpResponseNotFound, FileResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.generic import TemplateView
 
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
-# from .abstract_class import AbstractView
+from .abstract_class import AbstractView
+
 
 # Create your views here.
 
@@ -41,25 +41,33 @@ def index(request):
 
 
 class Sniffing:
-    class SettingsView(TemplateView):
+    """
+    Sniffing Container View
+    """
+    # noinspection PyUnresolvedReferences,PyIncorrectDocstring
+    class SettingsView(AbstractView):
+        """
+        Sniffing View
+        """
+        name = 'sniffing.settings'
         template_name = 'sniffing/settings.html'
 
         def get(self, request, *args, **kwargs):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             """
-            return render(request, self.template_name, {
-                'network_interfaces': network.get_interfaces(),
-                'filters': []   # TODO: chose the way to set filters
+            view_params = self.session_get(request.session, {
+                'interfaces': network.get_interfaces()
             })
+            print(view_params)
+            return render(request, self.template_name, view_params)
 
         def post(self, request):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             """
-            return render(request, self.template_name, {
-                'network_interfaces': network.get_interfaces()
-            })
+            self.session_put(request.session, request.POST)
+            return HttpResponseRedirect(request.path)
 
 
 def user(request):
@@ -88,17 +96,18 @@ def notifications(request):
 
 def upgrade(request):
     """
-    :param request:
+    :type request: django.core.handlers.wsgi.WSGIRequest
     :return: django.http.HttpResponse
     """
     return render(request, 'upgrade.html')
 
 
+# noinspection PyUnusedLocal
 def static(request, path):
     """
     Manage requested static file (for non-DEBUG mode compatibility without web-server)
-    :type path: str
     :type request: django.core.handlers.wsgi.WSGIRequest
+    :type path: str
     """
     for directory in STATICFILES_DIRS:
         static_file = os.path.join(directory, path)

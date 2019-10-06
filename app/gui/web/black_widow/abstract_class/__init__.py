@@ -1,1 +1,1 @@
-from .view import AbstractView
+from .abstract_view import AbstractView
