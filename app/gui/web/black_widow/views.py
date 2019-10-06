@@ -41,10 +41,8 @@ def index(request):
 
 
 class Sniffing:
-    name = 'sniffing'
-
     class InterfaceView(TemplateView):
-        template_name = Sniffing.name + '/interface.html'
+        template_name = 'sniffing/interface.html'
 
         def get(self, request, *args, **kwargs):
             """
