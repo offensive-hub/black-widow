@@ -44,7 +44,7 @@
 {% block content %}
     <!-- Interfaces -->
     <div class="row">
-        <div class="col-lg-6 col-md-12">
+        <div class="col-lg-5 col-md-5">
             <div class="card">
                 <div class="card-header card-header-primary">
                     <h4 class="card-title ">Interfaces</h4>
@@ -60,13 +60,15 @@
                                         <td>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" value="{{network_interface}}"> <!-- checked -->
+                                                    <input class="form-check-input" type="checkbox" value="{{network_interface}}" name="interface"> <!-- checked -->
                                                     <span class="form-check-sign"><span class="check"></span></span>
                                                 </label>
                                             </div>
                                         </td>
                                         <td>{{network_interface}}</td>
-                                        <!--
+                                    </tr>
+                                {% endfor %}
+                                 <!-- [old code in loop]
                                         <td class="td-actions text-right">
                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
                                                 <i class="material-icons">edit</i>
@@ -75,9 +77,7 @@
                                                 <i class="material-icons">close</i>
                                             </button>
                                         </td>
-                                        -->
-                                    </tr>
-                                {% endfor %}
+                                -->
                                 </tbody>
                             </table>
                         </div>
@@ -87,7 +87,7 @@
         </div>
 
         <!-- Filters -->
-        <div class="col-lg-6 col-md-12">
+        <div class="col-lg-7 col-md-7">
             <div class="card">
                 <div class="card-header card-header-primary">
                     <h4 class="card-title ">Filters</h4>
@@ -102,7 +102,7 @@
                         <div class="tab-pane active" id="filters">
                             <div class="form-group">
                                 <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
-                                <input type="email" class="form-control" id="filters-input">
+                                <input type="text" class="form-control" id="filters-input" name="filters">
                                 <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
                           </div>
                         </div>
