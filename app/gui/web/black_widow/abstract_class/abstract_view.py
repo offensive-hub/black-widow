@@ -26,8 +26,6 @@
 from os.path import join
 
 from django.views.generic import TemplateView
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 
 from app.utils.helpers.util import is_listable, timestamp
 from app.utils.helpers import storage
@@ -76,11 +74,11 @@ class AbstractView(TemplateView):
                 return_values = dict()
                 for value in values:
                     return_values[value] = (value == session_value)
-                return_params[key] = return_values
             else:
-                return_params[key] = {
+                return_values = {
                     {
                         values: (session_value is not None)
                     }
                 }
+            return_params[key] = return_values
         return return_params
