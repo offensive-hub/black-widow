@@ -23,9 +23,15 @@
 *********************************************************************************
 """
 
-from django.views.generic import TemplateView
+from os.path import join
 
-from app.utils.helpers.util import is_listable
+from django.views.generic import TemplateView
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
+from app.utils.helpers.util import is_listable, timestamp
+from app.utils.helpers import storage
+from app.env import APP_TMP
 
 
 class AbstractView(TemplateView):
@@ -33,6 +39,20 @@ class AbstractView(TemplateView):
     Abstract view extended by application views
     """
     name = None
+
+    def upload_file(self, tmp_file):
+        """
+        :type tmp_file: django.core.files.uploadedfile.InMemoryUploadedFile
+        """
+        upload_folder = join(APP_TMP, self.name)
+        storage.check_folder(upload_folder)
+        uploaded_filename = timestamp() + '_' + tmp_file.name
+        uploaded_path = join(upload_folder, uploaded_filename)
+        storage.delete(uploaded_path)
+        with open(uploaded_path, 'wb+') as destination:
+            for chunk in tmp_file.chunks():
+                destination.write(chunk)
+        return uploaded_path
 
     def session_put(self, session, value):
         """

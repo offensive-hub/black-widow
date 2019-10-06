@@ -73,14 +73,17 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
 
                 dirty_field = layer.get_field(field_name).strip()
 
-                try:
-                    # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
-                    field = bytes.fromhex(dirty_field.replace(":", " ")).decode('utf-8', 'ignore')
-                except ValueError or UnicodeDecodeError or TypeError:
-                    # Decodifico in utf-8 (il doc non era in esadecimale)
-                    field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
-                # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
-                field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
+                if ('addr' in field_name or 'dst' in field_name or 'src' in field_name) and (':' in dirty_field):
+                    field = dirty_field
+                else:
+                    try:
+                        # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
+                        field = bytes.fromhex(dirty_field.replace(":", " ")).decode('utf-8', 'ignore')
+                    except ValueError or UnicodeDecodeError or TypeError:
+                        # Decodifico in utf-8 (il doc non era in esadecimale)
+                        field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
+                    # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
+                    field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
                                                                                                         '\n').strip()
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field
@@ -144,7 +147,8 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
     if interface is None:
         interface = settings.Get.my_interface()
     if src_file is not None:
+        Log.info('Analyzing file: ' + src_file)
         capture = pyshark.FileCapture(src_file, display_filter=filters, output_file=dest_file)
     else:
         capture = pyshark.LiveCapture(interface, display_filter=filters, output_file=dest_file)
-    capture.apply_on_packets(__pcap_callback__, timeout=None)
+    capture.apply_on_packets(__pcap_callback__)

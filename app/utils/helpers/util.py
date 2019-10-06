@@ -37,6 +37,10 @@ def now():
     return str(datetime.now()).replace(' ', '_')
 
 
+def timestamp():
+    return str(datetime.timestamp(datetime.now()))
+
+
 # @return dict Il json nel file in formato dict
 def get_json(file):
     return get_json_str(storage.read_file(file))

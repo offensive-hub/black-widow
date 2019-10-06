@@ -27,9 +27,12 @@ import os
 
 from django.http import HttpResponseNotFound, FileResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
+from app.utils.sniffing.pcap import sniff_pcap
+
 from .abstract_class import AbstractView
 
 
@@ -70,8 +73,33 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
+            pcap_file: InMemoryUploadedFile = request.FILES.get('pcap')
+            if pcap_file is not None:
+                uploaded_file = self.upload_file(pcap_file)
+                # tmp_file = os.path.join(settings.MEDIA_ROOT, path)
+                sniff_pcap(
+                    filters=request.POST['filters'],
+                    src_file=uploaded_file,
+                    interface='wlan0',
+                    limit_length=10000
+                    # callback=TODO: write the callback to send the data to client by using the session
+                )
             self.session_put(request.session, request.POST)
             return HttpResponseRedirect(request.path)
+
+    class CaptureView(AbstractView):
+        """
+        Capture View
+        """
+        name = 'sniffing.capture'
+        template_name = 'sniffing/capture.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            return HttpResponseNotFound()
 
 
 def user(request):
