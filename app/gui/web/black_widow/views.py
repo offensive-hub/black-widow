@@ -37,6 +37,10 @@ from .abstract_class import AbstractView
 
 
 def index(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :return: django.http.HttpResponse
+    """
     return render(request, 'index.html')
 
 
@@ -44,7 +48,6 @@ class Sniffing:
     """
     Sniffing Container View
     """
-    # noinspection PyUnresolvedReferences,PyIncorrectDocstring
     class SettingsView(AbstractView):
         """
         Sniffing View
@@ -55,16 +58,17 @@ class Sniffing:
         def get(self, request, *args, **kwargs):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
             """
             view_params = self.session_get(request.session, {
                 'interfaces': network.get_interfaces()
             })
-            print(view_params)
             return render(request, self.template_name, view_params)
 
         def post(self, request):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponseRedirect
             """
             self.session_put(request.session, request.POST)
             return HttpResponseRedirect(request.path)

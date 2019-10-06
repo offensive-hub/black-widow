@@ -27,6 +27,7 @@
  *  0) GLOBAL
  *       |
 *        |-- 0.1) Cards
+*        |-- 0.2) Buttons
  *
  *  1) base.html
  *
@@ -41,6 +42,25 @@
 
 .card [class*="card-header-"] .card-title+.card-category .material-icons {
   font-size: 16px;
+}
+
+/******************/
+
+/*** 0.2) Buttons ***/
+
+button .material-icons {
+  padding-left: 6px;
+}
+input.upload {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+    border: 0;
+    margin: 0;
+    padding: 0;
 }
 
 /******************/

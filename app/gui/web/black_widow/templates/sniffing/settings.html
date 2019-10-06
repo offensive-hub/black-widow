@@ -42,7 +42,7 @@
 -->
 {% endcomment %}
 {% block content %}
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
              <!-- Interfaces -->
@@ -118,7 +118,16 @@
 
         <div class="row">
             <div class="col">
-                <button type="submit" class="btn btn-primary">Start</button>
+                <button type="submit" class="btn btn-warning">
+                    Capture!
+                    <i class="material-icons">play_arrow</i>
+                </button>
+                <label for="pcap">
+                    <button class="btn btn-info upload" type="button">
+                        Open pcap file <i class="material-icons">open_in_browser</i>
+                    </button>
+                </label>
+                <input type="file" class="btn btn-info upload submit" name="pcap" id="pcap"/>
             </div>
         </div>
     </form>

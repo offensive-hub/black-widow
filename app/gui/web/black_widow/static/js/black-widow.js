@@ -20,3 +20,21 @@
  * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
  *                                                                               *
  ********************************************************************************/
+
+$(function() {
+    $('button.upload').click(function() {
+        const $label = $(this).parent();
+        $label.click();
+    });
+    $('input.submit').change(function(e) {
+        const $form = $(this).closest('form');
+        $form.submit();
+    });
+    $('form').submit(function() {
+        if (!this.checkValidity()) {
+            alert('Fill the required fields!')
+            return false;
+        }
+        return true;
+    });
+});
