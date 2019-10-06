@@ -46,7 +46,7 @@ def create_parser():
                          action="store_true")
     options.add_argument("-g", "--gui", help="Run " + app.env.APP_NAME + " with GUI",
                          action="store_true")
-    options.add_argument("--django", help="Run django manager (ex. `--django 'help'`)",
+    options.add_argument("--django", help="Run django manager (eg. `--django 'help'`)",
                          type=str, metavar='ARGS')
 
     # Sniffing
