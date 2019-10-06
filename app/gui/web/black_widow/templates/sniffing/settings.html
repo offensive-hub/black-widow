@@ -91,38 +91,20 @@
             <div class="card">
                 <div class="card-header card-header-primary">
                     <h4 class="card-title ">Filters</h4>
-                    <p class="card-category"> Chose filters</p>
+                    <div class="card-category"> Available filters:
+                        <a target="_blank" title="Available filters" href="https://wiki.wireshark.org/DisplayFilters">
+                           <strong>Wireshark display filters <i class="material-icons">open_in_new</i></strong>
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="tab-pane active" id="filters">
-                            <table class="table">
-                                <tbody>
-                                {% for filter in filters %}
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" value="{{filter}}"> <!-- checked -->
-                                                    <span class="form-check-sign"><span class="check"></span></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>{{filter}}</td>
-                                        <!--
-                                        <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
-                                                <i class="material-icons">edit</i>
-                                            </button>
-                                            <button type="button" rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm">
-                                                <i class="material-icons">close</i>
-                                            </button>
-                                        </td>
-                                        -->
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                            <div class="form-group">
+                                <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
+                                <input type="email" class="form-control" id="filters-input">
+                                <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
+                          </div>
                         </div>
                     </div>
                 </div>

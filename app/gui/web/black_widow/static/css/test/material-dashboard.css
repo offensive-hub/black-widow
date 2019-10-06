@@ -17162,7 +17162,7 @@ label {
 
 .card .card-category .material-icons {
   position: relative;
-  top: 8px;
+  /*top: 8px;*/
   line-height: 0;
 }
 
