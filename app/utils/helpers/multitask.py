@@ -183,7 +183,7 @@ class MultiTask:
 # @param target La funzione che i threads chiameranno: se questa ritorna un valore
 #               diverso da None, allora tutti i threads concorrenti verranno stoppati
 # @param args Gli argomenti che verranno passati alla funzione target
-# @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
+# @param asynchronous True, se NON bisogna attendere la fine dell'esecuzione di
 #                     tutti i threads, False altrimenti
 # @param cpu Il numero di threads da creare (default: il numero di cpu disponibili)
 # @return Il risultato della funzione target
