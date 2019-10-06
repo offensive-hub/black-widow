@@ -44,7 +44,7 @@ class Sniffing:
     name = 'sniffing'
 
     class InterfaceView(TemplateView):
-        template_name = 'sniffing/interface.html'
+        template_name = Sniffing.name + '/interface.html'
 
         def get(self, request, *args, **kwargs):
             """
