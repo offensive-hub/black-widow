@@ -42,6 +42,7 @@
 -->
 {% endcomment %}
 {% block content %}
+    <!-- Interfaces -->
     <div class="row">
         <div class="col-lg-6 col-md-12">
             <div class="card">
@@ -59,12 +60,55 @@
                                         <td>
                                             <div class="form-check">
                                                 <label class="form-check-label">
-                                                    <input class="form-check-input" type="checkbox" value=""> <!-- checked -->
+                                                    <input class="form-check-input" type="checkbox" value="{{network_interface}}"> <!-- checked -->
                                                     <span class="form-check-sign"><span class="check"></span></span>
                                                 </label>
                                             </div>
                                         </td>
                                         <td>{{network_interface}}</td>
+                                        <!--
+                                        <td class="td-actions text-right">
+                                            <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                            <button type="button" rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm">
+                                                <i class="material-icons">close</i>
+                                            </button>
+                                        </td>
+                                        -->
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="col-lg-6 col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title ">Filters</h4>
+                    <p class="card-category"> Chose filters</p>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="filters">
+                            <table class="table">
+                                <tbody>
+                                {% for filter in filters %}
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox" value="{{filter}}"> <!-- checked -->
+                                                    <span class="form-check-sign"><span class="check"></span></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td>{{filter}}</td>
                                         <!--
                                         <td class="td-actions text-right">
                                             <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">

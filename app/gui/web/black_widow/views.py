@@ -41,25 +41,25 @@ def index(request):
 
 
 class Sniffing:
-    class InterfaceView(TemplateView):
-        template_name = 'sniffing/interface.html'
+    class SettingsView(TemplateView):
+        template_name = 'sniffing/settings.html'
 
         def get(self, request, *args, **kwargs):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             """
             return render(request, self.template_name, {
-                'network_interfaces': network.get_interfaces()
+                'network_interfaces': network.get_interfaces(),
+                'filters': []   # TODO: chose the way to set filters
             })
 
-    class FilterView(TemplateView):
-        template_name = 'sniffing/filter.html'
-
-        def get(self, request, *args, **kwargs):
+        def post(self, request):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             """
-            return render(request, self.template_name)
+            return render(request, self.template_name, {
+                'network_interfaces': network.get_interfaces()
+            })
 
 
 def user(request):
