@@ -36,21 +36,11 @@
 *********************************************************************************
 """
 
-import re
-
-# from django.conf.urls import url
-# from django.contrib import admin
 from django.urls import include, path
-from django.urls import re_path
-from django.views.static import serve
 
 from app.gui.web.wsgi import WEB_PACKAGE
-from app.gui.web.settings import STATIC_URL
 
 
 urlpatterns = [
-    path('', include(WEB_PACKAGE + '.black_widow.urls')),
-    # url(r'^admin/', admin.site.urls),
+    path('', include(WEB_PACKAGE + '.black_widow.urls'))
 ]
-
-# urlpatterns += staticfiles_urlpatterns()

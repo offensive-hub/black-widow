@@ -27,10 +27,10 @@ import os
 
 from django.http import HttpResponseNotFound, FileResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
+from app.utils.helpers.logger import Log
 from app.utils.sniffing.pcap import sniff_pcap
 from app.utils.helpers.multitask import multiprocess
 
@@ -56,7 +56,7 @@ class Sniffing:
         """
         Sniffing View
         """
-        name = 'sniffing.settings'
+        name = 'sniffing'
         template_name = 'sniffing/settings.html'
 
         def get(self, request, *args, **kwargs):
@@ -70,38 +70,51 @@ class Sniffing:
             return render(request, self.template_name, view_params)
 
         def post(self, request):
-            def callback(pkt):
-                """
-                :type pkt: dict
-                """
-                print(pkt)
-
-            def target():
-                sniff_pcap(
-                    filters=request.POST['filters'],
-                    src_file=uploaded_file,
-                    interface='wlan0',
-                    limit_length=10000,
-                    callback=callback  # TODO: write the callback to send the data to client by using the session
-                )
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
-            pcap_file: InMemoryUploadedFile = request.FILES.get('pcap')
+
+            def callback(pkt: dict):
+                """
+                :type pkt: dict
+                """
+                print(type(pkt))
+
+            params: dict = request.POST.dict()
+
+            pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
                 uploaded_file = self.upload_file(pcap_file)
-                # tmp_file = os.path.join(settings.MEDIA_ROOT, path)
-                # TODO: uncomment the following line
-                # multiprocess(target, asynchronous=True, cpu=1)
-            self.session_put(request.session, request.POST)
-            return HttpResponseRedirect(request.path)
+                Log.info("Uploaded file: " + uploaded_file)
+            else:
+                uploaded_file = None
+
+            params['pcap'] = uploaded_file
+            self.session_put(request.session, params)
+
+            Log.info('Request params: ' + str(params))
+
+            def target():
+                """
+                The target function used by parallel process
+                """
+                sniff_pcap(
+                    filters=params.get('filters'),
+                    src_file=uploaded_file,
+                    interface=params.get('interfaces'),
+                    limit_length=10000,
+                    callback=callback  # TODO: write the callback to send the data to client by using the session
+                )
+
+            # multiprocess(target, asynchronous=True, cpu=1)
+            return HttpResponseRedirect('sniffing/capture')
 
     class CaptureView(AbstractView):
         """
         Capture View
         """
-        name = 'sniffing.capture'
+        name = 'sniffing'
         template_name = 'sniffing/capture.html'
 
         def get(self, request, *args, **kwargs):
@@ -109,29 +122,51 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            return HttpResponseNotFound()
+            params = self.session_get(request.session)
+            view_params = {
+                'interfaces': params.get('interfaces'),
+                'filters': params.get('filters'),
+                'pcap': params.get('filters')
+            }
+            return render(request, self.template_name, view_params)
 
 
 def user(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :rtype: django.http.HttpResponse
+    """
     return render(request, 'user.html')
 
 
 def tables(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :rtype: django.http.HttpResponse
+    """
     return render(request, 'tables.html')
 
 
 def typography(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :rtype: django.http.HttpResponse
+    """
     return render(request, 'typography.html')
 
 
 def icons(request):
+    """
+    :type request: django.core.handlers.wsgi.WSGIRequest
+    :rtype: django.http.HttpResponse
+    """
     return render(request, 'icons.html')
 
 
 def notifications(request):
     """
     :type request: django.core.handlers.wsgi.WSGIRequest
-    :return: django.http.HttpResponse
+    :rtype: django.http.HttpResponse
     """
     return render(request, 'notifications.html')
 
@@ -139,7 +174,7 @@ def notifications(request):
 def upgrade(request):
     """
     :type request: django.core.handlers.wsgi.WSGIRequest
-    :return: django.http.HttpResponse
+    :rtype: django.http.HttpResponse
     """
     return render(request, 'upgrade.html')
 
@@ -150,9 +185,10 @@ def static(request, path):
     Manage requested static file (for non-DEBUG mode compatibility without web-server)
     :type request: django.core.handlers.wsgi.WSGIRequest
     :type path: str
+    :rtype: django.http.HttpResponse
     """
     for directory in STATICFILES_DIRS:
         static_file = os.path.join(directory, path)
         if os.path.isfile(static_file):
-            return FileResponse(open(static_file, 'rb'), as_attachment=False)
+            return FileResponse(open(static_file, 'rb'))
     return HttpResponseNotFound()

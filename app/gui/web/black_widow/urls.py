@@ -33,6 +33,7 @@ urlpatterns = [
 
     # --- SNIFFING --- #
     path('sniffing', views.Sniffing.SettingsView.as_view(), name='sniffing'),
+    path('sniffing/capture', views.Sniffing.CaptureView.as_view(), name='sniffing'),
 
     path('user', views.user, name='user'),
     path('tables', views.tables, name='tables'),

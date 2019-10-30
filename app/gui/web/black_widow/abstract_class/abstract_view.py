@@ -38,9 +38,11 @@ class AbstractView(TemplateView):
     """
     name = None
 
-    def upload_file(self, tmp_file):
+    def upload_file(self, tmp_file) -> str:
         """
+        :param tmp_file: the in-memory uploaded file
         :type tmp_file: django.core.files.uploadedfile.InMemoryUploadedFile
+        :rtype: str
         """
         upload_folder = join(APP_TMP, self.name)
         storage.check_folder(upload_folder)
@@ -50,7 +52,7 @@ class AbstractView(TemplateView):
         with open(uploaded_path, 'wb+') as destination:
             for chunk in tmp_file.chunks():
                 destination.write(chunk)
-        return uploaded_path
+        return str(uploaded_path)
 
     def session_put(self, session, value):
         """
@@ -59,11 +61,13 @@ class AbstractView(TemplateView):
         """
         session[self.name] = value
 
-    def session_get(self, session, params):
+    def session_get(self, session, params=None):
         """
         :type session: django.contrib.sessions.backends.db.SessionStore
         :type params: dict
         """
+        if params is None:
+            params = {}
         session_params = session.get(self.name)
         if session_params is None:
             session_params = dict()
