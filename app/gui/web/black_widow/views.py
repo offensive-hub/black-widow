@@ -64,6 +64,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
+            # TODO: show current capturing process jobs
             view_params = self.session_get(request.session, {
                 'interfaces': network.get_interfaces()
             })
@@ -85,13 +86,9 @@ class Sniffing:
 
             pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
-                uploaded_file = self.upload_file(pcap_file)
-                Log.info("Uploaded file: " + uploaded_file)
+                params['pcap'] = self.upload_file(pcap_file)
             else:
-                uploaded_file = None
-
-            params['pcap'] = uploaded_file
-            self.session_put(request.session, params)
+                params['pcap'] = None
 
             Log.info('Request params: ' + str(params))
 
@@ -101,13 +98,15 @@ class Sniffing:
                 """
                 sniff_pcap(
                     filters=params.get('filters'),
-                    src_file=uploaded_file,
+                    src_file=params.get('pcap'),
                     interface=params.get('interfaces'),
                     limit_length=10000,
                     callback=callback  # TODO: write the callback to send the data to client by using the session
                 )
 
             # multiprocess(target, asynchronous=True, cpu=1)
+            # TODO: put the process job in session
+            self.session_put(request.session, params)
             return HttpResponseRedirect('sniffing/capture')
 
     class CaptureView(AbstractView):
