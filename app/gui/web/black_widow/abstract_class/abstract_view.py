@@ -25,6 +25,7 @@
 import itertools
 from os.path import join
 
+import math
 from django.views.generic import TemplateView
 
 from app.utils.helpers.util import is_listable, timestamp
@@ -112,12 +113,13 @@ class AbstractView(TemplateView):
         elements_tot = len(elements)
         start = page_size * (page - 1)
         stop = start + page_size
-        page_end = elements_tot / page
+        page_end = math.ceil(elements_tot / page_size)
         result = dict(itertools.islice(elements.items(), start + stop))
         return {
             'result': result,
             'page': page,
             'page_start': 1,
             'page_end': page_end,
+            'page_size': page_size,
             'total': elements_tot
         }
