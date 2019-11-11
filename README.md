@@ -45,7 +45,7 @@
 <br/>
 
 > ### Default Installation:
-> 1. `sudo apt-get update && sudo apt-get install tidy`
+> 1. `sudo apt-get update && sudo apt-get install tidy clang`
 > 2. `git clone git@github.com:FabrizioFubelli/black-widow.git`
 > 3. `cd black-widow`
 > 4. `sudo pip3 install -U -r requirements.txt`
