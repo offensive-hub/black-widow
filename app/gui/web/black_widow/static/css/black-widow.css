@@ -58,6 +58,9 @@ button.btn-stop {
 button.btn-stop .material-icons {
     padding: 0;
 }
+button.disabled {
+    pointer-events: none;
+}
 input.upload {
     width: 0;
     height: 0;
