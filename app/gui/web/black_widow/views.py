@@ -24,7 +24,6 @@
 """
 
 import os
-import pickle
 import signal
 
 from django.http import HttpResponseNotFound, FileResponse
@@ -36,7 +35,7 @@ from app.env import APP_STORAGE_OUT
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
 from app.utils.sniffing.pcap import sniff_pcap
-from app.utils.helpers.util import add_json_item, get_json, now, Log
+from app.utils.helpers import util
 from app.utils.helpers import storage
 from app.utils.helpers.multitask import multiprocess
 
@@ -97,7 +96,7 @@ class Sniffing:
             else:
                 session_job_params['pcap'] = None
 
-            out_json_file = APP_STORAGE_OUT + '/' + now() + '_SNIFFING_' + str(job_id) + '.json'
+            out_json_file = APP_STORAGE_OUT + '/' + util.now() + '_SNIFFING_' + str(job_id) + '.json'
             job_killed_file = out_json_file + '.KILL'
 
             session_job_params.update({
@@ -111,10 +110,11 @@ class Sniffing:
                 """
                 if os.path.exists(job_killed_file):
                     storage.delete(job_killed_file)
-                    Log.success("Sniffing Job #" + str(job_id) + " killed")
+                    util.Log.success("Sniffing Job #" + str(job_id) + " killed")
                     os.kill(os.getpid(), signal.SIGKILL)
-                serialized_pkt = str(pickle.dumps(pkt))
-                add_json_item(pkt['number'], serialized_pkt, out_json_file)
+                    return
+
+                util.add_serialized_dict_item(pkt['number'], pkt, out_json_file)
 
             def target():
                 """
@@ -152,7 +152,7 @@ class Sniffing:
             """
             request_params: dict = request.GET.dict()
             job_id = request_params.get('job_id')
-            Log.info("Showing job #" + str(job_id))
+            util.Log.info("Showing job #" + str(job_id))
             return render(request, self.template_name)
 
         @json_view
@@ -189,25 +189,16 @@ class Sniffing:
                     'message': 'Job killed'
                 }
 
-            out_json = get_json(out_json_file)
-            print(len(out_json))
-
-            result = {
-                'pkt #1': '1',
-                'pkt #2': '2',
-                'pkt #3': '3',
-                'pkt #4': '4'
-            }
-
+            out_dict = util.get_serialized_dict(out_json_file)
             page = request_params.get('page')
             page_size = request_params.get('page_size')
+            pagination = AbstractView.pagination(out_dict, page, page_size)
 
-            return {
-                'job_id': request_params.get('job_id'),
-                'result': result,
-                'page': page,
-                'page_size': page_size
-            }
+            pagination.update({
+                'job_id': request_params.get('job_id')
+            })
+
+            return pagination
 
 
 def user(request):

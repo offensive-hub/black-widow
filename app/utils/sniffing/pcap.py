@@ -36,6 +36,7 @@
 import codecs  # gzip
 import numpy
 import pyshark
+from pyshark.packet.layer import Layer
 
 from app.utils import settings
 # from app.utils.helpers.util import replace_regex, regex_in_string
@@ -128,13 +129,16 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
             layers_dict[layer.layer_name] = layer_fields
 
         # Creo un dizionario con le informazioni sul pacchetto catturato
+        frame_info = dict()
+        for field_name in pkt.frame_info.field_names:
+            frame_info[field_name] = str(pkt.frame_info.get_field(field_name))
         pkt_dict = {
-            'number': pkt.number,
-            'captured_length': pkt.captured_length,
-            'interface_captured': pkt.interface_captured,
-            'highest_layer': pkt.highest_layer,
-            'frame_info': pkt.frame_info,
-            'length': pkt.length,
+            'number': str(pkt.number),
+            'captured_length': str(pkt.captured_length),
+            'interface_captured': str(pkt.interface_captured),
+            'highest_layer': str(pkt.highest_layer),
+            'frame_info': frame_info,
+            'length': str(pkt.length),
             'sniff_time': pkt.sniff_time,
             'sniff_timestamp': pkt.sniff_timestamp,
             'transport_layer': pkt.transport_layer,

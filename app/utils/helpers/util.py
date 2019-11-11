@@ -24,7 +24,9 @@
 """
 
 import json
+import pickle
 import re
+import os
 
 from datetime import datetime
 
@@ -59,11 +61,38 @@ def set_json(dictionary, file):
     return storage.overwrite_file(json.dumps(dictionary), file)
 
 
-# @param dictionary dict Il dizionario da scrivere nel file in formato json
 def add_json_item(key, value, file):
     dictionary = get_json(file)
     dictionary[key] = value
     return set_json(dictionary, file)
+
+
+def add_serialized_dict_item(key, obj, file):
+    if os.path.isfile(file):
+        f = open(file, 'rb')
+        dictionary = pickle.load(f)
+        f.close()
+    else:
+        dictionary = dict()
+    dictionary[key] = obj
+    f = open(file, 'wb')
+    pickle.dump(dictionary, f)
+    f.close()
+
+
+def set_serialized_dict(dictionary, file):
+    f = open(file, 'wb')
+    pickle.dump(dictionary, f)
+    f.close()
+
+
+def get_serialized_dict(file):
+    if not os.path.isfile(file):
+        return dict()
+    f = open(file, 'rb')
+    dictionary = pickle.load(f)
+    f.close()
+    return dictionary
 
 
 # @return True se string contiene regex

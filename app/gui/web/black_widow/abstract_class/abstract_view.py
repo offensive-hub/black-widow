@@ -22,7 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
-
+import itertools
 from os.path import join
 
 from django.views.generic import TemplateView
@@ -98,3 +98,26 @@ class AbstractView(TemplateView):
                 }
             return_params[key] = return_values
         return return_params
+
+    @staticmethod
+    def pagination(elements: dict, page: int, page_size: int):
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
+        try:
+            page_size = int(page_size)
+        except ValueError:
+            page_size = 10
+        elements_tot = len(elements)
+        start = page_size * (page - 1)
+        stop = start + page_size
+        page_end = elements_tot / page
+        result = dict(itertools.islice(elements.items(), start + stop))
+        return {
+            'result': result,
+            'page': page,
+            'page_start': 1,
+            'page_end': page_end,
+            'total': elements_tot
+        }
