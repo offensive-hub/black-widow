@@ -43,17 +43,17 @@ def timestamp():
     return str(datetime.timestamp(datetime.now()))
 
 
-# @return dict Il json nel file in formato dict
-def get_json(file):
-    return get_json_str(storage.read_file(file))
-
-
 # @return dict Il json in formato dict
-def get_json_str(string):
+def get_json_from_string(string):
     try:
         return json.loads(string)
     except json.decoder.JSONDecodeError:
         return dict()
+
+
+# @return dict Il json nel file in formato dict
+def get_json(file):
+    return get_json_from_string(storage.read_file(file))
 
 
 # @param dictionary dict Il dizionario da scrivere nel file in formato json
@@ -67,25 +67,6 @@ def add_json_item(key, value, file):
     return set_json(dictionary, file)
 
 
-def add_serialized_dict_item(key, obj, file):
-    if os.path.isfile(file):
-        f = open(file, 'rb')
-        dictionary = pickle.load(f)
-        f.close()
-    else:
-        dictionary = dict()
-    dictionary[key] = obj
-    f = open(file, 'wb')
-    pickle.dump(dictionary, f)
-    f.close()
-
-
-def set_serialized_dict(dictionary, file):
-    f = open(file, 'wb')
-    pickle.dump(dictionary, f)
-    f.close()
-
-
 def get_serialized_dict(file):
     if not os.path.isfile(file):
         return dict()
@@ -93,6 +74,18 @@ def get_serialized_dict(file):
     dictionary = pickle.load(f)
     f.close()
     return dictionary
+
+
+def set_serialized_dict(dictionary, file):
+    f = open(file, 'wb')
+    pickle.dump(dictionary, f, protocol=pickle.HIGHEST_PROTOCOL)
+    f.close()
+
+
+def add_serialized_dict_item(key, obj, file):
+    dictionary = get_serialized_dict(file)
+    dictionary[key] = obj
+    set_serialized_dict(dictionary, file)
 
 
 # @return True se string contiene regex

@@ -139,9 +139,9 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
             'highest_layer': str(pkt.highest_layer),
             'frame_info': frame_info,
             'length': str(pkt.length),
-            'sniff_time': pkt.sniff_time,
-            'sniff_timestamp': pkt.sniff_timestamp,
-            'transport_layer': pkt.transport_layer,
+            'sniff_time': str(pkt.sniff_time),
+            'sniff_timestamp': str(pkt.sniff_timestamp),
+            'transport_layer': str(pkt.transport_layer),
             'layers': layers_dict  # Il dizionario dei livelli creato nel sovrastante loop
         }
 

@@ -114,7 +114,7 @@ class Sniffing:
                     os.kill(os.getpid(), signal.SIGKILL)
                     return
 
-                util.add_serialized_dict_item(pkt['number'], pkt, out_json_file)
+                util.add_json_item(pkt['number'], pkt, out_json_file)
 
             def target():
                 """
@@ -189,7 +189,7 @@ class Sniffing:
                     'message': 'Job killed'
                 }
 
-            out_dict = util.get_serialized_dict(out_json_file)
+            out_dict = util.get_json(out_json_file)
             page = request_params.get('page')
             page_size = request_params.get('page_size')
             pagination = AbstractView.pagination(out_dict, page, page_size)
