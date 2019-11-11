@@ -24,14 +24,20 @@
 """
 
 import os
+import pickle
+import signal
 
-from django.http import HttpResponseNotFound, FileResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseNotFound, FileResponse
+from django.shortcuts import render, redirect
 
+from jsonview.decorators import json_view
+
+from app.env import APP_STORAGE_OUT
 from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
-from app.utils.helpers.logger import Log
 from app.utils.sniffing.pcap import sniff_pcap
+from app.utils.helpers.util import add_json_item, get_json, now, Log
+from app.utils.helpers import storage
 from app.utils.helpers.multitask import multiprocess
 
 from .abstract_class import AbstractView
@@ -75,39 +81,62 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
+            session_params = self.session_get(request.session)
+            sniffing_jobs = session_params.get('sniffing_jobs')
+            if sniffing_jobs is None:
+                sniffing_jobs = dict()
+                job_id = 0
+            else:
+                job_id = len(sniffing_jobs)
+
+            session_job_params: dict = request.POST.dict()
+
+            pcap_file = request.FILES.get('pcap')
+            if pcap_file is not None:
+                session_job_params['pcap'] = self.upload_file(pcap_file)
+            else:
+                session_job_params['pcap'] = None
+
+            out_json_file = APP_STORAGE_OUT + '/' + now() + '_SNIFFING_' + str(job_id) + '.json'
+            job_killed_file = out_json_file + '.KILL'
+
+            session_job_params.update({
+                'id': job_id,
+                'out_json_file': out_json_file
+            })
 
             def callback(pkt: dict):
                 """
                 :type pkt: dict
                 """
-                print(type(pkt))
-
-            params: dict = request.POST.dict()
-
-            pcap_file = request.FILES.get('pcap')
-            if pcap_file is not None:
-                params['pcap'] = self.upload_file(pcap_file)
-            else:
-                params['pcap'] = None
-
-            Log.info('Request params: ' + str(params))
+                if os.path.exists(job_killed_file):
+                    storage.delete(job_killed_file)
+                    Log.success("Sniffing Job #" + str(job_id) + " killed")
+                    os.kill(os.getpid(), signal.SIGKILL)
+                serialized_pkt = str(pickle.dumps(pkt))
+                add_json_item(pkt['number'], serialized_pkt, out_json_file)
 
             def target():
                 """
                 The target function used by parallel process
                 """
                 sniff_pcap(
-                    filters=params.get('filters'),
-                    src_file=params.get('pcap'),
-                    interface=params.get('interfaces'),
+                    filters=session_job_params.get('filters'),
+                    src_file=session_job_params.get('pcap'),
+                    interface=session_job_params.get('interfaces'),
                     limit_length=10000,
                     callback=callback  # TODO: write the callback to send the data to client by using the session
                 )
 
-            # multiprocess(target, asynchronous=True, cpu=1)
-            # TODO: put the process job in session
-            self.session_put(request.session, params)
-            return HttpResponseRedirect('sniffing/capture')
+            multiprocess(target, asynchronous=True, cpu=1)
+
+            session_job_params.pop('csrfmiddlewaretoken', None)
+            sniffing_jobs[job_id] = session_job_params
+            session_params['sniffing_jobs'] = sniffing_jobs
+
+            self.session_update(request.session, session_params)
+
+            return redirect('sniffing/capture?job_id=' + str(job_id))
 
     class CaptureView(AbstractView):
         """
@@ -121,13 +150,64 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            params = self.session_get(request.session)
-            view_params = {
-                'interfaces': params.get('interfaces'),
-                'filters': params.get('filters'),
-                'pcap': params.get('filters')
+            request_params: dict = request.GET.dict()
+            job_id = request_params.get('job_id')
+            Log.info("Showing job #" + str(job_id))
+            return render(request, self.template_name)
+
+        @json_view
+        def post(self, request):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            session_params = self.session_get(request.session)
+            sniffing_jobs = session_params.get('sniffing_jobs')
+            request_params: dict = request.POST.dict()
+            job_id = request_params.get('job_id')
+            if type(sniffing_jobs) is dict:
+                sniffing_job = sniffing_jobs.get(job_id)
+            else:
+                sniffing_job = None
+
+            if sniffing_job is None:
+                return {
+                    'message': 'Unable to find the requested job'
+                }, 400
+
+            out_json_file = sniffing_job.get('out_json_file')
+
+            kill_job = request_params.get('kill')
+            if kill_job is not None and int(kill_job) == 1:
+                kill_job_file = out_json_file + '.KILL'
+                open(kill_job_file, 'a').close()
+                sniffing_jobs.pop(job_id, None)
+                session_params['sniffing_jobs'] = sniffing_jobs
+                self.session_update(request.session, session_params)
+                return {
+                    'job_id': request_params.get('job_id'),
+                    'message': 'Job killed'
+                }
+
+            out_json = get_json(out_json_file)
+            print(len(out_json))
+
+            result = {
+                'pkt #1': '1',
+                'pkt #2': '2',
+                'pkt #3': '3',
+                'pkt #4': '4'
             }
-            return render(request, self.template_name, view_params)
+
+            page = request_params.get('page')
+            page_size = request_params.get('page_size')
+
+            return {
+                'job_id': request_params.get('job_id'),
+                'result': result,
+                'page': page,
+                'page_size': page_size
+            }
 
 
 def user(request):

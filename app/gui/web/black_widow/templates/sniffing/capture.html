@@ -42,6 +42,7 @@
 -->
 {% endcomment %}
 {% block content %}
+    {% csrf_token %}
     <!-- TODO: UI to view the packet captured. Features:
             - Show real-time traffic
             - Sorting/Search filters
@@ -49,5 +50,113 @@
             - Download ".pcap" file
             -
     -->
-    {{ pcap_file }}
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-plain">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title mt-0"> Network Traffic</h4>
+          <p class="card-category">
+            Here is the monitored traffic
+          </p>
+
+          <button id="stop-capture" type="submit" class="btn btn-danger btn-stop" title="Stop">
+              <i class="material-icons" style="padding: 0;">stop</i>
+          </button>
+
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="">
+              <tr>
+                <th>
+                  #
+                </th>
+                <th>
+                  Name
+                </th>
+                <th>
+                  Country
+                </th>
+                <th>
+                  City
+                </th>
+                <th>
+                  Salary
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    1
+                  </td>
+                  <td>
+                    Dakota Rice
+                  </td>
+                  <td>
+                    Niger
+                  </td>
+                  <td>
+                    Oud-Turnhout
+                  </td>
+                  <td>
+                    $36,738
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    2
+                  </td>
+                  <td>
+                    Minerva Hooper
+                  </td>
+                  <td>
+                    Curaçao
+                  </td>
+                  <td>
+                    Sinaai-Waas
+                  </td>
+                  <td>
+                    $23,789
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
+
+{% block script %}
+<script type="application/javascript">
+    const updatePkts = function() {
+        request('POST', '/sniffing/capture', {
+            'job_id': urlParams.get('job_id'),
+            'page': 1,
+            'page_size': 20
+        }, function(data, textStatus, jqXHR) {
+            console.log('Sniffing request success!');
+
+        }, function(jqXHR, textStatus, errorThrown) {
+            console.error('Sniffing request error!');
+        });
+    };
+    const stopPkts = function() {
+        request('POST', '/sniffing/capture', {
+            'job_id': urlParams.get('job_id'),
+            'kill': 1
+        }, function(data, textStatus, jqXHR) {
+            console.log('Sniffing request stopped!');
+
+        }, function(jqXHR, textStatus, errorThrown) {
+            console.error('Sniffing request error!');
+        });
+    };
+    updatePkts();
+    $('#stop-capture').click(stopPkts);
+</script>
 {% endblock %}

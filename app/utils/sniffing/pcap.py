@@ -54,8 +54,8 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
     """
 
     def __pcap_callback__(pkt):
-        Log.info('Analyzing packet number ' + str(pkt.number))
-        Log.info('Layers: ' + str(pkt.layers))
+        # Log.info('Analyzing packet number ' + str(pkt.number))
+        # Log.info('Layers: ' + str(pkt.layers))
         layers_dict = {}
         # pkt.pretty_print() # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
         for layer in pkt.layers:
@@ -150,5 +150,6 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         Log.info('Analyzing file: ' + src_file)
         capture = pyshark.FileCapture(src_file, display_filter=filters, output_file=dest_file)
     else:
+        Log.info('Analyzing live traffic')
         capture = pyshark.LiveCapture(interface, display_filter=filters, output_file=dest_file)
     capture.apply_on_packets(__pcap_callback__)

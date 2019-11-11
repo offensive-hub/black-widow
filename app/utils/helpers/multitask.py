@@ -145,6 +145,7 @@ class MultiTask:
 
         if self.tasks_type == MultiTask.MULTI_PROCESSING:
             pids = []
+            signal.signal(signal.SIGCHLD, signal.SIG_IGN)   # Ignore child exit status
             for task in self.tasks:
                 task.start()
                 # noinspection PyUnresolvedReferences

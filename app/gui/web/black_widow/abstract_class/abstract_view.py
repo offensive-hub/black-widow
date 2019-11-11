@@ -54,12 +54,24 @@ class AbstractView(TemplateView):
                 destination.write(chunk)
         return str(uploaded_path)
 
-    def session_put(self, session, value):
+    def session_put(self, session, value: dict):
         """
         :type session: django.contrib.sessions.backends.db.SessionStore
-        :type value: object
+        :type value: dict
         """
         session[self.name] = value
+
+    def session_update(self, session, value: dict):
+        """
+        :type session: django.contrib.sessions.backends.db.SessionStore
+        :type value: dict
+        """
+        session_value = session.get(self.name)
+        if type(session_value) is not dict:
+            session_value = value
+        else:
+            session_value.update(value)
+        session[self.name] = session_value
 
     def session_get(self, session, params=None):
         """

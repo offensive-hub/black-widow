@@ -38,3 +38,84 @@ $(function() {
         return true;
     });
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+
+/**
+ * @param Anything data
+ * @param String textStatus
+ * @param jqXHR jqXHR
+ * @param function|null callback
+*/
+const responseSuccess = function(data, textStatus, jqXHR, callback=null) {
+    console.info("[RESPONSE SUCCESS]")
+    console.log('data:');
+    console.log(data);
+    console.log('textStatus: ' + textStatus)
+    if (callback !== null) {
+        callback(data, textStatus, jqXHR);
+    }
+}
+
+/**
+ * @param jqXHR jqXHR
+ * @param String textStatus
+ * @param String errorThrown
+ * @param function|null callback
+*/
+const responseError = function(jqXHR, textStatus, errorThrown, callback=null) {
+    console.error("[RESPONSE ERROR]")
+    console.log('jqXHR:');
+    console.log(jqXHR);
+    console.log('textStatus: ' + textStatus)
+    console.log('errorThrown: ' + errorThrown)
+    if (callback !== null) {
+        callback(jqXHR, textStatus, errorThrown);
+    }
+}
+
+const getCookie = function(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const request = function(
+    method,
+    url,
+    data=null,
+    successCallback=null,
+    errorCallback=null
+) {
+    if (method === 'GET' && data !== null) {
+        url += '?' + $.param(data);
+        data = null;
+    }
+    console.log("[REQUEST]: " + method + ' ' + url);
+    console.log("[REQUEST DATA]:");
+    console.log(data);
+    $.ajax({
+        method: method,
+        url: url,
+        data: data,
+        headers: {
+            'X-CSRFToken': $("[name=csrfmiddlewaretoken]").val()
+        },
+        success: function(data, textStatus, jqXHR) {
+            responseSuccess(data, textStatus, jqXHR, successCallback);
+        },
+        error: function(data, textStatus, jqXHR) {
+            responseSuccess(data, textStatus, jqXHR, errorCallback);
+        }
+    });
+};

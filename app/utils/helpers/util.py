@@ -59,6 +59,13 @@ def set_json(dictionary, file):
     return storage.overwrite_file(json.dumps(dictionary), file)
 
 
+# @param dictionary dict Il dizionario da scrivere nel file in formato json
+def add_json_item(key, value, file):
+    dictionary = get_json(file)
+    dictionary[key] = value
+    return set_json(dictionary, file)
+
+
 # @return True se string contiene regex
 def regex_in_string(regex, string):
     if APP_DEBUG:
@@ -80,6 +87,20 @@ def replace_regex(regex, replace, string):
 # @return True se element è un elemento listabile, False altrimenti
 def is_listable(obj):
     return type(obj) in (list, tuple, dict, range)
+
+
+def print_dict(dictionary: dict, depth: int = 0):
+    """
+    :type dictionary: dict
+    :type depth: int
+    """
+    for key, value in dictionary.items():
+        space = (' ' * depth) + '|-- '
+        print(space + str(key) + ':')
+        if type(value) is dict:
+            print_dict(value, depth+1)
+        else:
+            print(space + ' [' + str(type(value)) + '] ' + str(value))
 
 
 # Fa eseguire al sistema operativo i comandi in args
