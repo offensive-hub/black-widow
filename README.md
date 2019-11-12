@@ -50,7 +50,8 @@
 > 3. `cd black-widow`
 > 4. `sudo pip3 install -U -r requirements.txt`
 > 5. `cp ./app/env_local_dist.py ./app/env_local.py`
-> 6. `sudo ./black-widow.py <arguments>`
+> 6. `./black-widow.py --django migrate`
+> 7. `sudo ./black-widow.py <arguments>`
 
 <br/>
 
