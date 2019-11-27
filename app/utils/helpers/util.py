@@ -61,7 +61,7 @@ def set_json(dictionary, file):
     return storage.overwrite_file(json.dumps(dictionary), file)
 
 
-def add_json_item(key, value, file):
+def append_json_item(key, value, file):
     dictionary = get_json(file)
     dictionary[key] = value
     return set_json(dictionary, file)
@@ -109,6 +109,19 @@ def replace_regex(regex, replace, string):
 # @return True se element è un elemento listabile, False altrimenti
 def is_listable(obj):
     return type(obj) in (list, tuple, dict, range)
+
+
+def sort_dict(dictionary: dict) -> dict:
+    """
+    :param dictionary: The dictionary to sort
+    :return: The sorted dictionary
+    """
+    sorted_dictionary = dict()
+    i = 0
+    for k in dictionary.keys():
+        sorted_dictionary[i] = dictionary[k]
+        i += 1
+    return sorted_dictionary
 
 
 def print_dict(dictionary: dict, depth: int = 0):
