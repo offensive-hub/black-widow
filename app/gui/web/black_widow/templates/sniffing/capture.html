@@ -66,61 +66,33 @@
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover" id="sniffed-pkts-table">
               <thead class="">
               <tr>
                 <th>
-                  #
+                  No.
                 </th>
                 <th>
-                  Name
+                  Time
                 </th>
                 <th>
-                  Country
+                  Source
                 </th>
                 <th>
-                  City
+                  Destination
                 </th>
                 <th>
-                  Salary
+                  Protocol
+                </th>
+                <th>
+                  Length
+                </th>
+                <th>
+                  Info
                 </th>
               </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    1
-                  </td>
-                  <td>
-                    Dakota Rice
-                  </td>
-                  <td>
-                    Niger
-                  </td>
-                  <td>
-                    Oud-Turnhout
-                  </td>
-                  <td>
-                    $36,738
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    2
-                  </td>
-                  <td>
-                    Minerva Hooper
-                  </td>
-                  <td>
-                    Curaçao
-                  </td>
-                  <td>
-                    Sinaai-Waas
-                  </td>
-                  <td>
-                    $23,789
-                  </td>
-                </tr>
               </tbody>
             </table>
           </div>
@@ -132,9 +104,11 @@
 {% endblock %}
 
 {% block script %}
-<script type="application/javascript">
+<!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
+    <script type="application/javascript">
     $(function() {
-        const updatePkts = function() {
+        const $sniffedPktsTable = $('#sniffed-pkts-table');
+        const updatePkts = function(sleep=5000) {
             window.setTimeout(function() {
                 request('POST', '/sniffing/capture', {
                     'job_id': urlParams.get('job_id'),
@@ -142,11 +116,22 @@
                     'page_size': 20
                 }, function(data, textStatus, jqXHR) {
                     console.log('Sniffing request success!');
+                    console.log('data.result:');
+                    console.log(data.result);
+                    for (let key in data.result) {
+                        let pkt = data.result[key];
+                        $sniffedPktsTable.insertTableRow([
+                            pkt.number,                     // No.
+                            pkt.frame_info.time_relative    // Time
+                            // TODO: insert attributes
+                        ]);
+                    }
+
                     updatePkts();
                 }, function(jqXHR, textStatus, errorThrown) {
                     console.error('Sniffing request error!');
                 });
-            }, 5000);
+            }, sleep);
         };
 
         const $stopCapture = $('#stop-capture');
@@ -162,7 +147,7 @@
             });
         };
         $stopCapture.click(stopPkts);
-        updatePkts();
+        updatePkts(2000);
     });
 </script>
 {% endblock %}

@@ -26,13 +26,13 @@ $(function() {
         const $label = $(this).parent();
         $label.click();
     });
-    $('input.submit').change(function(e) {
+    $('input.submit').change(function() {
         const $form = $(this).closest('form');
         $form.submit();
     });
     $('form').submit(function() {
         if (!this.checkValidity()) {
-            alert('Fill the required fields!')
+            alert('Fill the required fields!');
             return false;
         }
         return true;
@@ -42,44 +42,44 @@ $(function() {
 const urlParams = new URLSearchParams(window.location.search);
 
 /**
- * @param Anything data
- * @param String textStatus
+ * @param data Anything
+ * @param textStatus String
  * @param jqXHR jqXHR
- * @param function|null callback
+ * @param callback function|null
 */
 const responseSuccess = function(data, textStatus, jqXHR, callback=null) {
-    console.info("[RESPONSE SUCCESS]")
+    console.info("[RESPONSE SUCCESS]");
     console.log('data:');
     console.log(data);
-    console.log('textStatus: ' + textStatus)
+    console.log('textStatus: ' + textStatus);
     if (callback !== null) {
         callback(data, textStatus, jqXHR);
     }
-}
+};
 
 /**
  * @param jqXHR jqXHR
- * @param String textStatus
- * @param String errorThrown
- * @param function|null callback
+ * @param textStatus String
+ * @param errorThrown String
+ * @param callback function|null
 */
 const responseError = function(jqXHR, textStatus, errorThrown, callback=null) {
-    console.error("[RESPONSE ERROR]")
+    console.error("[RESPONSE ERROR]");
     console.log('jqXHR:');
     console.log(jqXHR);
-    console.log('textStatus: ' + textStatus)
-    console.log('errorThrown: ' + errorThrown)
+    console.log('textStatus: ' + textStatus);
+    console.log('errorThrown: ' + errorThrown);
     if (callback !== null) {
         callback(jqXHR, textStatus, errorThrown);
     }
-}
+};
 
 const getCookie = function(name) {
-    var cookieValue = null;
+    let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -88,7 +88,7 @@ const getCookie = function(name) {
         }
     }
     return cookieValue;
-}
+};
 
 const request = function(
     method,
@@ -115,7 +115,15 @@ const request = function(
             responseSuccess(data, textStatus, jqXHR, successCallback);
         },
         error: function(data, textStatus, jqXHR) {
-            responseSuccess(data, textStatus, jqXHR, errorCallback);
+            responseError(data, textStatus, jqXHR, errorCallback);
         }
     });
+};
+
+$.fn.insertTableRow = function (values) {
+    const $table = $(this);
+    console.log('insertTableRow - table:');
+    console.log($table);
+    console.log('values:');
+    console.log(values);
 };

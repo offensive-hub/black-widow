@@ -124,7 +124,7 @@ class Sniffing:
                     src_file=session_job_params.get('pcap'),
                     interface=session_job_params.get('interfaces'),
                     limit_length=10000,
-                    callback=callback  # TODO: write the callback to send the data to client by using the session
+                    callback=callback
                 )
 
             multiprocess(target, asynchronous=True, cpu=1)
