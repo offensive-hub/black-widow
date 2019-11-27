@@ -97,6 +97,12 @@ def regex_in_string(regex, string):
     return len(matches) > 0
 
 
+# @return True se string ~ regex
+def regex_is_string(regex, string):
+    reg = re.compile(regex)
+    return bool(reg.match(string))
+
+
 # @param regex la regex da trovare in string
 # @param replace la stringa con cui sostituire la regex
 # @param string la stringa in cui trovare la regex

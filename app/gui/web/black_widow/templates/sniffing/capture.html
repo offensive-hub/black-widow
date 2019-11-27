@@ -133,34 +133,36 @@
 
 {% block script %}
 <script type="application/javascript">
-    const updatePkts = function() {
-        window.setTimeout(function() {
+    $(function() {
+        const updatePkts = function() {
+            window.setTimeout(function() {
+                request('POST', '/sniffing/capture', {
+                    'job_id': urlParams.get('job_id'),
+                    'page': 1,
+                    'page_size': 20
+                }, function(data, textStatus, jqXHR) {
+                    console.log('Sniffing request success!');
+                    updatePkts();
+                }, function(jqXHR, textStatus, errorThrown) {
+                    console.error('Sniffing request error!');
+                });
+            }, 5000);
+        };
+
+        const $stopCapture = $('#stop-capture');
+        const stopPkts = function() {
             request('POST', '/sniffing/capture', {
                 'job_id': urlParams.get('job_id'),
-                'page': 1,
-                'page_size': 20
+                'kill': 1
             }, function(data, textStatus, jqXHR) {
-                console.log('Sniffing request success!');
-                updatePkts();
+                console.log('Sniffing request stopped!');
+                $stopCapture.addClass('disabled');
             }, function(jqXHR, textStatus, errorThrown) {
                 console.error('Sniffing request error!');
             });
-        }, 5000);
-    };
-
-    const $stopCapture = $('#stop-capture');
-    const stopPkts = function() {
-        request('POST', '/sniffing/capture', {
-            'job_id': urlParams.get('job_id'),
-            'kill': 1
-        }, function(data, textStatus, jqXHR) {
-            console.log('Sniffing request stopped!');
-            $stopCapture.addClass('disabled');
-        }, function(jqXHR, textStatus, errorThrown) {
-            console.error('Sniffing request error!');
-        });
-    };
-    $stopCapture.click(stopPkts);
-    updatePkts();
+        };
+        $stopCapture.click(stopPkts);
+        updatePkts();
+    });
 </script>
 {% endblock %}

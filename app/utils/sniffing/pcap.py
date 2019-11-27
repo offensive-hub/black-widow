@@ -36,10 +36,9 @@
 import codecs  # gzip
 import numpy
 import pyshark
-from pyshark.packet.layer import Layer
 
 from app.utils import settings
-# from app.utils.helpers.util import replace_regex, regex_in_string
+from app.utils.helpers.util import replace_regex, regex_is_string
 from app.utils.helpers.logger import Log
 
 
@@ -53,6 +52,18 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
     :param limit_length: The limit length of each packet field (they will be truncated), or None
     :param callback: The callback method to call (or None)
     """
+
+    def __is_hash__(text: str) -> bool:
+        return len(text) >= 8 and regex_is_string('^(([A-Z]|[a-z]|[0-9])+)+$', text)
+
+    def __best_field__(original: str, decoded: str) -> str:
+        if __is_hash__(original):
+            return 'original'
+        decoded = replace_regex('[^a-zA-Z0-9 \n\.]', '', decoded)
+        if len(decoded) <= 5:
+            return 'original'
+        else:
+            return 'decoded'
 
     def __pcap_callback__(pkt):
         # Log.info('Analyzing packet number ' + str(pkt.number))
@@ -85,7 +96,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
                         field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
                     # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
                     field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
-                                                                                                        '\n').strip()
+                                                                                                            '\n').strip()
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
@@ -107,10 +118,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
 
                 # Se il risultato della codifica è troppo corto, è probabilissimo che la decodifica
                 # non abbia dato un valore sensato: consiglio di visualizzare il valore originale
-                if len(field) <= 5:
-                    layer_field_dict['best'] = 'original'
-                else:
-                    layer_field_dict['best'] = 'decoded'
+                layer_field_dict['best'] = __best_field__(dirty_field, field)
 
                 layer_fields[field_name] = layer_field_dict
 
