@@ -59,7 +59,8 @@
                         Here is the monitored traffic
                     </p>
 
-                    <button id="play-capture-btn" type="button" class="btn btn-success btn-action" title="Play">
+                    <button id="play-capture-btn" type="button" class="btn btn-warning btn-action disabled" title="Play"
+                            style="display: none">
                         <i class="material-icons" style="padding: 0;">play_arrow</i>
                     </button>
 
@@ -113,6 +114,7 @@
     <script type="application/javascript">
         $(function() {
             const $sniffedPktsTable = $('#sniffed-pkts-table');
+            const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
             const $stopCaptureBtn = $('#stop-capture-btn');
             const updatePkts = function(sleep=5000) {
@@ -150,6 +152,7 @@
                         console.error('Sniffing request error!');
                         $stopCaptureBtn.addClass('disabled');
                         $pauseCaptureBtn.addClass('disabled');
+                        $playCaptureBtn.addClass('disabled');
                     });
                 }, sleep);
             };
@@ -161,6 +164,7 @@
                     console.log('Sniffing requests stopped!');
                     $stopCaptureBtn.addClass('disabled');
                     $pauseCaptureBtn.addClass('disabled');
+                    $playCaptureBtn.addClass('disabled');
                 }, function(jqXHR, textStatus, errorThrown) {
                     console.error('Sniffing requests error!');
                 });
@@ -168,9 +172,16 @@
             $stopCaptureBtn.click(stopPkts);
             const pausePkts = function() {
                 console.log('Sniffing requests paused!');
-                $pauseCaptureBtn.addClass('disabled');
+                $pauseCaptureBtn.addClass('disabled').hide();
+                $playCaptureBtn.removeClass('disabled').show();
             };
             $pauseCaptureBtn.click(pausePkts);
+            const playPkts = function() {
+                console.log('Sniffing requests played!');
+                $playCaptureBtn.addClass('disabled').hide();
+                $pauseCaptureBtn.removeClass('disabled').show();
+            };
+            $playCaptureBtn.click(playPkts);
             updatePkts(2000);
         });
     </script>
