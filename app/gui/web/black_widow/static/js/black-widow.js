@@ -27,7 +27,11 @@ $(function() {
         $label.click();
     });
     $('input.submit').change(function() {
+        const $this = $(this);
         const $form = $(this).closest('form');
+        if ($this.hasClass('force')) {
+            $form.find('input:required').prop('required', null);
+        }
         $form.submit();
     });
     $('form').submit(function() {

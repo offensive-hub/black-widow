@@ -183,12 +183,12 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         if source is not None:
             try:
                 source_host = socket.gethostbyaddr(source)[0]
-            except socket.herror:
+            except socket.herror or socket.gaierror:
                 pass
         if destination is not None:
             try:
                 destination_host = socket.gethostbyaddr(destination)[0]
-            except socket.herror:
+            except socket.herror or socket.gaierror:
                 pass
         pkt_dict['source'] = source
         pkt_dict['source_host'] = source_host
@@ -207,7 +207,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         if callback is not None:
             callback(pkt_dict)
 
-    if interface is None:
+    if interface is None and src_file is None:
         interface = settings.Get.my_interface()
     if src_file is not None:
         Log.info('Analyzing file: ' + src_file)
