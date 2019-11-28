@@ -28,6 +28,7 @@
  *       |
 *        |-- 0.1) Cards
 *        |-- 0.2) Buttons
+*        |-- 0.3) Tables
  *
  *  1) base.html
  *
@@ -51,7 +52,7 @@
 button .material-icons {
     padding-left: 6px;
 }
-button.btn-stop {
+button.btn-action {
     padding: 10px 16px;
     margin: 10px 0 0;
 }
@@ -74,6 +75,14 @@ input.upload {
 }
 
 /******************/
+
+/*** 0.3) Tables ***/
+
+.table-select > tbody > tr {
+    cursor: pointer;
+}
+
+/*******************/
 
 
 /**********************************/

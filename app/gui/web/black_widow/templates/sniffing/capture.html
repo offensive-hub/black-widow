@@ -59,14 +59,22 @@
                         Here is the monitored traffic
                     </p>
 
-                    <button id="stop-capture" type="submit" class="btn btn-danger btn-stop" title="Stop">
+                    <button id="play-capture-btn" type="button" class="btn btn-success btn-action" title="Play">
+                        <i class="material-icons" style="padding: 0;">play_arrow</i>
+                    </button>
+
+                    <button id="pause-capture-btn" type="button" class="btn btn-warning btn-action" title="Pause">
+                        <i class="material-icons" style="padding: 0;">pause</i>
+                    </button>
+
+                    <button id="stop-capture-btn" type="button" class="btn btn-danger btn-action" title="Stop">
                         <i class="material-icons" style="padding: 0;">stop</i>
                     </button>
 
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-hover" id="sniffed-pkts-table">
+                        <table class="table table-hover table-select" id="sniffed-pkts-table">
                             <thead class="">
                             <tr>
                                 <th>
@@ -104,10 +112,15 @@
     <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
     <script type="application/javascript">
         $(function() {
-            const $stopCapture = $('#stop-capture');
             const $sniffedPktsTable = $('#sniffed-pkts-table');
+            const $pauseCaptureBtn = $('#pause-capture-btn');
+            const $stopCaptureBtn = $('#stop-capture-btn');
             const updatePkts = function(sleep=5000) {
                 window.setTimeout(function() {
+                    if ($pauseCaptureBtn.hasClass('disabled')) {
+                        updatePkts();
+                        return;
+                    }
                     request('POST', '/sniffing/capture', {
                         'job_id': urlParams.get('job_id'),
                         'page': 1,
@@ -132,11 +145,11 @@
                                 {name: pkt.frame_info.len},           // Length (bytes)
                             ]);
                         }
-
                         updatePkts();
                     }, function(jqXHR, textStatus, errorThrown) {
                         console.error('Sniffing request error!');
-                        $stopCapture.addClass('disabled');
+                        $stopCaptureBtn.addClass('disabled');
+                        $pauseCaptureBtn.addClass('disabled');
                     });
                 }, sleep);
             };
@@ -145,13 +158,19 @@
                     'job_id': urlParams.get('job_id'),
                     'kill': 1
                 }, function(data, textStatus, jqXHR) {
-                    console.log('Sniffing request stopped!');
-                    $stopCapture.addClass('disabled');
+                    console.log('Sniffing requests stopped!');
+                    $stopCaptureBtn.addClass('disabled');
+                    $pauseCaptureBtn.addClass('disabled');
                 }, function(jqXHR, textStatus, errorThrown) {
-                    console.error('Sniffing request error!');
+                    console.error('Sniffing requests error!');
                 });
             };
-            $stopCapture.click(stopPkts);
+            $stopCaptureBtn.click(stopPkts);
+            const pausePkts = function() {
+                console.log('Sniffing requests paused!');
+                $pauseCaptureBtn.addClass('disabled');
+            };
+            $pauseCaptureBtn.click(pausePkts);
             updatePkts(2000);
         });
     </script>
