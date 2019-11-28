@@ -120,10 +120,21 @@ const request = function(
     });
 };
 
+/**
+ * @param field Object
+ */
+const bestField = function(field) {
+    // noinspection JSUnresolvedVariable
+    return field[field.best];
+};
+
 $.fn.insertTableRow = function (values) {
     const $table = $(this);
-    console.log('insertTableRow - table:');
-    console.log($table);
-    console.log('values:');
-    console.log(values);
+    let tableRow = '<tr>';
+    values.forEach(value => {
+        let title = value.title === undefined ? '' : 'title="' + value.title + '"';
+        tableRow += '<th '+title+'>' + value.name + '</th>';
+    });
+    tableRow += '</tr>';
+    $table.find('tbody:last-child').append(tableRow);
 };

@@ -50,104 +50,109 @@
             - Download ".pcap" file
             -
     -->
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card card-plain">
-        <div class="card-header card-header-primary">
-          <h4 class="card-title mt-0"> Network Traffic</h4>
-          <p class="card-category">
-            Here is the monitored traffic
-          </p>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title mt-0"> Network Traffic</h4>
+                    <p class="card-category">
+                        Here is the monitored traffic
+                    </p>
 
-          <button id="stop-capture" type="submit" class="btn btn-danger btn-stop" title="Stop">
-              <i class="material-icons" style="padding: 0;">stop</i>
-          </button>
+                    <button id="stop-capture" type="submit" class="btn btn-danger btn-stop" title="Stop">
+                        <i class="material-icons" style="padding: 0;">stop</i>
+                    </button>
+
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="sniffed-pkts-table">
+                            <thead class="">
+                            <tr>
+                                <th>
+                                    No.
+                                </th>
+                                <th>
+                                    Time
+                                </th>
+                                <th>
+                                    Source
+                                </th>
+                                <th>
+                                    Destination
+                                </th>
+                                <th>
+                                    Protocol
+                                </th>
+                                <th>
+                                    Length (bytes)
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
         </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover" id="sniffed-pkts-table">
-              <thead class="">
-              <tr>
-                <th>
-                  No.
-                </th>
-                <th>
-                  Time
-                </th>
-                <th>
-                  Source
-                </th>
-                <th>
-                  Destination
-                </th>
-                <th>
-                  Protocol
-                </th>
-                <th>
-                  Length
-                </th>
-                <th>
-                  Info
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </div>
 {% endblock %}
 
 {% block script %}
-<!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
+    <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
     <script type="application/javascript">
-    $(function() {
-        const $sniffedPktsTable = $('#sniffed-pkts-table');
-        const updatePkts = function(sleep=5000) {
-            window.setTimeout(function() {
+        $(function() {
+            const $stopCapture = $('#stop-capture');
+            const $sniffedPktsTable = $('#sniffed-pkts-table');
+            const updatePkts = function(sleep=5000) {
+                window.setTimeout(function() {
+                    request('POST', '/sniffing/capture', {
+                        'job_id': urlParams.get('job_id'),
+                        'page': 1,
+                        'page_size': 10
+                    }, function(data, textStatus, jqXHR) {
+                        console.log('Sniffing request success!');
+                        $sniffedPktsTable.find('tbody').html('');
+                        for (let key in data.result) {
+                            let pkt = data.result[key];
+                            $sniffedPktsTable.insertTableRow([
+                                {name: pkt.number},                   // No.
+                                {name: pkt.frame_info.time_relative}, // Time
+                                {
+                                    name: pkt.source,                 // Source
+                                    title: pkt.source_host
+                                },
+                                {
+                                    name: pkt.destination,            // Destination
+                                    title: pkt.destination_host
+                                },
+                                {name: pkt.protocol},                 // Protocol
+                                {name: pkt.frame_info.len},           // Length (bytes)
+                            ]);
+                        }
+
+                        updatePkts();
+                    }, function(jqXHR, textStatus, errorThrown) {
+                        console.error('Sniffing request error!');
+                        $stopCapture.addClass('disabled');
+                    });
+                }, sleep);
+            };
+            const stopPkts = function() {
                 request('POST', '/sniffing/capture', {
                     'job_id': urlParams.get('job_id'),
-                    'page': 1,
-                    'page_size': 20
+                    'kill': 1
                 }, function(data, textStatus, jqXHR) {
-                    console.log('Sniffing request success!');
-                    console.log('data.result:');
-                    console.log(data.result);
-                    for (let key in data.result) {
-                        let pkt = data.result[key];
-                        $sniffedPktsTable.insertTableRow([
-                            pkt.number,                     // No.
-                            pkt.frame_info.time_relative    // Time
-                            // TODO: insert attributes
-                        ]);
-                    }
-
-                    updatePkts();
+                    console.log('Sniffing request stopped!');
+                    $stopCapture.addClass('disabled');
                 }, function(jqXHR, textStatus, errorThrown) {
                     console.error('Sniffing request error!');
                 });
-            }, sleep);
-        };
-
-        const $stopCapture = $('#stop-capture');
-        const stopPkts = function() {
-            request('POST', '/sniffing/capture', {
-                'job_id': urlParams.get('job_id'),
-                'kill': 1
-            }, function(data, textStatus, jqXHR) {
-                console.log('Sniffing request stopped!');
-                $stopCapture.addClass('disabled');
-            }, function(jqXHR, textStatus, errorThrown) {
-                console.error('Sniffing request error!');
-            });
-        };
-        $stopCapture.click(stopPkts);
-        updatePkts(2000);
-    });
-</script>
+            };
+            $stopCapture.click(stopPkts);
+            updatePkts(2000);
+        });
+    </script>
 {% endblock %}

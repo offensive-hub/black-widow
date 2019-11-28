@@ -33,7 +33,9 @@
 *********************************************************************************
 """
 
-import codecs  # gzip
+import codecs
+import socket
+
 import numpy
 import pyshark
 
@@ -68,7 +70,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
     def __pcap_callback__(pkt):
         # Log.info('Analyzing packet number ' + str(pkt.number))
         # Log.info('Layers: ' + str(pkt.layers))
-        layers_dict = {}
+        layers_dict = dict()
         # pkt.pretty_print() # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
         for layer in pkt.layers:
             layer_fields = {}
@@ -95,8 +97,13 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
                         # Decodifico in utf-8 (il doc non era in esadecimale)
                         field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
                     # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
-                    field = field.replace('\\xa', '\n').replace('\\xd', '\n').replace('\\x9', '\t').replace('\\n',
-                                                                                                            '\n').strip()
+                    field = field\
+                        .replace('\\xa', '\n')\
+                        .replace('\\xd', '\n')\
+                        .replace('\\x9', '\t')\
+                        .replace('\\n', '\n')\
+                        .strip()
+
                 # salvo campi originale e decodificato
                 layer_field_dict['decoded'] = field
                 layer_field_dict['original'] = dirty_field
@@ -152,6 +159,50 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
             'transport_layer': str(pkt.transport_layer),
             'layers': layers_dict  # Il dizionario dei livelli creato nel sovrastante loop
         }
+        source = None
+        destination = None
+        source_host = None
+        destination_host = None
+        protocol = None
+        pkt_dict_layers = pkt_dict.get('layers')
+        # noinspection PyTypeChecker
+        pkt_dict_ip: dict = pkt_dict_layers.get('ip')
+        # noinspection PyTypeChecker
+        pkt_dict_arp: dict = pkt_dict_layers.get('arp')
+        # noinspection PyTypeChecker
+        pkt_dict_eth: dict = pkt_dict_layers.get('eth')
+        if pkt_dict_ip is not None:
+            source = pkt_dict_ip['src']['decoded']
+            destination = pkt_dict_ip['dst']['decoded']
+        elif pkt_dict_arp is not None:
+            source = pkt_dict_arp['src_proto_ipv4']['decoded']
+            destination = pkt_dict_arp['dst_proto_ipv4']['decoded']
+        elif pkt_dict_eth is not None:
+            source = pkt_dict_eth['src']['decoded']
+            destination = pkt_dict_eth['dst']['decoded']
+        if source is not None:
+            try:
+                source_host = socket.gethostbyaddr(source)[0]
+            except socket.herror:
+                Log.error("Unknown host " + str(source))
+        if destination is not None:
+            try:
+                destination_host = socket.gethostbyaddr(destination)[0]
+            except socket.herror:
+                Log.error("Unknown host " + str(destination))
+        pkt_dict['source'] = source
+        pkt_dict['source_host'] = source_host
+        pkt_dict['destination'] = destination
+        pkt_dict['destination_host'] = destination_host
+
+        transport_layer = pkt_dict.get('transport_layer')
+        highest_layer = pkt_dict.get('highest_layer')
+        if transport_layer != 'None':
+            protocol = transport_layer
+        elif highest_layer != 'None':
+            protocol = highest_layer
+
+        pkt_dict['protocol'] = protocol
 
         if callback is not None:
             callback(pkt_dict)
