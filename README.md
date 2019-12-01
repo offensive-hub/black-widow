@@ -96,8 +96,8 @@
 >   |    |
 >   |    |-- env.py          # Variabili d'ambiente
 >   |
->   |-- main.py   # Eseguibile principale
->   |-- test.py   # Eseguibile di testing
+>   |-- black-widow.py   # Eseguibile principale
+>   |-- test.py          # Eseguibile di testing
 > ```
 
 <br/>
