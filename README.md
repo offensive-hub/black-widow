@@ -32,6 +32,8 @@
 > ### Links:
 > - Homepage: [https://black-widow.io](https://black-widow.io)
 > - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
+> - Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
+
 
 <br/>
 
@@ -43,9 +45,6 @@
 >   - Command line: `docker run --rm offensive/black-widow [arguments]`
 >   - GUI: `docker run -d -p 8095:80 --rm offensive/black-widow -g`
 >       - Than visit: [http://localhost:8095](http://localhost:8095/)
->
-> ### Docker Registry:
-> [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 
 <br/>
 
