@@ -28,7 +28,7 @@ $(function() {
     });
     $('input.submit').change(function() {
         const $this = $(this);
-        const $form = $(this).closest('form');
+        const $form = $this.closest('form');
         if ($this.hasClass('force')) {
             $form.find('input:required').prop('required', null);
         }
@@ -137,7 +137,7 @@ $.fn.insertTableRow = function (values) {
     let tableRow = '<tr>';
     values.forEach(value => {
         let title = value.title === undefined ? '' : 'title="' + value.title + '"';
-        tableRow += '<th '+title+'>' + value.name + '</th>';
+        tableRow += '<td '+title+'>' + value.name + '</td>';
     });
     tableRow += '</tr>';
     $table.find('tbody:last-child').append(tableRow);
