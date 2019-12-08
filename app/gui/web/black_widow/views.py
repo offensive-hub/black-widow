@@ -178,11 +178,17 @@ class Sniffing:
                 util.Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
 
                 running_pids = storage.read_file(sniffing_jobs[job_id]['pidfile']).split(', ')
-                for pid in running_pids:
-                    os.kill(int(pid), signal_job)
-                    util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+                kill = signal_job == signal.SIGKILL
 
-                if signal_job == signal.SIGKILL:
+                for pid in running_pids:
+                    try:
+                        os.kill(int(pid), signal_job)
+                        util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+                    except ProcessLookupError:
+                        util.Log.error("The process " + str(pid) + "does not exists")
+                        kill = True
+
+                if kill:
                     sniffing_jobs.pop(job_id, None)
                 else:
                     sniffing_jobs[job_id]['status'] = signal.Signals(signal_job).name
