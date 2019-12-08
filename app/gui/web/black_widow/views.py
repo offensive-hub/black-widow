@@ -78,8 +78,6 @@ class Sniffing:
             view_params.update({
                 'jobs': sniffing_jobs
             })
-            # pprint(sniffing_jobs)
-            print(sniffing_jobs)
             return render(request, self.template_name, view_params)
 
         def post(self, request):

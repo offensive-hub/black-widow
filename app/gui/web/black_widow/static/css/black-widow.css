@@ -29,6 +29,7 @@
 *        |-- 0.1) Cards
 *        |-- 0.2) Buttons
 *        |-- 0.3) Tables
+*        |-- 0.4) Pagination
  *
  *  1) base.html
  *
@@ -95,6 +96,21 @@ input.upload {
 
 table > thead > tr > th {
     font-weight: normal !important;
+}
+
+/*******************/
+
+/*** 0.4) Pagination ***/
+
+.page-item.active .page-link {
+    background: #d22824 !important;
+    border-color: #da3a36 !important;;
+}
+.page-link:hover {
+    color: #fff !important;
+    text-decoration: none;
+    background-color: rgba(239, 233, 233, 0.36);
+    border-color: rgba(230, 222, 222, 0.21);
 }
 
 /*******************/

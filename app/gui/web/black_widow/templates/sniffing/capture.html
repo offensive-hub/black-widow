@@ -41,6 +41,12 @@
 *********************************************************************************
 -->
 {% endcomment %}
+{% load static %}
+
+{% block style %}
+    <link href="{% static 'css/plugins/simplePagination.css' %}" rel="stylesheet" />
+{% endblock %}
+
 {% block content %}
     {% csrf_token %}
     <!-- TODO: UI to view the packet captured. Features:
@@ -105,11 +111,35 @@
                 </div>
             </div>
 
+            <div class="pagination justify-content-center" id="demo">
+            </div>
+
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
         </div>
     </div>
 {% endblock %}
 
 {% block script %}
+    <script type="application/javascript" src="{% static 'js/plugins/simplePagination.js' %}"></script>
     <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
     <script type="application/javascript">
         $(function() {
@@ -118,7 +148,7 @@
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
             const $stopCaptureBtn = $('#stop-capture-btn');
-            const updatePkts = function(sleep=5000) {
+            const updatePkts = function(sleep=5000, loop=false) {
                 window.setTimeout(function() {
                     if ($pauseCaptureBtn.hasClass('disabled')) {
                         updatePkts();
@@ -153,7 +183,24 @@
                                 {name: pkt.frame_info.len},           // Length (bytes)
                             ]);
                         }
-                        updatePkts();
+
+                        // Pagination
+                        $('#demo-TODO').pagination({
+                            dataSource: Object.values(data.result),
+                            pageNumber: data.page,
+                            items: data.total,
+                            pages: data.page_end,
+                            currentPage: 1,
+                            itemsOnPage: 10,
+                            callback: function(data, pagination) {
+                                console.log('callback');
+                                console.log(data);
+                                console.log(pagination);
+                                updatePkts(0);
+                            }
+                        });
+
+                        updatePkts(loop=true);
                     }, function(jqXHR, textStatus, errorThrown) {
                         console.error('Sniffing request error!');
                         window.location.replace("/sniffing");
@@ -171,6 +218,7 @@
                     callback(data, textStatus, jqXHR);
                 }, function(jqXHR, textStatus, errorThrown) {
                     console.error('Sniffing requests error!');
+                    window.location.replace("/sniffing");
                 });
             };
             const stopPkts = function() {
@@ -203,7 +251,7 @@
                 });
             };
             $playCaptureBtn.click(playPkts);
-            updatePkts(2000);
+            updatePkts(2000, true);
         });
     </script>
 {% endblock %}
