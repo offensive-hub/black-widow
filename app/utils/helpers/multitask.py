@@ -198,7 +198,7 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
     # The arguments to pass at the parent process
     multithread_args = (target, args, asynchronous, cpu)
     # Creates a process (cpu=1) that runs all the threads
-    return multiprocess(multitask.start, multithread_args, asynchronous=False, cpu=1)
+    return multiprocess(multitask.start, multithread_args, cpu=1)
 
 
 # Sfrutta il multiprocessing per effettuare la stessa operazione
@@ -211,7 +211,10 @@ def multithread(target=None, args=(), asynchronous=False, cpu=CPU):
 # @param asynchronous True, se non bisogna attendere la fine dell'esecuzione di
 #                     tutti i processi, False altrimenti
 # @param cpu Il numero di processi da creare (default: il numero di cpu disponibili)
-# @return Il risultato della funzione target
+# @return Il risultato della funzione target, il pidfile altrimenti
 def multiprocess(target=None, args=(), asynchronous=False, cpu=CPU):
     multitask = MultiTask(MultiTask.MULTI_PROCESSING)
-    return multitask.start(target, args, asynchronous, cpu)
+    result = multitask.start(target, args, asynchronous, cpu)
+    if asynchronous:
+        return multitask.pidfile
+    return result

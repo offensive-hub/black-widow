@@ -22,6 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import itertools
 from os.path import join
 
@@ -78,6 +79,7 @@ class AbstractView(TemplateView):
         """
         :type session: django.contrib.sessions.backends.db.SessionStore
         :type params: dict
+        :rtype: dict
         """
         if params is None:
             params = {}
@@ -104,11 +106,11 @@ class AbstractView(TemplateView):
     def pagination(elements: dict, page: int, page_size: int):
         try:
             page = int(page)
-        except ValueError:
+        except TypeError:
             page = 1
         try:
             page_size = int(page_size)
-        except ValueError:
+        except TypeError:
             page_size = 10
         elements_tot = len(elements)
         start = page_size * (page - 1)

@@ -1,6 +1,7 @@
-/********************************************************************************
+"""
+*********************************************************************************
 *                                                                               *
-* black-widow.css -- Main black-widow stylesheet                                *
+* abstract_sniffing_view.py -- Abstract sniffing view                           *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -19,96 +20,32 @@
 * You should have received a copy of the GNU General Public License             *
 * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
 *                                                                               *
-********************************************************************************/
+*********************************************************************************
+"""
 
-/**
- *   [ INDEX ]
- *
- *  0) GLOBAL
- *       |
-*        |-- 0.1) Cards
-*        |-- 0.2) Buttons
-*        |-- 0.3) Tables
- *
- *  1) base.html
- *
-*/
+from app.gui.web.black_widow.abstract_class import AbstractView
 
 
+class AbstractSniffingView(AbstractView):
+    """
+    Abstract Sniffing View
+    """
+    def _get_sniffing_jobs(self, session) -> dict:
+        """
+        :type session: django.contrib.sessions.backends.db.SessionStore
+        :rtype: dict
+        """
+        session_params = self.session_get(session)
+        sniffing_jobs = session_params.get('sniffing_jobs')
+        if type(sniffing_jobs) is not dict:
+            sniffing_jobs = dict()
+        return sniffing_jobs
 
-/*********** 0) GLOBAL ************/
-
-
-/*** 0.1) Cards ***/
-
-.card [class*="card-header-"] .card-title+.card-category .material-icons {
-  font-size: 16px;
-}
-
-.card-body-primary .card-category, .card-body-primary .card-title {
-    color: #fff !important;
-}
-
-.card-hover {
-    box-shadow: unset !important;
-}
-
-/******************/
-
-/*** 0.2) Buttons ***/
-
-button .material-icons {
-    padding-left: 6px;
-}
-button.btn-action {
-    padding: 10px 16px;
-    margin: 10px 0 0;
-}
-button.btn-stop .material-icons {
-    padding: 0;
-}
-button.disabled {
-    pointer-events: none;
-}
-input.upload {
-    width: 0;
-    height: 0;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-.link {
-    cursor: pointer;
-}
-
-/******************/
-
-/*** 0.3) Tables ***/
-
-.table-select > tbody > tr {
-    cursor: pointer;
-}
-
-table > thead > tr > th {
-    font-weight: normal !important;
-}
-
-/*******************/
-
-
-/**********************************/
-
-
-
-/********** 1) base.html **********/
-
-#page-title {
-  text-transform: capitalize;
-  pointer-events: none;
-}
-
-/**********************************/
+    def _set_sniffing_jobs(self, session, sniffing_jobs):
+        """
+        :type session: django.contrib.sessions.backends.db.SessionStore
+        :type sniffing_jobs: dict
+        """
+        session_params = self.session_get(session)
+        session_params['sniffing_jobs'] = sniffing_jobs
+        self.session_update(session, session_params)

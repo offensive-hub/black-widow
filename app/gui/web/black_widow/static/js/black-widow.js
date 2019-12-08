@@ -41,6 +41,13 @@ $(function() {
         }
         return true;
     });
+    $('.link').click(function() {
+        const $this = $(this);
+        const href = $this.attr('href');
+        if (href !== null && href !== undefined) {
+            window.location.href = href;
+        }
+    })
 });
 
 const urlParams = new URLSearchParams(window.location.search);

@@ -45,90 +45,156 @@
     <form method="post" enctype="multipart/form-data" id="sniffing-settings-form">
         {% csrf_token %}
         <div class="row">
-            <!-- Interfaces -->
-            <div class="col-lg-4 col-md-5">
+
+            <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="card-title ">Interfaces *</h4>
-                        <p class="card-category"> Chose the interface to sniff</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="interfaces">
-                                <table class="table">
-                                    <tbody>
-                                    {% for interface,checked in interfaces.items %}
-                                        <tr>
-                                            <td>
-                                                <div class="form-check form-check-radio">
-                                                    <label class="form-check-label">
-                                                        <input {% if checked %}checked{% endif %} required class="form-check-input" type="radio" name="interfaces" value="{{interface}}">
-                                                        {{interface}}
-                                                        <span class="circle">
-                                                            <span class="check"></span>
-                                                        </span>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    <!-- [old code in loop]
-                                           <td class="td-actions text-right">
-                                               <button type="button" rel="tooltip" title="Edit Task" class="btn btn-white btn-link btn-sm">
-                                                   <i class="material-icons">edit</i>
-                                               </button>
-                                               <button type="button" rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm">
-                                                   <i class="material-icons">close</i>
-                                               </button>
-                                           </td>
-                                   -->
-                                    </tbody>
-                                </table>
+
+                    <!-- Show Jobs / New Job -->
+                    <div class="card-header card-header-tabs card-header-danger">
+                        <div class="nav-tabs-navigation">
+                            <div class="nav-tabs-wrapper">
+                                <ul class="nav nav-tabs" data-tabs="tabs">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#show-jobs" data-toggle="tab">
+                                            <i class="material-icons">playlist_play</i> Show Jobs
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#new-job" data-toggle="tab">
+                                            <i class="material-icons">fiber_new</i> New Job
+                                            <div class="ripple-container"></div>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Filters -->
-            <div class="col-lg-8 col-md-7">
-                <div class="card">
-                    <div class="card-header card-header-primary">
-                        <h4 class="card-title ">Filters</h4>
-                        <div class="card-category"> Available filters:
-                            <a target="_blank" title="Available filters" href="https://wiki.wireshark.org/DisplayFilters">
-                                <strong>Wireshark display filters <i class="material-icons">open_in_new</i></strong>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
+
+                    <div class="card-body-primary card-body">
                         <div class="tab-content">
-                            <div class="tab-pane active" id="filters">
-                                <div class="form-group">
-                                    <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
-                                    <input value="{{filters}}" type="text" class="form-control" id="filters-input" name="filters">
-                                    <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
+
+                            <!-- Show Jobs -->
+                            <div class="tab-pane active" id="show-jobs">
+                                <table class="table table-hover table-select">
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>File/Interface</th>
+                                        <th>Filters</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for id,job in jobs.items %}
+                                        <tr class="link" href="/sniffing/capture?job_id={{ job.id }}">
+                                            <td>{{ job.id }}</td>
+                                            <td>
+                                                {% if job.interfaces != None %}
+                                                    {{ job.interfaces }}
+                                                {% else %}
+                                                    {{ job.pcap }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ job.filters }}</td>
+                                            <td>{{ job.status }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- New Job -->
+                            <div class="tab-pane" id="new-job">
+                                <div class="row">
+                                    <!-- Interfaces -->
+                                    <div class="col-lg-4 col-md-5">
+                                        <div class="card card-hover">
+                                            <div class="card-header card-header-primary">
+                                                <h4 class="card-title ">Interfaces *</h4>
+                                                <p class="card-category"> Chose the interface to sniff</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="interfaces">
+                                                        <table class="table">
+                                                            <tbody>
+                                                            {% for interface,checked in interfaces.items %}
+                                                                <tr>
+                                                                    <td>
+                                                                        <div class="form-check form-check-radio">
+                                                                            <label class="form-check-label">
+                                                                                <input {% if checked %}checked{% endif %} required class="form-check-input" type="radio" name="interfaces" value="{{interface}}">
+                                                                                {{interface}}
+                                                                                <span class="circle">
+                                                            <span class="check"></span>
+                                                        </span>
+                                                                            </label>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Filters -->
+                                    <div class="col-lg-8 col-md-7">
+                                        <div class="card card-hover">
+                                            <div class="card-header card-header-primary">
+                                                <h4 class="card-title ">Filters</h4>
+                                                <div class="card-category"> Available filters:
+                                                    <a target="_blank" title="Available filters" href="https://wiki.wireshark.org/DisplayFilters">
+                                                        <strong>Wireshark display filters <i class="material-icons">open_in_new</i></strong>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active" id="filters">
+                                                        <div class="form-group">
+                                                            <label for="filters-input" class="bmd-label-floating">Write filters here...</label>
+                                                            <input value="{{filters}}" type="text" class="form-control" id="filters-input" name="filters">
+                                                            <span class="bmd-help">(eg. tcp.port eq 25 or icmp)</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit -->
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-warning">
+                                            Capture!
+                                            <i class="material-icons">play_arrow</i>
+                                        </button>
+                                        <label for="pcap">
+                                            <button class="btn btn-info upload" type="button">
+                                                Open pcap file <i class="material-icons">open_in_browser</i>
+                                            </button>
+                                        </label>
+                                        <input type="file" class="btn btn-info upload submit force" name="pcap" id="pcap"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
                 </div>
             </div>
+
+
         </div>
 
-        <div class="row">
-            <div class="col">
-                <button type="submit" class="btn btn-warning">
-                    Capture!
-                    <i class="material-icons">play_arrow</i>
-                </button>
-                <label for="pcap">
-                    <button class="btn btn-info upload" type="button">
-                        Open pcap file <i class="material-icons">open_in_browser</i>
-                    </button>
-                </label>
-                <input type="file" class="btn btn-info upload submit force" name="pcap" id="pcap"/>
-            </div>
-        </div>
+
     </form>
 {% endblock %}

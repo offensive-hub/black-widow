@@ -22,6 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import os
 import signal
 
@@ -37,12 +38,12 @@ from app.utils.sniffing.pcap import sniff_pcap
 from app.utils.helpers import util
 from app.utils.helpers import storage
 from app.utils.helpers.multitask import multiprocess
+from app.gui.web.black_widow.abstract_class.abstract_sniffing_view import AbstractSniffingView
 
 from .abstract_class import AbstractView
 
 
 # Create your views here.
-
 
 def index(request):
     """
@@ -56,7 +57,7 @@ class Sniffing:
     """
     Sniffing Container View
     """
-    class SettingsView(AbstractView):
+    class SettingsView(AbstractSniffingView):
         """
         Sniffing View
         """
@@ -69,9 +70,16 @@ class Sniffing:
             :return: django.http.HttpResponse
             """
             # TODO: show current capturing process jobs
+            sniffing_jobs = self._get_sniffing_jobs(request.session)
+            # sniffing_jobs = Obj(sniffing_jobs)
             view_params = self.session_get(request.session, {
                 'interfaces': network.get_interfaces()
             })
+            view_params.update({
+                'jobs': sniffing_jobs
+            })
+            # pprint(sniffing_jobs)
+            print(sniffing_jobs)
             return render(request, self.template_name, view_params)
 
         def post(self, request):
@@ -79,13 +87,9 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
-            session_params = self.session_get(request.session)
-            sniffing_jobs = session_params.get('sniffing_jobs')
-            if sniffing_jobs is None:
-                sniffing_jobs = dict()
-                job_id = 0
-            else:
-                job_id = len(sniffing_jobs)
+            sniffing_jobs = self._get_sniffing_jobs(request.session)
+
+            job_id = len(sniffing_jobs)
 
             session_job_params: dict = request.POST.dict()
 
@@ -96,24 +100,19 @@ class Sniffing:
                 session_job_params['pcap'] = None
 
             out_json_file = APP_STORAGE_OUT + '/' + util.now() + '_SNIFFING_' + str(job_id) + '.json'
-            job_killed_file = out_json_file + '.KILL'
 
             session_job_params.update({
                 'id': job_id,
-                'out_json_file': out_json_file
+                'out_json_file': out_json_file,
+                'status': signal.SIGCONT.name
             })
 
             def callback(pkt: dict):
                 """
                 :type pkt: dict
                 """
-                if os.path.exists(job_killed_file):
-                    storage.delete(job_killed_file)
-                    util.Log.success("Sniffing Job #" + str(job_id) + " killed")
-                    os.kill(os.getpid(), signal.SIGKILL)
-                    return
-
                 util.append_json_item(pkt['number'], pkt, out_json_file)
+                return
 
             def target():
                 """
@@ -127,17 +126,15 @@ class Sniffing:
                     callback=callback
                 )
 
-            multiprocess(target, asynchronous=True, cpu=1)
-
+            session_job_params['pidfile'] = multiprocess(target, asynchronous=True, cpu=1)
             session_job_params.pop('csrfmiddlewaretoken', None)
             sniffing_jobs[job_id] = session_job_params
-            session_params['sniffing_jobs'] = sniffing_jobs
 
-            self.session_update(request.session, session_params)
+            self._set_sniffing_jobs(request.session, sniffing_jobs)
 
             return redirect('sniffing/capture?job_id=' + str(job_id))
 
-    class CaptureView(AbstractView):
+    class CaptureView(AbstractSniffingView):
         """
         Capture View
         """
@@ -160,8 +157,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            session_params = self.session_get(request.session)
-            sniffing_jobs = session_params.get('sniffing_jobs')
+            sniffing_jobs = self._get_sniffing_jobs(request.session)
             request_params: dict = request.POST.dict()
             job_id = request_params.get('job_id')
             if type(sniffing_jobs) is dict:
@@ -176,16 +172,27 @@ class Sniffing:
 
             out_json_file = sniffing_job.get('out_json_file')
 
-            kill_job = request_params.get('kill')
-            if kill_job is not None and int(kill_job) == 1:
-                kill_job_file = out_json_file + '.KILL'
-                open(kill_job_file, 'a').close()
-                sniffing_jobs.pop(job_id, None)
-                session_params['sniffing_jobs'] = sniffing_jobs
-                self.session_update(request.session, session_params)
+            signal_job = request_params.get('signal')
+            if signal_job is not None:
+                signal_job = int(signal_job)
+                util.Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
+
+                running_pids = storage.read_file(sniffing_jobs[job_id]['pidfile']).split(', ')
+                for pid in running_pids:
+                    os.kill(int(pid), signal_job)
+                    util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+
+                if signal_job == signal.SIGKILL:
+                    sniffing_jobs.pop(job_id, None)
+                else:
+                    sniffing_jobs[job_id]['status'] = signal.Signals(signal_job).name
+
+                self._set_sniffing_jobs(request.session, sniffing_jobs)
+
                 return {
                     'job_id': request_params.get('job_id'),
-                    'message': 'Job killed'
+                    'signal': signal_job,
+                    'message': 'Signal sent'
                 }
 
             page = request_params.get('page')
@@ -199,8 +206,13 @@ class Sniffing:
 
             pagination = AbstractView.pagination(out_dict, page, page_size)
 
+            job_id = request_params.get('job_id')
+
             pagination.update({
-                'job_id': request_params.get('job_id')
+                'job': {
+                    'id': job_id,
+                    'status': sniffing_jobs[job_id]['status']
+                }
             })
 
             return pagination

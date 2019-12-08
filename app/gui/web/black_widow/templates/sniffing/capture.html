@@ -113,6 +113,7 @@
     <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
     <script type="application/javascript">
         $(function() {
+            const jobId = urlParams.get('job_id');
             const $sniffedPktsTable = $('#sniffed-pkts-table');
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
@@ -124,11 +125,16 @@
                         return;
                     }
                     request('POST', '/sniffing/capture', {
-                        'job_id': urlParams.get('job_id'),
+                        'job_id': jobId,
                         'page': 1,
                         'page_size': 10
                     }, function(data, textStatus, jqXHR) {
                         console.log('Sniffing request success!');
+                        if (data.job.status === 'SIGSTOP') {
+                            // Process stopped
+                            $pauseCaptureBtn.addClass('disabled').hide();
+                            $playCaptureBtn.removeClass('disabled').show();
+                        }
                         $sniffedPktsTable.find('tbody').html('');
                         for (let key in data.result) {
                             let pkt = data.result[key];
@@ -150,36 +156,51 @@
                         updatePkts();
                     }, function(jqXHR, textStatus, errorThrown) {
                         console.error('Sniffing request error!');
-                        $stopCaptureBtn.addClass('disabled');
-                        $pauseCaptureBtn.addClass('disabled');
-                        $playCaptureBtn.addClass('disabled');
+                        window.location.replace("/sniffing");
+                        {#$stopCaptureBtn.addClass('disabled');#}
+                        {#$pauseCaptureBtn.addClass('disabled');#}
+                        {#$playCaptureBtn.addClass('disabled');#}
                     });
                 }, sleep);
             };
-            const stopPkts = function() {
+            const signPkts = function(signal, callback) {
                 request('POST', '/sniffing/capture', {
-                    'job_id': urlParams.get('job_id'),
-                    'kill': 1
+                    'job_id': jobId,
+                    'signal': signal
                 }, function(data, textStatus, jqXHR) {
-                    console.log('Sniffing requests stopped!');
-                    $stopCaptureBtn.addClass('disabled');
-                    $pauseCaptureBtn.addClass('disabled');
-                    $playCaptureBtn.addClass('disabled');
+                    callback(data, textStatus, jqXHR);
                 }, function(jqXHR, textStatus, errorThrown) {
                     console.error('Sniffing requests error!');
                 });
             };
+            const stopPkts = function() {
+                // 9 = SIGKILL
+                signPkts(9, function(data, textStatus, jqXHR) {
+                    console.log('Sniffing requests stopped!');
+                    window.location.replace("/sniffing");
+                    {#$stopCaptureBtn.addClass('disabled');#}
+                    {#$pauseCaptureBtn.addClass('disabled');#}
+                    {#$playCaptureBtn.addClass('disabled');#}
+                });
+            };
             $stopCaptureBtn.click(stopPkts);
             const pausePkts = function() {
-                console.log('Sniffing requests paused!');
-                $pauseCaptureBtn.addClass('disabled').hide();
-                $playCaptureBtn.removeClass('disabled').show();
+                // 19 = SIGSTOP
+                signPkts(19, function(data, textStatus, jqXHR) {
+                    console.log('Sniffing requests paused!');
+                    $pauseCaptureBtn.addClass('disabled').hide();
+                    $playCaptureBtn.removeClass('disabled').show();
+                });
+
             };
             $pauseCaptureBtn.click(pausePkts);
             const playPkts = function() {
-                console.log('Sniffing requests played!');
-                $playCaptureBtn.addClass('disabled').hide();
-                $pauseCaptureBtn.removeClass('disabled').show();
+                // 18 = SIGCONT
+                signPkts(18, function(data, textStatus, jqXHR) {
+                    console.log('Sniffing requests played!');
+                    $playCaptureBtn.addClass('disabled').hide();
+                    $pauseCaptureBtn.removeClass('disabled').show();
+                });
             };
             $playCaptureBtn.click(playPkts);
             updatePkts(2000);
