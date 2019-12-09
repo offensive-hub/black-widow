@@ -54,6 +54,10 @@
     box-shadow: unset !important;
 }
 
+.card-header-danger.card-header-sec {
+    background: linear-gradient(60deg, rgba(214, 79, 75, 0.96), rgba(184, 125, 124, 0.7)) !important;
+}
+
 /******************/
 
 /*** 0.2) Buttons ***/
