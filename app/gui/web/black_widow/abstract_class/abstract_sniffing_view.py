@@ -28,7 +28,6 @@ import signal
 from app.gui.web.black_widow.abstract_class import AbstractView
 from app.utils.helpers import storage
 from app.utils.helpers import util
-from app.utils.helpers.logger import Log
 
 
 class AbstractSniffingView(AbstractView):
@@ -71,8 +70,6 @@ class AbstractSniffingView(AbstractView):
         """
         session_params = self.session_get(session)
         sniffing_jobs = session_params.get('sniffing_jobs')
-        print('_get_sniffing_jobs:')
-        print(sniffing_jobs)
         update_session = False
         if type(sniffing_jobs) is not dict:
             sniffing_jobs = dict()
@@ -93,8 +90,6 @@ class AbstractSniffingView(AbstractView):
         :type session: django.contrib.sessions.backends.db.SessionStore
         :type sniffing_jobs: dict
         """
-        print('_set_sniffing_jobs:')
-        print(sniffing_jobs)
         session_params = self.session_get(session)
         session_params['sniffing_jobs'] = sniffing_jobs
         self.session_update(session, session_params)
