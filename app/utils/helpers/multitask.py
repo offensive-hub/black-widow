@@ -45,7 +45,7 @@ import threading
 from app.env import APP_TMP
 from app.utils.helpers import storage
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_listable
+from app.utils.helpers.util import is_listable, timestamp
 
 
 CPU = multiprocessing.cpu_count()
@@ -72,9 +72,9 @@ class MultiTask:
         self.tasks = []
         pid = str(multiprocessing.process.current_process().pid)
         # File con pids (se multiprocessing)
-        self.pidfile = APP_TMP + '/multitask.' + pid + '.pids'
+        self.pidfile = APP_TMP + '/multitask.' + pid + '.' + timestamp() + '.pids'
         # File con result
-        self.resfile = APP_TMP + '/multitask.' + pid + '.res'
+        self.resfile = APP_TMP + '/multitask.' + pid + '.' + timestamp() + '.res'
 
     # Sfrutta il multiprocessing o il multitasking per effettuare la stessa
     # operazione sugli elementi di un/una lista|tupla|dizionario|range.

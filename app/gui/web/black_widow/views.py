@@ -69,9 +69,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            # TODO: show current capturing process jobs
             sniffing_jobs = self._get_sniffing_jobs(request.session)
-            # sniffing_jobs = Obj(sniffing_jobs)
             view_params = self.session_get(request.session, {
                 'interfaces': network.get_interfaces()
             })
@@ -177,23 +175,23 @@ class Sniffing:
 
                 pid = AbstractSniffingView._get_job_pid(sniffing_jobs[job_id])
 
-                kill = signal_job == signal.SIGKILL
-
-                job = sniffing_jobs[job_id]
-
-                try:
-                    os.kill(int(pid), signal_job)
-                    util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
-                    job['status'] = signal.Signals(signal_job).name
-                except ProcessLookupError:
+                if pid is None:
                     util.Log.error("The process " + str(pid) + " does not exists")
-                    kill = True
+                else:
+                    kill = signal_job == signal.SIGKILL
+                    job = sniffing_jobs[job_id]
+                    try:
+                        os.kill(int(pid), signal_job)
+                        util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+                        job['status'] = signal.Signals(signal_job).name
+                    except ProcessLookupError:
+                        util.Log.error("The process " + str(pid) + " does not exists")
+                        kill = True
+                    if kill:
+                        AbstractSniffingView._clean_job(job)
+                        sniffing_jobs.pop(job_id, None)
 
-                if kill:
-                    AbstractSniffingView._clean_job(job)
-                    sniffing_jobs.pop(job_id, None)
-
-                self._set_sniffing_jobs(request.session, sniffing_jobs)
+                    self._set_sniffing_jobs(request.session, sniffing_jobs)
 
                 return {
                     'job_id': request_params.get('job_id'),
