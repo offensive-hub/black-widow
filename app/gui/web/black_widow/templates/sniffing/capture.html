@@ -151,7 +151,7 @@
             const updatePkts = function(sleep=5000, loop=false) {
                 window.setTimeout(function() {
                     if ($pauseCaptureBtn.hasClass('disabled')) {
-                        updatePkts();
+                        updatePkts(5000, loop);
                         return;
                     }
                     request('POST', '/sniffing/capture', {
@@ -196,11 +196,13 @@
                                 console.log('callback');
                                 console.log(data);
                                 console.log(pagination);
-                                updatePkts(0);
+                                updatePkts(0, false);
                             }
                         });
 
-                        updatePkts(loop=true);
+                        if (loop) {
+                            updatePkts(3000, loop);
+                        }
                     }, function(jqXHR, textStatus, errorThrown) {
                         console.error('Sniffing request error!');
                         window.location.replace("/sniffing");
@@ -222,14 +224,16 @@
                 });
             };
             const stopPkts = function() {
-                // 9 = SIGKILL
-                signPkts(9, function(data, textStatus, jqXHR) {
-                    console.log('Sniffing requests stopped!');
-                    window.location.replace("/sniffing");
-                    {#$stopCaptureBtn.addClass('disabled');#}
-                    {#$pauseCaptureBtn.addClass('disabled');#}
-                    {#$playCaptureBtn.addClass('disabled');#}
-                });
+                if (confirm("This action will delete the current job permanently! Are you sure ?")) {
+                    // 9 = SIGKILL
+                    signPkts(9, function(data, textStatus, jqXHR) {
+                        console.log('Sniffing requests stopped!');
+                        window.location.replace("/sniffing");
+                        {#$stopCaptureBtn.addClass('disabled');#}
+                        {#$pauseCaptureBtn.addClass('disabled');#}
+                        {#$playCaptureBtn.addClass('disabled');#}
+                    });
+                }
             };
             $stopCaptureBtn.click(stopPkts);
             const pausePkts = function() {
@@ -251,7 +255,7 @@
                 });
             };
             $playCaptureBtn.click(playPkts);
-            updatePkts(2000, true);
+            updatePkts(300, true);
         });
     </script>
 {% endblock %}

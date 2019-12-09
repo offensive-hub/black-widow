@@ -36,7 +36,6 @@ from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
 from app.utils.sniffing.pcap import sniff_pcap
 from app.utils.helpers import util
-from app.utils.helpers import storage
 from app.utils.helpers.multitask import multiprocess
 from app.gui.web.black_widow.abstract_class.abstract_sniffing_view import AbstractSniffingView
 
@@ -175,21 +174,23 @@ class Sniffing:
                 signal_job = int(signal_job)
                 util.Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
 
-                running_pids = storage.read_file(sniffing_jobs[job_id]['pidfile']).split(', ')
+                pid = AbstractSniffingView._get_job_pid(sniffing_jobs[job_id])
+
                 kill = signal_job == signal.SIGKILL
 
-                for pid in running_pids:
-                    try:
-                        os.kill(int(pid), signal_job)
-                        util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
-                    except ProcessLookupError:
-                        util.Log.error("The process " + str(pid) + "does not exists")
-                        kill = True
+                job = sniffing_jobs[job_id]
+
+                try:
+                    os.kill(int(pid), signal_job)
+                    util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+                    job['status'] = signal.Signals(signal_job).name
+                except ProcessLookupError:
+                    util.Log.error("The process " + str(pid) + " does not exists")
+                    kill = True
 
                 if kill:
+                    AbstractSniffingView._clean_job(job)
                     sniffing_jobs.pop(job_id, None)
-                else:
-                    sniffing_jobs[job_id]['status'] = signal.Signals(signal_job).name
 
                 self._set_sniffing_jobs(request.session, sniffing_jobs)
 

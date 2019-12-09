@@ -22,14 +22,44 @@
 *                                                                               *
 *********************************************************************************
 """
+import os
+import signal
 
 from app.gui.web.black_widow.abstract_class import AbstractView
+from app.utils.helpers import storage
+from app.utils.helpers import util
 
 
 class AbstractSniffingView(AbstractView):
     """
     Abstract Sniffing View
     """
+
+    @staticmethod
+    def _get_job_pid(job: dict) -> int or None:
+        """
+        :type job: dict
+        :rtype: int or None
+        """
+        pids = storage.read_file(job['pidfile']).split(', ')
+        if len(pids) >= 1:
+            return int(pids[0])
+        return None
+
+    @staticmethod
+    def _clean_job(job: dict):
+        """
+        :type job: dict
+        """
+        print(job)
+        pid = AbstractSniffingView._get_job_pid(job)
+        try:
+            os.kill(int(pid), signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        storage.delete(job['out_json_file'])
+        storage.delete(job['pidfile'])
+
     def _get_sniffing_jobs(self, session) -> dict:
         """
         :type session: django.contrib.sessions.backends.db.SessionStore
@@ -37,8 +67,19 @@ class AbstractSniffingView(AbstractView):
         """
         session_params = self.session_get(session)
         sniffing_jobs = session_params.get('sniffing_jobs')
+        update_session = False
         if type(sniffing_jobs) is not dict:
             sniffing_jobs = dict()
+        job_ids = list(sniffing_jobs.keys())
+        for job_id in job_ids:
+            job = sniffing_jobs[job_id]
+            pid = AbstractSniffingView._get_job_pid(job)
+            if not util.pid_exists(pid):
+                update_session = True
+                sniffing_jobs.pop(job_id, None)
+                AbstractSniffingView._clean_job(job)
+        if update_session:
+            self._set_sniffing_jobs(session, sniffing_jobs)
         return sniffing_jobs
 
     def _set_sniffing_jobs(self, session, sniffing_jobs):

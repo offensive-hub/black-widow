@@ -144,6 +144,16 @@ def print_dict(dictionary: dict, depth: int = 0):
             print(space + ' [' + str(type(value)) + '] ' + str(value))
 
 
+def pid_exists(pid: int or None) -> bool:
+    if pid is None:
+        return False
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"
 def pexec(*args):
