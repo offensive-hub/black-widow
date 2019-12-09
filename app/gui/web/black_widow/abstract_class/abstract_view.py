@@ -116,7 +116,7 @@ class AbstractView(TemplateView):
         start = page_size * (page - 1)
         stop = start + page_size
         page_end = math.ceil(elements_tot / page_size)
-        result = dict(itertools.islice(elements.items(), start + stop))
+        result = dict(itertools.islice(elements.items(), start, stop))
         return {
             'result': result,
             'page': page,

@@ -51,7 +51,6 @@ class AbstractSniffingView(AbstractView):
         """
         :type job: dict
         """
-        print(job)
         pid = AbstractSniffingView._get_job_pid(job)
         try:
             os.kill(int(pid), signal.SIGKILL)

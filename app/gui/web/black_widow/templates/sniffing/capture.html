@@ -148,15 +148,28 @@
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
             const $stopCaptureBtn = $('#stop-capture-btn');
+            const $pagination = $('#demo');
+
+            // Pagination
+            $pagination.pagination({
+                dataSource: [],
+                pageNumber: 1,
+                items: 0,
+                pages: 1,
+                currentPage: 1,
+                itemsOnPage: 10,
+                cssStyle: 'dark-theme'
+            });
+
             const updatePkts = function(sleep=5000, loop=false) {
                 window.setTimeout(function() {
-                    if ($pauseCaptureBtn.hasClass('disabled')) {
-                        updatePkts(5000, loop);
+                    console.log('updatePkts');
+                    if (loop && $pauseCaptureBtn.hasClass('disabled')) {
                         return;
                     }
                     request('POST', '/sniffing/capture', {
                         'job_id': jobId,
-                        'page': 1,
+                        'page':  $pagination.pagination('getCurrentPage'),
                         'page_size': 10
                     }, function(data, textStatus, jqXHR) {
                         console.log('Sniffing request success!');
@@ -185,17 +198,16 @@
                         }
 
                         // Pagination
-                        $('#demo-TODO').pagination({
+                        $pagination.pagination({
                             dataSource: Object.values(data.result),
                             pageNumber: data.page,
                             items: data.total,
                             pages: data.page_end,
-                            currentPage: 1,
+                            currentPage: $pagination.pagination('getCurrentPage'),
                             itemsOnPage: 10,
-                            callback: function(data, pagination) {
-                                console.log('callback');
-                                console.log(data);
-                                console.log(pagination);
+                            onPageClick: function(pageNumber, event) {
+                                console.log('onPageClick');
+                                console.log(pageNumber);
                                 updatePkts(0, false);
                             }
                         });
@@ -252,6 +264,7 @@
                     console.log('Sniffing requests played!');
                     $playCaptureBtn.addClass('disabled').hide();
                     $pauseCaptureBtn.removeClass('disabled').show();
+                    updatePkts(5000, true);
                 });
             };
             $playCaptureBtn.click(playPkts);

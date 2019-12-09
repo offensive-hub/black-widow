@@ -183,7 +183,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         if source is not None:
             try:
                 source_host = socket.gethostbyaddr(source)[0]
-            except socket.herror or socket.gaierror:
+            except OSError:
                 pass
         if destination is not None:
             try:

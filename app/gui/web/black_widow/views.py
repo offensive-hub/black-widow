@@ -25,6 +25,7 @@
 
 import os
 import signal
+from time import sleep
 
 from django.http import HttpResponseNotFound, FileResponse
 from django.shortcuts import render, redirect
@@ -202,6 +203,12 @@ class Sniffing:
 
             page = request_params.get('page')
             page_size = request_params.get('page_size')
+
+            out_json_dict = util.get_json(out_json_file)
+            while len(out_json_dict) == 0:
+                sleep(0.2)
+                # Prevent parallel access errors to file
+                out_json_dict = util.get_json(out_json_file)
 
             out_dict = util.sort_dict(dict(sorted(
                 util.get_json(out_json_file).items(),
