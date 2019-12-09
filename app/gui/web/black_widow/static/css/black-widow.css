@@ -113,6 +113,64 @@ table > thead > tr > th {
     border-color: rgba(230, 222, 222, 0.21);
 }
 
+
+nav.pagination.dark-theme {
+    display: grid;
+}
+nav.pagination.dark-theme li {
+    margin: 1px;
+}
+nav.pagination.dark-theme li a,
+nav.pagination.dark-theme li span {
+    box-shadow: unset;
+    border: unset !important;
+    border-radius: 0;
+    padding: 3px 10px;
+}
+nav.pagination.dark-theme input {
+    background: unset;
+    color: white;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+    border: unset;
+    margin: 0;
+    padding: 2px;
+}
+nav.pagination.dark-theme .current {
+    background: #cc3330;
+}
+nav.pagination.dark-theme li:not(.disabled):not(.active):not(:hover) a,
+nav.pagination.dark-theme li:not(.disabled):not(.active):not(:hover) span {
+    background: unset;
+}
+nav.pagination.dark-theme li.disabled:not(.active) a,
+nav.pagination.dark-theme li.disabled:not(.active) span {
+    background: unset;
+    color: #6c757d;
+}
+nav.pagination.dark-theme li.disabled.active a,
+nav.pagination.dark-theme li.disabled.active span {
+    background: #cc3330;
+    color: white;
+}
+nav.pagination.dark-theme li:not(.active):not(.disabled):hover a,
+nav.pagination.dark-theme li:not(.active):not(.disabled):hover span {
+    background: rgba(255, 255, 255, 0.30);
+}
+
+nav.pagination.dark-theme li:last-child li a,
+nav.pagination.dark-theme li:last-child li span {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+nav.pagination.dark-theme li:first-child li a,
+nav.pagination.dark-theme li:first-child li span {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
+}
+
+
 /*******************/
 
 

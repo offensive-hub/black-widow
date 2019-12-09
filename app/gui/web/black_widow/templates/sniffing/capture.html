@@ -111,27 +111,7 @@
                 </div>
             </div>
 
-            <div class="pagination justify-content-center" id="demo">
-            </div>
-
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="#">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
+            <nav class="pagination justify-content-center" id="pagination">
             </nav>
 
         </div>
@@ -148,7 +128,7 @@
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
             const $stopCaptureBtn = $('#stop-capture-btn');
-            const $pagination = $('#demo');
+            const $pagination = $('#pagination');
 
             // Pagination
             $pagination.pagination({
@@ -205,6 +185,7 @@
                             pages: data.page_end,
                             currentPage: $pagination.pagination('getCurrentPage'),
                             itemsOnPage: 10,
+                            cssStyle: 'dark-theme',
                             onPageClick: function(pageNumber, event) {
                                 console.log('onPageClick');
                                 console.log(pageNumber);
