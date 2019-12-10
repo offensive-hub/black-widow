@@ -29,6 +29,7 @@
 import app
 import os
 import sys
+
 from app_plugins import args
 
 
@@ -85,6 +86,9 @@ def main_cmd(arguments):
 
 # Main function generic app
 def main():
+    if not app.utils.helpers.util.is_root():
+        print("Root privileges required to run " + app.env.APP_PROC + "!\n")
+        sys.exit(50)
     arguments = args.get_arguments()
     if arguments.gui:
         main_gui()

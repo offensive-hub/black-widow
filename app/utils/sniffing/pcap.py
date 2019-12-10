@@ -35,7 +35,6 @@
 
 import codecs
 import socket
-
 import numpy
 import pyshark
 

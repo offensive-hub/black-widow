@@ -53,6 +53,9 @@ CPU = multiprocessing.cpu_count()
 
 # Classe astratta, sfruttata sia da MultiThreading che da MultiProcessing
 class MultiTask:
+    # TODO: Implements serializer and deserializer (using "pickle")
+    #       to get and write the result in file
+
     MULTI_THREADING = 'MULTI_THREADING'
     MULTI_PROCESSING = 'MULTI_PROCESSING'
     tasks_types = (MULTI_THREADING, MULTI_PROCESSING)
@@ -102,7 +105,7 @@ class MultiTask:
                 Log.success("Result: " + str(result))
                 # Scrivo il risultato nel file
                 Log.info('Writing result in ' + str(self.resfile))
-                storage.overwrite_file(str(result), self.resfile)
+                storage.overwrite_file(str(result), self.resfile)   # TODO: dump result as object with "pickle"
                 # Termino tutti gli altri threads/processi
                 if self.tasks_type == MultiTask.MULTI_PROCESSING:
                     Log.info('Killing other processes')
@@ -162,7 +165,7 @@ class MultiTask:
                 Log.info('Task ' + str(task.name) + ' joined')
             Log.info('Reading result in ' + str(self.resfile))
             # Prendo il risultato dal file
-            res = storage.read_file(self.resfile)
+            res = storage.read_file(self.resfile)   # TODO: load result as object with "pickle"
             # Elimino l'eventuale file con i pid
             storage.delete(self.pidfile)
             # Elimino il file con il risultato

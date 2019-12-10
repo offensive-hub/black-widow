@@ -22,11 +22,12 @@
 *                                                                               *
 *********************************************************************************
 """
-
+import getpass
 import json
 import pickle
 import re
 import os
+import subprocess
 
 from datetime import datetime
 
@@ -154,19 +155,57 @@ def pid_exists(pid: int or None) -> bool:
     return True
 
 
+def is_root() -> bool:
+    user = whoami(False)
+    return user['uid'] == 0
+
+
+def whoami(check_sudo: bool = True) -> dict:
+    name = None
+    uid = None
+    gid = None
+    sudo = True
+    if check_sudo:
+        name = os.environ.get('SUDO_USER')
+        uid = os.environ.get('SUDO_UID')
+        gid = os.environ.get('SUDO_GID')
+    if name is None:
+        sudo = False
+        name = getpass.getuser()
+        uid = os.getuid()
+        gid = os.getgid()
+    return {
+        'name': str(name),
+        'uid': int(uid),
+        'gid': int(gid),
+        'sudo': sudo
+    }
+
+
+def set_owner_process(user: dict):
+    """ set user and group of workers processes """
+    os.setgid(user['gid'])
+    os.setuid(user['uid'])
+    os.environ['USER'] = user['name']
+    os.environ['LOGNAME'] = user['name']
+    home_dirname = os.path.dirname(os.path.expanduser("~"))
+    if home_dirname == '/' and user['sudo']:
+        home_dirname = '/home'
+    new_home = os.path.join(home_dirname, user['name'])
+    os.environ['HOME'] = new_home
+
+
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"
 def pexec(*args):
     if APP_DEBUG:
         Log.info('CALLED: pexec' + str(args))
-    """
     try:
-        p=subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     except Exception as e:
         Log.error(str(e))
         return []
-    list_stdout=[]
+    list_stdout = []
     for line in p.stdout.readlines():
         list_stdout.append(str(line.decode('utf-8')).rstrip('\n'))
     return list_stdout
-    """

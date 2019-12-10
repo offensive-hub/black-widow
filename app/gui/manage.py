@@ -27,15 +27,33 @@
 
 import os
 import sys
+import webbrowser
 
 from gunicorn.app.wsgiapp import run as gunicorn_run
 from django.core import management
 
 from app.env_local import APP_WEB_HOST, APP_WEB_PORT
 from app.env import EXEC_PATH, APP_NAME
+from app.utils.helpers import multiprocess
 from app.utils.helpers.logger import Log
 from app.utils.helpers.network import get_ip_address
+from app.utils.helpers.util import whoami, set_owner_process, pexec
 from app.gui.web.wsgi import WEB_PACKAGE
+
+
+def _launch_browser(bind_host: str):
+    user = whoami()
+
+    def browser_target():
+        """
+        The function that launch the browser
+        """
+        set_owner_process(user)
+        Log.info('Launching browser with User: ' + str(whoami(False)))
+        webbrowser.open(bind_host)
+        Log.success('Web browser opened')
+
+    multiprocess(browser_target, asynchronous=True, cpu=1)
 
 
 def _get_bind_socket():
@@ -52,6 +70,7 @@ def django_gui():
     bind_host = _get_bind_socket()
     Log.info("Starting " + str(APP_NAME) + ' GUI')
     sys.argv = [sys.argv[0], 'web.wsgi', '-b', bind_host]
+    _launch_browser(bind_host)
     gunicorn_run()
 
 
@@ -62,5 +81,6 @@ def django_cmd(args):
     elif len(args) <= 1:
         bind_host = _get_bind_socket()
         args.append(bind_host)
+        _launch_browser(bind_host)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     management.execute_from_command_line([EXEC_PATH + ' --django', ] + args)
