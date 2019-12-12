@@ -38,6 +38,11 @@ class AppType:
     GUI = 'GUI'
 
 
+def make_temp_dir():
+    app.utils.helpers.storage.check_folder(app.env.APP_TMP)
+    app.utils.helpers.util.chmod(app.env.APP_TMP, 0o0666, True)
+
+
 # Startup
 def init(app_type):
     app.utils.helpers.logger.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
@@ -89,6 +94,7 @@ def main():
     if not app.utils.helpers.util.is_root():
         print("Root privileges required to run " + app.env.APP_PROC + "!\n")
         sys.exit(50)
+    make_temp_dir()
     arguments = args.get_arguments()
     if arguments.gui:
         main_gui()
