@@ -145,6 +145,11 @@ def clean_folder(folder):
     return False
 
 
+def touch(fname, times=None):
+    with open(fname, 'a'):
+        os.utime(fname, times)
+
+
 # Copia il file o la cartella "src", in "dest"
 def copy(src, dest):
     # if APP_DEBUG:
@@ -186,3 +191,14 @@ def delete(file):
         except Exception or IOError:
             time.sleep(0.5)
     return False
+
+
+def chmod(path, mode, recursive=False):
+    os.chmod(path, mode)
+    if not recursive:
+        return
+    for root, dirs, files in os.walk(path):
+        for d in dirs:
+            os.chmod(os.path.join(root, d), mode)
+        for f in files:
+            os.chmod(os.path.join(root, f), mode)

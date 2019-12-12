@@ -209,14 +209,3 @@ def pexec(*args):
     for line in p.stdout.readlines():
         list_stdout.append(str(line.decode('utf-8')).rstrip('\n'))
     return list_stdout
-
-
-def chmod(path, mode, recursive=False):
-    if not recursive:
-        os.chmod(path, mode)
-        return
-    for root, dirs, files in os.walk(path):
-        for d in dirs:
-            os.chmod(os.path.join(root, d), mode)
-        for f in files:
-            os.chmod(os.path.join(root, f), mode)

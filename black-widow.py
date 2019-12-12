@@ -40,7 +40,7 @@ class AppType:
 
 def make_temp_dir():
     app.utils.helpers.storage.check_folder(app.env.APP_TMP)
-    app.utils.helpers.util.chmod(app.env.APP_TMP, 0o0666, True)
+    app.utils.helpers.storage.chmod(app.env.APP_TMP, 0o0777, True)
 
 
 # Startup

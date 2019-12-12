@@ -44,27 +44,29 @@ class Log:
 
     @staticmethod
     def info(msg):
-        if Log.logger is None:
-            Log.logger = Log()
-        Log.logger._inf(str(msg))
+        Log._log('inf', msg)
 
     @staticmethod
     def success(msg):
-        if Log.logger is None:
-            Log.logger = Log()
-        Log.logger._suc(str(msg))
+        Log._log('suc', msg)
 
     @staticmethod
     def error(msg):
-        if Log.logger is None:
-            Log.logger = Log()
-        Log.logger._err(str(msg))
+        Log._log('err', msg)
 
     @staticmethod
     def warning(msg):
+        Log._log('war', msg)
+
+    @staticmethod
+    def _log(method: str, msg):
         if Log.logger is None:
             Log.logger = Log()
-        Log.logger._war(str(msg))
+        getattr(Log.logger, '_' + method)(str(msg))
+
+    def __init__(self):
+        storage.touch(APP_LOGFILE)
+        storage.chmod(APP_LOGFILE, 0o0666)
 
     # info
     def _inf(self, msg):
