@@ -141,7 +141,7 @@
                 cssStyle: 'dark-theme'
             });
 
-            const updatePkts = function(sleep=5000, loop=false) {
+            const updatePkts = function(sleep, loop=false) {
                 window.setTimeout(function() {
                     console.log('updatePkts');
                     if (loop && $pauseCaptureBtn.hasClass('disabled')) {
@@ -245,7 +245,7 @@
                     console.log('Sniffing requests played!');
                     $playCaptureBtn.addClass('disabled').hide();
                     $pauseCaptureBtn.removeClass('disabled').show();
-                    updatePkts(5000, true);
+                    updatePkts(300, true);
                 });
             };
             $playCaptureBtn.click(playPkts);
