@@ -196,10 +196,10 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
 
         transport_layer = pkt_dict.get('transport_layer')
         highest_layer = pkt_dict.get('highest_layer')
-        if transport_layer != 'None':
-            protocol = transport_layer
-        elif highest_layer != 'None':
+        if highest_layer != 'None':
             protocol = highest_layer
+        elif transport_layer != 'None':
+            protocol = transport_layer
 
         pkt_dict['protocol'] = protocol
 
