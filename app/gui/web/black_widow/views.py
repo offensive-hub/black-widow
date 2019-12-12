@@ -229,6 +229,53 @@ class Sniffing:
             return pagination
 
 
+class Sql:
+    """
+    SQL injection Container View
+    """
+    class SettingsView(AbstractView):
+        """
+        SQL View
+        """
+        name = 'sql-injection'
+        template_name = 'sql/settings.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            # TODO: get current sql injection jobs
+            view_params = dict()
+            return render(request, self.template_name, view_params)
+
+        def post(self, request):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponseRedirect
+            """
+            # TODO: create new SQL injection job
+            job_id = 0
+            return redirect('sql/inject?job_id=' + str(job_id))
+
+    class InjectView(AbstractView):
+        """
+        Injection View
+        """
+        name = 'sniffing'
+        template_name = 'sql/inject.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            request_params: dict = request.GET.dict()
+            job_id = request_params.get('job_id')
+            util.Log.info("Showing job #" + str(job_id))
+            return render(request, self.template_name)
+
+
 def user(request):
     """
     :type request: django.core.handlers.wsgi.WSGIRequest

@@ -84,6 +84,12 @@
                         <p>Sniffing</p>
                     </a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'sql injection' %}active{% endif %}">
+                    <a class="nav-link" href="/sql">
+                        <i class="material-icons">storage</i>
+                        <p>SQL injection</p>
+                    </a>
+                </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'user' %}active{% endif %}">
                     <a class="nav-link" href="/user">
                         <i class="material-icons">person</i>
