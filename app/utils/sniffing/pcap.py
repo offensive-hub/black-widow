@@ -162,7 +162,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         destination = None
         source_host = 'Unknown'
         destination_host = 'Unknown'
-        protocol = None
+        pkt_type = None
         pkt_dict_layers = pkt_dict.get('layers')
         # noinspection PyTypeChecker
         pkt_dict_ip: dict = pkt_dict_layers.get('ip')
@@ -170,6 +170,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         pkt_dict_arp: dict = pkt_dict_layers.get('arp')
         # noinspection PyTypeChecker
         pkt_dict_eth: dict = pkt_dict_layers.get('eth')
+
         if pkt_dict_ip is not None:
             source = pkt_dict_ip['src']['decoded']
             destination = pkt_dict_ip['dst']['decoded']
@@ -179,6 +180,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         elif pkt_dict_eth is not None:
             source = pkt_dict_eth['src']['decoded']
             destination = pkt_dict_eth['dst']['decoded']
+
         if source is not None:
             try:
                 source_host = socket.gethostbyaddr(source)[0]
@@ -189,6 +191,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
                 destination_host = socket.gethostbyaddr(destination)[0]
             except OSError:
                 pass
+
         pkt_dict['source'] = source
         pkt_dict['source_host'] = source_host
         pkt_dict['destination'] = destination
@@ -197,11 +200,11 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         transport_layer = pkt_dict.get('transport_layer')
         highest_layer = pkt_dict.get('highest_layer')
         if highest_layer != 'None':
-            protocol = highest_layer
+            pkt_type = highest_layer
         elif transport_layer != 'None':
-            protocol = transport_layer
+            pkt_type = transport_layer
 
-        pkt_dict['protocol'] = protocol
+        pkt_dict['type'] = pkt_type
 
         if callback is not None:
             callback(pkt_dict)
