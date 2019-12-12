@@ -26,7 +26,7 @@ import os
 import signal
 
 from app.gui.web.black_widow.abstract_class import AbstractView
-from app.utils.helpers import storage
+from app.utils.helpers import storage, MultiTask
 from app.utils.helpers import util
 
 
@@ -41,7 +41,7 @@ class AbstractSniffingView(AbstractView):
         :type job: dict
         :rtype: int or None
         """
-        pids = storage.read_file(job['pidfile']).split(', ')
+        pids = MultiTask.get_pids_from_file(job['pidfile'])
         if len(pids) >= 1:
             try:
                 return int(pids[0])

@@ -26,7 +26,8 @@
 from urllib.parse import urlparse
 from app.utils.html import form_parse, relevant_parse, find_forms, find_links
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import now, set_json
+from app.utils.helpers.util import now
+from app.utils.helpers.serializer import JsonSerializer
 from app.env import APP_STORAGE_OUT
 from app.utils.sql.sqlmapcli import SqlmapClient
 
@@ -70,7 +71,7 @@ def deep_inject_form(url, max_depth):
 
         if len(parsed_forms) % 10 == 0:
             Log.info('Writing result in ' + out_file + '...')
-            set_json(parsed_forms, out_file)
+            JsonSerializer.set_dictionary(parsed_forms, out_file)
 
         # Visit adjacent links
         for link in links:
@@ -84,7 +85,7 @@ def deep_inject_form(url, max_depth):
     cookies = _deep_inject_form(url)
 
     Log.info('Writing result in ' + out_file + '...')
-    set_json(parsed_forms, out_file)
+    JsonSerializer.set_dictionary(parsed_forms, out_file)
     Log.success('Result wrote in ' + out_file)
 
     Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')

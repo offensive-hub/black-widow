@@ -27,7 +27,7 @@ from app.env import APP_SETTINGS    # Json file
 from app.env_local import APP_DEBUG
 from app.utils.helpers import validators
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import set_json, get_json
+from app.utils.helpers.serializer import JsonSerializer
 from . import keys
 
 
@@ -79,9 +79,9 @@ class Set:
 
     @staticmethod
     def __set__(key, value):
-        dictionary = get_json(APP_SETTINGS)
+        dictionary = JsonSerializer.get_dictionary(APP_SETTINGS)
         dictionary[key] = value
-        set_json(dictionary, APP_SETTINGS)
+        JsonSerializer.set_dictionary(dictionary, APP_SETTINGS)
         return True
 
 
@@ -117,14 +117,14 @@ class Add:
     # Aggiunge un elemento da una lista
     @staticmethod
     def __add__(key, element):
-        dictionary = get_json(APP_SETTINGS)
+        dictionary = JsonSerializer.get_dictionary(APP_SETTINGS)
         elements = dictionary.get(key)
         if type(elements) != list:
             elements = []
         if element not in elements:
             elements.append(element)
             dictionary[key] = elements
-            set_json(dictionary, APP_SETTINGS)
+            JsonSerializer.set_dictionary(dictionary, APP_SETTINGS)
         return True
 
 
@@ -195,19 +195,19 @@ class Remove:
     # Rimuove un elemento da una lista
     @staticmethod
     def __remove__(key, element):
-        dictionary = get_json(APP_SETTINGS)
+        dictionary = JsonSerializer.get_dictionary(APP_SETTINGS)
         if dictionary.get(key) is None:
             return True
         if element == '*':
             # Rimuove tutti gli elementi
             dictionary[key] = []
-            set_json(dictionary, APP_SETTINGS)
+            JsonSerializer.set_dictionary(dictionary, APP_SETTINGS)
             return True
         elements = dictionary[key]
         if element in elements:
             elements.remove(element)
             dictionary[key] = elements
-            set_json(dictionary, APP_SETTINGS)
+            JsonSerializer.set_dictionary(dictionary, APP_SETTINGS)
         return True
 
 
@@ -262,7 +262,7 @@ class Get:
 
     @staticmethod
     def __get__(key=None):
-        dictionary = get_json(APP_SETTINGS)
+        dictionary = JsonSerializer.get_dictionary(APP_SETTINGS)
         if key is None:
             return dictionary
         return dictionary.get(key)

@@ -34,10 +34,11 @@ from django.core import management
 
 from app.env_local import APP_WEB_HOST, APP_WEB_PORT
 from app.env import EXEC_PATH, APP_NAME
-from app.utils.helpers import multiprocess
+from app.utils.helpers import MultiTask
 from app.utils.helpers.logger import Log
 from app.utils.helpers.network import get_ip_address
-from app.utils.helpers.util import whoami, set_owner_process, pexec
+from app.utils.helpers.storage import delete
+from app.utils.helpers.util import whoami, set_owner_process
 from app.gui.web.wsgi import WEB_PACKAGE
 
 
@@ -53,7 +54,8 @@ def _launch_browser(bind_host: str):
         webbrowser.open(bind_host)
         Log.success('Web browser opened')
 
-    multiprocess(browser_target, asynchronous=True, cpu=1)
+    pidfile = MultiTask.multiprocess(browser_target, asynchronous=True, cpu=1)
+    delete(pidfile)     # The pidfile is not required
 
 
 def _get_bind_socket():

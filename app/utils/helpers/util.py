@@ -22,9 +22,8 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import getpass
-import json
-import pickle
 import re
 import os
 import subprocess
@@ -32,7 +31,6 @@ import subprocess
 from datetime import datetime
 
 from app.env_local import APP_DEBUG
-from app.utils.helpers import storage
 from app.utils.helpers.logger import Log
 
 
@@ -42,51 +40,6 @@ def now():
 
 def timestamp():
     return str(datetime.timestamp(datetime.now()))
-
-
-# @return dict Il json in formato dict
-def get_json_from_string(string):
-    try:
-        return json.loads(string)
-    except json.decoder.JSONDecodeError:
-        return dict()
-
-
-# @return dict Il json nel file in formato dict
-def get_json(file):
-    return get_json_from_string(storage.read_file(file))
-
-
-# @param dictionary dict Il dizionario da scrivere nel file in formato json
-def set_json(dictionary, file):
-    return storage.overwrite_file(json.dumps(dictionary), file)
-
-
-def append_json_item(key, value, file):
-    dictionary = get_json(file)
-    dictionary[key] = value
-    return set_json(dictionary, file)
-
-
-def get_serialized_dict(file):
-    if not os.path.isfile(file):
-        return dict()
-    f = open(file, 'rb')
-    dictionary = pickle.load(f)
-    f.close()
-    return dictionary
-
-
-def set_serialized_dict(dictionary, file):
-    f = open(file, 'wb')
-    pickle.dump(dictionary, f, protocol=pickle.HIGHEST_PROTOCOL)
-    f.close()
-
-
-def add_serialized_dict_item(key, obj, file):
-    dictionary = get_serialized_dict(file)
-    dictionary[key] = obj
-    set_serialized_dict(dictionary, file)
 
 
 # @return True se string contiene regex

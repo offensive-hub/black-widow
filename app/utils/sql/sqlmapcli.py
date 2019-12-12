@@ -35,7 +35,7 @@ from pprint import pprint
 from sqlmap.lib.utils.api import server as sqlmap_server
 
 from app.utils.helpers.logger import Log
-from app.utils.helpers.multitask import multithread
+from app.utils.helpers.multitask import MultiTask
 
 
 class SqlmapClient:
@@ -46,7 +46,7 @@ class SqlmapClient:
         self.port = port
         # Start the sqlmap-api server in a parallel thread
         Log.info("Starting sqlmap-api server in a parallel thread")
-        multithread(sqlmap_server, (self.host, self.port), True, 1)
+        MultiTask.multithread(sqlmap_server, (self.host, self.port), True, 1)
         Log.success("Sqlmap-api server started!")
 
     @staticmethod

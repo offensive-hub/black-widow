@@ -37,7 +37,8 @@ from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
 from app.utils.sniffing.pcap import sniff_pcap
 from app.utils.helpers import util
-from app.utils.helpers.multitask import multiprocess
+from app.utils.helpers.serializer import JsonSerializer
+from app.utils.helpers.multitask import MultiTask
 from app.gui.web.black_widow.abstract_class.abstract_sniffing_view import AbstractSniffingView
 
 from .abstract_class import AbstractView
@@ -107,7 +108,7 @@ class Sniffing:
                 """
                 :type pkt: dict
                 """
-                util.append_json_item(pkt['number'], pkt, out_json_file)
+                JsonSerializer.add_item_to_dict(pkt['number'], pkt, out_json_file)
                 return
 
             def target():
@@ -122,7 +123,7 @@ class Sniffing:
                     callback=callback
                 )
 
-            session_job_params['pidfile'] = multiprocess(target, asynchronous=True, cpu=1)
+            session_job_params['pidfile'] = MultiTask.multiprocess(target, asynchronous=True, cpu=1)
             session_job_params.pop('csrfmiddlewaretoken', None)
             sniffing_jobs[job_id] = session_job_params
 
@@ -202,11 +203,11 @@ class Sniffing:
             page = request_params.get('page')
             page_size = request_params.get('page_size')
 
-            out_json_dict = util.get_json(out_json_file)
+            out_json_dict = JsonSerializer.get_dictionary(out_json_file)
             while len(out_json_dict) == 0:
                 sleep(0.2)
                 # Prevent parallel access errors to file
-                out_json_dict = util.get_json(out_json_file)
+                out_json_dict = JsonSerializer.get_dictionary(out_json_file)
 
             out_dict = util.sort_dict(dict(sorted(
                 out_json_dict.items(),
