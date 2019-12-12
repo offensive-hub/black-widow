@@ -209,7 +209,7 @@ class Sniffing:
                 out_json_dict = util.get_json(out_json_file)
 
             out_dict = util.sort_dict(dict(sorted(
-                util.get_json(out_json_file).items(),
+                out_json_dict.items(),
                 key=lambda e: int(e[1]['number']),
                 reverse=True
             )))
