@@ -46,19 +46,15 @@
 .card [class*="card-header-"] .card-title+.card-category .material-icons {
   font-size: 16px;
 }
-
 .card-body-primary .card-category, .card-body-primary .card-title {
     color: #fff !important;
 }
-
 .card-hover {
     box-shadow: unset !important;
 }
-
 .black-edition .card-header-danger.card-header-sec {
-    background: linear-gradient(60deg, rgb(155, 53, 50), rgb(108, 36, 34)) !important
+    background: linear-gradient(60deg, rgb(155, 53, 50), rgb(164, 60, 56)) !important
 }
-
 .black-edition .card .card-header-primary .card-icon,
 .black-edition .card .card-header-primary .card-text,
 .black-edition .card .card-header-primary:not(.card-header-icon):not(.card-header-text),
@@ -69,6 +65,7 @@
 }
 
 /******************/
+
 
 /*** 0.2) Buttons ***/
 
@@ -99,7 +96,6 @@ input.upload {
 .link {
     cursor: pointer;
 }
-
 .black-edition .btn.btn-danger {
     background-color: #8e0000;
     border-color: #2a0400;
@@ -108,14 +104,12 @@ input.upload {
     background-color: #a60002;
     border-color: #890010;
 }
-
 .black-edition .btn.btn-danger:focus,
 .black-edition .btn.btn-danger.focus,
 .black-edition .btn.btn-danger:hover {
     background-color: #a60002;
     border-color: #890010;
 }
-
 .black-edition .btn.btn-danger:active,
 .black-edition .btn.btn-danger.active,
 .open>.black-edition .btn.btn-danger.dropdown-toggle,
@@ -127,17 +121,23 @@ input.upload {
 
 /******************/
 
+
 /*** 0.3) Tables ***/
 
 .table-select > tbody > tr {
     cursor: pointer;
 }
-
 table > thead > tr > th {
     font-weight: normal !important;
 }
+.black-edition .card .card-header-primary .card-icon,
+.black-edition .card .card-header-primary:not(.card-header-icon):not(.card-header-text),
+.black-edition .card .card-header-primary .card-text {
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(179, 12, 12, 0.55);
+}
 
 /*******************/
+
 
 /*** 0.4) Pagination ***/
 
@@ -151,8 +151,6 @@ table > thead > tr > th {
     background-color: rgba(239, 233, 233, 0.36);
     border-color: rgba(230, 222, 222, 0.21);
 }
-
-
 nav.pagination.dark-theme {
     display: grid;
 }
@@ -197,7 +195,6 @@ nav.pagination.dark-theme li:not(.active):not(.disabled):hover a,
 nav.pagination.dark-theme li:not(.active):not(.disabled):hover span {
     background: rgba(255, 255, 255, 0.30);
 }
-
 nav.pagination.dark-theme li:last-child li a,
 nav.pagination.dark-theme li:last-child li span {
     border-top-right-radius: 0.25rem;
@@ -210,6 +207,7 @@ nav.pagination.dark-theme li:first-child li span {
 }
 
 /*******************/
+
 
 /*** 0.5) Forms ***/
 
