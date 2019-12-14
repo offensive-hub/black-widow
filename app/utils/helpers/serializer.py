@@ -89,7 +89,8 @@ class JsonSerializer:
         :param dictionary: The dictionary to dump in file
         :param file: The file where dumps the object
         """
-        storage.overwrite_file(json.dumps(dictionary), file)
+        dumped_json = JsonSerializer.dump_json(dictionary)
+        storage.overwrite_file(dumped_json, file)
 
     @staticmethod
     def add_item_to_dict(key, value, file: str):
@@ -101,6 +102,17 @@ class JsonSerializer:
         dictionary = JsonSerializer.get_dictionary(file)
         dictionary[key] = value
         JsonSerializer.set_dictionary(dictionary, file)
+
+    @staticmethod
+    def dump_json(obj) -> str:
+        """
+        :type obj: dict or list
+        :return: The dumped json of object
+        """
+        try:
+            return json.dumps(obj)
+        except json.decoder.JSONDecodeError:
+            return ""
 
     @staticmethod
     def load_json(string: str) -> dict:

@@ -36,6 +36,7 @@ from time import sleep
 
 from sqlmap.lib.utils.api import server as sqlmap_server
 
+from app.utils.requests import default_agent
 from app.utils.helpers.logger import Log
 from app.utils.helpers.multitask import MultiTask
 from app.utils.helpers.network import check_socket
@@ -77,15 +78,45 @@ class SqlmapClient:
         return SqlmapTask.task_list(client.base_url)
 
     @staticmethod
-    def try_inject(forms, cookies=''):
+    def try_inject(
+            forms: dict,
+            cookies: str = '',
+            delay: int = 0,
+            random_agent: bool = False
+    ) -> dict:
         """
         Try injection with all provided forms
         :param forms: dict A dictionary of { "<url>": [ <parsed_form_1>, <parsed_form_2>, ... ], ... }
         :param cookies: str the request cookies
+        :param delay: int The delay on each request
+        :param random_agent: True if set a random agent for each sqlmap request
+        :rtype: dict
         """
-        pprint(forms)
-        Log.info('Trying injection with cookies: '+str(cookies))
-        sqlmap_task = SqlmapClient._task_new()
+        sqlmap_tasks = dict()
+        Log.info('Trying injection with cookies: ' + str(cookies))
+        for url, page_forms in forms.items():
+            page_forms: list    # The forms in page got from url
+            for page_form in page_forms:
+                page_form: dict    # The attributes and inputs of form
+                action = page_form.get('action')
+                inputs = page_form.get('inputs')
+                method = page_form.get('method')
+                # Foreach form, will created a new SqlmapTask
+                pprint(inputs)
+                sqlmap_task = SqlmapClient._task_new()
+                sqlmap_task.option_set({
+                    'cookie': cookies,
+                    'agent': default_agent(),
+                    'referer': url,
+                    'delay': delay,
+                    'randomAgent': random_agent,
+                    'method': method,
+                    'url': action
+                })
+                sqlmap_task.option_list()
+                sqlmap_tasks[sqlmap_task.id] = sqlmap_task
+
+        return sqlmap_tasks
 
     # Private static methods
 

@@ -60,7 +60,7 @@ class Md5:
     @staticmethod
     def decrypt(string):
         for api in Md5.Api.all():
-            r = request(api['url'] + string, RequestType.GET)
+            r = request(api['url'] + string)
             if r is None:
                 continue
 

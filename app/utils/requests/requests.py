@@ -23,13 +23,14 @@
 *********************************************************************************
 """
 
-import json
 import requests
-import simplejson
+from json.decoder import JSONDecodeError
+from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 
 from app.env import APP_VERSION, APP_NAME
 from app.env_local import APP_DEBUG
 from app.utils.helpers.logger import Log
+from app.utils.helpers.util import is_listable
 from app.utils.helpers.validators import is_url
 
 
@@ -49,12 +50,14 @@ class Type:
         return Type.GET, Type.POST, Type.PUT, Type.PATCH, Type.DELETE
 
 
-def request(url: str, request_type: str = Type.GET, data: dict = None, headers: dict = None):
+def request(url: str, request_type: str = Type.GET, data=None, json: dict or list = None, headers: dict = None):
     """
     Make a request to chosen url
     :param url: The target url
     :param request_type: get|post|put|patch|delete
-    :param data: The data to send
+    :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+        object to send in the body of the :class:`Request`
+    :param json: (optional) json data to send in the body of the :class:`Request`
     :param headers: The headers to send
     :rtype: requests.Response
     """
@@ -64,8 +67,16 @@ def request(url: str, request_type: str = Type.GET, data: dict = None, headers: 
         'User-Agent': str(APP_NAME)+' '+str(APP_VERSION)
     }
     req_headers.update(headers)
+
     if data is None:
         data = {}
+
+    if type(json) is not dict and is_listable(json):
+        json_dict = dict()
+        for param in json:
+            json_dict[param] = param
+        json = json_dict
+
     request_type = request_type.lower()
     if not is_url(url):
         Log.error(str(url) + ' is not a valid url!')
@@ -74,7 +85,7 @@ def request(url: str, request_type: str = Type.GET, data: dict = None, headers: 
         if request_type == Type.GET:
             r = requests.get(url, data, headers=req_headers)
         elif request_type == Type.POST:
-            r = requests.post(url, data, headers=req_headers)
+            r = requests.post(url, data, json, headers=req_headers)
         elif request_type == Type.PUT:
             r = requests.put(url, data, headers=req_headers)
         elif request_type == Type.PATCH:
@@ -85,7 +96,7 @@ def request(url: str, request_type: str = Type.GET, data: dict = None, headers: 
             Log.error(str(request_type) + ' is not a valid request type!')
             return None
         if APP_DEBUG:
-            print_request(r)
+            print_response(r)
         return r
     except requests.exceptions.ConnectionError or requests.exceptions.TooManyRedirects as e:
         Log.error('Unable to connect to ' + str(url))
@@ -93,12 +104,14 @@ def request(url: str, request_type: str = Type.GET, data: dict = None, headers: 
     return None
 
 
-def multi_request(urls: str, request_type: str = Type.GET, data: dict = None, headers: dict = None):
+def multi_request(urls: str, request_type: str = Type.GET, data=None, json: dict or list = None, headers: dict = None):
     """
     Make multiple sequential requests
     :param urls: The list of target urls
     :param request_type: get|post|put|patch|delete
-    :param data: The data to send
+    :param data: (optional) Dictionary, list of tuples, bytes, or file-like
+        object to send in the body of the :class:`Request`
+    :param json: (optional) json data to send in the body of the :class:`Request`
     :param headers: The headers to send
     :rtype: list
     """
@@ -107,35 +120,42 @@ def multi_request(urls: str, request_type: str = Type.GET, data: dict = None, he
     request_type = request_type.lower()
     r_list = []
     for url in urls:
-        r = request(url, request_type, data, headers)
+        r = request(url, request_type, data, json, headers)
         if r is None:
             continue
         r_list.append(r)
         if APP_DEBUG:
             try:
                 print(r.json())
-            except json.decoder.JSONDecodeError or simplejson.errors.JSONDecodeError:
+            except JSONDecodeError or SimpleJSONDecodeError:
                 print(r.text)
     return r_list
 
 
-def print_request(_request, limit=1000):
+def default_agent() -> str:
     """
-    :param _request: The request to print
+    :return: The black-widow agent
+    """
+    return str(APP_NAME)+' '+str(APP_VERSION)
+
+
+def print_response(_response, limit=1000):
+    """
+    :param _response: The response to print
     :param limit:
     """
-    Log.info(str(_request.url))
-    Log.info('      |--- status_code: ' + str(_request.status_code))
-    Log.info('      |--- encoding: ' + str(_request.encoding))
+    Log.info(str(_response.url))
+    Log.info('      |--- status_code: ' + str(_response.status_code))
+    Log.info('      |--- encoding: ' + str(_response.encoding))
     Log.info('      |--- headers:')
-    for key, value in _request.headers.items():
+    for key, value in _response.headers.items():
         Log.info('      |       |--- ' + str(key) + ': ' + str(value))
     Log.info('      |')
     try:
-        json_body = _request.json()
+        json_body = _response.json()
         Log.info('      |-- data: ' + str(json_body))
     except ValueError:
-        data = str(_request.text)
+        data = str(_response.text)
         if len(data) > limit:
             data = '[truncated]' + data[0:limit]
         Log.info('      |-- data: ' + data)

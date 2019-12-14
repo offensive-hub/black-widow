@@ -166,7 +166,7 @@ class Parser(HTMLParser, ABC):
             url_parsed = urlparse(url)
             self.url_scheme = str(url_parsed.scheme)
             self.base_url = self.url_scheme + '://' + str(url_parsed.netloc)
-            r = request(url, RequestType.GET)
+            r = request(url)
             if r is None:
                 return None
             try:
