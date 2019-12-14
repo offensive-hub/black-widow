@@ -67,7 +67,7 @@ class SqlmapClient:
         self._wait_server()
         Log.success("Sqlmap-api server started!")
 
-    # Public static methods
+    """ Public static methods """
 
     @staticmethod
     def task_list() -> dict:
@@ -76,6 +76,14 @@ class SqlmapClient:
         """
         client = SqlmapClient._get_client()
         return SqlmapTask.task_list(client.base_url)
+
+    @staticmethod
+    def task_flush():
+        """
+        Flush task spool (delete all tasks)
+        """
+        client = SqlmapClient._get_client()
+        return SqlmapTask.task_flush(client.base_url)
 
     @staticmethod
     def try_inject(
@@ -95,7 +103,7 @@ class SqlmapClient:
         sqlmap_tasks = dict()
         Log.info('Trying injection with cookies: ' + str(cookies))
         for url, page_forms in forms.items():
-            page_forms: list    # The forms in page got from url
+            page_forms: list    # The forms in page returned by url
             for page_form in page_forms:
                 page_form: dict    # The attributes and inputs of form
                 action = page_form.get('action')
@@ -118,7 +126,7 @@ class SqlmapClient:
 
         return sqlmap_tasks
 
-    # Private static methods
+    """ Private static methods """
 
     @staticmethod
     def _get_client():

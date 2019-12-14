@@ -66,6 +66,20 @@ class SqlmapTask:
         """
         SqlmapTask.request(base_url + '/admin/flush')
 
+    #############################
+    # Task management functions #
+    #############################
+
+    @staticmethod
+    def task_new(base_url: str):
+        """
+        Create a new task
+        :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
+        :rtype: SqlmapTask
+        """
+        r_data = SqlmapTask.request(base_url + '/task/new')
+        return SqlmapTask(r_data['taskid'], base_url)
+
     ###################
     # Utils functions #
     ###################
@@ -90,16 +104,6 @@ class SqlmapTask:
     ##################################
     # Sqlmap core interact functions #
     ##################################
-
-    @staticmethod
-    def task_new(base_url: str):
-        """
-        Create a new task
-        :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
-        :rtype: SqlmapTask
-        """
-        r_data = SqlmapTask.request(base_url + '/task/new')
-        return SqlmapTask(r_data['taskid'], base_url)
 
     def option_list(self):
         """
