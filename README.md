@@ -57,6 +57,10 @@
 > 6. `./black-widow.py --django migrate`
 > 7. `sudo ./black-widow.py <arguments>`
 
+> ### Run:
+> - **GUI:** `sudo ./black-widow.py -g`
+> - **Command line:** `sudo ./black-widow.py <arguments>`
+
 <br/>
 
 > ### Debug:
