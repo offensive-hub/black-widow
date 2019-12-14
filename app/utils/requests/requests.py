@@ -33,42 +33,31 @@ from app.utils.helpers.logger import Log
 from app.utils.helpers.validators import is_url
 
 
-# Request Types
 class Type:
+    """ Request Types """
     GET = 'get'
-    POST = 'get'
+    POST = 'post'
     PUT = 'put'
     PATCH = 'patch'
     DELETE = 'delete'
 
     @staticmethod
     def all():
+        """
+        :return: all supported request methods
+        """
         return Type.GET, Type.POST, Type.PUT, Type.PATCH, Type.DELETE
 
 
-def print_request(_request, limit=1000):
-    Log.info(str(_request.url))
-    Log.info('      |--- status_code: ' + str(_request.status_code))
-    Log.info('      |--- encoding: ' + str(_request.encoding))
-    Log.info('      |--- headers:')
-    for key, value in _request.headers.items():
-        Log.info('      |       |--- ' + str(key) + ': ' + str(value))
-    Log.info('      |')
-    try:
-        json_body = _request.json()
-        Log.info('      |-- data: ' + str(json_body))
-    except ValueError:
-        data = str(_request.text)
-        if len(data) > limit:
-            data = '[truncated]' + data[0:limit]
-        Log.info('      |-- data: ' + data)
-
-
-# Effettua una richiesta verso l'url passato
-# @param url un url
-# @param request_type get|post|put|patch|delete
-# @param data dizionario con parametri
-def request(url, request_type=Type.GET, data=None, headers=None):
+def request(url: str, request_type: str = Type.GET, data: dict = None, headers: dict = None):
+    """
+    Make a request to chosen url
+    :param url: The target url
+    :param request_type: get|post|put|patch|delete
+    :param data: The data to send
+    :param headers: The headers to send
+    :rtype: requests.Response
+    """
     if headers is None:
         headers = {}
     req_headers = {
@@ -104,20 +93,49 @@ def request(url, request_type=Type.GET, data=None, headers=None):
     return None
 
 
-# Effettua una richiesta verso più urls in modo sequenziale
-# @param urls una lista di url
-# @param request_type get|post|put|patch|delete
-# @param data dizionario con parametri
-def multi_request(urls, request_type=Type.GET, data=None, headers=None):
+def multi_request(urls: str, request_type: str = Type.GET, data: dict = None, headers: dict = None):
+    """
+    Make multiple sequential requests
+    :param urls: The list of target urls
+    :param request_type: get|post|put|patch|delete
+    :param data: The data to send
+    :param headers: The headers to send
+    :rtype: list
+    """
     if APP_DEBUG:
         Log.info('CALLED: multi_request(' + str(urls) + ', ' + str(request_type) + ', ' + str(data) + ')')
     request_type = request_type.lower()
+    r_list = []
     for url in urls:
         r = request(url, request_type, data, headers)
         if r is None:
             continue
+        r_list.append(r)
         if APP_DEBUG:
             try:
                 print(r.json())
             except json.decoder.JSONDecodeError or simplejson.errors.JSONDecodeError:
                 print(r.text)
+    return r_list
+
+
+def print_request(_request, limit=1000):
+    """
+    :param _request: The request to print
+    :param limit:
+    """
+    Log.info(str(_request.url))
+    Log.info('      |--- status_code: ' + str(_request.status_code))
+    Log.info('      |--- encoding: ' + str(_request.encoding))
+    Log.info('      |--- headers:')
+    for key, value in _request.headers.items():
+        Log.info('      |       |--- ' + str(key) + ': ' + str(value))
+    Log.info('      |')
+    try:
+        json_body = _request.json()
+        Log.info('      |-- data: ' + str(json_body))
+    except ValueError:
+        data = str(_request.text)
+        if len(data) > limit:
+            data = '[truncated]' + data[0:limit]
+        Log.info('      |-- data: ' + data)

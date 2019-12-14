@@ -32,33 +32,85 @@
 """
 
 from pprint import pprint
+from time import sleep
+
 from sqlmap.lib.utils.api import server as sqlmap_server
 
 from app.utils.helpers.logger import Log
 from app.utils.helpers.multitask import MultiTask
+from app.utils.helpers.network import check_socket
+from app.utils.sql import SqlmapTask
 
 
 class SqlmapClient:
+    """
+    Sqlmap Client
+    """
+
+    DEFAULT_HOST = '127.0.0.1'
+    DEFAULT_PORT = 8775
+
     _client = None
 
-    def __init__(self, host='0.0.0.0', port=8775):
+    def __init__(self, host: str = DEFAULT_HOST, port: int = DEFAULT_PORT):
+        """
+        :param host: The host
+        :param port: The port
+        """
         self.host = host
         self.port = port
+        self.base_url = 'http://' + self.host + ':' + str(port)
         # Start the sqlmap-api server in a parallel thread
         Log.info("Starting sqlmap-api server in a parallel thread")
         MultiTask.multithread(sqlmap_server, (self.host, self.port), True, 1)
+        self._wait_server()
         Log.success("Sqlmap-api server started!")
+
+    # Public static methods
+
+    @staticmethod
+    def task_list() -> dict:
+        """
+        :return: The dictionary of existent tasks
+        """
+        client = SqlmapClient._get_client()
+        return SqlmapTask.task_list(client.base_url)
 
     @staticmethod
     def try_inject(forms, cookies=''):
         """
-        Try injection in all provided forms
+        Try injection with all provided forms
         :param forms: dict A dictionary of { "<url>": [ <parsed_form_1>, <parsed_form_2>, ... ], ... }
         :param cookies: str the request cookies
         """
-        if SqlmapClient._client is None:
-            SqlmapClient._client = SqlmapClient()
         pprint(forms)
         Log.info('Trying injection with cookies: '+str(cookies))
-        Log.error("try_inject: Not Implemented")
-        # TODO: Use sqlmap-api server to inject all forms
+        sqlmap_task = SqlmapClient._task_new()
+
+    # Private static methods
+
+    @staticmethod
+    def _get_client():
+        """
+        :rtype: SqlmapClient
+        """
+        if SqlmapClient._client is None:
+            SqlmapClient._client = SqlmapClient()
+        return SqlmapClient._client
+
+    @staticmethod
+    def _task_new() -> SqlmapTask:
+        """
+        :return: The new task
+        """
+        client = SqlmapClient._get_client()
+        return SqlmapTask.task_new(client.base_url)
+
+    # Private methods
+
+    def _wait_server(self):
+        """
+        Wait the sqlmap-api server initialization
+        """
+        while not check_socket(self.host, self.port):
+            sleep(0.1)
