@@ -153,7 +153,7 @@ class SqlmapTask:
         """
         self._scan_request('data')
 
-    """ Private methods """
+    """ Protected methods """
 
     def _request(self, path: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
         """

@@ -64,7 +64,9 @@ class SqlmapClient:
         # Start the sqlmap-api server in a parallel thread
         Log.info("Starting sqlmap-api server in a parallel thread")
         MultiTask.multithread(sqlmap_server, (self.host, self.port), True, 1)
-        self._wait_server()
+        while not check_socket(self.host, self.port):
+            # Wait sqlmap-api server
+            sleep(0.1)
         Log.success("Sqlmap-api server started!")
 
     """ Public static methods """
@@ -121,15 +123,20 @@ class SqlmapClient:
                     'method': method,
                     'url': action
                 })
-                sqlmap_task.option_list()
                 sqlmap_task.option_get([
-                    'referer'
+                    'referer',
+                    'agent',
+                    'referer',
+                    'delay',
+                    'randomAgent',
+                    'method',
+                    'url'
                 ])
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
 
         return sqlmap_tasks
 
-    """ Private static methods """
+    """ Protected static methods """
 
     @staticmethod
     def _get_client():
@@ -147,12 +154,3 @@ class SqlmapClient:
         """
         client = SqlmapClient._get_client()
         return SqlmapTask.task_new(client.base_url)
-
-    # Private methods
-
-    def _wait_server(self):
-        """
-        Wait the sqlmap-api server initialization
-        """
-        while not check_socket(self.host, self.port):
-            sleep(0.1)
