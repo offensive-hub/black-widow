@@ -122,6 +122,9 @@ class SqlmapClient:
                     'url': action
                 })
                 sqlmap_task.option_list()
+                sqlmap_task.option_get([
+                    'referer'
+                ])
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
 
         return sqlmap_tasks

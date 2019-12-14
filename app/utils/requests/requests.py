@@ -30,7 +30,6 @@ from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 from app.env import APP_VERSION, APP_NAME
 from app.env_local import APP_DEBUG
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_listable
 from app.utils.helpers.validators import is_url
 
 
@@ -70,12 +69,6 @@ def request(url: str, request_type: str = Type.GET, data=None, json: dict or lis
 
     if data is None:
         data = {}
-
-    if type(json) is not dict and is_listable(json):
-        json_dict = dict()
-        for param in json:
-            json_dict[param] = param
-        json = json_dict
 
     request_type = request_type.lower()
     if not is_url(url):

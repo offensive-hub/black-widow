@@ -121,7 +121,7 @@ class SqlmapTask:
     def option_set(self, options: dict):
         """
         Get value of option(s) for this task
-        :param options: The options to set (eg. { "referer": "http://example.com" ])
+        :param options: The options to set (eg. { "referer": "https://example.com" ])
         """
         self._option_request('set', RequestType.POST, options)
 
