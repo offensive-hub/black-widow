@@ -31,7 +31,7 @@
 
 > ### Links:
 > - Homepage: [https://black-widow.io](https://black-widow.io)
-> - GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
+> - GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
 > - Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 > - Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/Black-widow)
 
