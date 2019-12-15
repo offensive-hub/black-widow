@@ -88,7 +88,7 @@ class SqlmapTask:
     def request(url: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
         """
         Send a request to sqlmap-api server and then load the data json as dict
-        :param url: The url (eg. "http://127.0.0.1:8775/task/new")
+        :param url: The sqlmap-api url (eg. "http://127.0.0.1:8775/task/new")
         :param request_type: get|post|put|patch|delete
         :param json: The json to send
         :rtype: dict
