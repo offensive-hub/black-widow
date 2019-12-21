@@ -12,20 +12,28 @@
 
 ## Offensive penetration testing tool (Open Source)
 
+**black-widow** is one of the most useful, powerful and complete offensive penetration testing tool.
 
-> ### Features:
+It provides easy ways to execute many kinds of information gatherings and attacks.
+
+ - Fully Open Source
+ - Written in Python
+ - Continuously updated and extended
+
+<br/>
+
+> Features:
+>  - Localhost Web GUI
 >  - Sniffing
->  - SQL Injection
->  - Injected-database management
->  - Web page parser
->  - Website crawler
+>  - Website crawling
+>  - Web page parsing
+>  - SQL injection
+>  - Injected database management
+>  - Brute force attacks
+>  - Cluster between other black-widows
+>  - Multiple asynchronous requests
 >  - Multiple targets management
->  - Mapping **{server -> vulnerabilities}**
->  - Cluster between **black-widow** that are running inside the same network
->  - Encrypted communications between other **black-widows**
->  - Useful features for **CTF** challenges
-> 
-> ##### Suggest you other features!
+>  - Useful CTF features
 
 <br/>
 
