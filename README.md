@@ -20,8 +20,6 @@ It provides easy ways to execute many kinds of information gatherings and attack
  - Written in Python
  - Continuously updated and extended
 
-<br/>
-
 ### Features:
  - Localhost Web GUI
  - Sniffing
@@ -35,25 +33,12 @@ It provides easy ways to execute many kinds of information gatherings and attack
  - Multiple targets management
  - Useful CTF features
 
-<br/>
-
-### Links:
-- Homepage: [https://black-widow.io](https://black-widow.io)
-- GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
-- Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
-- Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
-
-<br/>
-
-
 ### <img alt="DOCKER_IMAGE" src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 2. Run docker:
   - Command line: `docker run --rm offensive/black-widow [arguments]`
   - GUI: `docker run -d -p 8095:80 --rm offensive/black-widow -g`
       - Than visit: [http://localhost:8095](http://localhost:8095/)
-
-<br/>
 
 ### Default Installation:
 1. `sudo apt-get update && sudo apt-get install tidy clang tshark`
@@ -64,13 +49,9 @@ It provides easy ways to execute many kinds of information gatherings and attack
 6. `./black-widow.py --django migrate`
 7. `sudo ./black-widow.py <arguments>`
 
-<br/>
-
 ### Run:
 - **GUI:** `sudo ./black-widow.py -g`
 - **Command line:** `sudo ./black-widow.py <arguments>`
-
-<br/>
 
 ### Debug:
 - Run django (examples):
@@ -114,22 +95,22 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 <br/>
 
+### Links:
+- Homepage: [https://black-widow.io](https://black-widow.io)
+- GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
+- Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
+- Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
+
 ### Contacts:
  -  [offensive-hub@protonmail.com](offensive-hub@protonmail.com)
 
-<br/>
-
 ### Authors:
  -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
-
-<br/>
 
 ### Thanks to:
  - [PyShark](https://github.com/KimiNewt/pyshark)
  - [Sqlmap](https://github.com/sqlmapproject/sqlmap)
  - [Material Dashboard](https://github.com/creativetimofficial/material-dashboard)
-
-<br/>
 
 ### Follow Us:
 <a href="https://www.facebook.com/offensive.black.widow" title="Facebook"><img title="Facebook" src="https://it.facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png" width="32"/></a>
