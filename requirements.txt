@@ -1,4 +1,3 @@
-django-jsonview
 gunicorn
 numpy
 pyshark

@@ -27,10 +27,8 @@ import os
 import signal
 from time import sleep
 
-from django.http import HttpResponseNotFound, FileResponse
+from django.http import HttpResponseNotFound, FileResponse, JsonResponse
 from django.shortcuts import render, redirect
-
-from jsonview.decorators import json_view
 
 from app.env import APP_STORAGE_OUT
 from app.gui.web.settings import STATICFILES_DIRS
@@ -58,6 +56,7 @@ class Sniffing:
     """
     Sniffing Container View
     """
+
     class SettingsView(AbstractSniffingView):
         """
         Sniffing View
@@ -148,7 +147,6 @@ class Sniffing:
             util.Log.info("Showing job #" + str(job_id))
             return render(request, self.template_name)
 
-        @json_view
         def post(self, request):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
@@ -163,9 +161,9 @@ class Sniffing:
                 sniffing_job = None
 
             if sniffing_job is None:
-                return {
+                return JsonResponse({
                     'message': 'Unable to find the requested job'
-                }, 400
+                }, status=400)
 
             out_json_file = sniffing_job.get('out_json_file')
 
@@ -194,11 +192,11 @@ class Sniffing:
 
                     self._set_sniffing_jobs(request.session, sniffing_jobs)
 
-                return {
+                return JsonResponse({
                     'job_id': request_params.get('job_id'),
                     'signal': signal_job,
                     'message': 'Signal sent'
-                }
+                }, status=200)
 
             page = request_params.get('page')
             page_size = request_params.get('page_size')
@@ -225,8 +223,7 @@ class Sniffing:
                     'status': sniffing_jobs[job_id]['status']
                 }
             })
-
-            return pagination
+            return JsonResponse(pagination, status=200)
 
 
 class Sql:

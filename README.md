@@ -46,7 +46,7 @@ It provides easy ways to execute many kinds of information gatherings and attack
 3. `cd black-widow`
 4. `sudo pip3 install -U -r requirements.txt`
 5. `cp ./app/env_local_dist.py ./app/env_local.py`
-6. `./black-widow.py --django migrate`
+6. `sudo ./black-widow.py --django migrate`
 7. `sudo ./black-widow.py <arguments>`
 
 ### Run:
