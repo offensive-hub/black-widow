@@ -102,7 +102,7 @@ It provides easy ways to execute many kinds of information gatherings and attack
 - Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
 
 ### Contacts:
- -  [offensive-hub@protonmail.com](offensive-hub@protonmail.com)
+ -  [offensive-hub@protonmail.com](mailto:offensive-hub@protonmail.com)
 
 ### Authors:
  -  [Fabrizio Fubelli](https://fabrizio.fubelli.org)
