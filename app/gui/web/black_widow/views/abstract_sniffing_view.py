@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* abstract_sniffing_view.py -- Abstract sniffing view                           *
+* abstract_sniffing_view.py -- Django Abstract Sniffing view.                   *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -22,12 +22,14 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import os
 import signal
 
-from app.gui.web.black_widow.abstract_class import AbstractView
 from app.utils.helpers import storage, MultiTask
 from app.utils.helpers import util
+
+from . import AbstractView
 
 
 class AbstractSniffingView(AbstractView):
