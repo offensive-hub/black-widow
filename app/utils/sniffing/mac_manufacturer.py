@@ -109,7 +109,7 @@ class MacManufacturer:
                     else:
                         Log.error("Wrong mac address: " + str(detail))
                         break
-                if i > 2:
+                if i >= len(MacManufacturer.MANUFACTURERS_DETAIL_DICT):
                     Log.error("Wrong manufacturer details: " + str(manufacturer_details))
                     break
                 lookup_dict[MacManufacturer.MANUFACTURERS_DETAIL_DICT[i]] = detail

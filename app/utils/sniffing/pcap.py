@@ -35,9 +35,11 @@
 
 import codecs
 import socket
+from pprint import pprint
 
-import numpy
 import pyshark
+
+from pyshark.packet.fields import LayerField
 
 from app.utils import settings
 from app.utils.helpers.util import replace_regex, regex_is_string
@@ -71,14 +73,46 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
         else:
             return 'decoded'
 
+    # noinspection PyProtectedMember
     def __pcap_callback__(pkt):
         # Log.info('Analyzing packet number ' + str(pkt.number))
         # Log.info('Layers: ' + str(pkt.layers))
-        layers_dict = dict()
-        pkt.pretty_print()  # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
+        pkt_layers = dict()
+        print("\n\n")
+        # pkt.pretty_print()  # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
+
         for layer in pkt.layers:
-            # for field_line in layer._get_all_field_lines():
-            #     print(field_line)
+            for field in layer._all_fields.values():
+                field: LayerField
+                field_key: str = layer._sanitize_field_name(field.name)
+                field_name: str = field.showname_key
+                field_value: str = field.showname_value
+                if not field_name:
+                    field_name = field.name
+                if not field_value:
+                    field_value = field.get_default_value()
+                if field_value is not None:
+                    field_value = field_value.encode('utf-8').decode('unicode-escape').replace('Âµs', 'µs')
+                field.alternate_fields
+                pkt_layers[field_key] = {
+                    'name': field_name,
+                    'value': field_value
+                }
+                pprint({
+                    'key': field_key,
+                    'name': field_name,
+                    'value': field_value
+                })
+                print("\n")
+
+        # pprint(pkt_layers)
+
+        exit(0)
+
+        for layer in pkt.layers:
+            for field in layer._all_fields:
+                print(field)
+                return
 
             layer_fields = {}
 
@@ -89,7 +123,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
             if callback is None:
                 print('Layer: ' + str(layer.layer_name))
 
-            for field_name in numpy.unique(layer.field_names):
+            for field_name in layer.field_names:
                 layer_field_dict = {}
 
                 dirty_field = layer.get_field(field_name).strip()
@@ -148,7 +182,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
                 if callback is None:
                     print('   |--[ ' + str(field_name) + ' ] = ' + str(field))  # Printa stile albero
 
-            layers_dict[layer.layer_name] = layer_fields
+            pkt_layers[layer.layer_name] = layer_fields
 
         # Creo un dizionario con le informazioni sul pacchetto catturato
         frame_info = dict()
@@ -164,7 +198,7 @@ def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limi
             'sniff_time': str(pkt.sniff_time),
             'sniff_timestamp': str(pkt.sniff_timestamp),
             'transport_layer': str(pkt.transport_layer),
-            'layers': layers_dict  # Il dizionario dei livelli creato nel sovrastante loop
+            'layers': pkt_layers  # Il dizionario dei livelli creato nel sovrastante loop
         }
         source = None
         destination = None
