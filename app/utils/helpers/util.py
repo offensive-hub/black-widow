@@ -43,12 +43,11 @@ def timestamp():
 
 
 # @return True se string contiene regex
-def regex_in_string(regex, string):
-    if APP_DEBUG:
-        Log.info('CALLED: regex_in_string(' + str(regex) + ', ' + str(string) + ')')
-    reg = re.compile(regex)
-    matches = re.findall(reg, string)
-    return len(matches) > 0
+def regex_in_string(regex, string) -> bool:
+    match = re.search(regex, string)
+    if match:
+        return True
+    return False
 
 
 # @return True se string ~ regex

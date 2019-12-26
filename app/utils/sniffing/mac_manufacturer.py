@@ -61,6 +61,7 @@ class MacManufacturer:
     }
 
     def __init__(self):
+        self.manufacturer_dict = dict()
         self._update_manufacturer_dict()
 
     def lookup(self, mac: str) -> dict or None:
@@ -76,8 +77,10 @@ class MacManufacturer:
         return None
 
     def _update_manufacturer_dict(self):
-        self.manufacturer_dict = dict()
         manufacturer_response = request(MacManufacturer.MANUFACTURERS_URL)
+        if manufacturer_response.text is None:
+            return
+        self.manufacturer_dict = dict()
         manufacturer_list = manufacturer_response.text.splitlines()
         for manufacturer in manufacturer_list:
             if len(manufacturer) < 1:

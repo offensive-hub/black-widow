@@ -32,7 +32,7 @@ from django.shortcuts import render, redirect
 
 from app.env import APP_STORAGE_OUT
 from app.utils.helpers import network
-from app.utils.sniffing.pcap import sniff_pcap
+from app.utils.sniffing.pcap import Pcap
 from app.utils.helpers import util
 from app.utils.helpers.serializer import JsonSerializer
 from app.utils.helpers.multitask import MultiTask
@@ -102,7 +102,7 @@ class Sniffing:
                 """
                 The target function used by parallel process
                 """
-                sniff_pcap(
+                Pcap.sniff(
                     filters=session_job_params.get('filters'),
                     src_file=session_job_params.get('pcap'),
                     interface=session_job_params.get('interfaces'),

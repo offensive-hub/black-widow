@@ -271,7 +271,7 @@ def pcap():
     interface='docker0' # None for default
     interface = 'wlan0'
     filter = filter1
-    app.utils.sniffing.sniff_pcap(src_file=test_pcap3, interface=interface, dest_file=test_pcap_out, filters=filter,
+    app.utils.sniffing.Pcap.sniff(src_file=test_pcap3, interface=interface, dest_file=test_pcap_out, filters=filter,
                                   limit_length=10000, callback=pcap_callback)
 
 
