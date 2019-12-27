@@ -103,13 +103,19 @@ class PcapLayerField(Node):
         """
         :param depth: The current printing depth
         """
-        pcap_layer_field_row = '   |' * depth + '   ├── [ ' + str(self.label) + ' ]'
+        pcap_layer_field_header = '   |' * depth
+        pcap_layer_field_row = pcap_layer_field_header + '   ├── [ ' + str(self.label) + ' ]'
         if self.value is not None:
-            pcap_layer_field_row += ' = ' + str(self.value)
+            value = str(self.value)
+            if len(value) > 30:
+                value = value[0:30] + '...'
+            pcap_layer_field_row += ' = ' + value
         else:
             pcap_layer_field_row += ' : PARENT NAME'
         pcap_layer_field_row += ', key=' + self.name + ', size=' + str(self.size) + ', pos=' + str(self.pos)
         for pcap_layer_field_child in self.children:
             pcap_layer_field_child: PcapLayerField
-            pcap_layer_field_row += "\n" + pcap_layer_field_child.__str__(depth+1)
+            pcap_layer_field_row += "    \n" + pcap_layer_field_child.__str__(depth+1)
+        if len(self.children) > 0:
+            pcap_layer_field_row += "   |\n" + pcap_layer_field_header
         return pcap_layer_field_row

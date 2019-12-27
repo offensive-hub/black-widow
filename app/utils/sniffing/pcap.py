@@ -44,7 +44,7 @@ from pyshark.packet.packet import Packet
 
 from app.utils import settings
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_hex
+from app.utils.helpers.util import is_hex, regex_is_string
 
 from . import MacManufacturer
 from . import PcapLayerField
@@ -115,7 +115,7 @@ class Pcap:
         return pcap
 
     @staticmethod
-    def print_pkt_dict(pkt_dict: dict):
+    def print_pkt(pkt_dict: dict):
         """
         Print the pkt_dict
         :param pkt_dict: The pkt dict created by Pcap._callback(pkt)
@@ -151,6 +151,8 @@ class Pcap:
         field_value = field_dict.get('value')
         if field_value is None:
             field_value = ''
+        if len(field_value) > 30:
+            field_value = field_value[0:30] + '...'
         else:
             field_key += ' = '
         alternate_values = field_dict.get('alternate_values')
@@ -158,7 +160,10 @@ class Pcap:
             field_key_len = len(field_key)
             for alternate_value in field_dict.get('alternate_values'):
                 field_value += '\n' + (field_key_len * ' ') + alternate_value
-        print(field_key + field_value)
+        pos = str(field_dict.get('pos'))
+        size = str(field_dict.get('size'))
+        name = str(field_dict.get('name'))
+        print(field_key + field_value + ' (pos=' + pos + ', size=' + size + ', name=' + name + ')')
         for field_child in field_dict.get('children'):
             Pcap._print_field(field_child, depth + 1)
 
@@ -183,20 +188,27 @@ class Pcap:
         }
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
-
-        Pcap.print_pkt_dict(pkt_dict)
+        # Pcap.print_pkt(pkt_dict)
+        exit(0)
         # TODO: clean field + self.callback
 
+    @staticmethod
+    def _field_is_binary(field: PcapLayerField):
+        field_label = field.label
+        equal_index = field_label.find(' = ')
+        binary_key = field_label[0:equal_index]
+        return equal_index >= 0 and regex_is_string('^(\.| |0|1)+$', binary_key)
 
     # noinspection PyProtectedMember
     @staticmethod
     def _get_layer_dict(layer: Layer) -> dict:
         """
+        TODO: Manage Tags
         :param layer: The layer to process
         :return: The dictionary of layer
         """
 
-        field_tree = dict()     # tree dict { name => pkt }
+        field_tree = dict()  # tree dict { name => pkt }
 
         def update_field_tree_keys(local_field_tree_keys: list) -> (list, dict):
             """
@@ -239,6 +251,13 @@ class Pcap:
             family, node = update_field_tree_keys(field_tree_keys)
 
             def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
+                """
+                If exists, found the big brother of local_field, otherwise, the parent
+                :param local_member:
+                :param only_hex:
+                :return:
+                """
+                parent = None
                 for key, member_parent in local_member.items():
                     member_parent: PcapLayerField or dict
                     if not only_hex:
@@ -247,11 +266,16 @@ class Pcap:
                             # Check brothers
                             member_brother = find_pcap_layer_field_parent(member_parent, True)
                         if member_brother is not None:
-                            return member_brother
+                            return member_brother   # brother
                     if key in parent_poss and member_parent.name != local_field.name:
-                        if not only_hex or (is_hex(member_parent.value) and member_parent.pos == int(local_field.pos)):
-                            return member_parent
-                return None
+                        member_parent: PcapLayerField
+                        if not only_hex:
+                            parent = member_parent  # parent (but the preferred is brother)
+                        elif is_hex(member_parent.value) and \
+                                member_parent.pos == int(local_field.pos) and \
+                                not Pcap._field_is_binary(member_parent):
+                            return member_parent    # brother
+                return parent
 
             pcap_layer_field_parent = None
             for member in family:
@@ -261,6 +285,7 @@ class Pcap:
 
             if pcap_layer_field_parent is None:
                 pcap_layer_field_parent = pcap_layer_field_root
+
             local_pcap_layer_field = PcapLayerField(local_field, pcap_layer_field_parent)
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
@@ -275,6 +300,7 @@ class Pcap:
             if pcap_layer_field is not None:
                 field_insert.add(field_unique_key)
 
+        print(pcap_layer_field_root)
         return {
             'name': layer.layer_name,
             'fields': pcap_layer_field_root.get_dict().get('children')
