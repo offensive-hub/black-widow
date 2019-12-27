@@ -8,7 +8,6 @@
 * Methods to sniff the network traffic through pyshark.                         *
 *                                                                               *
 * LayerField tree info:                                                         *
-*      Field (
 *                                                                               *
 * pyshark repository:                                                           *
 * https://github.com/KimiNewt/pyshark                                           *
@@ -167,7 +166,6 @@ class Pcap:
         for field_child in field_dict.get('children'):
             Pcap._print_field(field_child, depth + 1)
 
-    # noinspection PyProtectedMember
     @staticmethod
     def _callback(pkt: Packet):
         """
@@ -189,7 +187,6 @@ class Pcap:
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
         # Pcap.print_pkt(pkt_dict)
-        exit(0)
         # TODO: clean field + self.callback
 
     @staticmethod
@@ -300,7 +297,6 @@ class Pcap:
             if pcap_layer_field is not None:
                 field_insert.add(field_unique_key)
 
-        print(pcap_layer_field_root)
         return {
             'name': layer.layer_name,
             'fields': pcap_layer_field_root.get_dict().get('children')
