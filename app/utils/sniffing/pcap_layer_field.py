@@ -92,5 +92,5 @@ class PcapLayerField(Node):
         pcap_layer_field_row += ', key=' + self.name + ', size=' + str(self.size) + ', pos=' + str(self.pos)
         for pcap_layer_field_child in self.children:
             pcap_layer_field_child: PcapLayerField
-            pcap_layer_field_row += "\n" + pcap_layer_field_child.__str__(depth*2)
+            pcap_layer_field_row += "\n" + pcap_layer_field_child.__str__(depth+1)
         return pcap_layer_field_row

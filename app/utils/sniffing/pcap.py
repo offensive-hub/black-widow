@@ -35,7 +35,6 @@
 *                                                                               *
 *********************************************************************************
 """
-from pprint import pprint
 
 import pyshark
 
@@ -45,6 +44,7 @@ from pyshark.packet.packet import Packet
 
 from app.utils import settings
 from app.utils.helpers.logger import Log
+from app.utils.helpers.util import is_int, is_hex
 
 from . import MacManufacturer
 from . import PcapLayerField
@@ -205,27 +205,23 @@ class Pcap:
             'fields': []
         }
 
-        field_tree = dict()     # dict { name => pkt }
+        field_tree = dict()     # tree dict { name => pkt }
 
-        def update_field_tree_keys(local_field_tree_keys: list) -> (dict, dict):
+        def update_field_tree_keys(local_field_tree_keys: list) -> (list, dict):
             """
             :param local_field_tree_keys: the dictionary keys used to create the parent dicts of field
-            :return: The node (as dict) of field to insert
+            :return: The family (as list) and the node (as dict) of field to insert
             """
-            local_field_tree = field_tree
-            i = 0
-            local_field_tree_keys_len = len(local_field_tree_keys)
-            local_field_tree_parent = None
+            local_field_node = field_tree
+            local_field_tree_family = []
             for local_field_tree_key in local_field_tree_keys:
-                local_field_tree_child = local_field_tree.get(local_field_tree_key)
+                local_field_tree_child = local_field_node.get(local_field_tree_key)
                 if local_field_tree_child is None:
                     local_field_tree_child = dict()
-                    local_field_tree[local_field_tree_key] = local_field_tree_child
-                if i == local_field_tree_keys_len - 2:
-                    local_field_tree_parent = local_field_tree_child
-                i += 1
-                local_field_tree = local_field_tree_child
-            return local_field_tree_parent, local_field_tree
+                    local_field_node[local_field_tree_key] = local_field_tree_child
+                local_field_tree_family.insert(0, local_field_tree_child)
+                local_field_node = local_field_tree_child
+            return local_field_tree_family, local_field_node
 
         pcap_layer_field_root = PcapLayerField()
 
@@ -234,18 +230,36 @@ class Pcap:
             :param local_field: The LayerField to insert in dict
             """
             field_name: str = local_field.name
+            parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
             field_tree_keys = field_name.split('.')
-            parent, node = update_field_tree_keys(field_tree_keys)
-            if parent is not None:
-                local_pcap_layer_field_parent = parent.get('field')
-            else:
-                parent['field'] = pcap_layer_field_root
-                local_pcap_layer_field_parent = None
-            if local_pcap_layer_field_parent is None:
-                local_pcap_layer_field_parent = pcap_layer_field_root
-            # The parent_node will contains the local_field
-            local_pcap_layer_field = PcapLayerField(local_field, local_pcap_layer_field_parent)
-            node['field'] = local_pcap_layer_field  # Update dictionary tree
+            family, node = update_field_tree_keys(field_tree_keys)
+
+            def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
+                for key, member_parent in local_member.items():
+                    member_parent: PcapLayerField or dict
+                    local_field.get_default_value()
+                    if not only_hex:
+                        member_brother = None
+                        if isinstance(member_parent, dict):
+                            # check brothers
+                            member_brother = find_pcap_layer_field_parent(member_parent, True)
+                        if member_brother is not None:
+                            return member_brother
+                    if key in parent_poss and isinstance(member_parent, PcapLayerField):
+                        if not only_hex or (is_hex(member_parent.value) and member_parent.pos == int(local_field.pos)):
+                            return member_parent
+                return None
+
+            pcap_layer_field_parent = None
+            for member in family:
+                pcap_layer_field_parent = find_pcap_layer_field_parent(member)
+                if pcap_layer_field_parent is not None:
+                    break
+
+            if pcap_layer_field_parent is None:
+                pcap_layer_field_parent = pcap_layer_field_root
+            local_pcap_layer_field = PcapLayerField(local_field, pcap_layer_field_parent)
+            node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
 
         field_insert = dict()
