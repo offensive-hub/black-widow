@@ -96,7 +96,7 @@ class Pcap:
                 # use_json=True
                 # debug=APP_DEBUG
             )
-        self.capture.apply_on_packets(Pcap._callback)
+        self.capture.apply_on_packets(self._callback)
 
     @staticmethod
     def sniff(filters=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
@@ -128,8 +128,7 @@ class Pcap:
             else:
                 print(str(key) + ': ' + str(value))
 
-    @staticmethod
-    def _callback(pkt: Packet):
+    def _callback(self, pkt: Packet):
         """
         :param pkt: The pyshark packet
         :return:
@@ -149,7 +148,10 @@ class Pcap:
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
         Pcap.print_pkt(pkt_dict)
-        # TODO: clean field + self.callback
+        if self.user_callback is not None:
+            self.user_callback(pkt_dict)
+        else:
+            Pcap.print_pkt(pkt_dict)
 
     @staticmethod
     def _field_is_binary(field: PcapLayerField):
