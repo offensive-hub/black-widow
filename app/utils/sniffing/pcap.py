@@ -129,44 +129,6 @@ class Pcap:
                 print(str(key) + ': ' + str(value))
 
     @staticmethod
-    def _print_layer(layer_dict: dict):
-        """
-        Print the layer_dict
-        :param layer_dict: The layer dict created by Pcap._callback(pkt)
-        """
-        print('Layer: ' + str(layer_dict.get('name')))
-        for field_dict in layer_dict.get('fields'):
-            Pcap._print_field(field_dict)
-
-    @staticmethod
-    def _print_field(field_dict: dict, depth: int = 0):
-        """
-        Print the field_dict
-        :param field_dict: The field dict returned by PcapLayerField.get_dict()
-        """
-        field_header = '   |' * depth + '   ├── '
-        field_label = field_dict.get('label')
-        field_key = field_header + '[ ' + str(field_label) + ' ]'
-        field_value = field_dict.get('value')
-        if field_value is None:
-            field_value = ''
-        if len(field_value) > 30:
-            field_value = field_value[0:30] + '...'
-        else:
-            field_key += ' = '
-        alternate_values = field_dict.get('alternate_values')
-        if alternate_values is not None:
-            field_key_len = len(field_key)
-            for alternate_value in field_dict.get('alternate_values'):
-                field_value += '\n' + (field_key_len * ' ') + alternate_value
-        pos = str(field_dict.get('pos'))
-        size = str(field_dict.get('size'))
-        name = str(field_dict.get('name'))
-        print(field_key + field_value + ' (pos=' + pos + ', size=' + size + ', name=' + name + ')')
-        for field_child in field_dict.get('children'):
-            Pcap._print_field(field_child, depth + 1)
-
-    @staticmethod
     def _callback(pkt: Packet):
         """
         :param pkt: The pyshark packet
@@ -186,7 +148,7 @@ class Pcap:
         }
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
-        # Pcap.print_pkt(pkt_dict)
+        Pcap.print_pkt(pkt_dict)
         # TODO: clean field + self.callback
 
     @staticmethod
@@ -200,7 +162,7 @@ class Pcap:
     @staticmethod
     def _get_layer_dict(layer: Layer) -> dict:
         """
-        TODO: Manage Tags
+        TODO: Manage Tags + get src and dst ip/(mac & vendor)
         :param layer: The layer to process
         :return: The dictionary of layer
         """
@@ -301,3 +263,41 @@ class Pcap:
             'name': layer.layer_name,
             'fields': pcap_layer_field_root.get_dict().get('children')
         }
+
+    @staticmethod
+    def _print_layer(layer_dict: dict):
+        """
+        Print the layer_dict
+        :param layer_dict: The layer dict created by Pcap._callback(pkt)
+        """
+        print('Layer: ' + str(layer_dict.get('name')))
+        for field_dict in layer_dict.get('fields'):
+            Pcap._print_field(field_dict)
+
+    @staticmethod
+    def _print_field(field_dict: dict, depth: int = 0):
+        """
+        Print the field_dict
+        :param field_dict: The field dict returned by PcapLayerField.get_dict()
+        """
+        field_header = '   |' * depth + '   ├── '
+        field_label = field_dict.get('label')
+        field_key = field_header + '[ ' + str(field_label) + ' ]'
+        field_value = field_dict.get('value')
+        if field_value is None:
+            field_value = ''
+        if len(field_value) > 30:
+            field_value = field_value[0:30] + '...'
+        else:
+            field_key += ' = '
+        alternate_values = field_dict.get('alternate_values')
+        if alternate_values is not None:
+            field_key_len = len(field_key)
+            for alternate_value in field_dict.get('alternate_values'):
+                field_value += '\n' + (field_key_len * ' ') + alternate_value
+        pos = str(field_dict.get('pos'))
+        size = str(field_dict.get('size'))
+        name = str(field_dict.get('name'))
+        print(field_key + field_value + ' (pos=' + pos + ', size=' + size + ', name=' + name + ')')
+        for field_child in field_dict.get('children'):
+            Pcap._print_field(field_child, depth + 1)
