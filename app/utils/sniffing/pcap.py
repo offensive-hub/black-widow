@@ -145,7 +145,7 @@ class Pcap:
         Print the field_dict
         :param field_dict: The field dict returned by PcapLayerField.get_dict()
         """
-        field_header = '   |' * depth + '├── '
+        field_header = '   |' * depth + '   ├── '
         field_label = field_dict.get('label')
         field_key = field_header + '[ ' + str(field_label) + ' ]'
         field_value = field_dict.get('value')
