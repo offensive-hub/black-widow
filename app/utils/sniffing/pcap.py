@@ -147,7 +147,6 @@ class Pcap:
         }
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
-        Pcap.print_pkt(pkt_dict)
         if self.user_callback is not None:
             self.user_callback(pkt_dict)
         else:
