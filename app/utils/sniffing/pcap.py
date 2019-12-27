@@ -209,6 +209,9 @@ class Pcap:
 
         def update_field_tree_keys(local_field_tree_keys: list) -> (list, dict):
             """
+            Insert into the field_tree the input keys recursively
+            Eg. local_field_tree_keys = ['a', 'b', 'c']
+                field_tree['a']['b']['c'] = dict()
             :param local_field_tree_keys: the dictionary keys used to create the parent dicts of field
             :return: The family (as list) and the node (as dict) of field to insert
             """
@@ -264,8 +267,6 @@ class Pcap:
         field_insert = set()
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
-            # if 'wlan.wfa.ie.wme.acp' != field.name:
-            #     continue
             field_unique_key: str = field.pos + '_' + field.name
             if field_unique_key in field_insert:
                 return None
@@ -274,13 +275,3 @@ class Pcap:
                 field_insert.add(field_unique_key)
 
         print(pcap_layer_field_root)
-
-        #
-        # layer_dict['fields'].append(pcap_layer_field_root)
-        #
-        # for pcap_layer_field in layer_dict.get('fields'):
-        #     pcap_layer_field: PcapLayerField
-        #     if 'wlan.wfa.ie.wme.acp' in pcap_layer_field.name:
-        #         print(pcap_layer_field)
-        #
-        # return layer_dict
