@@ -145,7 +145,7 @@ class Pcap:
         Print the field_dict
         :param field_dict: The field dict returned by PcapLayerField.get_dict()
         """
-        field_header = '   |' * depth + '├── '
+        field_header = '   |' * depth + '   ├── '
         field_label = field_dict.get('label')
         field_key = field_header + '[ ' + str(field_label) + ' ]'
         field_value = field_dict.get('value')
@@ -156,7 +156,7 @@ class Pcap:
         alternate_values = field_dict.get('alternate_values')
         if alternate_values is not None:
             field_key_len = len(field_key)
-            for alternate_value in field_dict.get('alternate_values'):
+            for alternate_value in fifield_headereld_dict.get('alternate_values'):
                 field_value += '\n' + (field_key_len * ' ') + alternate_value
         print(field_key + field_value)
         for field_child in field_dict.get('children'):
