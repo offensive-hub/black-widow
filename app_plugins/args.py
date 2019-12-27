@@ -56,7 +56,7 @@ def create_parser():
                               metavar='FILE')
     options_pcap.add_argument("--pcap-dest", help="The .pcap destination file",
                               type=argparse.FileType('w'), metavar='FILE')
-    options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--pcap-int", help="Network interfaces (eg: eth0,wlan0)", type=str, metavar='INTERFACE')
     options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str,
                               metavar='FILTERS')
     options_pcap.add_argument("--pcap-limit", help="Max field lengths of each packet", type=int, metavar='INTEGER')
