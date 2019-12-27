@@ -237,15 +237,14 @@ class Pcap:
             def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
                 for key, member_parent in local_member.items():
                     member_parent: PcapLayerField or dict
-                    local_field.get_default_value()
                     if not only_hex:
                         member_brother = None
                         if isinstance(member_parent, dict):
-                            # check brothers
+                            # Check brothers
                             member_brother = find_pcap_layer_field_parent(member_parent, True)
                         if member_brother is not None:
                             return member_brother
-                    if key in parent_poss and isinstance(member_parent, PcapLayerField):
+                    if key in parent_poss and member_parent.name != local_field.name:
                         if not only_hex or (is_hex(member_parent.value) and member_parent.pos == int(local_field.pos)):
                             return member_parent
                 return None
@@ -262,18 +261,17 @@ class Pcap:
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
 
-        field_insert = dict()
-
+        field_insert = set()
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
-            if 'wlan.wfa.ie.wme.acp' not in field.name:
-                continue
+            # if 'wlan.wfa.ie.wme.acp' != field.name:
+            #     continue
             field_unique_key: str = field.pos + '_' + field.name
-            if field_insert.get(field_unique_key) is not None:
+            if field_unique_key in field_insert:
                 return None
             pcap_layer_field = local_get_field_tree(field)
             if pcap_layer_field is not None:
-                field_insert[field_unique_key] = pcap_layer_field
+                field_insert.add(field_unique_key)
 
         print(pcap_layer_field_root)
 
