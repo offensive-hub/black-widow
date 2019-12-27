@@ -31,20 +31,27 @@ class PcapLayerField(Node):
     """
     """
 
-    def __init__(self, layer_field: LayerField, parent=None, children=None):
+    def __init__(self, layer_field: LayerField = None, parent=None, children=None):
         """
         :param layer_field: The LayerField of this Node
         :type parent: PcapLayerField
         :param children: The children of this Node
         """
-        kwargs = {
-            'field': layer_field
-        }
+        kwargs = {}
+        if layer_field is not None:
+            kwargs.update({
+                'field': layer_field
+            })
+            name = layer_field.name
+        else:
+            name = 'root'
         self.field = layer_field
-        super().__init__(layer_field.name, parent, children, **kwargs)
+        super().__init__(name, parent, children, **kwargs)
 
     @property
     def label(self):
+        if self.field is None:
+            return self.name
         field_label: str = self.field.showname_key
         if not field_label:
             return self.name
@@ -52,6 +59,8 @@ class PcapLayerField(Node):
 
     @property
     def value(self):
+        if self.field is None:
+            return self.name
         field_value: str = self.field.showname_value
         if not field_value:
             field_value = self.field.get_default_value()
@@ -60,11 +69,15 @@ class PcapLayerField(Node):
         return field_value
 
     @property
-    def size(self) -> float:
+    def size(self) -> float or None:
+        if self.field is None:
+            return 0
         return float(self.field.size)
 
     @property
-    def pos(self) -> int:
+    def pos(self) -> int or None:
+        if self.field is None:
+            return 0
         return int(self.field.pos)
 
     def __str__(self, depth: int = 1):
