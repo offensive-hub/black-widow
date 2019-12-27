@@ -3,15 +3,19 @@
 """
 *********************************************************************************
 *                                                                               *
-* pcap.py -- Packet Capture (pcap)                                              *
+* mac_manufacturer.py -- Packet Capture (pcap)                                  *
 *                                                                               *
-* Methods to sniff the network traffic through pyshark.                         *
+*   The Mac Manufacturer Lookup class                                           *
+*   _________________________                                                   *
+*   | 1 | 2 | 3 | 4 | 5 | 6 |  =  48bit (6 * 8bit)                              *
+*   {^^^^OUI^^^}^{^^^NIC^^^^}                                                   *
 *                                                                               *
-* pyshark repository:                                                           *
-* https://github.com/KimiNewt/pyshark                                           *
-*                                                                               *
-* pyshark license:                                                              *
-* https://raw.githubusercontent.com/KimiNewt/pyshark/master/LICENSE.txt         *
+*   MAC Address (6 Octets):                                                     *
+*       |--- First 3 Octets:  OUI "Organisationally Unique Identifier"          *
+*       |       |--- 1st Octet:                                                 *
+*       |              |--- 7th bit (1=locally administered, 0=globally unique) *
+*       |              |--- 8th bit (0=unicast, 1=multicast)                    *
+*       |--- Second 3 Octets: NIC "Network Interface Controller"                *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -42,14 +46,6 @@ from app.utils.requests import request
 class MacManufacturer:
     """
     The Mac Manufacturer Lookup class
-    _________________________
-    | 1 | 2 | 3 | 4 | 5 | 6 |  =  48bit (6 * 8bit)
-    {^^^^OUI^^^}^{^^^NIC^^^^}
-
-    MAC Address: 6 Octets -> First 3 Octets:  OUI "Organisationally Unique Identifier"
-                                   |--- 1st Octet: 7th bit (1=locally administered, 0=globally unique)
-                                                   8th bit (0=unicast, 1=multicast)
-                             Second 3 Octets: NIC "Network Interface Controller"
     """
 
     MANUFACTURERS_URL = 'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
