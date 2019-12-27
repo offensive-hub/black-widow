@@ -149,3 +149,27 @@ $.fn.insertTableRow = function (values) {
     tableRow += '</tr>';
     $table.find('tbody:last-child').append(tableRow);
 };
+
+/**
+ * Move the spinner inside $parent
+ * @param $parent A jQuery element
+ * @param message The message to show (default: "Loading...")
+ */
+const moveSpinner = function($parent, message='Loading') {
+    $parent.append($('#spinner'));
+    $('.spinner-text').html(message);
+};
+
+/**
+ * Show the spinner
+ */
+const startSpinner = function() {
+    $('#spinner').show();
+};
+
+/**
+ * Hide the spinner
+ */
+const stopSpinner = function() {
+    $('#spinner').hide();
+};

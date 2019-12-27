@@ -7,8 +7,6 @@
 *                                                                               *
 * Methods to sniff the network traffic through pyshark.                         *
 *                                                                               *
-* LayerField tree info:                                                         *
-*                                                                               *
 * pyshark repository:                                                           *
 * https://github.com/KimiNewt/pyshark                                           *
 *                                                                               *
@@ -131,14 +129,19 @@ class Pcap:
     def _callback(self, pkt: Packet):
         """
         :param pkt: The pyshark packet
-        :return:
         """
         pkt_dict = {
             'number': str(pkt.number),
+            'time': str(pkt.frame_info.time_relative),
+            # TODO: source
+            # TODO: source_host
+            # TODO: destination
+            # TODO: destination_host
+            # TODO: protocol
+            'length': str(pkt.length),
             'captured_length': str(pkt.captured_length),
             'interface_captured': str(pkt.interface_captured),
             'highest_layer': str(pkt.highest_layer),
-            'length': str(pkt.length),
             'sniff_time': str(pkt.sniff_time),
             'sniff_timestamp': str(pkt.sniff_timestamp),
             'transport_layer': str(pkt.transport_layer),
@@ -198,13 +201,13 @@ class Pcap:
             try:
                 parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
             except TypeError as e:
-                Log.error(str(e))
+                # Log.error(str(e))
                 parent_poss = ()
                 local_field.pos = 0
                 local_field.size = 0
 
             if local_field.name is None:
-                Log.error('Field name is None')
+                # Log.error('Field name is None')
                 local_field.name = ''
 
             field_tree_keys = local_field.name.split('.')
@@ -261,7 +264,7 @@ class Pcap:
                 field_insert.add(field_unique_key)
 
         return {
-            'name': layer.layer_name,
+            'name': layer.layer_name.upper(),
             'fields': pcap_layer_field_root.get_dict().get('children')
         }
 

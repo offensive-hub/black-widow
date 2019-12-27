@@ -76,6 +76,7 @@ class Sniffing:
             job_id = len(sniffing_jobs)
 
             session_job_params: dict = request.POST.dict()
+            session_job_params['interfaces'] = request.POST.getlist('interfaces')
 
             pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
@@ -96,7 +97,6 @@ class Sniffing:
                 :type pkt: dict
                 """
                 JsonSerializer.add_item_to_dict(pkt['number'], pkt, out_json_file)
-                return
 
             def target():
                 """
