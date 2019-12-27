@@ -164,11 +164,11 @@ class Pcap:
 
     # noinspection PyProtectedMember
     @staticmethod
-    def _get_layer_dict(layer: Layer) -> dict:
+    def _get_layer_dict(layer: Layer) -> (dict, dict):
         """
         TODO: Manage Tags + get src and dst ip/(mac & vendor)
         :param layer: The layer to process
-        :return: The dictionary of layer
+        :return: The dictionary of layer, The dictionary of src and dest ip/mac (looked up)
         """
 
         field_tree = dict()  # tree dict { name => pkt }
@@ -253,6 +253,13 @@ class Pcap:
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
 
+        src_dest_dict = {
+            'source': None,
+            'source_host': None,
+            'destination': None,
+            'destination_host': None
+        }
+
         field_insert = set()
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
@@ -261,6 +268,7 @@ class Pcap:
                 continue
             pcap_layer_field = local_get_field_tree(field)
             if pcap_layer_field is not None:
+                # TODO: check if pcap_layer_field is (src, dest) ip/mac
                 field_insert.add(field_unique_key)
 
         return {
