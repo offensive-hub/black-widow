@@ -140,16 +140,14 @@ class Pcap:
             Pcap._print_field(field_dict)
 
     @staticmethod
-    def _print_field(field_dict: dict, depth: int = 4):
+    def _print_field(field_dict: dict, depth: int = 0):
         """
         Print the field_dict
         :param field_dict: The field dict returned by PcapLayerField.get_dict()
         """
-        field_header = ''
-        for i in range(0, depth, 4):
-            field_header += '   |'
+        field_header = '   |' * depth + '├── '
         field_label = field_dict.get('label')
-        field_key = field_header + '   |--[ ' + str(field_label) + ' ]'
+        field_key = field_header + '[ ' + str(field_label) + ' ]'
         field_value = field_dict.get('value')
         if field_value is None:
             field_value = ''
@@ -162,7 +160,7 @@ class Pcap:
                 field_value += '\n' + (field_key_len * ' ') + alternate_value
         print(field_key + field_value)
         for field_child in field_dict.get('children'):
-            Pcap._print_field(field_child, depth * 2)
+            Pcap._print_field(field_child, depth + 1)
 
     # noinspection PyProtectedMember
     @staticmethod

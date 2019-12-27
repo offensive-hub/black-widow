@@ -99,11 +99,11 @@ class PcapLayerField(Node):
             node_dict['children'].append(child.get_dict())
         return node_dict
 
-    def __str__(self, depth: int = 1):
+    def __str__(self, depth: int = 0):
         """
         :param depth: The current printing depth
         """
-        pcap_layer_field_row = '   |' * (depth - 1) + '   ├── [ ' + str(self.label) + ' ]'
+        pcap_layer_field_row = '   |' * depth + '   ├── [ ' + str(self.label) + ' ]'
         if self.value is not None:
             pcap_layer_field_row += ' = ' + str(self.value)
         else:
