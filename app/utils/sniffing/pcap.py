@@ -44,7 +44,7 @@ from pyshark.packet.packet import Packet
 
 from app.utils import settings
 from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_int, is_hex
+from app.utils.helpers.util import is_hex
 
 from . import MacManufacturer
 from . import PcapLayerField
@@ -137,20 +137,18 @@ class Pcap:
         """
         print('Layer: ' + str(layer_dict.get('name')))
         for field_dict in layer_dict.get('fields'):
-            Pcap._print_field(field_dict, 4)
+            Pcap._print_field(field_dict)
 
     @staticmethod
-    def _print_field(field_dict: dict, depth: int):
+    def _print_field(field_dict: dict, depth: int = 4):
         """
         Print the field_dict
-        :param field_dict: The field dict created by Pcap._callback(pkt)
+        :param field_dict: The field dict returned by PcapLayerField.get_dict()
         """
         field_header = ''
         for i in range(0, depth, 4):
             field_header += '   |'
         field_label = field_dict.get('label')
-        if field_label is None:
-            field_label = field_dict.get('name')
         field_key = field_header + '   |--[ ' + str(field_label) + ' ]'
         field_value = field_dict.get('value')
         if field_value is None:
@@ -163,10 +161,8 @@ class Pcap:
             for alternate_value in field_dict.get('alternate_values'):
                 field_value += '\n' + (field_key_len * ' ') + alternate_value
         print(field_key + field_value)
-        children = field_dict.get('children')
-        if children is not None:
-            for field_child in field_dict.get('children'):
-                Pcap._print_field(field_child, depth * 2)
+        for field_child in field_dict.get('children'):
+            Pcap._print_field(field_child, depth * 2)
 
     # noinspection PyProtectedMember
     @staticmethod
@@ -189,21 +185,18 @@ class Pcap:
         }
         for layer in pkt.layers:
             pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
-        # Pcap.print_pkt_dict(pkt_dict)
+
+        Pcap.print_pkt_dict(pkt_dict)
         # TODO: clean field + self.callback
-        exit(0)
+
 
     # noinspection PyProtectedMember
     @staticmethod
-    def _get_layer_dict(layer: Layer):
+    def _get_layer_dict(layer: Layer) -> dict:
         """
         :param layer: The layer to process
         :return: The dictionary of layer
         """
-        layer_dict = {
-            'name': layer.layer_name,
-            'fields': []
-        }
 
         field_tree = dict()     # tree dict { name => pkt }
 
@@ -232,9 +225,19 @@ class Pcap:
             """
             :param local_field: The LayerField to insert in dict
             """
-            field_name: str = local_field.name
-            parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
-            field_tree_keys = field_name.split('.')
+            try:
+                parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
+            except TypeError as e:
+                Log.error(str(e))
+                parent_poss = ()
+                local_field.pos = 0
+                local_field.size = 0
+
+            if local_field.name is None:
+                Log.error('Field name is None')
+                local_field.name = ''
+
+            field_tree_keys = local_field.name.split('.')
             family, node = update_field_tree_keys(field_tree_keys)
 
             def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
@@ -267,11 +270,14 @@ class Pcap:
         field_insert = set()
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
-            field_unique_key: str = field.pos + '_' + field.name
+            field_unique_key = str(field.pos) + '_' + str(field.name)
             if field_unique_key in field_insert:
-                return None
+                continue
             pcap_layer_field = local_get_field_tree(field)
             if pcap_layer_field is not None:
                 field_insert.add(field_unique_key)
 
-        print(pcap_layer_field_root)
+        return {
+            'name': layer.layer_name,
+            'fields': pcap_layer_field_root.get_dict().get('children')
+        }

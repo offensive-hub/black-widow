@@ -43,8 +43,10 @@ class PcapLayerField(Node):
                 'field': layer_field
             })
             name = layer_field.name
+            self.is_main = False
         else:
             name = 'root'
+            self.is_main = True
         self.field = layer_field
         super().__init__(name, parent, children, **kwargs)
 
@@ -79,6 +81,23 @@ class PcapLayerField(Node):
         if self.field is None:
             return 0
         return int(self.field.pos)
+
+    def get_dict(self) -> dict:
+        node_dict = {
+            'children': []
+        }
+        if not self.is_main:
+            node_dict.update({
+                'label': self.label,
+                'value': self.value,
+                'pos': self.pos,
+                'name': self.name,
+                'size': self.size   # byte
+            })
+        for child in self.children:
+            child: PcapLayerField
+            node_dict['children'].append(child.get_dict())
+        return node_dict
 
     def __str__(self, depth: int = 1):
         """
