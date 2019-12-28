@@ -1,45 +1,45 @@
 {% extends 'layout/base.html' %}
 {% comment %}
-<!--
-*********************************************************************************
-*                                                                               *
-* sniffing.html -- HTML file.                                                   *
-*                                                                               *
-************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
-*                                                                               *
-* =========================================================                     *
-* Material Dashboard Dark Edition - v2.1.0                                      *
-* =========================================================                     *
-*                                                                               *
-* Product Page: https://www.creative-tim.com/product/material-dashboard-dark    *
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)                     *
-*                                                                               *
-* Coded by www.creative-tim.com                                                 *
-*                                                                               *
-* =========================================================                     *
-*                                                                               *
-* The above copyright notice and this permission notice shall be included in    *
-* all copies or substantial portions of the Software.                           *
-*                                                                               *
-********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
-*                                                                               *
-* This file is part of black-widow.                                             *
-*                                                                               *
-* black-widow is free software: you can redistribute it and/or modify           *
-* it under the terms of the GNU General Public License as published by          *
-* the Free Software Foundation, either version 3 of the License, or             *
-* (at your option) any later version.                                           *
-*                                                                               *
-* black-widow is distributed in the hope that it will be useful,                *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
-* GNU General Public License for more details.                                  *
-*                                                                               *
-* You should have received a copy of the GNU General Public License             *
-* along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
-*                                                                               *
-*********************************************************************************
--->
+    <!--
+    *********************************************************************************
+    *                                                                               *
+    * sniffing.html -- HTML file.                                                   *
+    *                                                                               *
+    ************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
+    *                                                                               *
+    * =========================================================                     *
+    * Material Dashboard Dark Edition - v2.1.0                                      *
+    * =========================================================                     *
+    *                                                                               *
+    * Product Page: https://www.creative-tim.com/product/material-dashboard-dark    *
+    * Copyright 2019 Creative Tim (http://www.creative-tim.com)                     *
+    *                                                                               *
+    * Coded by www.creative-tim.com                                                 *
+    *                                                                               *
+    * =========================================================                     *
+    *                                                                               *
+    * The above copyright notice and this permission notice shall be included in    *
+    * all copies or substantial portions of the Software.                           *
+    *                                                                               *
+    ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
+    *                                                                               *
+    * This file is part of black-widow.                                             *
+    *                                                                               *
+    * black-widow is free software: you can redistribute it and/or modify           *
+    * it under the terms of the GNU General Public License as published by          *
+    * the Free Software Foundation, either version 3 of the License, or             *
+    * (at your option) any later version.                                           *
+    *                                                                               *
+    * black-widow is distributed in the hope that it will be useful,                *
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+    * GNU General Public License for more details.                                  *
+    *                                                                               *
+    * You should have received a copy of the GNU General Public License             *
+    * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
+    *                                                                               *
+    *********************************************************************************
+    -->
 {% endcomment %}
 {% block content %}
     <form method="post" enctype="multipart/form-data" id="sniffing-settings-form">
@@ -113,30 +113,23 @@
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">Interfaces *</h4>
-                                                <p class="card-category"> Chose the interface to sniff</p>
+                                                <p class="card-category"> Select the interfaces to sniff</p>
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="interfaces">
-                                                        <table class="table">
-                                                            <tbody>
-                                                            {% for interface,checked in interfaces.items %}
-                                                                <tr>
-                                                                    <td>
-                                                                        <div class="form-check form-check-radio">
-                                                                            <label class="form-check-label">
-                                                                                <input {% if checked %}checked{% endif %} required class="form-check-input" type="radio" name="interfaces" value="{{interface}}">
-                                                                                {{interface}}
-                                                                                <span class="circle">
-                                                            <span class="check"></span>
-                                                        </span>
-                                                                            </label>
-                                                                        </div>
-                                                                    </td>
-                                                                </tr>
-                                                            {% endfor %}
-                                                            </tbody>
-                                                        </table>
+
+                                                        {% for interface,checked in interfaces.items %}
+
+                                                            <div class="form-check">
+                                                                <label class="form-check-label">
+                                                                    <input {% if checked %}checked{% endif %} class="form-check-input" type="checkbox" value="{{ interface }}"  name="interfaces" >
+                                                                    {{ interface }}
+                                                                    <span class="form-check-sign"><span class="check"></span></span>
+                                                                </label>
+                                                            </div>
+
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>

@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* env.py -- Public environment variables.                                       *
+* sql_view.py -- Django SQL Injection views.                                    *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,19 +23,55 @@
 *********************************************************************************
 """
 
-from os.path import dirname, realpath
+from django.shortcuts import render, redirect
 
-APP_VERSION = '1.3.0#alpha'
-APP_NAME = 'Black Widow'
-APP_PROC = 'black-widow'
-APP_PATH = dirname(realpath(__file__))  # /path/to/app
-APP_STORAGE = APP_PATH + '/storage'
-APP_STORAGE_OUT = APP_STORAGE + '/out'
-APP_WEB_ROOT = APP_PATH + '/gui/web'
-APP_WEB = APP_PATH + '/gui/web/black_widow'
-APP_SETTINGS = APP_STORAGE + '/settings.json'
-APP_TMP = '/tmp/black-widow'
-APP_LOGFILE = APP_TMP + '/black-widow.log'
-ROOT_PATH = dirname(APP_PATH)
-EXEC_PATH = ROOT_PATH + '/' + APP_PROC + '.py'
-RES_PATH = ROOT_PATH + '/resources'
+from app.utils.helpers import util
+
+from . import AbstractView
+
+
+class Sql:
+    """
+    SQL injection Container View
+    """
+    class SettingsView(AbstractView):
+        """
+        SQL View
+        """
+        name = 'sql-injection'
+        template_name = 'sql/settings.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            # TODO: get current sql injection jobs
+            view_params = dict()
+            return render(request, self.template_name, view_params)
+
+        def post(self, request):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponseRedirect
+            """
+            # TODO: create new SQL injection job
+            job_id = 0
+            return redirect('sql/inject?job_id=' + str(job_id))
+
+    class InjectView(AbstractView):
+        """
+        Injection View
+        """
+        name = 'sniffing'
+        template_name = 'sql/inject.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            request_params: dict = request.GET.dict()
+            job_id = request_params.get('job_id')
+            util.Log.info("Showing job #" + str(job_id))
+            return render(request, self.template_name)

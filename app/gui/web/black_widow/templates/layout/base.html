@@ -50,7 +50,7 @@
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
-    <link href="{% static 'css/material-dashboard.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/material-dashboard.min.css' %}" rel="stylesheet" />
     <link href="{% static 'css/black-widow.css' %}" rel="stylesheet" />
     <!-- Other CSS Files -->
     {% block style %}
@@ -58,6 +58,23 @@
 </head>
 
 <body class="dark-edition black-edition">
+
+<!-- Spinner -->
+<div id="spinner" class="spinner-container" style="display: none;">
+    <div class="atom-spinner spinner">
+        <div class="spinner-inner">
+            <div class="spinner-line"></div>
+            <div class="spinner-line"></div>
+            <div class="spinner-line"></div>
+            <!--Chrome renders little circles malformed :(-->
+            <div class="spinner-circle">
+                &#9679;
+            </div>
+        </div>
+    </div>
+    <div class="spinner-text text-danger">Loading...</div>
+</div>
+
 <div class="wrapper ">
     <div class="sidebar" data-color="danger" data-background-color="black" data-image="{% static 'img/sidebar-2.jpg' %}">
         <!--
@@ -209,7 +226,7 @@
                 <nav class="float-left">
                     <ul>
                         <li>
-                            <a target="_blank" href="https://github.com/FabrizioFubelli/black-widow">
+                            <a target="_blank" href="https://github.com/offensive-hub/black-widow">
                                 GitHub
                             </a>
                         </li>
@@ -231,7 +248,7 @@
                         </li>
                         -->
                         <li>
-                            <a target="_blank" href="https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE">
+                            <a target="_blank" href="https://raw.githubusercontent.com/offensive-hub/black-widow/master/LICENSE">
                                 License
                             </a>
                         </li>
@@ -291,7 +308,7 @@
                 </a>
             </li>
             <li class="button-container">
-                <a href="https://github.com/FabrizioFubelli/black-widow" target="_blank" class="btn btn-primary btn-block">
+                <a href="https://github.com/offensive-hub/black-widow" target="_blank" class="btn btn-primary btn-block">
                     GitHub
                 </a>
             </li>

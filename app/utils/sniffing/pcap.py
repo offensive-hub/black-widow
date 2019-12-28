@@ -33,188 +33,302 @@
 *********************************************************************************
 """
 
-import codecs
-import socket
-import numpy
 import pyshark
 
-from app.utils import settings
-from app.utils.helpers.util import replace_regex, regex_is_string
+from pyshark.packet.fields import LayerField
+from pyshark.packet.layer import Layer
+from pyshark.packet.packet import Packet
+
 from app.utils.helpers.logger import Log
+from app.utils.helpers.util import is_hex, regex_is_string
+
+from . import MacManufacturer
+from . import PcapLayerField
 
 
-def sniff_pcap(filters=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
+class Pcap:
     """
-    Packet capture method
-    :param filters: https://wiki.wireshark.org/DisplayFilters
-    :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
-    :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
-    :param interface: L'interfaccia da cui ascoltare (o None)
-    :param limit_length: The limit length of each packet field (they will be truncated), or None
-    :param callback: The callback method to call (or None)
+    Packet Capture (pcap) class
     """
+    mac_manufacturer = None
 
-    def __is_hash__(text: str) -> bool:
-        return len(text) >= 8 and regex_is_string('^(([A-Z]|[a-z]|[0-9])+)+$', text)
-
-    def __best_field__(original: str, decoded: str) -> str:
-        if __is_hash__(original):
-            return 'original'
-        decoded = replace_regex('[^a-zA-Z0-9 \n\.]', '', decoded)
-        if len(decoded) <= 5:
-            return 'original'
+    def __init__(
+            self,
+            filters: str = None,
+            src_file: str = None,
+            dest_file: str = None,
+            interfaces: list = None,
+            limit_length: int = None,
+            pkt_count: int = None,
+            callback=None
+    ):
+        """
+        Packet capture method
+        :param filters: https://wiki.wireshark.org/DisplayFilters
+        :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
+        :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
+        :param interfaces: The list of interfaces to sniff (or None, to sniff all interfaces)
+        :param limit_length: The limit length of each packet field (they will be truncated), or None
+        :param pkt_count: Max packets to sniff, or None
+        :param callback: The callback method to call (or None)
+        """
+        if Pcap.mac_manufacturer is None:
+            Pcap.mac_manufacturer = MacManufacturer()
+        self.count = 0  # Sniffed packets
+        self.filters = filters
+        self.src_file = src_file
+        self.dest_file = dest_file
+        self.limit_length = limit_length
+        self.user_callback = callback
+        self.interfaces = interfaces
+        if src_file is not None:
+            Log.info('Analyzing file: ' + src_file)
+            self.capture = pyshark.FileCapture(
+                input_file=src_file,
+                display_filter=filters,
+                output_file=dest_file,
+                # include_raw=True,
+                # use_json=True
+                # debug=APP_DEBUG
+            )
         else:
-            return 'decoded'
+            Log.info('Analyzing live traffic')
+            self.capture = pyshark.LiveCapture(
+                interface=interfaces,
+                display_filter=filters,
+                output_file=dest_file,
+                # include_raw=True,
+                # use_json=True
+                # debug=APP_DEBUG
+            )
+        self.capture.apply_on_packets(self._callback, packet_count=pkt_count)
 
-    def __pcap_callback__(pkt):
-        # Log.info('Analyzing packet number ' + str(pkt.number))
-        # Log.info('Layers: ' + str(pkt.layers))
-        layers_dict = dict()
-        # pkt.pretty_print() # Printa il pacchetto in modo comprensibile (non mostra importanti campi e non decodifica)
-        for layer in pkt.layers:
-            layer_fields = {}
+    @staticmethod
+    def sniff(
+            filters: str = None,
+            src_file: str = None,
+            dest_file: str = None,
+            interfaces: list = None,
+            limit_length: int = None,
+            pkt_count: int = None,
+            callback=None
+    ):
+        """
+        Packet capture method
+        :param filters: https://wiki.wireshark.org/DisplayFilters
+        :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
+        :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
+        :param interfaces: The list of interfaces to sniff (or None, to sniff all interfaces)
+        :param limit_length: The limit length of each packet field (they will be truncated), or None
+        :param pkt_count: Max packets to sniff, or None
+        :param callback: The callback method to call (or None)
+        :rtype: Pcap
+        """
+        pcap = Pcap(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
+        return pcap
 
-            # Ripasso Layers:
-            # Layers: ["2. Data Link (mac)",    "3. Network (ip)", "4. Transport (tcp/udp)", "5-6-7. *data"]
-            # Layers: ["2. Collegamento (mac)", "3. Rete (ip)",    "4. Trasporto (tcp/udp)", "5-6-7. *dati"]
+    @staticmethod
+    def print_pkt(pkt_dict: dict):
+        """
+        Print the pkt_dict
+        :param pkt_dict: The pkt dict created by Pcap._callback(pkt)
+        """
+        for key, value in pkt_dict.items():
+            if key == 'layers':
+                for layer_dict in value:
+                    Pcap._print_layer(layer_dict)
+            elif key == 'frame_info':
+                Pcap._print_layer(value)
+            else:
+                print(str(key) + ': ' + str(value))
 
-            if callback is None:
-                print('Layer: ' + str(layer.layer_name))
-
-            for field_name in numpy.unique(layer.field_names):
-                layer_field_dict = {}
-
-                dirty_field = layer.get_field(field_name).strip()
-
-                if ('addr' in field_name or 'dst' in field_name or 'src' in field_name) and (':' in dirty_field):
-                    field = dirty_field
-                else:
-                    try:
-                        # Decodifico da esadecimale a utf-8 (se non è esadecimale, lancia eccezione)
-                        field = bytes.fromhex(dirty_field.replace(":", " ")).decode('utf-8', 'ignore')
-                    except ValueError or UnicodeDecodeError or TypeError:
-                        # Decodifico in utf-8 (il doc non era in esadecimale)
-                        field = codecs.decode(bytes(dirty_field, encoding='utf-8')).replace("\\r\\n", "")
-                    # Ordino codice sostituendo caratteri di accapo e di tabulazione e pulisco la stringa
-                    field = field\
-                        .replace('\\xa', '\n')\
-                        .replace('\\xd', '\n')\
-                        .replace('\\x9', '\t')\
-                        .replace('\\n', '\n')\
-                        .strip()
-
-                # salvo campi originale e decodificato
-                layer_field_dict['decoded'] = field
-                layer_field_dict['original'] = dirty_field
-
-                if limit_length is not None:
-                    # Verifico lunghezza campo decodificato
-                    if len(field) > limit_length:
-                        # Log.info('Truncated too long decoded field (old_length='+str(len(field))+',
-                        # new_length='+str(limit_length)+')')
-                        field = '[truncated]' + str(field[0:limit_length])
-                        layer_field_dict['decoded_truncated'] = field
-
-                    # Verifico lunghezza campo originale
-                    if len(dirty_field) > limit_length:
-                        # Log.info('Truncated too long original field (old_length='+str(len(dirty_field))+',
-                        # new_length='+str(limit_length)+')')
-                        dirty_field = '[truncated]' + str(dirty_field[0:limit_length])
-                        layer_field_dict['original_truncated'] = dirty_field
-
-                # Se il risultato della codifica è troppo corto, è probabilissimo che la decodifica
-                # non abbia dato un valore sensato: consiglio di visualizzare il valore originale
-                layer_field_dict['best'] = __best_field__(dirty_field, field)
-
-                layer_fields[field_name] = layer_field_dict
-
-                key = layer_field_dict['best']
-                truncated_key = key + '_truncated'
-                if truncated_key in layer_field_dict:
-                    field = layer_field_dict[truncated_key]
-                else:
-                    field = layer_field_dict[key]
-
-                # if (field_name == 'content_encoding'): content_encoding = field
-
-                if callback is None:
-                    print('   |--[ ' + str(field_name) + ' ] = ' + str(field))  # Printa stile albero
-
-            layers_dict[layer.layer_name] = layer_fields
-
-        # Creo un dizionario con le informazioni sul pacchetto catturato
-        frame_info = dict()
-        for field_name in pkt.frame_info.field_names:
-            frame_info[field_name] = str(pkt.frame_info.get_field(field_name))
+    def _callback(self, pkt: Packet):
+        """
+        :param pkt: The pyshark packet
+        """
         pkt_dict = {
             'number': str(pkt.number),
+            'time': str(pkt.frame_info.time_relative),
+            # TODO: source
+            # TODO: source_host
+            # TODO: destination
+            # TODO: destination_host
+            # TODO: protocol
+            'length': str(pkt.length),
             'captured_length': str(pkt.captured_length),
             'interface_captured': str(pkt.interface_captured),
             'highest_layer': str(pkt.highest_layer),
-            'frame_info': frame_info,
-            'length': str(pkt.length),
             'sniff_time': str(pkt.sniff_time),
             'sniff_timestamp': str(pkt.sniff_timestamp),
             'transport_layer': str(pkt.transport_layer),
-            'layers': layers_dict  # Il dizionario dei livelli creato nel sovrastante loop
+            'frame_info': Pcap._get_layer_dict(pkt.frame_info),
+            'layers': []
         }
-        source = None
-        destination = None
-        source_host = 'Unknown'
-        destination_host = 'Unknown'
-        pkt_type = None
-        pkt_dict_layers = pkt_dict.get('layers')
-        # noinspection PyTypeChecker
-        pkt_dict_ip: dict = pkt_dict_layers.get('ip')
-        # noinspection PyTypeChecker
-        pkt_dict_arp: dict = pkt_dict_layers.get('arp')
-        # noinspection PyTypeChecker
-        pkt_dict_eth: dict = pkt_dict_layers.get('eth')
+        for layer in pkt.layers:
+            pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
+        if self.user_callback is not None:
+            self.user_callback(pkt_dict)
+        else:
+            Pcap.print_pkt(pkt_dict)
+        self.count += 1
 
-        if pkt_dict_ip is not None:
-            source = pkt_dict_ip['src']['decoded']
-            destination = pkt_dict_ip['dst']['decoded']
-        elif pkt_dict_arp is not None:
-            source = pkt_dict_arp['src_proto_ipv4']['decoded']
-            destination = pkt_dict_arp['dst_proto_ipv4']['decoded']
-        elif pkt_dict_eth is not None:
-            source = pkt_dict_eth['src']['decoded']
-            destination = pkt_dict_eth['dst']['decoded']
+    @staticmethod
+    def _field_is_binary(field: PcapLayerField):
+        field_label = field.label
+        equal_index = field_label.find(' = ')
+        binary_key = field_label[0:equal_index]
+        return equal_index >= 0 and regex_is_string('^(\.| |0|1)+$', binary_key)
 
-        if source is not None:
+    # noinspection PyProtectedMember
+    @staticmethod
+    def _get_layer_dict(layer: Layer) -> (dict, dict):
+        """
+        TODO: Manage Tags + get src and dst ip/(mac & vendor)
+        :param layer: The layer to process
+        :return: The dictionary of layer, The dictionary of src and dest ip/mac (looked up)
+        """
+
+        field_tree = dict()  # tree dict { name => pkt }
+
+        def update_field_tree_keys(local_field_tree_keys: list) -> (list, dict):
+            """
+            Insert into the field_tree the input keys recursively
+            Eg. local_field_tree_keys = ['a', 'b', 'c']
+                field_tree['a']['b']['c'] = dict()
+            :param local_field_tree_keys: the dictionary keys used to create the parent dicts of field
+            :return: The family (as list) and the node (as dict) of field to insert
+            """
+            local_field_node = field_tree
+            local_field_tree_family = []
+            for local_field_tree_key in local_field_tree_keys:
+                local_field_tree_child = local_field_node.get(local_field_tree_key)
+                if local_field_tree_child is None:
+                    local_field_tree_child = dict()
+                    local_field_node[local_field_tree_key] = local_field_tree_child
+                local_field_tree_family.insert(0, local_field_tree_child)
+                local_field_node = local_field_tree_child
+            return local_field_tree_family, local_field_node
+
+        pcap_layer_field_root = PcapLayerField()
+
+        # noinspection PyProtectedMember
+        def local_get_field_tree(local_field: LayerField) -> PcapLayerField:
+            """
+            :param local_field: The LayerField to insert in dict
+            """
             try:
-                source_host = socket.gethostbyaddr(source)[0]
-            except OSError:
-                pass
-        if destination is not None:
-            try:
-                destination_host = socket.gethostbyaddr(destination)[0]
-            except OSError:
-                pass
+                parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
+            except TypeError as e:
+                # Log.error(str(e))
+                parent_poss = ()
+                local_field.pos = 0
+                local_field.size = 0
 
-        pkt_dict['source'] = source
-        pkt_dict['source_host'] = source_host
-        pkt_dict['destination'] = destination
-        pkt_dict['destination_host'] = destination_host
+            if local_field.name is None:
+                # Log.error('Field name is None')
+                local_field.name = ''
 
-        transport_layer = pkt_dict.get('transport_layer')
-        highest_layer = pkt_dict.get('highest_layer')
-        if highest_layer != 'None':
-            pkt_type = highest_layer
-        elif transport_layer != 'None':
-            pkt_type = transport_layer
+            field_tree_keys = local_field.name.split('.')
+            family, node = update_field_tree_keys(field_tree_keys)
 
-        pkt_dict['type'] = pkt_type
+            def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
+                """
+                If exists, found the big brother of local_field, otherwise, the parent
+                :param local_member:
+                :param only_hex:
+                :return:
+                """
+                parent = None
+                for key, member_parent in local_member.items():
+                    member_parent: PcapLayerField or dict
+                    if not only_hex:
+                        member_brother = None
+                        if isinstance(member_parent, dict):
+                            # Check brothers
+                            member_brother = find_pcap_layer_field_parent(member_parent, True)
+                        if member_brother is not None:
+                            return member_brother   # brother
+                    if key in parent_poss and member_parent.name != local_field.name:
+                        member_parent: PcapLayerField
+                        if not only_hex:
+                            parent = member_parent  # parent (but the preferred is brother)
+                        elif is_hex(member_parent.value) and \
+                                member_parent.pos == int(local_field.pos) and \
+                                not Pcap._field_is_binary(member_parent):
+                            return member_parent    # brother
+                return parent
 
-        if callback is not None:
-            callback(pkt_dict)
+            pcap_layer_field_parent = None
+            for member in family:
+                pcap_layer_field_parent = find_pcap_layer_field_parent(member)
+                if pcap_layer_field_parent is not None:
+                    break
 
-    if interface is None and src_file is None:
-        interface = settings.Get.my_interface()
-    if src_file is not None:
-        Log.info('Analyzing file: ' + src_file)
-        capture = pyshark.FileCapture(src_file, display_filter=filters, output_file=dest_file)
-    else:
-        Log.info('Analyzing live traffic')
-        capture = pyshark.LiveCapture(interface, display_filter=filters, output_file=dest_file)
-    capture.apply_on_packets(__pcap_callback__)
+            if pcap_layer_field_parent is None:
+                pcap_layer_field_parent = pcap_layer_field_root
+
+            local_field_sanitized_name = layer._sanitize_field_name(local_field.name)
+            local_pcap_layer_field = PcapLayerField(local_field, pcap_layer_field_parent)
+            node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
+            return local_pcap_layer_field
+
+        src_dest_dict = {
+            'source': None,
+            'source_host': None,
+            'destination': None,
+            'destination_host': None
+        }
+
+        field_insert = set()
+        for field in layer._get_all_fields_with_alternates():
+            field: LayerField
+            field_unique_key = str(field.pos) + '_' + str(field.name)
+            if field_unique_key in field_insert and False:
+                continue
+            pcap_layer_field = local_get_field_tree(field)
+            if pcap_layer_field is not None:
+                # TODO: check if pcap_layer_field is (src, dest) ip/mac
+                field_insert.add(field_unique_key)
+
+        return {
+            'name': layer.layer_name.upper(),
+            'fields': pcap_layer_field_root.get_dict().get('children')
+        }
+
+    @staticmethod
+    def _print_layer(layer_dict: dict):
+        """
+        Print the layer_dict
+        :param layer_dict: The layer dict created by Pcap._callback(pkt)
+        """
+        print('Layer: ' + str(layer_dict.get('name')))
+        for field_dict in layer_dict.get('fields'):
+            Pcap._print_field(field_dict)
+
+    @staticmethod
+    def _print_field(field_dict: dict, depth: int = 0):
+        """
+        Print the field_dict
+        :param field_dict: The field dict returned by PcapLayerField.get_dict()
+        """
+        field_header = '   |' * depth + '   ├── '
+        field_label = field_dict.get('label')
+        field_key = field_header + '[ ' + str(field_label) + ' ]'
+        field_value = field_dict.get('value')
+        if field_value is None:
+            field_value = ''
+        if len(field_value) > 30:
+            field_value = field_value[0:30] + '...'
+        else:
+            field_key += ' = '
+        alternate_values = field_dict.get('alternate_values')
+        if alternate_values is not None:
+            field_key_len = len(field_key)
+            for alternate_value in field_dict.get('alternate_values'):
+                field_value += '\n' + (field_key_len * ' ') + alternate_value
+        pos = str(field_dict.get('pos'))
+        size = str(field_dict.get('size'))
+        name = str(field_dict.get('name'))
+        print(field_key + field_value + ' (pos=' + pos + ', size=' + size + ', name=' + name + ')')
+        for field_child in field_dict.get('children'):
+            Pcap._print_field(field_child, depth + 1)

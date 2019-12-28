@@ -56,10 +56,11 @@ def create_parser():
                               metavar='FILE')
     options_pcap.add_argument("--pcap-dest", help="The .pcap destination file",
                               type=argparse.FileType('w'), metavar='FILE')
-    options_pcap.add_argument("--pcap-int", help="Network interface (ex: eth0)", type=str, metavar='INTERFACE')
+    options_pcap.add_argument("--pcap-int", help="Network interfaces (eg: eth0,wlan0)", type=str, metavar='INTERFACES')
     options_pcap.add_argument("--pcap-filters", help="https://wiki.wireshark.org/CaptureFilters", type=str,
                               metavar='FILTERS')
     options_pcap.add_argument("--pcap-limit", help="Max field lengths of each packet", type=int, metavar='INTEGER')
+    options_pcap.add_argument("--pcap-count", help="Max packets to sniff", type=int, metavar='INTEGER')
 
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")

@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* abstract_view.py -- Abstract view of black-widow.                             *
+* abstract_view.py -- Django Abstract view.                                     *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *

@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* views.py -- Django views of black-widow.                                      *
+* sniffing_view.py -- Django Sniffing views.                                    *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -27,36 +27,24 @@ import os
 import signal
 from time import sleep
 
-from django.http import HttpResponseNotFound, FileResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from app.env import APP_STORAGE_OUT
-from app.gui.web.settings import STATICFILES_DIRS
 from app.utils.helpers import network
-from app.utils.sniffing.pcap import sniff_pcap
+from app.utils.sniffing.pcap import Pcap
 from app.utils.helpers import util
 from app.utils.helpers.serializer import JsonSerializer
 from app.utils.helpers.multitask import MultiTask
-from app.gui.web.black_widow.abstract_class.abstract_sniffing_view import AbstractSniffingView
 
-from .abstract_class import AbstractView
-
-
-# Create your views here.
-
-def index(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :return: django.http.HttpResponse
-    """
-    return render(request, 'index.html')
+from . import AbstractSniffingView
+from . import AbstractView
 
 
 class Sniffing:
     """
     Sniffing Container View
     """
-
     class SettingsView(AbstractSniffingView):
         """
         Sniffing View
@@ -88,6 +76,8 @@ class Sniffing:
             job_id = len(sniffing_jobs)
 
             session_job_params: dict = request.POST.dict()
+            if session_job_params.get('interfaces') is not None:
+                session_job_params['interfaces'] = request.POST.getlist('interfaces')
 
             pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
@@ -108,16 +98,15 @@ class Sniffing:
                 :type pkt: dict
                 """
                 JsonSerializer.add_item_to_dict(pkt['number'], pkt, out_json_file)
-                return
 
             def target():
                 """
                 The target function used by parallel process
                 """
-                sniff_pcap(
+                Pcap.sniff(
                     filters=session_job_params.get('filters'),
                     src_file=session_job_params.get('pcap'),
-                    interface=session_job_params.get('interfaces'),
+                    interfaces=session_job_params.get('interfaces'),
                     limit_length=10000,
                     callback=callback
                 )
@@ -224,113 +213,3 @@ class Sniffing:
                 }
             })
             return JsonResponse(pagination, status=200)
-
-
-class Sql:
-    """
-    SQL injection Container View
-    """
-    class SettingsView(AbstractView):
-        """
-        SQL View
-        """
-        name = 'sql-injection'
-        template_name = 'sql/settings.html'
-
-        def get(self, request, *args, **kwargs):
-            """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponse
-            """
-            # TODO: get current sql injection jobs
-            view_params = dict()
-            return render(request, self.template_name, view_params)
-
-        def post(self, request):
-            """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponseRedirect
-            """
-            # TODO: create new SQL injection job
-            job_id = 0
-            return redirect('sql/inject?job_id=' + str(job_id))
-
-    class InjectView(AbstractView):
-        """
-        Injection View
-        """
-        name = 'sniffing'
-        template_name = 'sql/inject.html'
-
-        def get(self, request, *args, **kwargs):
-            """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponse
-            """
-            request_params: dict = request.GET.dict()
-            job_id = request_params.get('job_id')
-            util.Log.info("Showing job #" + str(job_id))
-            return render(request, self.template_name)
-
-
-def user(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'user.html')
-
-
-def tables(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'tables.html')
-
-
-def typography(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'typography.html')
-
-
-def icons(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'icons.html')
-
-
-def notifications(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'notifications.html')
-
-
-def upgrade(request):
-    """
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :rtype: django.http.HttpResponse
-    """
-    return render(request, 'upgrade.html')
-
-
-# noinspection PyUnusedLocal
-def static(request, path):
-    """
-    Manage requested static file (for non-DEBUG mode compatibility without web-server)
-    :type request: django.core.handlers.wsgi.WSGIRequest
-    :type path: str
-    :rtype: django.http.HttpResponse
-    """
-    for directory in STATICFILES_DIRS:
-        static_file = os.path.join(directory, path)
-        if os.path.isfile(static_file):
-            return FileResponse(open(static_file, 'rb'))
-    return HttpResponseNotFound()

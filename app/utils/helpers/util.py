@@ -43,9 +43,7 @@ def timestamp():
 
 
 # @return True se string contiene regex
-def regex_in_string(regex, string):
-    if APP_DEBUG:
-        Log.info('CALLED: regex_in_string(' + str(regex) + ', ' + str(string) + ')')
+def regex_in_string(regex, string) -> bool:
     reg = re.compile(regex)
     matches = re.findall(reg, string)
     return len(matches) > 0
@@ -69,6 +67,24 @@ def replace_regex(regex, replace, string):
 # @return True se element è un elemento listabile, False altrimenti
 def is_listable(obj):
     return type(obj) in (list, tuple, dict, range)
+
+
+def is_hex(text: str) -> bool:
+    """
+    Check if the input text is an hexadecimal value
+    :param text: The text to check
+    :return: True, if text is an hexadecimal value, otherwise False
+    """
+    return regex_is_string('^0x[A-Fa-f0-9]+$', text)
+
+
+def is_int(text: str) -> bool:
+    """
+    Check if the input text is a decimal value
+    :param text: The text to check
+    :return: True, if text is an decimal value, otherwise False
+    """
+    return regex_is_string('^[0-9]+$', text)
 
 
 def sort_dict(dictionary: dict) -> dict:

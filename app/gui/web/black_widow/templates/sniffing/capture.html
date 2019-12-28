@@ -79,7 +79,7 @@
                     </button>
 
                 </div>
-                <div class="card-body">
+                <div class="card-body" id="main_body">
                     <div class="table-responsive">
                         <table class="table table-hover table-select" id="sniffed-pkts-table">
                             <thead class="">
@@ -97,7 +97,7 @@
                                     Destination
                                 </th>
                                 <th>
-                                    Type
+                                    Protocol
                                 </th>
                                 <th>
                                     Length (bytes)
@@ -163,7 +163,7 @@
                             let pkt = data.result[key];
                             $sniffedPktsTable.insertTableRow([
                                 {name: pkt.number},                   // No.
-                                {name: pkt.frame_info.time_relative}, // Time
+                                {name: pkt.time},                     // Time
                                 {
                                     name: pkt.source,                 // Source
                                     title: pkt.source_host
@@ -172,8 +172,8 @@
                                     name: pkt.destination,            // Destination
                                     title: pkt.destination_host
                                 },
-                                {name: pkt.type},                     // Type
-                                {name: pkt.frame_info.len},           // Length (bytes)
+                                {name: pkt.protocol},                 // Protocol
+                                {name: pkt.length},                   // Length (bytes)
                             ]);
                         }
 
@@ -192,6 +192,8 @@
                                 updatePkts(0, false);
                             }
                         });
+
+                        stopSpinner();
 
                         if (loop) {
                             updatePkts(3000, loop);
@@ -250,6 +252,8 @@
             };
             $playCaptureBtn.click(playPkts);
             updatePkts(300, true);
+            moveSpinner($('#main_body'), 'Setting up sniffer...');
+            startSpinner();
         });
     </script>
 {% endblock %}
