@@ -76,7 +76,8 @@ class Sniffing:
             job_id = len(sniffing_jobs)
 
             session_job_params: dict = request.POST.dict()
-            session_job_params['interfaces'] = request.POST.getlist('interfaces')
+            if session_job_params.get('interfaces') is not None:
+                session_job_params['interfaces'] = request.POST.getlist('interfaces')
 
             pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
@@ -105,7 +106,7 @@ class Sniffing:
                 Pcap.sniff(
                     filters=session_job_params.get('filters'),
                     src_file=session_job_params.get('pcap'),
-                    interface=session_job_params.get('interfaces'),
+                    interfaces=session_job_params.get('interfaces'),
                     limit_length=10000,
                     callback=callback
                 )
