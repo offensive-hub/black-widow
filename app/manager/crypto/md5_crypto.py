@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* urls.py -- Django urls of black-widow.                                        *
+* md5_crypto.py -- Md5 Encryption/Decryption manager                            *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,29 +23,60 @@
 *********************************************************************************
 """
 
-from django.urls import path, re_path
+import hashlib
+import json
+from app.utils.request import HttpRequest
+from app.utils.helpers.logger import Log
 
-from app.gui.web.settings import STATIC_URL
-from . import view
 
-urlpatterns = [
-    path('', view.index, name='black widow'),
+class Md5Crypto:
+    """
+    Md5 encryption/decryption class
+    """
 
-    # --- SNIFFING --- #
-    path('sniffing', view.Sniffing.SettingsView.as_view(), name='sniffing'),
-    path('sniffing/capture', view.Sniffing.CaptureView.as_view(), name='sniffing'),
+    class Api:
+        """
+        Md5 APIs
+        """
 
-    # --- SQL INJECTION --- #
-    path('sql', view.Sql.SettingsView.as_view(), name='sql injection'),
-    path('sql/inject', view.Sql.InjectView.as_view(), name='sql injection'),
+        # Method to get response data from 1st API
+        @staticmethod
+        def _api_1_result(json_dict):
+            return json_dict.get('result')
 
-    path('user', view.user, name='user'),
-    path('tables', view.tables, name='tables'),
-    path('typography', view.typography, name='typography'),
-    path('icons', view.icons, name='icons'),
-    path('notifications', view.notifications, name='notifications'),
-    path('upgrade', view.upgrade, name='upgrade'),
+        _api_1 = {'url': 'https://md5.pinasthika.com/api/decrypt?value=', 'get_result': _api_1_result}
 
-    # static (non debug compatibility without web server)
-    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', view.static, name='static'),
-]
+        # Method to get response data from 2nd API
+        @staticmethod
+        def _api_2_result(json_dict):
+            return json_dict[0].get('decrypted')
+
+        _api_2 = {'url': 'https://www.md5.ovh/index.php?result=json&md5=', 'get_result': _api_2_result}
+
+        @staticmethod
+        def all():
+            return Md5Crypto.Api._api_1, Md5Crypto.Api._api_2
+
+    @staticmethod
+    def encrypt(text: str):
+        m = hashlib.md5()
+        m.update(text.encode())
+        return str(m.hexdigest())
+
+    @staticmethod
+    def decrypt(text: str):
+        for api in Md5Crypto.Api.all():
+            r = HttpRequest.request(api['url'] + text)
+            if r is None:
+                continue
+
+            try:
+                r_json = r.json()
+            except json.decoder.JSONDecodeError:
+                continue
+
+            result = api['get_result'](r_json)
+            if result is not None:
+                return result
+        Log.error('md5: unable to decrypt: ' + text)
+        return None

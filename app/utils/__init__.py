@@ -1,1 +1,1 @@
-from . import helpers, settings, requests, sniffing, crypto, html, sql
+from . import helpers, settings, request, sniffing, html, sql

@@ -27,7 +27,7 @@ import requests
 
 from app.utils.helpers.logger import Log
 from app.utils.helpers.serializer import JsonSerializer
-from app.utils.requests import request, Type as RequestType
+from app.utils.request import HttpRequest
 
 
 class SqlmapTask:
@@ -85,7 +85,7 @@ class SqlmapTask:
     ###################
 
     @staticmethod
-    def request(url: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
+    def request(url: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         Send a request to sqlmap-api server and then load the data json as dict
         :param url: The sqlmap-api url (eg. "http://127.0.0.1:8775/task/new")
@@ -93,7 +93,7 @@ class SqlmapTask:
         :param json: The json to send
         :rtype: dict
         """
-        response = request(url, request_type, json=json)
+        response = HttpRequest.request(url, request_type, json=json)
         r_data = JsonSerializer.load_json(response.text)
         Log.info('Response data of ' + url + ': ' + str(r_data))
         if not r_data['success']:
@@ -116,14 +116,14 @@ class SqlmapTask:
         Get value of option(s) for this task
         :param options: The options to get (eg. [ "cookie", "headers", "referer", ... ])
         """
-        self._option_request('get', RequestType.POST, options)
+        self._option_request('get', HttpRequest.Type.POST, options)
 
     def option_set(self, options: dict):
         """
         Get value of option(s) for this task
         :param options: The options to set (eg. { "referer": "https://example.com" ])
         """
-        self._option_request('set', RequestType.POST, options)
+        self._option_request('set', HttpRequest.Type.POST, options)
 
     """ Public methods """
 
@@ -155,7 +155,7 @@ class SqlmapTask:
 
     """ Protected methods """
 
-    def _request(self, path: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
+    def _request(self, path: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param path: The path for request (eg. "/task/<id>/start")
         :param request_type: get|post|put|patch|delete
@@ -165,7 +165,7 @@ class SqlmapTask:
         url = self.base_url + path
         return SqlmapTask.request(url, request_type, json)
 
-    def _option_request(self, action: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
+    def _option_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param action: The action of option request (eg. "list")
         :param request_type: get|post|put|patch|delete
@@ -174,7 +174,7 @@ class SqlmapTask:
         """
         return self._request('/option/' + self.id + '/' + action, request_type, json)
 
-    def _task_request(self, action: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
+    def _task_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param action: The action of task request (eg. "delete")
         :param request_type: get|post|put|patch|delete
@@ -183,7 +183,7 @@ class SqlmapTask:
         """
         return self._request('/task/' + self.id + '/' + action, request_type, json)
 
-    def _scan_request(self, action: str, request_type: str = RequestType.GET, json: dict or list = None) -> dict:
+    def _scan_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param action: The action of scan request (eg. "kill")
         :param request_type: get|post|put|patch|delete

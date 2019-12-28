@@ -3,9 +3,9 @@
 """
 *********************************************************************************
 *                                                                               *
-* mac_manufacturer.py -- Packet Capture (pcap)                                  *
+* mac_manufacturer.py -- Mac Manufacturer Lookup class                          *
 *                                                                               *
-*   The Mac Manufacturer Lookup class                                           *
+*   MAC Address explanation:                                                    *
 *   _________________________                                                   *
 *   | 1 | 2 | 3 | 4 | 5 | 6 |  =  48bit (6 * 8bit)                              *
 *   {^^^^OUI^^^}^{^^^NIC^^^^}                                                   *
@@ -40,7 +40,7 @@
 from math import floor
 
 from app.utils.helpers.logger import Log
-from app.utils.requests import request
+from app.utils.request import HttpRequest
 
 
 class MacManufacturer:
@@ -73,7 +73,7 @@ class MacManufacturer:
         return None
 
     def _update_manufacturer_dict(self):
-        manufacturer_response = request(MacManufacturer.MANUFACTURERS_URL)
+        manufacturer_response = HttpRequest.request(MacManufacturer.MANUFACTURERS_URL)
         if manufacturer_response.text is None:
             return
         self.manufacturer_dict = dict()

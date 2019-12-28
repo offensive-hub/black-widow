@@ -36,7 +36,7 @@ from time import sleep
 
 from sqlmap.lib.utils.api import server as sqlmap_server
 
-from app.utils.requests import default_agent
+from app.utils.request import HttpRequest
 from app.utils.helpers.logger import Log
 from app.utils.helpers.multitask import MultiTask
 from app.utils.helpers.network import check_socket
@@ -116,7 +116,7 @@ class SqlmapClient:
                 sqlmap_task = SqlmapClient._task_new()
                 sqlmap_task.option_set({
                     'cookie': cookies,
-                    'agent': default_agent(),
+                    'agent': HttpRequest.default_agent(),
                     'referer': url,
                     'delay': delay,
                     'randomAgent': random_agent,
