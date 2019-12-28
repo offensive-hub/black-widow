@@ -21,17 +21,17 @@ It provides easy ways to execute many kinds of information gatherings and attack
  - Continuously updated and extended
 
 ### Features:
- - Localhost Web GUI
- - Sniffing
- - Website crawling
- - Web page parsing
- - SQL injection
- - Injected database management
- - Brute force attacks
- - Cluster between other black-widows
- - Multiple asynchronous requests
- - Multiple targets management
- - Useful CTF features
+ - [x] Localhost Web GUI
+ - [x] Sniffing
+ - [ ] Website crawling
+ - [ ] Web page parsing
+ - [ ] SQL injection
+ - [ ] Injected database management
+ - [ ] Brute force attacks
+ - [ ] Cluster between other black-widows
+ - [ ] Multiple asynchronous requests
+ - [ ] Multiple targets management
+ - [ ] Useful CTF features
 
 ### <img alt="DOCKER_IMAGE" src="https://docs.docker.com/favicons/docs@2x.ico" height="50px" title="Docker"/> Docker Installation:
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
