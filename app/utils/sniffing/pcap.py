@@ -74,6 +74,7 @@ class Pcap:
         """
         if Pcap.mac_manufacturer is None:
             Pcap.mac_manufacturer = MacManufacturer()
+        self.count = 0  # Sniffed packets
         self.filters = filters
         self.src_file = src_file
         self.dest_file = dest_file
@@ -169,6 +170,7 @@ class Pcap:
             self.user_callback(pkt_dict)
         else:
             Pcap.print_pkt(pkt_dict)
+        self.count += 1
 
     @staticmethod
     def _field_is_binary(field: PcapLayerField):
