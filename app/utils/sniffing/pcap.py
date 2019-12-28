@@ -39,7 +39,6 @@ from pyshark.packet.fields import LayerField
 from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
-from app.utils import settings
 from app.utils.helpers.logger import Log
 from app.utils.helpers.util import is_hex, regex_is_string
 
@@ -53,14 +52,24 @@ class Pcap:
     """
     mac_manufacturer = None
 
-    def __init__(self, filters=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
+    def __init__(
+            self,
+            filters: str = None,
+            src_file: str = None,
+            dest_file: str = None,
+            interfaces: list = None,
+            limit_length: int = None,
+            pkt_count: int = None,
+            callback=None
+    ):
         """
         Packet capture method
         :param filters: https://wiki.wireshark.org/DisplayFilters
         :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
         :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
-        :param interface: L'interfaccia da cui ascoltare (o None)
+        :param interfaces: The list of interfaces to sniff (or None, to sniff all interfaces)
         :param limit_length: The limit length of each packet field (they will be truncated), or None
+        :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None)
         """
         if Pcap.mac_manufacturer is None:
@@ -70,10 +79,7 @@ class Pcap:
         self.dest_file = dest_file
         self.limit_length = limit_length
         self.user_callback = callback
-        if interface is None and src_file is None:
-            self.interface = settings.Get.my_interface()
-        else:
-            self.interface = interface
+        self.interfaces = interfaces
         if src_file is not None:
             Log.info('Analyzing file: ' + src_file)
             self.capture = pyshark.FileCapture(
@@ -87,28 +93,37 @@ class Pcap:
         else:
             Log.info('Analyzing live traffic')
             self.capture = pyshark.LiveCapture(
-                interface=interface,
+                interface=interfaces,
                 display_filter=filters,
                 output_file=dest_file,
                 # include_raw=True,
                 # use_json=True
                 # debug=APP_DEBUG
             )
-        self.capture.apply_on_packets(self._callback)
+        self.capture.apply_on_packets(self._callback, packet_count=pkt_count)
 
     @staticmethod
-    def sniff(filters=None, src_file=None, dest_file=None, interface=None, limit_length=None, callback=None):
+    def sniff(
+            filters: str = None,
+            src_file: str = None,
+            dest_file: str = None,
+            interfaces: list = None,
+            limit_length: int = None,
+            pkt_count: int = None,
+            callback=None
+    ):
         """
         Packet capture method
         :param filters: https://wiki.wireshark.org/DisplayFilters
         :param src_file: Il file .pcap da cui leggere i pacchetti ascoltati (o None, per Live sniffing)
         :param dest_file: Il file in cui scrivere il .pcap dei pacchetti ascoltati (o None)
-        :param interface: L'interfaccia da cui ascoltare (o None)
+        :param interfaces: The list of interfaces to sniff (or None, to sniff all interfaces)
         :param limit_length: The limit length of each packet field (they will be truncated), or None
+        :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None)
         :rtype: Pcap
         """
-        pcap = Pcap(filters, src_file, dest_file, interface, limit_length, callback)
+        pcap = Pcap(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
         return pcap
 
     @staticmethod
@@ -194,7 +209,8 @@ class Pcap:
 
         pcap_layer_field_root = PcapLayerField()
 
-        def local_get_field_tree(local_field: LayerField):
+        # noinspection PyProtectedMember
+        def local_get_field_tree(local_field: LayerField) -> PcapLayerField:
             """
             :param local_field: The LayerField to insert in dict
             """
@@ -249,6 +265,7 @@ class Pcap:
             if pcap_layer_field_parent is None:
                 pcap_layer_field_parent = pcap_layer_field_root
 
+            local_field_sanitized_name = layer._sanitize_field_name(local_field.name)
             local_pcap_layer_field = PcapLayerField(local_field, pcap_layer_field_parent)
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
@@ -264,7 +281,7 @@ class Pcap:
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
             field_unique_key = str(field.pos) + '_' + str(field.name)
-            if field_unique_key in field_insert:
+            if field_unique_key in field_insert and False:
                 continue
             pcap_layer_field = local_get_field_tree(field)
             if pcap_layer_field is not None:
