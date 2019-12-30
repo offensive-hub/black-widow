@@ -7,7 +7,7 @@
 [![Image Size](https://img.shields.io/microbadger/image-size/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 -->
 
-![image](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/black-widow-img.png)
+![image](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/black-widow-img.png)
 
 
 ## Offensive penetration testing tool (Open Source)
