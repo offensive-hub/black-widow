@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* env.py -- Public environment variables.                                       *
+* env.py -- Environment variables.                                              *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,19 +23,72 @@
 *********************************************************************************
 """
 
-from os.path import dirname, realpath
+from os.path import dirname, join, isfile
 
+# ------- Black-widow files ------- #
+APP_PATH = dirname(__file__)    # /path/to/app
+ROOT_PATH = dirname(APP_PATH)   # parent of /path/to/app
+PRIVATE_ENV_FILE = join(ROOT_PATH, '.env')
+
+# ----- Editable environments ----- #
+APP_DEBUG = False
+APP_WEB_HOST = '0.0.0.0'
+APP_WEB_PORT = 80
+APP_TMP = '/tmp/black-widow'
+FLAG_REGEX = '[A-Z0-9]{31}='
+
+EDITABLE_ENV = (
+    'APP_DEBUG',
+    'APP_WEB_HOST',
+    'APP_WEB_PORT',
+    'APP_TMP',
+    'FLAG_REGEX'
+)
+
+# ----------- Read .env ----------- #
+if isfile(PRIVATE_ENV_FILE):
+    with open(PRIVATE_ENV_FILE) as f:
+        for e in f.readlines():
+            env = e.strip()
+            if len(env) < 3:
+                continue
+            if env[0] == '#':
+                continue
+            key, val = env.split('=', 1)[0:2]
+            key: str = key.strip()
+            val: str = val.strip()
+            if len(key) == 0 or len(val) == 0:
+                raise EnvironmentError("Wrong environment in .env file: " + env)
+            if key not in EDITABLE_ENV:
+                raise EnvironmentError("Not editable environment in .env file: " + env)
+            if val[0] == "'" or val[0] == '"':
+                i = 0
+                val_ok = ''
+                for char in val:
+                    val_ok += val[i]
+                    if i >= 1 and char == val[0]:
+                        if val[i-1] != '\\':
+                            break
+                    i += 1
+                val = val_ok
+                if len(val) == 0:
+                    raise EnvironmentError("Wrong environment in .env file: " + env)
+            else:
+                val = val.split('#')[0].strip()
+            exec(key + ' = ' + str(val))
+
+# ----- Derived environments ------ #
+# App info
 APP_VERSION = '1.3.5#alpha'
 APP_NAME = 'Black Widow'
 APP_PROC = 'black-widow'
-APP_PATH = dirname(realpath(__file__))  # /path/to/app
-APP_STORAGE = APP_PATH + '/storage'
-APP_STORAGE_OUT = APP_STORAGE + '/out'
-APP_WEB_ROOT = APP_PATH + '/gui/web'
-APP_WEB = APP_PATH + '/gui/web/black_widow'
-APP_SETTINGS = APP_STORAGE + '/settings.json'
-APP_TMP = '/tmp/black-widow'
-APP_LOGFILE = APP_TMP + '/black-widow.log'
-ROOT_PATH = dirname(APP_PATH)
-EXEC_PATH = ROOT_PATH + '/' + APP_PROC + '.py'
-RES_PATH = ROOT_PATH + '/resources'
+# App files
+APP_MAIN_FILENAME = APP_PROC + '.py'
+APP_LOGFILE = join(APP_TMP, APP_PROC + '.log')
+APP_STORAGE = join(APP_PATH, 'storage')
+APP_STORAGE_OUT = join(APP_STORAGE, 'out')
+APP_WEB_ROOT = join(APP_PATH, 'gui/web')
+APP_WEB = join(APP_WEB_ROOT, 'black_widow')
+APP_SETTINGS = join(APP_STORAGE, 'settings.json')
+EXEC_PATH = join(ROOT_PATH, APP_MAIN_FILENAME)
+RES_PATH = join(ROOT_PATH, 'resources')

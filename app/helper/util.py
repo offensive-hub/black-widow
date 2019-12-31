@@ -77,24 +77,6 @@ def is_listable(obj) -> bool:
     return type(obj) in (list, tuple, dict, range)
 
 
-def is_hex(text: str) -> bool:
-    """
-    Check if the input text is an hexadecimal value
-    :param text: The text to check
-    :return: True, if text is an hexadecimal value, otherwise False
-    """
-    return regex_is_string('^0x[A-Fa-f0-9]+$', text)
-
-
-def is_int(text: str) -> bool:
-    """
-    Check if the input text is a decimal value
-    :param text: The text to check
-    :return: True, if text is an decimal value, otherwise False
-    """
-    return regex_is_string('^[0-9]+$', text)
-
-
 def sort_dict(dictionary: dict) -> dict:
     """
     :param dictionary: The dictionary to sort

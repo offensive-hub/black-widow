@@ -27,6 +27,8 @@
 
 import re
 
+from app.helper.util import regex_is_string
+
 
 # @return True se il parametro passato e' un ip address, False altrimenti
 def is_ip(ip_address):
@@ -60,3 +62,21 @@ def is_url(url):
     if regex.match(url):
         return True
     return False
+
+
+def is_hex(text: str) -> bool:
+    """
+    Check if the input text is an hexadecimal value
+    :param text: The text to check
+    :return: True, if text is an hexadecimal value, otherwise False
+    """
+    return regex_is_string('^0x[A-Fa-f0-9]+$', text)
+
+
+def is_int(text: str) -> bool:
+    """
+    Check if the input text is a decimal value
+    :param text: The text to check
+    :return: True, if text is an decimal value, otherwise False
+    """
+    return regex_is_string('^[0-9]+$', text)

@@ -40,7 +40,8 @@ from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
 from app.service import Log
-from app.helper.util import is_hex, regex_is_string
+from app.helper.util import regex_is_string
+from app.helper.validators import is_hex
 
 from .pcap_sniffer_util import MacManufacturer
 from .pcap_sniffer_util import PcapLayerField

@@ -33,8 +33,7 @@ from multiprocessing.process import current_process
 from threading import current_thread
 from termcolor import colored
 
-from app.env import APP_LOGFILE, APP_PROC
-from app.env_local import APP_DEBUG
+from app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
 from app.helper import storage
 
 
