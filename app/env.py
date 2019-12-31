@@ -34,7 +34,7 @@ PRIVATE_ENV_FILE = join(ROOT_PATH, '.env')
 APP_DEBUG = False
 APP_WEB_HOST = '0.0.0.0'
 APP_WEB_PORT = 80
-APP_TMP = '/tmp/black-widow'
+APP_TMP = join('/tmp', 'black-widow')
 FLAG_REGEX = '[A-Z0-9]{31}='
 
 EDITABLE_ENV = (
@@ -87,7 +87,7 @@ APP_MAIN_FILENAME = APP_PROC + '.py'
 APP_LOGFILE = join(APP_TMP, APP_PROC + '.log')
 APP_STORAGE = join(APP_PATH, 'storage')
 APP_STORAGE_OUT = join(APP_STORAGE, 'out')
-APP_WEB_ROOT = join(APP_PATH, 'gui/web')
+APP_WEB_ROOT = join(APP_PATH, 'gui', 'web')
 APP_WEB = join(APP_WEB_ROOT, 'black_widow')
 APP_SETTINGS = join(APP_STORAGE, 'settings.json')
 EXEC_PATH = join(ROOT_PATH, APP_MAIN_FILENAME)
