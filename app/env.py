@@ -25,7 +25,7 @@
 
 from os.path import dirname, realpath
 
-APP_VERSION = '1.3.0#alpha'
+APP_VERSION = '1.3.5#alpha'
 APP_NAME = 'Black Widow'
 APP_PROC = 'black-widow'
 APP_PATH = dirname(realpath(__file__))  # /path/to/app
