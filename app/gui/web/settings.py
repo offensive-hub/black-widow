@@ -33,8 +33,7 @@
 
 import os
 
-from app.env import APP_STORAGE, APP_WEB
-from app.env_local import APP_DEBUG
+from app.env import APP_STORAGE, APP_WEB, APP_DEBUG
 from app.helper.network import get_ip_address
 from app.gui.web.wsgi import WEB_PACKAGE
 

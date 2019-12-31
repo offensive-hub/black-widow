@@ -44,7 +44,7 @@ def make_temp_dir():
 # Startup
 def init(app_type):
     app.service.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
-    app.service.Log.info('DEBUG is ' + str(app.env_local.APP_DEBUG))
+    app.service.Log.info('DEBUG is ' + str(app.env.APP_DEBUG))
 
 
 # Main function for TEST app

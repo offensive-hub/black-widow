@@ -32,8 +32,7 @@ import webbrowser
 from gunicorn.app.wsgiapp import run as gunicorn_run
 from django.core import management
 
-from app.env_local import APP_WEB_HOST, APP_WEB_PORT
-from app.env import EXEC_PATH, APP_NAME
+from app.env import EXEC_PATH, APP_NAME, APP_WEB_HOST, APP_WEB_PORT
 from app.service import MultiTask, Log
 from app.helper.network import get_ip_address
 from app.helper.storage import delete

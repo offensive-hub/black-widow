@@ -23,11 +23,10 @@
 *********************************************************************************
 """
 
-from app.env import APP_SETTINGS    # Json file
-from app.env_local import APP_DEBUG
-from app.utils.helpers import validators
-from app.utils.helpers.logger import Log
-from app.utils.helpers.serializer import JsonSerializer
+from app.env import APP_SETTINGS, APP_DEBUG   # Json file
+from app.service import Log, JsonSerializer
+from app.helper import validators
+
 from . import keys
 
 

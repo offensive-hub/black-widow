@@ -28,8 +28,6 @@ import re
 import shutil
 import time
 
-# from app.env_local import APP_DEBUG
-# from app.utils.helpers.logger import Log
 from .util import replace_regex
 
 

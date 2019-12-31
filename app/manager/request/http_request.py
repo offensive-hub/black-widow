@@ -28,8 +28,7 @@ import requests
 from json.decoder import JSONDecodeError
 from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 
-from app.env import APP_VERSION, APP_NAME
-from app.env_local import APP_DEBUG
+from app.env import APP_VERSION, APP_NAME, APP_DEBUG
 from app.service import Log
 from app.helper.validators import is_url
 
