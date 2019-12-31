@@ -167,15 +167,14 @@ class PcapSniffer:
         mac = host.get('mac')
         mac_manufacturer = host.get('mac_manufacturer')
         if ip is not None:
-            if ip_host is None:
-                host['label'] = ip
-            else:
-                host['label'] = ip_host
+            host['label'] = ip
+            host['title'] = ip_host
         else:
             if mac_manufacturer is None:
                 host['label'] = mac
             else:
                 host['label'] = mac_manufacturer
+                host['title'] = mac
         return host
 
     def _callback(self, pkt: Packet):

@@ -151,11 +151,20 @@ $.fn.insertTableRow = function (values) {
 };
 
 /**
+ * Move the spinner inside the jQuery Element
+ * @param message The message to show (default: "Loading...")
+ */
+$.fn.spinner = function (message='Loading...') {
+    moveSpinner($(this), message);
+    startSpinner();
+};
+
+/**
  * Move the spinner inside $parent
  * @param $parent A jQuery element
  * @param message The message to show (default: "Loading...")
  */
-const moveSpinner = function($parent, message='Loading') {
+const moveSpinner = function($parent, message='Loading...') {
     $parent.append($('#spinner'));
     $('.spinner-text').html(message);
 };

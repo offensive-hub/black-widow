@@ -161,16 +161,20 @@
                         $sniffedPktsTable.find('tbody').html('');
                         for (let key in data.result) {
                             let pkt = data.result[key];
+                            const source_name = pkt.source ? pkt.source.label : undefined;
+                            const source_title = pkt.source ? pkt.source.title : undefined;
+                            const destination_name = pkt.destination ? pkt.destination.label : undefined;
+                            const destination_title = pkt.destination ? pkt.destination.title : undefined;
                             $sniffedPktsTable.insertTableRow([
                                 {name: pkt.number},                   // No.
                                 {name: pkt.time},                     // Time
                                 {
-                                    name: pkt.source,                 // Source
-                                    title: pkt.source_host
+                                    name: source_name,                // Source
+                                    title: source_title
                                 },
                                 {
-                                    name: pkt.destination,            // Destination
-                                    title: pkt.destination_host
+                                    name: destination_name,           // Destination
+                                    title: destination_title
                                 },
                                 {name: pkt.protocol},                 // Protocol
                                 {name: pkt.length},                   // Length (bytes)
@@ -252,8 +256,7 @@
             };
             $playCaptureBtn.click(playPkts);
             updatePkts(300, true);
-            moveSpinner($('#main_body'), 'Setting up sniffer...');
-            startSpinner();
+            $('#main_body').spinner('Setting up sniffer...');
         });
     </script>
 {% endblock %}
