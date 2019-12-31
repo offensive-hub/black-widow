@@ -31,7 +31,7 @@ class PcapLayerField(Node):
     """
     """
 
-    def __init__(self, layer_field: LayerField = None, parent=None, children=None):
+    def __init__(self, layer_field: LayerField = None, sanitized_name: str = None, parent=None, children=None):
         """
         :param layer_field: The LayerField of this Node
         :type parent: PcapLayerField
@@ -48,6 +48,7 @@ class PcapLayerField(Node):
             name = 'root'
             self.is_main = True
         self.field = layer_field
+        self.sanitized_name = sanitized_name
         super().__init__(name, parent, children, **kwargs)
 
     @property

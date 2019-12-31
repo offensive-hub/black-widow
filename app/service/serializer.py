@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* serializer.py -- The serializer class for global usage.                       *
+* serializer.py -- The serializer classes for global usage.                     *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -27,7 +27,7 @@ import json
 import os
 import pickle
 
-from app.utils.helpers import storage
+from app.helper import storage
 
 
 class PickleSerializer:

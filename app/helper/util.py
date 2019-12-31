@@ -30,9 +30,6 @@ import subprocess
 
 from datetime import datetime
 
-from app.env_local import APP_DEBUG
-from app.utils.helpers.logger import Log
-
 
 def now():
     return str(datetime.now()).replace(' ', '_')
@@ -49,23 +46,34 @@ def regex_in_string(regex, string) -> bool:
     return len(matches) > 0
 
 
-# @return True se string ~ regex
-def regex_is_string(regex, string):
+def regex_is_string(regex, string) -> bool:
+    """
+    Check if a string is equals to input regex
+    :param regex: The regex to compare
+    :param string: The string to compare
+    :return: True, if the regex is equals to string
+    """
     reg = re.compile(regex)
     return bool(reg.match(string))
 
 
-# @param regex la regex da trovare in string
-# @param replace la stringa con cui sostituire la regex
-# @param string la stringa in cui trovare la regex
-# @return la string passata per argomento (find), con la sostituzione
-def replace_regex(regex, replace, string):
+def replace_regex(regex, replace, string) -> str:
+    """
+    Replace the regex in the string with another string
+    :param regex: The regex to found
+    :param replace: The replacer string
+    :param string: The string where find and replace the regex
+    :return: The input string with replaced regex
+    """
     return re.sub(regex, replace, string, flags=re.M)
 
 
-# @param element Un oggetto
-# @return True se element è un elemento listabile, False altrimenti
-def is_listable(obj):
+def is_listable(obj) -> bool:
+    """
+    Check if type(obj) is on of (list, tuple, dict, range)
+    :param obj: An Object
+    :return: True if obj is listable, otherwise False
+    """
     return type(obj) in (list, tuple, dict, range)
 
 
@@ -167,13 +175,7 @@ def set_owner_process(user: dict):
 # Fa eseguire al sistema operativo i comandi in args
 # @param *args "cmd [argomenti]"        // ES: "netstat -tuan"
 def pexec(*args):
-    if APP_DEBUG:
-        Log.info('CALLED: pexec' + str(args))
-    try:
-        p = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    except Exception as e:
-        Log.error(str(e))
-        return []
+    p = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     list_stdout = []
     for line in p.stdout.readlines():
         list_stdout.append(str(line.decode('utf-8')).rstrip('\n'))

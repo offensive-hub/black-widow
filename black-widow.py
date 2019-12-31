@@ -39,20 +39,20 @@ class AppType:
 
 
 def make_temp_dir():
-    app.utils.helpers.storage.check_folder(app.env.APP_TMP)
-    app.utils.helpers.storage.chmod(app.env.APP_TMP, 0o0777, True)
+    app.helper.storage.check_folder(app.env.APP_TMP)
+    app.helper.storage.chmod(app.env.APP_TMP, 0o0777, True)
 
 
 # Startup
 def init(app_type):
-    app.utils.helpers.logger.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
-    app.utils.helpers.logger.Log.info('DEBUG is ' + str(app.env_local.APP_DEBUG))
+    app.service.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
+    app.service.Log.info('DEBUG is ' + str(app.env_local.APP_DEBUG))
 
 
 # Main function for TEST app
 def main_test():
     init(AppType.CMD)
-    ip = app.utils.helpers.network.get_ip_address()
+    ip = app.helper.network.get_ip_address()
     print('ip: ' + str(ip))
 
 
@@ -67,32 +67,32 @@ def main_cmd(arguments):
     init(AppType.CMD)
     if arguments.django:
         django_args = str.split(arguments.django)
-        app.utils.helpers.logger.Log.info('Django manager executed')
-        app.utils.helpers.logger.Log.info('Django arguments: ' + str(django_args))
+        app.service.Log.info('Django manager executed')
+        app.service.Log.info('Django arguments: ' + str(django_args))
         app.gui.django_cmd(django_args)
         sys.exit(0)
 
     elif arguments.pcap:
         if arguments.pcap_int is not None:
             arguments.pcap_int = arguments.pcap_int.split(',')
-        app.utils.sniffing.Pcap.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
-                                      dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
-                                      limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
-                                      callback=None)
+        app.manager.sniffer.PcapSniffer.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
+                                              dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
+                                              limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
+                                              callback=None)
     elif arguments.sql:
         if arguments.sql_url is None:
             print('Please, specify an url! (eg. --sql-url=https://black-widow.io)\n')
             sys.exit(1)
         if arguments.sql_deep:
-            app.utils.sql.deep_inject_form(arguments.sql_url, arguments.sql_depth)
+            app.manager.injection.SqlInjection.deep_inject_form(arguments.sql_url, arguments.sql_depth)
         else:
-            app.utils.sql.inject_form(arguments.sql_url)
+            app.manager.injection.SqlInjection.inject_form(arguments.sql_url)
 
 
 # Main function generic app
 def main():
     arguments = args.get_arguments()
-    if not app.utils.helpers.util.is_root():
+    if not app.helper.util.is_root():
         print("Root privileges required to run " + app.env.APP_PROC + "!\n")
         sys.exit(50)
     make_temp_dir()

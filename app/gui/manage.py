@@ -34,11 +34,10 @@ from django.core import management
 
 from app.env_local import APP_WEB_HOST, APP_WEB_PORT
 from app.env import EXEC_PATH, APP_NAME
-from app.utils.helpers import MultiTask
-from app.utils.helpers.logger import Log
-from app.utils.helpers.network import get_ip_address
-from app.utils.helpers.storage import delete
-from app.utils.helpers.util import whoami, set_owner_process
+from app.service import MultiTask, Log
+from app.helper.network import get_ip_address
+from app.helper.storage import delete
+from app.helper.util import whoami, set_owner_process
 from app.gui.web.wsgi import WEB_PACKAGE
 
 

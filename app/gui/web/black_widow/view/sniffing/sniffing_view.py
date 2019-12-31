@@ -31,14 +31,11 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from app.env import APP_STORAGE_OUT
-from app.utils.helpers import network
-from app.utils.sniffing.pcap import Pcap
-from app.utils.helpers import util
-from app.utils.helpers.serializer import JsonSerializer
-from app.utils.helpers.multitask import MultiTask
+from app.manager.sniffer import PcapSniffer
+from app.service import JsonSerializer, MultiTask, Log
+from app.helper import network, util
 
-from . import AbstractSniffingView
-from . import AbstractView
+from .abstract_sniffing_view import AbstractSniffingView
 
 
 class Sniffing:
@@ -103,7 +100,7 @@ class Sniffing:
                 """
                 The target function used by parallel process
                 """
-                Pcap.sniff(
+                PcapSniffer.sniff(
                     filters=session_job_params.get('filters'),
                     src_file=session_job_params.get('pcap'),
                     interfaces=session_job_params.get('interfaces'),
@@ -133,7 +130,7 @@ class Sniffing:
             """
             request_params: dict = request.GET.dict()
             job_id = request_params.get('job_id')
-            util.Log.info("Showing job #" + str(job_id))
+            Log.info("Showing job #" + str(job_id))
             return render(request, self.template_name)
 
         def post(self, request):
@@ -159,21 +156,21 @@ class Sniffing:
             signal_job = request_params.get('signal')
             if signal_job is not None:
                 signal_job = int(signal_job)
-                util.Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
+                Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
 
                 pid = AbstractSniffingView._get_job_pid(sniffing_jobs[job_id])
 
                 if pid is None:
-                    util.Log.error("The process " + str(pid) + " does not exists")
+                    Log.error("The process " + str(pid) + " does not exists")
                 else:
                     kill = signal_job == signal.SIGKILL
                     job = sniffing_jobs[job_id]
                     try:
                         os.kill(int(pid), signal_job)
-                        util.Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
+                        Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
                         job['status'] = signal.Signals(signal_job).name
                     except ProcessLookupError:
-                        util.Log.error("The process " + str(pid) + " does not exists")
+                        Log.error("The process " + str(pid) + " does not exists")
                         kill = True
                     if kill:
                         AbstractSniffingView._clean_job(job)
@@ -202,7 +199,7 @@ class Sniffing:
                 reverse=True
             )))
 
-            pagination = AbstractView.pagination(out_dict, page, page_size)
+            pagination = self.pagination(out_dict, page, page_size)
 
             job_id = request_params.get('job_id')
 

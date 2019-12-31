@@ -39,8 +39,8 @@
 
 from math import floor
 
-from app.utils.helpers.logger import Log
-from app.utils.request import HttpRequest
+from app.manager.request import HttpRequest
+from app.service import Log
 
 
 class MacManufacturer:
@@ -76,7 +76,7 @@ class MacManufacturer:
         manufacturer_response = HttpRequest.request(MacManufacturer.MANUFACTURERS_URL)
         if manufacturer_response.text is None:
             return
-        self.manufacturer_dict = dict()
+        manufacturer_dict = dict()
         manufacturer_list = manufacturer_response.text.splitlines()
         for manufacturer in manufacturer_list:
             if len(manufacturer) < 1:
@@ -116,4 +116,6 @@ class MacManufacturer:
             if mac is None:
                 Log.error("Wrong manufacturer details: " + str(manufacturer_details))
                 continue
-            self.manufacturer_dict[mac] = lookup_dict
+            manufacturer_dict[mac] = lookup_dict
+        if len(manufacturer_dict) > 0:
+            self.manufacturer_dict = manufacturer_dict

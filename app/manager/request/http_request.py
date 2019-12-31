@@ -30,13 +30,13 @@ from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 
 from app.env import APP_VERSION, APP_NAME
 from app.env_local import APP_DEBUG
-from app.utils.helpers.logger import Log
-from app.utils.helpers.validators import is_url
+from app.service import Log
+from app.helper.validators import is_url
 
 
 class HttpRequest:
     """
-    Class HttpRequest
+    HttpRequest Manager
     """
 
     class Type:
@@ -48,15 +48,15 @@ class HttpRequest:
         DELETE = 'delete'
 
         @staticmethod
-        def all():
+        def all() -> tuple:
             """
             :return: all supported request methods
             """
             return HttpRequest.Type.GET, \
-                   HttpRequest.Type.POST, \
-                   HttpRequest.Type.PUT, \
-                   HttpRequest.Type.PATCH, \
-                   HttpRequest.Type.DELETE
+                HttpRequest.Type.POST, \
+                HttpRequest.Type.PUT, \
+                HttpRequest.Type.PATCH, \
+                HttpRequest.Type.DELETE
 
     @staticmethod
     def request(
@@ -65,7 +65,7 @@ class HttpRequest:
             data=None,
             json: dict or list = None,
             headers: dict = None
-    ):
+    ) -> requests.Response or None:
         """
         Make a request to chosen url
         :param url: The target url
@@ -74,7 +74,7 @@ class HttpRequest:
             object to send in the body of the :class:`Request`
         :param json: (optional) json data to send in the body of the :class:`Request`
         :param headers: The headers to send
-        :rtype: requests.Response
+        :return The response of request, or None (if the request fail)
         """
         if headers is None:
             headers = {}
@@ -92,21 +92,21 @@ class HttpRequest:
             return None
         try:
             if request_type == HttpRequest.Type.GET:
-                r = requests.get(url, data, headers=req_headers)
+                response = requests.get(url, data, headers=req_headers)
             elif request_type == HttpRequest.Type.POST:
-                r = requests.post(url, data, json, headers=req_headers)
+                response = requests.post(url, data, json, headers=req_headers)
             elif request_type == HttpRequest.Type.PUT:
-                r = requests.put(url, data, headers=req_headers)
+                response = requests.put(url, data, headers=req_headers)
             elif request_type == HttpRequest.Type.PATCH:
-                r = requests.patch(url, data, headers=req_headers)
+                response = requests.patch(url, data, headers=req_headers)
             elif request_type == HttpRequest.Type.DELETE:
-                r = requests.delete(url, headers=req_headers)
+                response = requests.delete(url, headers=req_headers)
             else:
                 Log.error(str(request_type) + ' is not a valid request type!')
                 return None
             if APP_DEBUG:
-                HttpRequest.print_response(r)
-            return r
+                HttpRequest.print_response(response)
+            return response
         except requests.exceptions.ConnectionError or requests.exceptions.TooManyRedirects as e:
             Log.error('Unable to connect to ' + str(url))
             Log.error('Exception: ' + str(e))
@@ -119,7 +119,7 @@ class HttpRequest:
             data=None,
             json: dict or list = None,
             headers: dict = None
-    ):
+    ) -> dict:
         """
         Make multiple sequential requests
         :param urls: The list of target urls
@@ -128,28 +128,28 @@ class HttpRequest:
             object to send in the body of the :class:`Request`
         :param json: (optional) json data to send in the body of the :class:`Request`
         :param headers: The headers to send
-        :rtype: list
+        :return A dictionary of responses like {'url_1': <response>, 'url_2': <response>, ...}
         """
         if APP_DEBUG:
             Log.info('CALLED: multi_request(' + str(urls) + ', ' + str(request_type) + ', ' + str(data) + ')')
         request_type = request_type.lower()
-        r_list = []
+        response_dict = dict()
         for url in urls:
-            r = HttpRequest.request(url, request_type, data, json, headers)
-            if r is None:
+            response = HttpRequest.request(url, request_type, data, json, headers)
+            if response is None:
                 continue
-            r_list.append(r)
+            response_dict[url] = response
             if APP_DEBUG:
                 try:
-                    print(r.json())
+                    print(response.json())
                 except JSONDecodeError or SimpleJSONDecodeError:
-                    print(r.text)
-        return r_list
+                    print(response.text)
+        return response_dict
 
     @staticmethod
     def default_agent() -> str:
         """
-        :return: The black-widow agent
+        :return The black-widow agent
         """
         return str(APP_NAME) + ' ' + str(APP_VERSION)
 
@@ -157,7 +157,7 @@ class HttpRequest:
     def print_response(response, limit=1000):
         """
         :param response: The response to print
-        :param limit:
+        :param limit: The limit data length before truncate that
         """
         Log.info(str(response.url))
         Log.info('      |--- status_code: ' + str(response.status_code))

@@ -25,9 +25,9 @@
 
 from django.shortcuts import render, redirect
 
-from app.utils.helpers import util
+from app.service import Log
 
-from . import AbstractView
+from .abstract_view import AbstractView
 
 
 class Sql:
@@ -73,5 +73,5 @@ class Sql:
             """
             request_params: dict = request.GET.dict()
             job_id = request_params.get('job_id')
-            util.Log.info("Showing job #" + str(job_id))
+            Log.info("Showing job #" + str(job_id))
             return render(request, self.template_name)

@@ -23,8 +23,8 @@ It provides easy ways to execute many kinds of information gatherings and attack
 ### Features:
  - [x] Localhost Web GUI
  - [x] Sniffing
- - [ ] Website crawling
- - [ ] Web page parsing
+ - [x] Website crawling
+ - [x] Web page parsing
  - [ ] SQL injection
  - [ ] Injected database management
  - [ ] Brute force attacks
@@ -63,9 +63,10 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 ### Directories:
 ```
+TODO: fix the following directory tree
 [root]
   |
-  |-- app/      # Package principale dell'applicazione
+  |-- app/      # Main application package
   |    |
   |    |-- attack/         # Package per modalità di attacco
   |    |-- defense/        # Package per modalità di difesa

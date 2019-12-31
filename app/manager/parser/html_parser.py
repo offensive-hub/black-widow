@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* html_parser.py -- Classes and methods to parse an HTML or an URL              *
+* html_parser.py -- HTML/URL parsing and Website crawling manager               *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -26,17 +26,17 @@
 from abc import ABC
 from html.parser import HTMLParser as PyHTMLParser
 from urllib.parse import urlparse
-
 from tidylib import tidy_document
-from app.utils.request import HttpRequest
-from app.utils.helpers.logger import Log
-from app.utils.helpers.validators import is_url
-from app.utils.helpers.util import is_listable
+
+from app.manager.request import HttpRequest
+from app.service import Log
+from app.helper.validators import is_url
+from app.helper.util import is_listable
 
 
 class HtmlParser(PyHTMLParser, ABC):
     """
-    black-widow HTML Parser
+    HtmlParser Manager
     """
 
     _relevant_tags = {

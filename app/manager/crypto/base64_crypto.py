@@ -27,6 +27,10 @@ from base64 import b64decode, b64encode
 
 
 class Base64Crypto:
+    """
+    Base64Crypto Manager
+    """
+
     @staticmethod
     def encrypt(text: str) -> str:
         return b64encode(bytes(text, encoding='utf-8')).decode('utf-8')

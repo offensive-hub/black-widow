@@ -26,10 +26,11 @@
 import os
 import signal
 
-from app.utils.helpers import storage, MultiTask
-from app.utils.helpers import util
+from app.service import MultiTask
+from app.helper import storage
+from app.helper.util import pid_exists
 
-from . import AbstractView
+from app.gui.web.black_widow.view.abstract_view import AbstractView
 
 
 class AbstractSniffingView(AbstractView):
@@ -79,7 +80,7 @@ class AbstractSniffingView(AbstractView):
         for job_id in job_ids:
             job = sniffing_jobs[job_id]
             pid = AbstractSniffingView._get_job_pid(job)
-            if not util.pid_exists(pid):
+            if not pid_exists(pid):
                 update_session = True
                 sniffing_jobs.pop(job_id, None)
                 AbstractSniffingView._clean_job(job)

@@ -25,13 +25,14 @@
 
 import hashlib
 import json
-from app.utils.request import HttpRequest
-from app.utils.helpers.logger import Log
+
+from app.manager.request import HttpRequest
+from app.service import Log
 
 
 class Md5Crypto:
     """
-    Md5 encryption/decryption class
+    Md5Crypto Manager
     """
 
     class Api:
@@ -43,14 +44,12 @@ class Md5Crypto:
         @staticmethod
         def _api_1_result(json_dict):
             return json_dict.get('result')
-
         _api_1 = {'url': 'https://md5.pinasthika.com/api/decrypt?value=', 'get_result': _api_1_result}
 
         # Method to get response data from 2nd API
         @staticmethod
         def _api_2_result(json_dict):
             return json_dict[0].get('decrypted')
-
         _api_2 = {'url': 'https://www.md5.ovh/index.php?result=json&md5=', 'get_result': _api_2_result}
 
         @staticmethod

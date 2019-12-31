@@ -32,15 +32,14 @@
 """
 
 from pprint import pprint
+from sqlmap.lib.utils.api import server as sqlmap_server
 from time import sleep
 
-from sqlmap.lib.utils.api import server as sqlmap_server
+from app.manager.request import HttpRequest
+from app.service import Log, MultiTask
+from app.helper.network import check_socket
 
-from app.utils.request import HttpRequest
-from app.utils.helpers.logger import Log
-from app.utils.helpers.multitask import MultiTask
-from app.utils.helpers.network import check_socket
-from app.utils.sql import SqlmapTask
+from .sqlmaptask import SqlmapTask
 
 
 class SqlmapClient:

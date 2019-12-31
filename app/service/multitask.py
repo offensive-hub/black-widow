@@ -43,12 +43,12 @@ import signal
 import threading
 
 from app.env import APP_TMP
-from app.utils.helpers import storage
-from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_listable, timestamp
+from app.service import Log
+from app.helper import storage
+from app.helper.util import is_listable, timestamp
 
 
-# Classe astratta, sfruttata sia da MultiThreading che da MultiProcessing
+# Classe sfruttata sia da MultiThreading che da MultiProcessing
 class MultiTask:
     # TODO: Implements serializer and deserializer (using "pickle")
     #       to get and write the result in file

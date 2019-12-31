@@ -25,9 +25,8 @@
 
 import requests
 
-from app.utils.helpers.logger import Log
-from app.utils.helpers.serializer import JsonSerializer
-from app.utils.request import HttpRequest
+from app.manager.request import HttpRequest
+from app.service import Log, JsonSerializer
 
 
 class SqlmapTask:

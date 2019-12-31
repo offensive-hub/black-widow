@@ -3,9 +3,9 @@
 """
 *********************************************************************************
 *                                                                               *
-* pcap.py -- Packet Capture (pcap)                                              *
+* pcap_sniffer.py -- Packet Capture (pcap)                                      *
 *                                                                               *
-* Methods to sniff the network traffic through pyshark.                         *
+* Methods and Classes to sniff the network traffic through pyshark.             *
 *                                                                               *
 * pyshark repository:                                                           *
 * https://github.com/KimiNewt/pyshark                                           *
@@ -39,16 +39,16 @@ from pyshark.packet.fields import LayerField
 from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
-from app.utils.helpers.logger import Log
-from app.utils.helpers.util import is_hex, regex_is_string
+from app.service import Log
+from app.helper.util import is_hex, regex_is_string
 
-from . import MacManufacturer
-from . import PcapLayerField
+from .pcap_sniffer_util import MacManufacturer
+from .pcap_sniffer_util import PcapLayerField
 
 
-class Pcap:
+class PcapSniffer:
     """
-    Packet Capture (pcap) class
+    Packet Capture Manager
     """
     mac_manufacturer = None
 
@@ -72,8 +72,8 @@ class Pcap:
         :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None)
         """
-        if Pcap.mac_manufacturer is None:
-            Pcap.mac_manufacturer = MacManufacturer()
+        if PcapSniffer.mac_manufacturer is None:
+            PcapSniffer.mac_manufacturer = MacManufacturer()
         self.count = 0  # Sniffed packets
         self.filters = filters
         self.src_file = src_file
@@ -122,23 +122,22 @@ class Pcap:
         :param limit_length: The limit length of each packet field (they will be truncated), or None
         :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None)
-        :rtype: Pcap
+        :rtype: PcapSniffer
         """
-        pcap = Pcap(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
-        return pcap
+        return PcapSniffer(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
 
     @staticmethod
     def print_pkt(pkt_dict: dict):
         """
         Print the pkt_dict
-        :param pkt_dict: The pkt dict created by Pcap._callback(pkt)
+        :param pkt_dict: The pkt dict created by PcapSniffer._callback(pkt)
         """
         for key, value in pkt_dict.items():
             if key == 'layers':
                 for layer_dict in value:
-                    Pcap._print_layer(layer_dict)
+                    PcapSniffer._print_layer(layer_dict)
             elif key == 'frame_info':
-                Pcap._print_layer(value)
+                PcapSniffer._print_layer(value)
             else:
                 print(str(key) + ': ' + str(value))
 
@@ -161,15 +160,15 @@ class Pcap:
             'sniff_time': str(pkt.sniff_time),
             'sniff_timestamp': str(pkt.sniff_timestamp),
             'transport_layer': str(pkt.transport_layer),
-            'frame_info': Pcap._get_layer_dict(pkt.frame_info),
+            'frame_info': PcapSniffer._get_layer_dict(pkt.frame_info),
             'layers': []
         }
         for layer in pkt.layers:
-            pkt_dict['layers'].append(Pcap._get_layer_dict(layer))
+            pkt_dict['layers'].append(PcapSniffer._get_layer_dict(layer))
         if self.user_callback is not None:
             self.user_callback(pkt_dict)
         else:
-            Pcap.print_pkt(pkt_dict)
+            PcapSniffer.print_pkt(pkt_dict)
         self.count += 1
 
     @staticmethod
@@ -209,7 +208,7 @@ class Pcap:
                 local_field_node = local_field_tree_child
             return local_field_tree_family, local_field_node
 
-        pcap_layer_field_root = PcapLayerField()
+        pcap_layer_field_root = PcapLayerField(sanitized_name='root')
 
         # noinspection PyProtectedMember
         def local_get_field_tree(local_field: LayerField) -> PcapLayerField:
@@ -218,34 +217,30 @@ class Pcap:
             """
             try:
                 parent_poss = (int(local_field.pos), int(local_field.pos) - int(local_field.size))
-            except TypeError as e:
-                # Log.error(str(e))
+            except TypeError:
                 parent_poss = ()
                 local_field.pos = 0
                 local_field.size = 0
 
             if local_field.name is None:
-                # Log.error('Field name is None')
                 local_field.name = ''
 
             field_tree_keys = local_field.name.split('.')
             family, node = update_field_tree_keys(field_tree_keys)
 
-            def find_pcap_layer_field_parent(local_member: dict, only_hex=False) -> PcapLayerField or None:
+            def find_pcap_layer_field_parent(local_member: dict, only_hex: bool = False) -> PcapLayerField or None:
                 """
                 If exists, found the big brother of local_field, otherwise, the parent
-                :param local_member:
-                :param only_hex:
-                :return:
+                :param local_member: The family tree of local_field (as dict)
+                :param only_hex: True if the member_parent of local_field should has an hexadecimal value
+                :return: If exits, the big brother of local_field, otherwise, the parent or None
                 """
                 parent = None
                 for key, member_parent in local_member.items():
                     member_parent: PcapLayerField or dict
-                    if not only_hex:
-                        member_brother = None
-                        if isinstance(member_parent, dict):
-                            # Check brothers
-                            member_brother = find_pcap_layer_field_parent(member_parent, True)
+                    if not only_hex and isinstance(member_parent, dict):
+                        # Check brothers
+                        member_brother = find_pcap_layer_field_parent(member_parent, True)
                         if member_brother is not None:
                             return member_brother   # brother
                     if key in parent_poss and member_parent.name != local_field.name:
@@ -254,7 +249,7 @@ class Pcap:
                             parent = member_parent  # parent (but the preferred is brother)
                         elif is_hex(member_parent.value) and \
                                 member_parent.pos == int(local_field.pos) and \
-                                not Pcap._field_is_binary(member_parent):
+                                not PcapSniffer._field_is_binary(member_parent):
                             return member_parent    # brother
                 return parent
 
@@ -268,7 +263,11 @@ class Pcap:
                 pcap_layer_field_parent = pcap_layer_field_root
 
             local_field_sanitized_name = layer._sanitize_field_name(local_field.name)
-            local_pcap_layer_field = PcapLayerField(local_field, pcap_layer_field_parent)
+            local_pcap_layer_field = PcapLayerField(
+                local_field,
+                local_field_sanitized_name,
+                pcap_layer_field_parent
+            )
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
 
@@ -299,11 +298,11 @@ class Pcap:
     def _print_layer(layer_dict: dict):
         """
         Print the layer_dict
-        :param layer_dict: The layer dict created by Pcap._callback(pkt)
+        :param layer_dict: The layer dict created by PcapSniffer._callback(pkt)
         """
         print('Layer: ' + str(layer_dict.get('name')))
         for field_dict in layer_dict.get('fields'):
-            Pcap._print_field(field_dict)
+            PcapSniffer._print_field(field_dict)
 
     @staticmethod
     def _print_field(field_dict: dict, depth: int = 0):
@@ -331,4 +330,4 @@ class Pcap:
         name = str(field_dict.get('name'))
         print(field_key + field_value + ' (pos=' + pos + ', size=' + size + ', name=' + name + ')')
         for field_child in field_dict.get('children'):
-            Pcap._print_field(field_child, depth + 1)
+            PcapSniffer._print_field(field_child, depth + 1)
