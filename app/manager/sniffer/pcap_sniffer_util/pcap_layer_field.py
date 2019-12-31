@@ -92,8 +92,9 @@ class PcapLayerField(Node):
                 'label': self.label,
                 'value': self.value,
                 'pos': self.pos,
-                'name': self.name,
-                'size': self.size   # byte
+                'key': self.name,
+                'size': self.size,   # byte
+                'name': self.sanitized_name
             })
         for child in self.children:
             child: PcapLayerField
@@ -113,7 +114,8 @@ class PcapLayerField(Node):
             pcap_layer_field_row += ' = ' + value
         else:
             pcap_layer_field_row += ' : PARENT NAME'
-        pcap_layer_field_row += ', key=' + self.name + ', size=' + str(self.size) + ', pos=' + str(self.pos)
+        pcap_layer_field_row += ', key=' + self.name + ', name' + self.sanitized_name + \
+                                ', size=' + str(self.size) + ', pos=' + str(self.pos)
         for pcap_layer_field_child in self.children:
             pcap_layer_field_child: PcapLayerField
             pcap_layer_field_row += "    \n" + pcap_layer_field_child.__str__(depth+1)

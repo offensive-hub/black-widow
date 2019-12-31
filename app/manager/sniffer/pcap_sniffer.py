@@ -34,6 +34,7 @@
 """
 
 import pyshark
+import socket
 
 from pyshark.packet.fields import LayerField
 from pyshark.packet.layer import Layer
@@ -41,7 +42,7 @@ from pyshark.packet.packet import Packet
 
 from app.service import Log
 from app.helper.util import regex_is_string
-from app.helper.validators import is_hex
+from app.helper.validators import is_hex, is_mac
 
 from .pcap_sniffer_util import MacManufacturer
 from .pcap_sniffer_util import PcapLayerField
@@ -51,7 +52,6 @@ class PcapSniffer:
     """
     Packet Capture Manager
     """
-    mac_manufacturer = None
 
     def __init__(
             self,
@@ -73,8 +73,6 @@ class PcapSniffer:
         :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None)
         """
-        if PcapSniffer.mac_manufacturer is None:
-            PcapSniffer.mac_manufacturer = MacManufacturer()
         self.count = 0  # Sniffed packets
         self.filters = filters
         self.src_file = src_file
@@ -142,6 +140,44 @@ class PcapSniffer:
             else:
                 print(str(key) + ': ' + str(value))
 
+    @staticmethod
+    def _merge_addr(host1: dict, host2: dict):
+        """
+        Merge host1 and host2 by preferring host2
+        :param host1: {
+                        'mac': <mac_addr>,
+                        'mac_manufacturer': tuple,
+                        'ip': <ip_addr>,
+                        'ip_host': list
+                      }
+        :param host2: //
+        :return: The host1 merged with host2
+        """
+        if host1 is None:
+            return host2
+        if host2 is None:
+            return host1
+        host = host2.copy()
+        for key, val in host2.items():
+            if val is not None:
+                continue
+            host[key] = host1.get(key)
+        ip = host.get('ip')
+        ip_host = host.get('ip_host')
+        mac = host.get('mac')
+        mac_manufacturer = host.get('mac_manufacturer')
+        if ip is not None:
+            if ip_host is None:
+                host['label'] = ip
+            else:
+                host['label'] = ip_host
+        else:
+            if mac_manufacturer is None:
+                host['label'] = mac
+            else:
+                host['label'] = mac_manufacturer
+        return host
+
     def _callback(self, pkt: Packet):
         """
         :param pkt: The pyshark packet
@@ -149,11 +185,6 @@ class PcapSniffer:
         pkt_dict = {
             'number': str(pkt.number),
             'time': str(pkt.frame_info.time_relative),
-            # TODO: source
-            # TODO: source_host
-            # TODO: destination
-            # TODO: destination_host
-            # TODO: protocol
             'length': str(pkt.length),
             'captured_length': str(pkt.captured_length),
             'interface_captured': str(pkt.interface_captured),
@@ -161,14 +192,28 @@ class PcapSniffer:
             'sniff_time': str(pkt.sniff_time),
             'sniff_timestamp': str(pkt.sniff_timestamp),
             'transport_layer': str(pkt.transport_layer),
-            'frame_info': PcapSniffer._get_layer_dict(pkt.frame_info),
+            'frame_info': PcapSniffer._get_layer_dict(pkt.frame_info)[0],
             'layers': []
         }
         for layer in pkt.layers:
-            pkt_dict['layers'].append(PcapSniffer._get_layer_dict(layer))
+            layer_dict, src_dest_dict = PcapSniffer._get_layer_dict(layer)
+            pkt_dict['source'] = PcapSniffer._merge_addr(
+                pkt_dict.get('source'),
+                src_dest_dict.get('source')
+            )
+            pkt_dict['destination'] = PcapSniffer._merge_addr(
+                pkt_dict.get('destination'),
+                src_dest_dict.get('destination')
+            )
+            protocol = src_dest_dict.get('protocol')
+            if protocol is not None:
+                pkt_dict['protocol'] = protocol
+            pkt_dict['layers'].append(layer_dict)
         if self.user_callback is not None:
             self.user_callback(pkt_dict)
         else:
+            PcapSniffer.print_pkt(pkt_dict)
+        if pkt_dict.get('destination') is None or pkt_dict.get('source') is None:
             PcapSniffer.print_pkt(pkt_dict)
         self.count += 1
 
@@ -183,7 +228,7 @@ class PcapSniffer:
     @staticmethod
     def _get_layer_dict(layer: Layer) -> (dict, dict):
         """
-        TODO: Manage Tags + get src and dst ip/(mac & vendor)
+        TODO: Manage Tags
         :param layer: The layer to process
         :return: The dictionary of layer, The dictionary of src and dest ip/mac (looked up)
         """
@@ -272,12 +317,19 @@ class PcapSniffer:
             node[int(local_field.pos)] = local_pcap_layer_field  # Update dictionary tree
             return local_pcap_layer_field
 
-        src_dest_dict = {
-            'source': None,
-            'source_host': None,
-            'destination': None,
-            'destination_host': None
+        source = {
+            'mac': None,
+            'mac_manufacturer': None,
+            'ip': None,
+            'ip_host': None
         }
+        destination = {
+            'mac': None,
+            'mac_manufacturer': None,
+            'ip': None,
+            'ip_host': None
+        }
+        protocol = None
 
         field_insert = set()
         for field in layer._get_all_fields_with_alternates():
@@ -285,15 +337,47 @@ class PcapSniffer:
             field_unique_key = str(field.pos) + '_' + str(field.name)
             if field_unique_key in field_insert and False:
                 continue
-            pcap_layer_field = local_get_field_tree(field)
+            pcap_layer_field: PcapLayerField = local_get_field_tree(field)
             if pcap_layer_field is not None:
-                # TODO: check if pcap_layer_field is (src, dest) ip/mac
+                if pcap_layer_field.sanitized_name == 'proto':
+                    protocol = pcap_layer_field.value
+                try:
+                    if pcap_layer_field.sanitized_name in (
+                            'src',
+                            'src_host',
+                            'src_hw_mac',
+                            'src_proto_ipv4'
+                    ):
+                        if is_mac(pcap_layer_field.value):
+                            source['mac'] = pcap_layer_field.value
+                            source['mac_manufacturer'] = MacManufacturer.lookup(pcap_layer_field.value)
+                        else:
+                            source['ip'] = pcap_layer_field.value
+                            source['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
+                    elif pcap_layer_field.sanitized_name in (
+                            'dst',
+                            'dst_host',
+                            'dst_hw_mac',
+                            'dst_proto_ipv4'
+                    ):
+                        if is_mac(pcap_layer_field.value):
+                            destination['mac'] = pcap_layer_field.value
+                            destination['mac_manufacturer'] = MacManufacturer.lookup(pcap_layer_field.value)
+                        else:
+                            destination['ip'] = pcap_layer_field.value
+                            destination['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
+                except socket.herror or socket.gaierror:
+                    pass
                 field_insert.add(field_unique_key)
 
         return {
-            'name': layer.layer_name.upper(),
-            'fields': pcap_layer_field_root.get_dict().get('children')
-        }
+                   'name': layer.layer_name.upper(),
+                   'fields': pcap_layer_field_root.get_dict().get('children')
+               }, {
+                   'source': source,
+                   'destination': destination,
+                   'protocol': protocol
+               }
 
     @staticmethod
     def _print_layer(layer_dict: dict):

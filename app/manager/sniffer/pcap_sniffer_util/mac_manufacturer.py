@@ -56,11 +56,30 @@ class MacManufacturer:
         3: 'comment'
     }
 
+    mac_manufacturer = None
+
     def __init__(self):
         self.manufacturer_dict = dict()
         self._update_manufacturer_dict()
 
-    def lookup(self, mac: str) -> dict or None:
+    @staticmethod
+    def lookup(mac: str) -> str or None:
+        """
+        Lookup the mac address
+        :param mac: The mac address to lookup
+        :rtype: str or None
+        """
+        if MacManufacturer.mac_manufacturer is None:
+            MacManufacturer.mac_manufacturer = MacManufacturer()
+        mac_manufacturer_result = MacManufacturer.mac_manufacturer._lookup(mac)
+        mac_manufacturer = None
+        if type(mac_manufacturer_result) is dict:
+            mac_manufacturer = mac_manufacturer_result.get('vendor') + \
+                               '_' + \
+                               mac_manufacturer_result.get('mac')
+        return mac_manufacturer
+
+    def _lookup(self, mac: str) -> dict or None:
         """
         Lookup the mac address
         :param mac: The mac address to lookup
