@@ -188,10 +188,14 @@ class Sniffing:
             page_size = request_params.get('page_size')
 
             out_json_dict = JsonSerializer.get_dictionary(out_json_file)
+            attempts = 0
             while len(out_json_dict) == 0:
                 sleep(0.2)
                 # Prevent parallel access errors to file
                 out_json_dict = JsonSerializer.get_dictionary(out_json_file)
+                attempts += 1
+                if attempts >= 5:
+                    break
 
             out_dict = util.sort_dict(dict(sorted(
                 out_json_dict.items(),
