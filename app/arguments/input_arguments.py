@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* args.py -- Methods to parse the user input arguments.                         *
+* input_arguments.py -- Methods to parse the user input arguments.              *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *

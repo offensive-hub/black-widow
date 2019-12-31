@@ -30,8 +30,6 @@ import app
 import os
 import sys
 
-from app_plugins import args
-
 
 class AppType:
     CMD = 'CMD'
@@ -91,7 +89,7 @@ def main_cmd(arguments):
 
 # Main function generic app
 def main():
-    arguments = args.get_arguments()
+    arguments = app.arguments.get_arguments()
     if not app.helper.util.is_root():
         print("Root privileges required to run " + app.env.APP_PROC + "!\n")
         sys.exit(50)
