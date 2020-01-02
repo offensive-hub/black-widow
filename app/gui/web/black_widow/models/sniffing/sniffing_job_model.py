@@ -24,12 +24,14 @@
 """
 import os
 import signal
+from time import sleep
 
 from django.db import models
 
 from app.gui.web.black_widow.models.abstract_model import AbstractModel
 from app.helper import storage
-from app.service import MultiTask
+from app.helper.util import sort_dict, pid_exists
+from app.service import MultiTask, JsonSerializer, Log
 
 
 class SniffingJobModel(AbstractModel):
@@ -40,6 +42,17 @@ class SniffingJobModel(AbstractModel):
     pcap_file: str = models.CharField(max_length=250, null=True)
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
+
+    @staticmethod
+    def all() -> models.query.QuerySet:
+        sniffing_jobs = SniffingJobModel.objects.all().order_by('-id')
+        for sniffing_job in sniffing_jobs:
+            sniffing_job: SniffingJobModel
+            if sniffing_job.status not in (signal.SIGKILL, signal.SIGABRT):
+                if not pid_exists(sniffing_job.pid):
+                    sniffing_job.status = signal.SIGKILL
+                    sniffing_job.save()
+        return sniffing_jobs
 
     @property
     def interfaces(self) -> list or None:
@@ -70,29 +83,33 @@ class SniffingJobModel(AbstractModel):
     def status_name(self) -> str:
         return signal.Signals(self.status).name
 
+    @property
+    def json_dict(self) -> dict:
+        attempts = 0
+        json_dict = JsonSerializer.get_dictionary(self.json_file)
+        while len(json_dict) == 0:
+            sleep(0.2)
+            # Prevents parallel access errors to file
+            json_dict = JsonSerializer.get_dictionary(self.json_file)
+            attempts += 1
+            if attempts >= 5:
+                break
+        return sort_dict(dict(sorted(
+            json_dict.items(),
+            key=lambda e: int(e[1]['number']),
+            reverse=True
+        )))
+
     def kill(self, sig: int):
         """
         Send a signal to process which is running this job
         :param sig: The signal as integer (eg. 9 for SIGKILL)
         """
+        Log.info("Sending signal " + str(sig) + " to job" + str(self.id) + ' (' + str(self.pid) + ')')
         self.status = sig
         os.kill(self.pid, sig)
-
-    def get_dict(self) -> dict:
-        """
-        Get this model as dictionary
-        :return:
-        """
-        return {
-            'id': self.id,
-            'filters': self.filters,
-            'interfaces': self.interfaces,
-            'json_file': self.json_file,
-            'pcap_file': self.pcap_file,
-            'pid': self.pid,
-            'pid_file': self.pid_file,
-            'status': self.status_name
-        }
+        self.save()
+        Log.success("Signal " + str(sig) + " sent to job" + str(self.id) + ' (' + str(self.pid) + ')')
 
     def delete(self, using=None, keep_parents=False):
         if self.status not in (signal.SIGKILL, signal.SIGABRT):
@@ -101,4 +118,13 @@ class SniffingJobModel(AbstractModel):
         return super(SniffingJobModel, self).delete(using, keep_parents)
 
     def __str__(self) -> str:
-        return str(self.get_dict())
+        return 'SniffingJobModel(' + str({
+            'id': self.id,
+            'filters': self.filters,
+            'interfaces': self.interfaces,
+            'json_file': self.json_file,
+            'pcap_file': self.pcap_file,
+            'pid': self.pid,
+            'pid_file': self.pid_file,
+            'status': self.status_name
+        }) + ')'
