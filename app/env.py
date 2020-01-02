@@ -79,7 +79,7 @@ if isfile(PRIVATE_ENV_FILE):
 
 # ----- Derived environments ------ #
 # App info
-APP_VERSION = '1.3.5#alpha'
+APP_VERSION = '1.4.0#alpha'
 APP_NAME = 'Black Widow'
 APP_PROC = 'black-widow'
 # App files
