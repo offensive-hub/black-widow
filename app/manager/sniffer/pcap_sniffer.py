@@ -71,7 +71,7 @@ class PcapSniffer:
         :param interfaces: The list of interfaces to sniff (or None, to sniff all interfaces)
         :param limit_length: The limit length of each packet field (they will be truncated), or None
         :param pkt_count: Max packets to sniff, or None
-        :param callback: The callback method to call (or None)
+        :param callback: The callback method to call (or None) (@see PcapSniffer._user_callback_example)
         """
         self.count = 0  # Sniffed packets
         self.filters = filters
@@ -139,6 +139,19 @@ class PcapSniffer:
                 PcapSniffer._print_layer(value)
             else:
                 print(str(key) + ': ' + str(value))
+
+    @staticmethod
+    def _user_callback_example(pkt_dict: dict, pcap_sniffer) -> None:
+        """
+        This is an user_callback example method.
+        It manages the pkt dictionary
+        :param pkt_dict: The packet dictionary
+        :param pcap_sniffer: The initialized entity PcapSniffer which is sniffing the traffic
+        :return: None
+        """
+        # Manage pkt_dict
+        return None
+
 
     @staticmethod
     def _merge_addr(host1: dict, host2: dict):
@@ -209,7 +222,7 @@ class PcapSniffer:
                 pkt_dict['protocol'] = protocol
             pkt_dict['layers'].append(layer_dict)
         if self.user_callback is not None:
-            self.user_callback(pkt_dict)
+            self.user_callback(pkt_dict, self)
         else:
             PcapSniffer.print_pkt(pkt_dict)
         if pkt_dict.get('destination') is None or pkt_dict.get('source') is None:

@@ -37,7 +37,7 @@ from app.service import MultiTask, JsonSerializer, Log
 class SniffingJobModel(AbstractModel):
     status: int = models.PositiveIntegerField(null=False, default=signal.SIGCONT)
     filters: str = models.CharField(max_length=500, null=True)
-    _interfaces: str or None = models.TextField(null=True)
+    _interfaces: str or None = models.TextField(null=False)
     json_file: str = models.CharField(max_length=250, null=False)
     pcap_file: str = models.CharField(max_length=250, null=True)
     pid: int = models.PositiveIntegerField(null=False)
@@ -115,6 +115,7 @@ class SniffingJobModel(AbstractModel):
         if self.status not in (signal.SIGKILL, signal.SIGABRT):
             self.kill(signal.SIGKILL)
         storage.delete(self.json_file)
+        storage.delete(self.pid_file)
         return super(SniffingJobModel, self).delete(using, keep_parents)
 
     def __str__(self) -> str:

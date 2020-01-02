@@ -56,7 +56,6 @@ def django_cmd(args):
     elif len(args) <= 1:
         bind_host = _get_bind_socket()
         args.append(bind_host)
-        _launch_browser(bind_host)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
     management.execute_from_command_line([EXEC_PATH + ' --django', ] + args)
 

@@ -81,12 +81,15 @@ class Sniffing:
             sniffing_job.interfaces = request_params.get('interfaces')
             sniffing_job.json_file = json_file
 
-            def _sniffer_callback(pkt: dict):
+            def _sniffer_callback(pkt: dict, pcap_sniffer: PcapSniffer):
                 """
                 The callback function of packet sniffer.
                 This method writes the sniffed packets in a json file
                 :param pkt: The sniffed packet
                 """
+                print(pcap_sniffer)
+                print(type(pcap_sniffer))
+                print(dir(pcap_sniffer))
                 JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
 
             def _sniffer_target():
@@ -154,9 +157,8 @@ class Sniffing:
                 signal_job = int(signal_job)
                 try:
                     sniffing_job.kill(signal_job)
-                except ProcessLookupError as error:
-                    Log.error(str(error))
-                    Log.error("The process " + str(sniffing_job.pid) + " does not exists")
+                except ProcessLookupError:
+                    Log.warning("The process " + str(sniffing_job.pid) + " does not exists")
                 if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
                     sniffing_job.delete()
                 return JsonResponse({
