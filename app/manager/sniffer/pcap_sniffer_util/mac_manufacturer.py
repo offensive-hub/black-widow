@@ -93,6 +93,8 @@ class MacManufacturer:
 
     def _update_manufacturer_dict(self):
         manufacturer_response = HttpRequest.request(MacManufacturer.MANUFACTURERS_URL)
+        if manufacturer_response is None:
+            return
         if manufacturer_response.text is None:
             return
         manufacturer_dict = dict()
