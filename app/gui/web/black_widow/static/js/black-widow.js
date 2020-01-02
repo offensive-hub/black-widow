@@ -39,6 +39,15 @@ $(function() {
             alert('Fill the required fields!');
             return false;
         }
+        const $this = $(this);
+        const $checkboxRequired = $this.find('.checkbox-required');
+        if ($checkboxRequired.length > 0) {
+            const $checkboxes = $checkboxRequired.find('input[type="checkbox"]:checked');
+            if ($checkboxes.length === 0) {
+                alert('Chose at least one ' + $checkboxRequired.attr('label') + ' !');
+                return false;
+            }
+        }
         return true;
     });
     $('.link').click(function() {
@@ -83,22 +92,6 @@ const responseError = function(jqXHR, textStatus, errorThrown, callback=null) {
     if (callback !== null) {
         callback(jqXHR, textStatus, errorThrown);
     }
-};
-
-const getCookie = function(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 };
 
 const request = function(
