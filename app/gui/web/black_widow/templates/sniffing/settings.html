@@ -87,8 +87,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for id,job in jobs.items %}
-                                        <tr class="link" href="/sniffing/capture?job_id={{ job.id }}">
+                                    {% for job in jobs %}
+                                        <tr class="link" href="/sniffing/capture?id={{ job.id }}">
                                             <td>{{ job.id }}</td>
                                             <td>
                                                 {% if job.interfaces != None %}
@@ -98,7 +98,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>{{ job.filters }}</td>
-                                            <td>{{ job.status }}</td>
+                                            <td>{{ job.status_name }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -119,11 +119,11 @@
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="interfaces">
 
-                                                        {% for interface,checked in interfaces.items %}
+                                                        {% for interface in interfaces %}
 
                                                             <div class="form-check">
                                                                 <label class="form-check-label">
-                                                                    <input {% if checked %}checked{% endif %} class="form-check-input" type="checkbox" value="{{ interface }}"  name="interfaces" >
+                                                                    <input class="form-check-input" type="checkbox" value="{{ interface }}"  name="interfaces" >
                                                                     {{ interface }}
                                                                     <span class="form-check-sign"><span class="check"></span></span>
                                                                 </label>

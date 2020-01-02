@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* abstract_sniffing_view.py -- Django Abstract Sniffing view.                   *
+* abstract_model.py -- The black-widow AbstractModel.                           *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,19 +23,15 @@
 *********************************************************************************
 """
 
-import os
-
-from app.env import APP_STORAGE_OUT
-from app.helper import storage
-
-from app.gui.web.black_widow.view.abstract_view import AbstractView
+from django.db import models
 
 
-class AbstractSniffingView(AbstractView):
+class AbstractModel(models.Model):
     """
-    Abstract Sniffing View
+    Abstract Model
     """
-    storage_out_dir = os.path.join(APP_STORAGE_OUT, 'sniffing')
-    storage.check_folder(storage_out_dir)
-    if not os.access(storage_out_dir, os.X_OK):
-        os.chmod(storage_out_dir, 0o0755)
+    objects: models.manager.Manager
+    id: int = models.BigAutoField(primary_key=True)
+
+    class Meta:
+        abstract = True

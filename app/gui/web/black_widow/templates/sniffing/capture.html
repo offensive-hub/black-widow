@@ -127,7 +127,7 @@
     <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
     <script type="application/javascript">
         $(function() {
-            const jobId = urlParams.get('job_id');
+            const jobId = urlParams.get('id');
             const $sniffedPktsTable = $('#sniffed-pkts-table');
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
@@ -153,7 +153,7 @@
                         return;
                     }
                     request('POST', '/sniffing/capture', {
-                        'job_id': jobId,
+                        'id': jobId,
                         'page':  $pagination.pagination('getCurrentPage'),
                         'page_size': 10
                     }, function(data, textStatus, jqXHR) {
@@ -231,7 +231,7 @@
              */
             const signPkts = function(signal, callback) {
                 request('POST', '/sniffing/capture', {
-                    'job_id': jobId,
+                    'id': jobId,
                     'signal': signal
                 }, function(data, textStatus, jqXHR) {
                     callback(data, textStatus, jqXHR);

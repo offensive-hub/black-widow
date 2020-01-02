@@ -30,9 +30,9 @@ from time import sleep
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.env import APP_STORAGE_OUT
+from app.gui.web.black_widow.models import SniffingJobModel
 from app.manager.sniffer import PcapSniffer
-from app.service import JsonSerializer, MultiTask, Log
+from app.service import JsonSerializer, Log, MultiTask
 from app.helper import network, util
 
 from .abstract_sniffing_view import AbstractSniffingView
@@ -54,13 +54,16 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            sniffing_jobs = self._get_sniffing_jobs(request.session)
-            view_params = self.session_get(request.session, {
-                'interfaces': network.get_interfaces()
-            })
-            view_params.update({
-                'jobs': sniffing_jobs
-            })
+            # view_params = self.session_get(request.session, {
+            #     'interfaces': network.get_interfaces()
+            # })
+            # view_params.update({
+            #     'jobs': sniffing_jobs
+            # })
+            view_params = {
+                'interfaces': network.get_interfaces(),
+                'jobs': SniffingJobModel.objects.all()
+            }
             return render(request, self.template_name, view_params)
 
         def post(self, request):
@@ -68,53 +71,52 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
-            sniffing_jobs = self._get_sniffing_jobs(request.session)
-
-            job_id = len(sniffing_jobs)
-
-            session_job_params: dict = request.POST.dict()
-            if session_job_params.get('interfaces') is not None:
-                session_job_params['interfaces'] = request.POST.getlist('interfaces')
-
+            request_params: dict = request.POST.dict()
+            if request_params.get('interfaces') is not None:
+                request_params['interfaces'] = request.POST.getlist('interfaces')
             pcap_file = request.FILES.get('pcap')
             if pcap_file is not None:
-                session_job_params['pcap'] = self.upload_file(pcap_file)
+                request_params['pcap'] = self.upload_file(pcap_file)
             else:
-                session_job_params['pcap'] = None
+                request_params['pcap'] = None
 
-            out_json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_' + str(job_id) + '.json')
+            json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_.json')
 
-            session_job_params.update({
-                'id': job_id,
-                'out_json_file': out_json_file,
-                'status': signal.SIGCONT.name
-            })
+            sniffing_job = SniffingJobModel()
+            sniffing_job.filters = request_params.get('filters')
+            sniffing_job.pcap_file = request_params.get('pcap')
+            sniffing_job.interfaces = request_params.get('interfaces')
+            sniffing_job.json_file = json_file
 
-            def callback(pkt: dict):
+            def _sniffer_callback(pkt: dict):
                 """
-                :type pkt: dict
+                The callback function of packet sniffer.
+                This method writes the sniffed packets in a json file
+                :param pkt: The sniffed packet
                 """
-                JsonSerializer.add_item_to_dict(pkt['number'], pkt, out_json_file)
+                JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
 
-            def target():
+            def _sniffer_target():
                 """
-                The target function used by parallel process
+                Starts the packet sniffing
                 """
                 PcapSniffer.sniff(
-                    filters=session_job_params.get('filters'),
-                    src_file=session_job_params.get('pcap'),
-                    interfaces=session_job_params.get('interfaces'),
+                    filters=sniffing_job.filters,
+                    src_file=sniffing_job.pcap_file,
+                    interfaces=sniffing_job.interfaces,
                     limit_length=10000,
-                    callback=callback
+                    callback=_sniffer_callback
                 )
 
-            session_job_params['pidfile'] = MultiTask.multiprocess(target, asynchronous=True, cpu=1)
-            session_job_params.pop('csrfmiddlewaretoken', None)
-            sniffing_jobs[job_id] = session_job_params
+            sniffing_job.pid_file = MultiTask.multiprocess(_sniffer_target, asynchronous=True, cpu=1)
 
-            self._set_sniffing_jobs(request.session, sniffing_jobs)
+            sniffing_job.save()
 
-            return redirect('sniffing/capture?job_id=' + str(job_id))
+            print(sniffing_job)
+
+            # request_params.pop('csrfmiddlewaretoken', None)
+
+            return redirect('sniffing/capture?id=' + str(sniffing_job.id))
 
     class CaptureView(AbstractSniffingView):
         """
@@ -129,86 +131,74 @@ class Sniffing:
             :return: django.http.HttpResponse
             """
             request_params: dict = request.GET.dict()
-            job_id = request_params.get('job_id')
-            Log.info("Showing job #" + str(job_id))
+            try:
+                sniffing_job_id = int(request_params.get('id'))
+            except ValueError:
+                return redirect('sniffing')
+            Log.info("Showing job #" + str(sniffing_job_id))
+            sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
+            if sniffing_job is None:
+                return redirect('sniffing')
             return render(request, self.template_name)
 
+        # noinspection PyTypeChecker
         def post(self, request):
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            sniffing_jobs = self._get_sniffing_jobs(request.session)
+            sniffing_job: SniffingJobModel = None
             request_params: dict = request.POST.dict()
-            job_id = request_params.get('job_id')
-            if type(sniffing_jobs) is dict:
-                sniffing_job = sniffing_jobs.get(job_id)
-            else:
-                sniffing_job = None
+            sniffing_job_id = request_params.get('id')
+            try:
+                sniffing_job_id = int(sniffing_job_id)
+                sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
+            except ValueError:
+                pass
 
             if sniffing_job is None:
                 return JsonResponse({
                     'message': 'Unable to find the requested job'
                 }, status=400)
 
-            out_json_file = sniffing_job.get('out_json_file')
-
             signal_job = request_params.get('signal')
             if signal_job is not None:
                 signal_job = int(signal_job)
-                Log.info("Sending signal " + str(signal_job) + " to job #" + str(job_id))
-
-                pid = AbstractSniffingView._get_job_pid(sniffing_jobs[job_id])
-
-                if pid is None:
-                    Log.error("The process " + str(pid) + " does not exists")
-                else:
-                    job = sniffing_jobs[job_id]
-                    try:
-                        os.kill(int(pid), signal_job)
-                        Log.info("Signal " + str(signal_job) + " sent to job #" + str(job_id))
-                        job['status'] = signal.Signals(signal_job).name
-                    except ProcessLookupError:
-                        Log.error("The process " + str(pid) + " does not exists")
-                    if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
-                        AbstractSniffingView._clean_job(job)
-                        sniffing_jobs.pop(job_id, None)
-
-                    self._set_sniffing_jobs(request.session, sniffing_jobs)
-
+                Log.info("Sending signal " + str(signal_job) + " to job #" + str(sniffing_job_id))
+                try:
+                    sniffing_job.kill(signal_job)
+                    Log.info("Signal " + str(signal_job) + " sent to job #" + str(sniffing_job_id))
+                except ProcessLookupError as error:
+                    Log.error(str(error))
+                    Log.error("The process " + str(sniffing_job.pid) + " does not exists")
+                if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
+                    sniffing_job.delete()
                 return JsonResponse({
-                    'job_id': request_params.get('job_id'),
+                    'id': sniffing_job_id,
                     'signal': signal_job,
                     'message': 'Signal sent'
                 }, status=200)
-
             page = request_params.get('page')
             page_size = request_params.get('page_size')
-
-            out_json_dict = JsonSerializer.get_dictionary(out_json_file)
+            out_json_dict = JsonSerializer.get_dictionary(sniffing_job.json_file)
             attempts = 0
             while len(out_json_dict) == 0:
                 sleep(0.2)
-                # Prevent parallel access errors to file
-                out_json_dict = JsonSerializer.get_dictionary(out_json_file)
+                # Prevents parallel access errors to file
+                out_json_dict = JsonSerializer.get_dictionary(sniffing_job.json_file)
                 attempts += 1
                 if attempts >= 5:
                     break
-
             out_dict = util.sort_dict(dict(sorted(
                 out_json_dict.items(),
                 key=lambda e: int(e[1]['number']),
                 reverse=True
             )))
-
             pagination = self.pagination(out_dict, page, page_size)
-
-            job_id = request_params.get('job_id')
-
             pagination.update({
                 'job': {
-                    'id': job_id,
-                    'status': sniffing_jobs[job_id]['status']
+                    'id': sniffing_job_id,
+                    'status': sniffing_job.status_name
                 }
             })
             return JsonResponse(pagination, status=200)

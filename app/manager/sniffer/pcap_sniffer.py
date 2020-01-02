@@ -83,9 +83,9 @@ class PcapSniffer:
         if src_file is not None:
             Log.info('Analyzing file: ' + src_file)
             self.capture = pyshark.FileCapture(
-                input_file=src_file,
-                display_filter=filters,
-                output_file=dest_file,
+                input_file=self.src_file,
+                display_filter=self.filters,
+                output_file=self.dest_file,
                 # include_raw=True,
                 # use_json=True
                 # debug=APP_DEBUG
@@ -93,9 +93,9 @@ class PcapSniffer:
         else:
             Log.info('Analyzing live traffic')
             self.capture = pyshark.LiveCapture(
-                interface=interfaces,
-                display_filter=filters,
-                output_file=dest_file,
+                interface=self.interfaces,
+                display_filter=self.filters,
+                output_file=self.dest_file,
                 # include_raw=True,
                 # use_json=True
                 # debug=APP_DEBUG
