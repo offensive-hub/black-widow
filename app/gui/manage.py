@@ -40,6 +40,27 @@ from app.helper.util import whoami, set_owner_process
 from app.gui.web.wsgi import WEB_PACKAGE
 
 
+def django_gui():
+    sys.path.insert(0, os.path.dirname(__file__))
+    bind_host = _get_bind_socket()
+    Log.info("Starting " + str(APP_NAME) + ' GUI')
+    sys.argv = [sys.argv[0], 'web.wsgi', '-b', bind_host]
+    _launch_browser(bind_host)
+    gunicorn_run()
+
+
+def django_cmd(args):
+    # Go to "web" directory
+    if 'runserver' not in args:
+        os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
+    elif len(args) <= 1:
+        bind_host = _get_bind_socket()
+        args.append(bind_host)
+        _launch_browser(bind_host)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
+    management.execute_from_command_line([EXEC_PATH + ' --django', ] + args)
+
+
 def _launch_browser(bind_host: str):
     user = whoami()
 
@@ -63,24 +84,3 @@ def _get_bind_socket():
     if host is None:
         host = '0.0.0.0'
     return str(host) + ':' + str(APP_WEB_PORT)
-
-
-def django_gui():
-    sys.path.insert(0, os.path.dirname(__file__))
-    bind_host = _get_bind_socket()
-    Log.info("Starting " + str(APP_NAME) + ' GUI')
-    sys.argv = [sys.argv[0], 'web.wsgi', '-b', bind_host]
-    _launch_browser(bind_host)
-    gunicorn_run()
-
-
-def django_cmd(args):
-    # Go to "web" directory
-    if 'runserver' not in args:
-        os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
-    elif len(args) <= 1:
-        bind_host = _get_bind_socket()
-        args.append(bind_host)
-        _launch_browser(bind_host)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
-    management.execute_from_command_line([EXEC_PATH + ' --django', ] + args)

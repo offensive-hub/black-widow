@@ -172,6 +172,33 @@ def move(src, dest):
     shutil.move(src, dest)
 
 
+def ls(directory: str) -> list:
+    """
+    Returns a list containing the names of the files in the directory.
+    :param directory: The directory
+    :return: The list of the files in the directory
+    """
+    return [os.path.join(directory, entry) for entry in os.listdir(directory)]
+
+
+def basename(path: str) -> str:
+    """
+    Returns the final component of a pathname.
+    :param path: The full path
+    :return: the final component of a pathname
+    """
+    return os.path.basename(path)
+
+
+def is_file(path: str) -> bool:
+    """
+    Test whether a path is a regular file.
+    :param path: The file path
+    :return: True if path is a file, otherwise False
+    """
+    return os.path.isfile(path)
+
+
 # Elimina il file o la cartella passato per argomento
 # noinspection PyBroadException
 def delete(file):

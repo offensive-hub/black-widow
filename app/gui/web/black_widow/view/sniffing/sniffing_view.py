@@ -82,7 +82,7 @@ class Sniffing:
             else:
                 session_job_params['pcap'] = None
 
-            out_json_file = APP_STORAGE_OUT + '/' + util.now() + '_SNIFFING_' + str(job_id) + '.json'
+            out_json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_' + str(job_id) + '.json')
 
             session_job_params.update({
                 'id': job_id,
@@ -163,7 +163,6 @@ class Sniffing:
                 if pid is None:
                     Log.error("The process " + str(pid) + " does not exists")
                 else:
-                    kill = signal_job == signal.SIGKILL
                     job = sniffing_jobs[job_id]
                     try:
                         os.kill(int(pid), signal_job)
@@ -171,8 +170,7 @@ class Sniffing:
                         job['status'] = signal.Signals(signal_job).name
                     except ProcessLookupError:
                         Log.error("The process " + str(pid) + " does not exists")
-                        kill = True
-                    if kill:
+                    if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
                         AbstractSniffingView._clean_job(job)
                         sniffing_jobs.pop(job_id, None)
 

@@ -60,12 +60,14 @@ class MultiTask:
     tasks_types = (MULTI_THREADING, MULTI_PROCESSING)
 
     @staticmethod
-    def get_pids_from_file(pidfile: str):
+    def get_pids_from_file(pidfile: str) -> list:
         """
         Returns a list of pids inside the pidfile
         :type pidfile str
         :param pidfile The pidfile returned by MultiTask.multiprocess()
         """
+        if pidfile is None:
+            return []
         return storage.read_file(pidfile).split(', ')
 
     # Crea un sottoprocesso che a sua volta genera n(=cpu) threads.

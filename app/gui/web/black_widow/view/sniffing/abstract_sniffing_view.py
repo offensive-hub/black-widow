@@ -26,6 +26,7 @@
 import os
 import signal
 
+from app.env import APP_STORAGE_OUT
 from app.service import MultiTask
 from app.helper import storage
 from app.helper.util import pid_exists
@@ -38,13 +39,18 @@ class AbstractSniffingView(AbstractView):
     Abstract Sniffing View
     """
 
+    storage_out_dir = os.path.join(APP_STORAGE_OUT, 'sniffing')
+    storage.check_folder(storage_out_dir)
+    if not os.access(storage_out_dir, os.X_OK):
+        os.chmod(storage_out_dir, 0o0755)
+
     @staticmethod
     def _get_job_pid(job: dict) -> int or None:
         """
         :type job: dict
         :rtype: int or None
         """
-        pids = MultiTask.get_pids_from_file(job['pidfile'])
+        pids = MultiTask.get_pids_from_file(job.get('pidfile'))
         if len(pids) >= 1:
             try:
                 return int(pids[0])
@@ -76,14 +82,35 @@ class AbstractSniffingView(AbstractView):
         update_session = False
         if type(sniffing_jobs) is not dict:
             sniffing_jobs = dict()
+        storage_files = storage.ls(self.storage_out_dir)
+        job_files = []
         job_ids = list(sniffing_jobs.keys())
         for job_id in job_ids:
             job = sniffing_jobs[job_id]
             pid = AbstractSniffingView._get_job_pid(job)
+            job_file = job.get('out_json_file')
             if not pid_exists(pid):
+                if job_file in storage_files:
+                    job['status'] = signal.SIGKILL.name
+                    job_files.append(job_file)
+                else:
+                    AbstractSniffingView._clean_job(job)
+                    sniffing_jobs.pop(job_id, None)
+                    update_session = True
+            else:
+                job_files.append(job_file)
+        for storage_file in storage_files:
+            if storage_file not in job_files:
+                job_id = len(sniffing_jobs)
+                job = {
+                    'id': job_id,
+                    'out_json_file': storage_file,
+                    'status': signal.SIGKILL.name,
+                    'pcap': storage_file,
+                    'interfaces': None
+                }
+                sniffing_jobs[job_id] = job
                 update_session = True
-                sniffing_jobs.pop(job_id, None)
-                AbstractSniffingView._clean_job(job)
         if update_session:
             self._set_sniffing_jobs(session, sniffing_jobs)
         return sniffing_jobs

@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* models.py -- Django models of black-widow.                                    *
+* sniffing_job_model.py -- A sniffing job info.                                 *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -25,4 +25,24 @@
 
 from django.db import models
 
-# Create your models here.
+
+class SniffingJobModel(models.Model):
+    id: int = models.PositiveIntegerField(primary_key=True)
+    pid: int = models.PositiveIntegerField()
+    status: int = models.PositiveIntegerField()
+    json_file: str = models.CharField(max_length=250)
+    pcap_file: str = models.CharField(max_length=250)
+    _interfaces: str = models.TextField()
+
+    @property
+    def interfaces(self) -> list or None:
+        if self._interfaces is None:
+            return None
+        return self._interfaces.split(';')
+
+    @interfaces.setter
+    def interfaces(self, value: list or None):
+        if value is None:
+            self._my_date = None
+        else:
+            self._my_date = ';'.join(value)

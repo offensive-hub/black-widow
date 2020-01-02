@@ -65,7 +65,8 @@ class Log:
 
     def __init__(self):
         storage.touch(APP_LOGFILE)
-        storage.chmod(APP_LOGFILE, 0o0666)
+        if not os.access(APP_LOGFILE, os.W_OK):
+            storage.chmod(APP_LOGFILE, 0o0666)
 
     # info
     def _inf(self, msg):

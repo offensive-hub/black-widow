@@ -78,6 +78,10 @@
                         <i class="material-icons" style="padding: 0;">stop</i>
                     </button>
 
+                    <button style="display: none;" id="delete-capture-btn" type="button" class="btn btn-danger btn-action disabled" title="Delete forever">
+                        <i class="material-icons" style="padding: 0;">delete_forever</i>
+                    </button>
+
                 </div>
                 <div class="card-body" id="main_body">
                     <div class="table-responsive">
@@ -128,6 +132,7 @@
             const $playCaptureBtn = $('#play-capture-btn');
             const $pauseCaptureBtn = $('#pause-capture-btn');
             const $stopCaptureBtn = $('#stop-capture-btn');
+            const $deleteCaptureBtn = $('#delete-capture-btn');
             const $pagination = $('#pagination');
 
             // Pagination
@@ -154,9 +159,16 @@
                     }, function(data, textStatus, jqXHR) {
                         console.log('Sniffing request success!');
                         if (data.job.status === 'SIGSTOP') {
-                            // Process stopped
+                            // Process paused
                             $pauseCaptureBtn.addClass('disabled').hide();
                             $playCaptureBtn.removeClass('disabled').show();
+                        }
+                        if (data.job.status === 'SIGKILL') {
+                            // Process stopped
+                            $pauseCaptureBtn.addClass('disabled').hide();
+                            $playCaptureBtn.addClass('disabled').hide();
+                            $stopCaptureBtn.addClass('disabled').hide();
+                            $deleteCaptureBtn.removeClass('disabled').show();
                         }
                         $sniffedPktsTable.find('tbody').html('');
                         for (let key in data.result) {
@@ -211,6 +223,12 @@
                     });
                 }, sleep);
             };
+
+            /**
+             * Send a signal to job
+             * @param signal The numeric signal to send
+             * @param callback The callback to call after signal
+             */
             const signPkts = function(signal, callback) {
                 request('POST', '/sniffing/capture', {
                     'job_id': jobId,
@@ -222,19 +240,41 @@
                     window.location.replace("/sniffing");
                 });
             };
+
+            /**
+             * Send a SIGABRT to the current job
+             */
+            const deletePkts = function() {
+                if (confirm("This job will be permanently deleted. Are you sure ?")) {
+                    // 6 = SIGABRT
+                    signPkts(6, function(data, textStatus, jqXHR) {
+                        console.log('Sniffing requests aborted!');
+                        window.location.replace("/sniffing");
+                    });
+                }
+            };
+            $deleteCaptureBtn.click(deletePkts);
+
+            /**
+             * Send a SIGKILL to the current job
+             */
             const stopPkts = function() {
-                if (confirm("This action will delete the current job permanently! Are you sure ?")) {
+                if (confirm("You'll cannot play again this job! Are you sure ?")) {
                     // 9 = SIGKILL
                     signPkts(9, function(data, textStatus, jqXHR) {
                         console.log('Sniffing requests stopped!');
-                        window.location.replace("/sniffing");
-                        {#$stopCaptureBtn.addClass('disabled');#}
-                        {#$pauseCaptureBtn.addClass('disabled');#}
-                        {#$playCaptureBtn.addClass('disabled');#}
+                        $stopCaptureBtn.addClass('disabled').hide();
+                        $pauseCaptureBtn.addClass('disabled').hide();
+                        $playCaptureBtn.addClass('disabled').hide();
+                        $deleteCaptureBtn.removeClass('disabled').show();
                     });
                 }
             };
             $stopCaptureBtn.click(stopPkts);
+
+            /**
+             * Send a SIGSTOP to the current job
+             */
             const pausePkts = function() {
                 // 19 = SIGSTOP
                 signPkts(19, function(data, textStatus, jqXHR) {
@@ -245,6 +285,10 @@
 
             };
             $pauseCaptureBtn.click(pausePkts);
+
+            /**
+             * Send a SIGCONT to the current job
+             */
             const playPkts = function() {
                 // 18 = SIGCONT
                 signPkts(18, function(data, textStatus, jqXHR) {
@@ -255,7 +299,9 @@
                 });
             };
             $playCaptureBtn.click(playPkts);
+
             updatePkts(300, true);
+
             $('#main_body').spinner('Setting up sniffer...');
         });
     </script>

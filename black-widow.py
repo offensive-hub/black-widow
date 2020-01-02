@@ -38,7 +38,8 @@ class AppType:
 
 def make_temp_dir():
     app.helper.storage.check_folder(app.env.APP_TMP)
-    app.helper.storage.chmod(app.env.APP_TMP, 0o0777, True)
+    if not os.access(app.env.APP_TMP, os.W_OK):
+        app.helper.storage.chmod(app.env.APP_TMP, 0o0777, True)
 
 
 # Startup
@@ -70,6 +71,10 @@ def main_cmd(arguments):
         app.gui.django_cmd(django_args)
         sys.exit(0)
 
+    if not app.helper.util.is_root():
+        print("Root privileges required to run " + app.env.APP_PROC + "!\n")
+        sys.exit(50)
+
     elif arguments.pcap:
         if arguments.pcap_int is not None:
             arguments.pcap_int = arguments.pcap_int.split(',')
@@ -90,11 +95,11 @@ def main_cmd(arguments):
 # Main function generic app
 def main():
     arguments = app.arguments.get_arguments()
-    if not app.helper.util.is_root():
-        print("Root privileges required to run " + app.env.APP_PROC + "!\n")
-        sys.exit(50)
     make_temp_dir()
     if arguments.gui:
+        if not app.helper.util.is_root():
+            print("Root privileges required to run " + app.env.APP_PROC + "!\n")
+            sys.exit(50)
         main_gui()
     elif arguments.test:
         main_test()
