@@ -67,12 +67,12 @@
     background: linear-gradient(60deg, #d22824, #da3a36);
 }
 .black-edition .modal {
-    background: rgba(19, 4, 4, 0.76);
+    background: rgba(11, 0, 0, 0.9);
 }
 .black-edition .modal .modal-content {
     background: #171717;
     color: #fff;
-    box-shadow: 0 .5rem 1rem rgba(149, 0, 3, 0.51);
+    box-shadow: 0 .5rem 1rem rgba(32, 1, 2, 0.51);
 }
 .black-edition .modal .modal-header,
 .black-edition .modal .modal-footer {
@@ -94,8 +94,23 @@
 .modal .card-header .material-icons {
     margin-top: 22px;
 }
-.modal .card-header h3 {
-    font-weight: bolder;
+.modal .card-header h3:not(.material-icons) {
+    font-weight: bold;
+}
+
+.modal .card-footer .stats span {
+    padding-top: 1px;
+    margin-left: 5px;
+}
+
+.modal .card .card-footer {
+    border-top: 1px solid hsla(0, 0%, 0%, 0.23);
+}
+
+.modal .card .card-header-danger {
+    background: linear-gradient(60deg,#3e0d0c,#591b19) !important;
+    color: #240606;
+    box-shadow: 0 1px 20px 0 rgba(55, 7, 7, 0.56),0 7px 10px -5px rgba(74, 22, 18, 0.91) !important;
 }
 
 /* 
@@ -107,7 +122,7 @@
         font-size: 1.3rem;
     }
     .modal .card-header .material-icons {
-        margin-top: 18px;
+        margin-top: 16px;
         font-size: 2rem;
     }
 }
@@ -482,8 +497,50 @@ nav.pagination.dark-theme li:first-child li span {
     padding: 0;
 }
 
-#pkt-modal .hosts .host.dst .card-header {
+#pkt-modal .hosts .host .addresses {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr {
+    background: #958e8e;
     color: #000;
+    margin: 0;
+    padding: 10px;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .material-icons {
+    width: 24px;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .label {
+    display: flow-root;
+    font-weight: bold;
+    border-bottom: 1px solid hsla(0, 0%, 0%, 0.23);
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .label span {
+    padding-top: 3px;
+    float: right;
+    margin-right: 5px;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .params {
+    padding-top: 5px;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .params .param {
+    font-weight: bold;
+}
+
+#pkt-modal .hosts .host .addresses .card.addr .params a.param {
+    color: #800b08;
+}
+
+@media screen and (max-width: 991px) {
+    #pkt-modal .hosts .host .addresses > div:first-child {
+        margin-bottom: 10px;
+    }
 }
 
 #pkt-modal .host-icon-container {
