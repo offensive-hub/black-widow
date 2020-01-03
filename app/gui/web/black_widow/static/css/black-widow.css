@@ -108,7 +108,7 @@
 }
 
 .modal .card .card-header-danger {
-    background: linear-gradient(60deg,#3e0d0c,#591b19) !important;
+    background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
     color: #240606;
     box-shadow: 0 1px 20px 0 rgba(55, 7, 7, 0.56),0 7px 10px -5px rgba(74, 22, 18, 0.91) !important;
 }

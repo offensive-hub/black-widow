@@ -81,6 +81,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Time</th>
                                         <th>File/Interfaces</th>
                                         <th>Filters</th>
                                         <th>Status</th>
@@ -90,6 +91,7 @@
                                     {% for job in jobs %}
                                         <tr class="link" href="/sniffing/capture?id={{ job.id }}">
                                             <td>{{ job.id }}</td>
+                                            <td>{{ job.created_at }}</td>
                                             <td>
                                                 {% if job.interfaces != None %}
                                                     {{ job.interfaces }}

@@ -22,11 +22,13 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import os
 import signal
-from time import sleep
 
+from time import sleep
 from django.db import models
+from django.utils.timezone import now
 
 from app.gui.web.black_widow.models.abstract_model import AbstractModel
 from app.helper import storage
@@ -42,6 +44,7 @@ class SniffingJobModel(AbstractModel):
     pcap_file: str = models.CharField(max_length=250, null=True)
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
+    created_at: str = models.DateTimeField(default=now, editable=False)
 
     @staticmethod
     def all() -> models.query.QuerySet:
