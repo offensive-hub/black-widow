@@ -74,7 +74,7 @@ def main_cmd(arguments):
     elif arguments.pcap:
         if arguments.pcap_int is None:
             print("\nChoose at least one interface (eg. --pcap-int=wlan0)\n")
-            sys.exit(0)
+            sys.exit(1)
         app.manager.sniffer.PcapSniffer.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
                                               dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
                                               limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
