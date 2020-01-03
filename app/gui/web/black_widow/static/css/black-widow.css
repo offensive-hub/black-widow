@@ -81,19 +81,18 @@
 .black-edition .modal .close {
    color: #fff;
 }
-.modal .card-header .col-4,
-.modal .card-header .col-8 {
+.modal .card-header .h3 {
    padding-left: 8px;
    padding-right: 8px;
 }
-.modal .card-header .col-4 {
+.modal .card-header h3:first-child {
     text-align: right;
 }
-.modal .card-header .col-8 {
+.modal .card-header h3:last-child {
     text-align: left;
 }
 .modal .card-header .material-icons {
-    margin-top: 24px;
+    margin-top: 22px;
 }
 .modal .card-header h3 {
     font-weight: bolder;
@@ -104,12 +103,12 @@
   ##Screen = 1281px to higher resolution desktops
 */
 @media (min-width: 1281px) {
-    .modal .card-header .material-icons {
-        margin-top: 24px;
+    .modal .card-header h3:not(.material-icons) {
+        font-size: 1.3rem;
     }
-    .modal .card-header h3 {
-        font-weight: bolder;
-        font-size: 1rem;
+    .modal .card-header .material-icons {
+        margin-top: 18px;
+        font-size: 2rem;
     }
 }
 
@@ -118,36 +117,53 @@
   ##Screen = B/w 1025px to 1280px
 */
 @media (min-width: 1025px) and (max-width: 1280px) {
+    .modal .card-header .material-icons {
+        display: none;
+    }
+    .modal .card-header h3 {
+        font-size: 1rem;
+        max-width: 100%;
+        text-align: center !important;
+        flex: content;
+    }
 }
 
 /* 
-  ##Device = Tablets, Ipads (portrait)
+  ##Device = Tablets, Ipads
   ##Screen = B/w 768px to 1024px
 */
 @media (min-width: 768px) and (max-width: 1024px) {
-}
-
-/* 
-  ##Device = Tablets, Ipads (landscape)
-  ##Screen = B/w 768px to 1024px
-*/
-
-@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .modal .card-header .material-icons {
+        display: none;
+    }
+    .modal .card-header h3 {
+        font-size: 0.9rem;
+        max-width: 100%;
+        text-align: center !important;
+        flex: content;
+    }
 }
 
 /* 
   ##Device = Low Resolution Tablets, Mobiles (Landscape)
   ##Screen = B/w 481px to 767px
 */
-
 @media (min-width: 481px) and (max-width: 767px) {
+    .modal .card-header .material-icons {
+        display: none;
+    }
+    .modal .card-header h3 {
+        font-size: 0.8rem;
+        max-width: 100%;
+        text-align: center !important;
+        flex: content;
+    }
 }
 
 /* 
   ##Device = Most of the Smartphones Mobiles (Portrait)
   ##Screen = B/w 320px to 479px
 */
-
 @media (max-width: 480px) {
     .modal .card-header .material-icons {
         display: none;
