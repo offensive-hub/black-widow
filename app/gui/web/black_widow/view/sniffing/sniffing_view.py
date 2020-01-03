@@ -81,7 +81,7 @@ class Sniffing:
             sniffing_job.interfaces = request_params.get('interfaces')
             sniffing_job.json_file = json_file
 
-            def _sniffer_callback(pkt: dict, pcap_sniffer: PcapSniffer):
+            def _sniffer_callback(pkt: dict):
                 """
                 The callback function of packet sniffer.
                 This method writes the sniffed packets in a json file

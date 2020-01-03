@@ -348,14 +348,15 @@ class PcapSniffer:
                 continue
             pcap_layer_field: PcapLayerField = local_get_field_tree(field)
             if pcap_layer_field is not None:
-                if pcap_layer_field.sanitized_name == 'proto':
+                if pcap_layer_field.sanitized_name in ('proto', 'phy'):
                     protocol = pcap_layer_field.value
                 try:
                     if pcap_layer_field.sanitized_name in (
                             'src',
                             'src_host',
                             'src_hw_mac',
-                            'src_proto_ipv4'
+                            'src_proto_ipv4',
+                            'addr'
                     ):
                         if is_mac(pcap_layer_field.value):
                             source['mac'] = pcap_layer_field.value
@@ -367,7 +368,8 @@ class PcapSniffer:
                             'dst',
                             'dst_host',
                             'dst_hw_mac',
-                            'dst_proto_ipv4'
+                            'dst_proto_ipv4',
+                            'ra'
                     ):
                         if is_mac(pcap_layer_field.value):
                             destination['mac'] = pcap_layer_field.value

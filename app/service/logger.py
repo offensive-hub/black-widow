@@ -65,8 +65,10 @@ class Log:
 
     def __init__(self):
         storage.touch(APP_LOGFILE)
-        if not os.access(APP_LOGFILE, os.W_OK):
+        try:
             storage.chmod(APP_LOGFILE, 0o0666)
+        except PermissionError:
+            pass
 
     # info
     def _inf(self, msg):
