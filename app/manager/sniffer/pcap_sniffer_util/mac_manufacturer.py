@@ -76,7 +76,7 @@ class MacManufacturer:
         if type(mac_manufacturer_result) is dict:
             mac_manufacturer = mac_manufacturer_result.get('vendor') + \
                                '_' + \
-                               mac_manufacturer_result.get('mac')
+                               mac[9:]
         return mac_manufacturer
 
     def _lookup(self, mac: str) -> dict or None:

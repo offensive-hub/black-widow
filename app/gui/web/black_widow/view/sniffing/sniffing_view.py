@@ -87,9 +87,6 @@ class Sniffing:
                 This method writes the sniffed packets in a json file
                 :param pkt: The sniffed packet
                 """
-                print(pcap_sniffer)
-                print(type(pcap_sniffer))
-                print(dir(pcap_sniffer))
                 JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
 
             def _sniffer_target():

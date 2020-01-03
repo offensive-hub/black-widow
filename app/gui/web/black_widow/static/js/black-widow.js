@@ -132,7 +132,12 @@ const bestField = function(field) {
     return field[field.best];
 };
 
-$.fn.insertTableRow = function (values) {
+/**
+ *
+ * @param values The row values
+ * @param action The function to call on row click
+ */
+$.fn.insertTableRow = function (values, action = null) {
     const $table = $(this);
     let tableRow = '<tr>';
     values.forEach(value => {
@@ -140,7 +145,10 @@ $.fn.insertTableRow = function (values) {
         tableRow += '<td '+title+'>' + value.name + '</td>';
     });
     tableRow += '</tr>';
-    $table.find('tbody:last-child').append(tableRow);
+    const $tableRow = $(tableRow).appendTo($table.find('tbody:last-child'));
+    if (action !== null && action !== undefined) {
+        $tableRow.click(action);
+    }
 };
 
 /**

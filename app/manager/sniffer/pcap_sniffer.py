@@ -140,18 +140,17 @@ class PcapSniffer:
             else:
                 print(str(key) + ': ' + str(value))
 
+    # noinspection PyUnusedLocal
     @staticmethod
-    def _user_callback_example(pkt_dict: dict, pcap_sniffer) -> None:
+    def _user_callback_example(pkt_dict: dict) -> None:
         """
         This is an user_callback example method.
         It manages the pkt dictionary
         :param pkt_dict: The packet dictionary
-        :param pcap_sniffer: The initialized entity PcapSniffer which is sniffing the traffic
         :return: None
         """
         # Manage pkt_dict
         return None
-
 
     @staticmethod
     def _merge_addr(host1: dict, host2: dict):
@@ -222,10 +221,8 @@ class PcapSniffer:
                 pkt_dict['protocol'] = protocol
             pkt_dict['layers'].append(layer_dict)
         if self.user_callback is not None:
-            self.user_callback(pkt_dict, self)
+            self.user_callback(pkt_dict)
         else:
-            PcapSniffer.print_pkt(pkt_dict)
-        if pkt_dict.get('destination') is None or pkt_dict.get('source') is None:
             PcapSniffer.print_pkt(pkt_dict)
         self.count += 1
 

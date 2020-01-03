@@ -1,45 +1,45 @@
 {% extends 'layout/base.html' %}
 {% comment %}
-<!--
-*********************************************************************************
-*                                                                               *
-* capture.html -- HTML file.                                                    *
-*                                                                               *
-************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
-*                                                                               *
-* =========================================================                     *
-* Material Dashboard Dark Edition - v2.1.0                                      *
-* =========================================================                     *
-*                                                                               *
-* Product Page: https://www.creative-tim.com/product/material-dashboard-dark    *
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)                     *
-*                                                                               *
-* Coded by www.creative-tim.com                                                 *
-*                                                                               *
-* =========================================================                     *
-*                                                                               *
-* The above copyright notice and this permission notice shall be included in    *
-* all copies or substantial portions of the Software.                           *
-*                                                                               *
-********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
-*                                                                               *
-* This file is part of black-widow.                                             *
-*                                                                               *
-* black-widow is free software: you can redistribute it and/or modify           *
-* it under the terms of the GNU General Public License as published by          *
-* the Free Software Foundation, either version 3 of the License, or             *
-* (at your option) any later version.                                           *
-*                                                                               *
-* black-widow is distributed in the hope that it will be useful,                *
-* but WITHOUT ANY WARRANTY; without even the implied warranty of                *
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
-* GNU General Public License for more details.                                  *
-*                                                                               *
-* You should have received a copy of the GNU General Public License             *
-* along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
-*                                                                               *
-*********************************************************************************
--->
+    <!--
+    *********************************************************************************
+    *                                                                               *
+    * capture.html -- HTML file.                                                    *
+    *                                                                               *
+    ************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
+    *                                                                               *
+    * =========================================================                     *
+    * Material Dashboard Dark Edition - v2.1.0                                      *
+    * =========================================================                     *
+    *                                                                               *
+    * Product Page: https://www.creative-tim.com/product/material-dashboard-dark    *
+    * Copyright 2019 Creative Tim (http://www.creative-tim.com)                     *
+    *                                                                               *
+    * Coded by www.creative-tim.com                                                 *
+    *                                                                               *
+    * =========================================================                     *
+    *                                                                               *
+    * The above copyright notice and this permission notice shall be included in    *
+    * all copies or substantial portions of the Software.                           *
+    *                                                                               *
+    ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
+    *                                                                               *
+    * This file is part of black-widow.                                             *
+    *                                                                               *
+    * black-widow is free software: you can redistribute it and/or modify           *
+    * it under the terms of the GNU General Public License as published by          *
+    * the Free Software Foundation, either version 3 of the License, or             *
+    * (at your option) any later version.                                           *
+    *                                                                               *
+    * black-widow is distributed in the hope that it will be useful,                *
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+    * GNU General Public License for more details.                                  *
+    *                                                                               *
+    * You should have received a copy of the GNU General Public License             *
+    * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
+    *                                                                               *
+    *********************************************************************************
+    -->
 {% endcomment %}
 {% load static %}
 
@@ -50,12 +50,78 @@
 {% block content %}
     {% csrf_token %}
     <!-- TODO: UI to view the packet captured. Features:
-            - Show real-time traffic
             - Sorting/Search filters
-            - Play/Pause/Reset/Stop
+            - Reset pkts
             - Download ".pcap" file
-            -
     -->
+
+    <!-- Show packet modal -->
+    <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row hosts">
+
+                        <div class="col-6 src host">
+                            <div class="col-12">
+                                <div class="card card-chart">
+                                    <div class="card-header card-chart card-header-danger">
+                                        <div class="row">
+                                            <h3 class="material-icons col-4">laptop_mac</h3>
+                                            <h3 class="header-title col-8">Source</h3>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title">Source</h4>
+                                        <p class="card-category"><span class="text-success"><i class="fa fa-long-arrow-up"></i> 55%  </span> increase in today sales.</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="stats">
+                                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-6 dst host">
+                            <div class="col-12">
+                                <div class="card card-chart">
+                                    <div class="card-header card-chart card-header-danger">
+                                        <div class="row">
+                                            <h3 class="material-icons col-4">laptop_chromebook</h3>
+                                            <h3 class="header-title col-8">Destination</h3>
+                                        </div>
+                                     </div>
+                                    <div class="card-body">
+                                        <h4 class="card-title">Destination</h4>
+                                        <p class="card-category"><span class="text-success"><i class="fa fa-long-arrow-up"></i> 55%  </span> increase in today sales.</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="stats">
+                                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card card-plain">
@@ -134,6 +200,7 @@
             const $stopCaptureBtn = $('#stop-capture-btn');
             const $deleteCaptureBtn = $('#delete-capture-btn');
             const $pagination = $('#pagination');
+            const $pktModal = $('#pkt-modal');
 
             // Pagination
             $pagination.pagination({
@@ -190,7 +257,9 @@
                                 },
                                 {name: pkt.protocol},                 // Protocol
                                 {name: pkt.length},                   // Length (bytes)
-                            ]);
+                            ], function() {
+                                showPkt(pkt);
+                            });
                         }
 
                         // Pagination
@@ -299,6 +368,23 @@
                 });
             };
             $playCaptureBtn.click(playPkts);
+
+            /**
+             * Show in a model the packet
+             * @param pkt The packet Object
+             */
+            const showPkt = function(pkt) {
+                console.log(pkt);
+                $pktModal.find('.modal-title').html('Packet #' + pkt.number);
+
+                const $pktModalSrcHost = $pktModal.find('.host.src');
+                const $pktModalDstHost = $pktModal.find('.host.dst');
+
+                $pktModalSrcHost.find('.header-title').html('SOURCE [ ' + pkt.source.label + ' ]');
+                $pktModalDstHost.find('.header-title').html('DESTINATION [ ' + pkt.destination.label + ' ]');
+
+                $pktModal.modal();
+            };
 
             updatePkts(300, true);
 

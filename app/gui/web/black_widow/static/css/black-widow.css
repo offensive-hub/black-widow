@@ -33,7 +33,9 @@
 *        |-- 0.5) Forms
 *        |-- 0.6) Spinner
  *
- *  1) base.html
+ *  1) layout/base.html
+ *
+ *  2) sniffing/capture.html
  *
 */
 
@@ -63,6 +65,99 @@
 .black-edition .card.card-rotate.bg-primary .front,
 .black-edition .card.card-rotate.bg-primary .back {
     background: linear-gradient(60deg, #d22824, #da3a36);
+}
+.black-edition .modal {
+    background: rgba(19, 4, 4, 0.76);
+}
+.black-edition .modal .modal-content {
+    background: #171717;
+    color: #fff;
+    box-shadow: 0 .5rem 1rem rgba(149, 0, 3, 0.51);
+}
+.black-edition .modal .modal-header,
+.black-edition .modal .modal-footer {
+   border-color: #000;
+}
+.black-edition .modal .close {
+   color: #fff;
+}
+.modal .card-header .col-4,
+.modal .card-header .col-8 {
+   padding-left: 8px;
+   padding-right: 8px;
+}
+.modal .card-header .col-4 {
+    text-align: right;
+}
+.modal .card-header .col-8 {
+    text-align: left;
+}
+.modal .card-header .material-icons {
+    margin-top: 24px;
+}
+.modal .card-header h3 {
+    font-weight: bolder;
+}
+
+/* 
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+@media (min-width: 1281px) {
+    .modal .card-header .material-icons {
+        margin-top: 24px;
+    }
+    .modal .card-header h3 {
+        font-weight: bolder;
+        font-size: 1rem;
+    }
+}
+
+/* 
+  ##Device = Laptops, Desktops
+  ##Screen = B/w 1025px to 1280px
+*/
+@media (min-width: 1025px) and (max-width: 1280px) {
+}
+
+/* 
+  ##Device = Tablets, Ipads (portrait)
+  ##Screen = B/w 768px to 1024px
+*/
+@media (min-width: 768px) and (max-width: 1024px) {
+}
+
+/* 
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+}
+
+/* 
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (max-width: 480px) {
+    .modal .card-header .material-icons {
+        display: none;
+    }
+    .modal .card-header h3 {
+        font-size: 0.7rem;
+        max-width: 100%;
+        text-align: center !important;
+        flex: content;
+    }
 }
 
 /******************/
@@ -344,6 +439,50 @@ nav.pagination.dark-theme li:first-child li span {
 
 .black-edition .sidebar .sidebar-background::after, .black-edition .sidebar {
     background: #1a1a1a;
+}
+
+/**********************************/
+
+
+
+/******** 2) capture.html *********/
+
+@media screen and (min-width: 576px) {
+    #pkt-modal > .modal-dialog {
+        max-width: 90vw;
+    }
+}
+
+#pkt-modal > .modal-dialog > .modal-content {
+    height: 100%;
+}
+
+#pkt-modal .hosts .host {
+    min-height: 180px;
+    display: grid;
+}
+
+#pkt-modal .hosts .host > .col-12 {
+    padding: 0;
+}
+
+#pkt-modal .hosts .host.dst .card-header {
+    color: #000;
+}
+
+#pkt-modal .host-icon-container {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+    display: flex;
+    opacity: 0.1;
+}
+
+#pkt-modal .host-icon-container .host-icon {
+    margin: auto;
+    font-size: 20vw;
 }
 
 /**********************************/
