@@ -38,9 +38,11 @@
 """
 
 from math import floor
+from os.path import join
 
+from app.env import APP_STORAGE
 from app.manager.request import HttpRequest
-from app.service import Log
+from app.service import Log, JsonSerializer
 
 
 class MacManufacturer:
@@ -48,18 +50,18 @@ class MacManufacturer:
     The Mac Manufacturer Lookup class
     """
 
-    MANUFACTURERS_URL = 'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
-    MANUFACTURERS_DETAIL_DICT = {
+    _MANUFACTURERS_URL = 'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
+    _MANUFACTURERS_DETAIL_DICT = {
         0: 'mac',
         1: 'vendor',
         2: 'company',
         3: 'comment'
     }
+    _MANUFACTURERS_JSON = join(APP_STORAGE, 'mac_manufacturers.json')
 
-    mac_manufacturer = None
+    _mac_manufacturer = None
 
     def __init__(self):
-        self.manufacturer_dict = dict()
         self._update_manufacturer_dict()
 
     @staticmethod
@@ -69,9 +71,9 @@ class MacManufacturer:
         :param mac: The mac address to lookup
         :rtype: str or None
         """
-        if MacManufacturer.mac_manufacturer is None:
-            MacManufacturer.mac_manufacturer = MacManufacturer()
-        mac_manufacturer_result = MacManufacturer.mac_manufacturer._lookup(mac)
+        if MacManufacturer._mac_manufacturer is None:
+            MacManufacturer._mac_manufacturer = MacManufacturer()
+        mac_manufacturer_result = MacManufacturer._mac_manufacturer._lookup(mac)
         mac_manufacturer = None
         if type(mac_manufacturer_result) is dict:
             mac_manufacturer = mac_manufacturer_result.get('vendor') + \
@@ -86,13 +88,13 @@ class MacManufacturer:
         :rtype: dict or None
         """
         for i in range(len(mac), 0, -1):
-            manufacturer = self.manufacturer_dict.get(mac[0:i])
+            manufacturer = self._manufacturer_dict.get(mac[0:i])
             if manufacturer is not None:
                 return manufacturer
         return None
 
     def _update_manufacturer_dict(self):
-        manufacturer_response = HttpRequest.request(MacManufacturer.MANUFACTURERS_URL)
+        manufacturer_response = HttpRequest.request(MacManufacturer._MANUFACTURERS_URL)
         if manufacturer_response is None:
             return
         if manufacturer_response.text is None:
@@ -108,9 +110,9 @@ class MacManufacturer:
             i = 0
             mac = None
             lookup_dict = {
-                MacManufacturer.MANUFACTURERS_DETAIL_DICT[1]: None,
-                MacManufacturer.MANUFACTURERS_DETAIL_DICT[2]: None,
-                MacManufacturer.MANUFACTURERS_DETAIL_DICT[3]: None
+                MacManufacturer._MANUFACTURERS_DETAIL_DICT[1]: None,
+                MacManufacturer._MANUFACTURERS_DETAIL_DICT[2]: None,
+                MacManufacturer._MANUFACTURERS_DETAIL_DICT[3]: None
             }
             for detail in manufacturer_details:
                 if detail == '':
@@ -129,14 +131,17 @@ class MacManufacturer:
                     else:
                         Log.error("Wrong mac address: " + str(detail))
                         break
-                if i >= len(MacManufacturer.MANUFACTURERS_DETAIL_DICT):
+                if i >= len(MacManufacturer._MANUFACTURERS_DETAIL_DICT):
                     Log.error("Wrong manufacturer details: " + str(manufacturer_details))
                     break
-                lookup_dict[MacManufacturer.MANUFACTURERS_DETAIL_DICT[i]] = detail
+                lookup_dict[MacManufacturer._MANUFACTURERS_DETAIL_DICT[i]] = detail
                 i += 1
             if mac is None:
                 Log.error("Wrong manufacturer details: " + str(manufacturer_details))
                 continue
             manufacturer_dict[mac] = lookup_dict
         if len(manufacturer_dict) > 0:
-            self.manufacturer_dict = manufacturer_dict
+            self._manufacturer_dict = manufacturer_dict
+            JsonSerializer.set_dictionary(self._manufacturer_dict, MacManufacturer._MANUFACTURERS_JSON)
+        else:
+            self._manufacturer_dict = JsonSerializer.get_dictionary(MacManufacturer._MANUFACTURERS_JSON)
