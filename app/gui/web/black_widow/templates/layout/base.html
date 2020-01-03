@@ -36,6 +36,7 @@
 *********************************************************************************
 -->
 {% load static %}
+<!--suppress HtmlUnknownTarget, JSUnresolvedVariable, JSUnresolvedFunction -->
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -47,7 +48,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!-- Fonts and icons -->
-    <link href="{% static 'css/material-icons.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/google-fonts.css' %}" rel="stylesheet" />
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" />
     <!-- CSS Files -->
     <link href="{% static 'css/material-dashboard.min.css' %}" rel="stylesheet" />
@@ -168,18 +169,18 @@
                     <span class="navbar-toggler-icon icon-bar"></span>
                 </button>
                 <div class="collapse navbar-collapse justify-content-end">
-                    <form class="navbar-form">
-                        <div class="input-group no-border">
-                            <input type="text" value="" class="form-control" placeholder="Search...">
-                            <button type="submit" class="btn btn-default btn-round btn-just-icon">
-                                <i class="material-icons">search</i>
-                                <span class="ripple-container"></span>
-                            </button>
-                        </div>
-                    </form>
+{#                    <form class="navbar-form">#}
+{#                        <div class="input-group no-border">#}
+{#                            <input type="text" value="" class="form-control" placeholder="Search...">#}
+{#                            <button type="submit" class="btn btn-default btn-round btn-just-icon">#}
+{#                                <i class="material-icons">search</i>#}
+{#                                <span class="ripple-container"></span>#}
+{#                            </button>#}
+{#                        </div>#}
+{#                    </form>#}
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="javascript:void(0)">
+                            <a class="nav-link" href="/">
                                 <i class="material-icons">dashboard</i>
                                 <p class="d-lg-none d-md-block">
                                     Stats
@@ -374,15 +375,10 @@
 <script type="application/javascript">
     $(document).ready(function() {
         $().ready(function() {
-            $sidebar = $('.sidebar');
-
-            $sidebar_img_container = $sidebar.find('.sidebar-background');
-
-            $full_page = $('.full-page');
-
-            $sidebar_responsive = $('body > .navbar-collapse');
-
-            window_width = $(window).width();
+            const $sidebar = $('.sidebar');
+            const $sidebar_img_container = $sidebar.find('.sidebar-background');
+            const $full_page = $('.full-page');
+            const $sidebar_responsive = $('body > .navbar-collapse');
 
             $('.fixed-plugin a').click(function(event) {
                 // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
@@ -396,22 +392,20 @@
             });
 
             $('.fixed-plugin .active-color span').click(function() {
-                $full_page_background = $('.full-page-background');
-
                 $(this).siblings().removeClass('active');
                 $(this).addClass('active');
 
-                var new_color = $(this).data('color');
+                let new_color = $(this).data('color');
 
-                if ($sidebar.length != 0) {
+                if ($sidebar.length !== 0) {
                     $sidebar.attr('data-color', new_color);
                 }
 
-                if ($full_page.length != 0) {
+                if ($full_page.length !== 0) {
                     $full_page.attr('filter-color', new_color);
                 }
 
-                if ($sidebar_responsive.length != 0) {
+                if ($sidebar_responsive.length !== 0) {
                     $sidebar_responsive.attr('data-color', new_color);
                 }
             });
@@ -420,31 +414,33 @@
                 $(this).siblings().removeClass('active');
                 $(this).addClass('active');
 
-                var new_color = $(this).data('background-color');
+                const new_color = $(this).data('background-color');
 
-                if ($sidebar.length != 0) {
+                if ($sidebar.length !== 0) {
                     $sidebar.attr('data-background-color', new_color);
                 }
             });
 
             $('.fixed-plugin .img-holder').click(function() {
-                $full_page_background = $('.full-page-background');
+                const $full_page_background = $('.full-page-background');
 
                 $(this).parent('li').siblings().removeClass('active');
                 $(this).parent('li').addClass('active');
 
+                let new_image = $(this).find("img").attr('src');
+                let new_image_full_page;
 
-                var new_image = $(this).find("img").attr('src');
+                const $switch_side_img_checked = $('.switch-sidebar-image input:checked');
 
-                if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                if ($sidebar_img_container.length !== 0 && $switch_side_img_checked.length !== 0) {
                     $sidebar_img_container.fadeOut('fast', function() {
                         $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
                         $sidebar_img_container.fadeIn('fast');
                     });
                 }
 
-                if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-                    var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+                if ($full_page_background.length !== 0 && $switch_side_img_checked.length !== 0) {
+                    new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
 
                     $full_page_background.fadeOut('fast', function() {
                         $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
@@ -452,57 +448,46 @@
                     });
                 }
 
-                if ($('.switch-sidebar-image input:checked').length == 0) {
-                    var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-                    var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+                if ($switch_side_img_checked.length === 0) {
+                    const $image_holder = $('.fixed-plugin li.active .img-holder');
+                    new_image = $image_holder.find("img").attr('src');
+                    new_image_full_page = $image_holder.find('img').data('src');
 
                     $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
                     $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
                 }
 
-                if ($sidebar_responsive.length != 0) {
+                if ($sidebar_responsive.length !== 0) {
                     $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
                 }
             });
 
             $('.switch-sidebar-image input').change(function() {
-                $full_page_background = $('.full-page-background');
-
-                $input = $(this);
-
+                const $full_page_background = $('.full-page-background');
+                const $input = $(this);
                 if ($input.is(':checked')) {
-                    if ($sidebar_img_container.length != 0) {
+                    if ($sidebar_img_container.length !== 0) {
                         $sidebar_img_container.fadeIn('fast');
                         $sidebar.attr('data-image', '#');
                     }
-
-                    if ($full_page_background.length != 0) {
+                    if ($full_page_background.length !== 0) {
                         $full_page_background.fadeIn('fast');
                         $full_page.attr('data-image', '#');
                     }
-
-                    background_image = true;
                 } else {
-                    if ($sidebar_img_container.length != 0) {
+                    if ($sidebar_img_container.length !== 0) {
                         $sidebar.removeAttr('data-image');
                         $sidebar_img_container.fadeOut('fast');
                     }
-
-                    if ($full_page_background.length != 0) {
+                    if ($full_page_background.length !== 0) {
                         $full_page.removeAttr('data-image', '#');
                         $full_page_background.fadeOut('fast');
                     }
-
-                    background_image = false;
                 }
             });
 
             $('.switch-sidebar-mini input').change(function() {
-                $body = $('body');
-
-                $input = $(this);
-
-                if (md.misc.sidebar_mini_active == true) {
+                if (md.misc.sidebar_mini_active === true) {
                     $('body').removeClass('sidebar-mini');
                     md.misc.sidebar_mini_active = false;
 
@@ -520,7 +505,7 @@
                 }
 
                 // we simulate the window Resize so the charts will get updated in realtime.
-                var simulateWindowResize = setInterval(function() {
+                let simulateWindowResize = setInterval(function() {
                     window.dispatchEvent(new Event('resize'));
                 }, 180);
 
