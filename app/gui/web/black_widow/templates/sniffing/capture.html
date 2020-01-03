@@ -222,7 +222,7 @@
                         'id': jobId,
                         'page':  $pagination.pagination('getCurrentPage'),
                         'page_size': 10
-                    }, function(data, textStatus, jqXHR) {
+                    }, function(data) {
                         if (data.job.status === 'SIGSTOP') {
                             // Process paused
                             $pauseCaptureBtn.addClass('disabled').hide();
@@ -269,7 +269,7 @@
                             currentPage: $pagination.pagination('getCurrentPage'),
                             itemsOnPage: 10,
                             cssStyle: 'dark-theme',
-                            onPageClick: function(pageNumber, event) {
+                            onPageClick: function() {
                                 updatePkts(0, false);
                             }
                         });
@@ -279,7 +279,7 @@
                         if (loop) {
                             updatePkts(3000, loop);
                         }
-                    }, function(jqXHR, textStatus, errorThrown) {
+                    }, function() {
                         console.error('Sniffing request error!');
                         window.location.replace("/sniffing");
                         {#$stopCaptureBtn.addClass('disabled');#}
@@ -300,7 +300,7 @@
                     'signal': signal
                 }, function(data, textStatus, jqXHR) {
                     callback(data, textStatus, jqXHR);
-                }, function(jqXHR, textStatus, errorThrown) {
+                }, function() {
                     console.error('Sniffing requests error!');
                     window.location.replace("/sniffing");
                 });
@@ -312,7 +312,7 @@
             const deletePkts = function() {
                 if (confirm("This job will be permanently deleted. Are you sure ?")) {
                     // 6 = SIGABRT
-                    signPkts(6, function(data, textStatus, jqXHR) {
+                    signPkts(6, function() {
                         console.log('Sniffing requests aborted!');
                         window.location.replace("/sniffing");
                     });
@@ -326,7 +326,7 @@
             const stopPkts = function() {
                 if (confirm("You'll cannot play again this job! Are you sure ?")) {
                     // 9 = SIGKILL
-                    signPkts(9, function(data, textStatus, jqXHR) {
+                    signPkts(9, function() {
                         console.log('Sniffing requests stopped!');
                         $stopCaptureBtn.addClass('disabled').hide();
                         $pauseCaptureBtn.addClass('disabled').hide();
@@ -342,7 +342,7 @@
              */
             const pausePkts = function() {
                 // 19 = SIGSTOP
-                signPkts(19, function(data, textStatus, jqXHR) {
+                signPkts(19, function() {
                     console.log('Sniffing requests paused!');
                     $pauseCaptureBtn.addClass('disabled').hide();
                     $playCaptureBtn.removeClass('disabled').show();
@@ -356,7 +356,7 @@
              */
             const playPkts = function() {
                 // 18 = SIGCONT
-                signPkts(18, function(data, textStatus, jqXHR) {
+                signPkts(18, function() {
                     console.log('Sniffing requests played!');
                     $playCaptureBtn.addClass('disabled').hide();
                     $pauseCaptureBtn.removeClass('disabled').show();

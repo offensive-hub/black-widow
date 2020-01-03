@@ -357,7 +357,7 @@ class PcapSniffer:
                             'src_host',
                             'src_hw_mac',
                             'src_proto_ipv4',
-                            'addr'
+                            'ta', 'sa'
                     ):
                         if is_mac(pcap_layer_field.value):
                             source['mac'] = pcap_layer_field.value
@@ -370,7 +370,7 @@ class PcapSniffer:
                             'dst_host',
                             'dst_hw_mac',
                             'dst_proto_ipv4',
-                            'ra'
+                            'ra', 'da'
                     ):
                         if is_mac(pcap_layer_field.value):
                             destination['mac'] = pcap_layer_field.value
