@@ -41,7 +41,7 @@ from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
 from app.service import Log
-from app.helper.util import regex_is_string
+from app.helper.util import regex_is_string, root_required
 from app.helper.validators import is_hex, is_mac
 
 from .pcap_sniffer_util import MacManufacturer
@@ -123,6 +123,7 @@ class PcapSniffer:
         :param callback: The callback method to call (or None)
         :rtype: PcapSniffer
         """
+        root_required()
         return PcapSniffer(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
 
     @staticmethod

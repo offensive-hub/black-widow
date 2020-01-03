@@ -71,13 +71,10 @@ def main_cmd(arguments):
         app.gui.django_cmd(django_args)
         sys.exit(0)
 
-    if not app.helper.util.is_root():
-        print("Root privileges required to run " + app.env.APP_PROC + "!\n")
-        sys.exit(50)
-
     elif arguments.pcap:
-        if arguments.pcap_int is not None:
-            arguments.pcap_int = arguments.pcap_int.split(',')
+        if arguments.pcap_int is None:
+            print("\nChoose at least one interface (eg. --pcap-int=wlan0)\n")
+            sys.exit(0)
         app.manager.sniffer.PcapSniffer.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
                                               dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
                                               limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
@@ -97,9 +94,6 @@ def main():
     arguments = app.arguments.get_arguments()
     make_temp_dir()
     if arguments.gui:
-        if not app.helper.util.is_root():
-            print("Root privileges required to run " + app.env.APP_PROC + "!\n")
-            sys.exit(50)
         main_gui()
     elif arguments.test:
         main_test()

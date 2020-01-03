@@ -215,7 +215,6 @@
 
             const updatePkts = function(sleep, loop=false) {
                 window.setTimeout(function() {
-                    console.log('updatePkts');
                     if (loop && $pauseCaptureBtn.hasClass('disabled')) {
                         return;
                     }
@@ -224,7 +223,6 @@
                         'page':  $pagination.pagination('getCurrentPage'),
                         'page_size': 10
                     }, function(data, textStatus, jqXHR) {
-                        console.log('Sniffing request success!');
                         if (data.job.status === 'SIGSTOP') {
                             // Process paused
                             $pauseCaptureBtn.addClass('disabled').hide();
@@ -272,8 +270,6 @@
                             itemsOnPage: 10,
                             cssStyle: 'dark-theme',
                             onPageClick: function(pageNumber, event) {
-                                console.log('onPageClick');
-                                console.log(pageNumber);
                                 updatePkts(0, false);
                             }
                         });
@@ -375,13 +371,18 @@
              */
             const showPkt = function(pkt) {
                 console.log(pkt);
+
                 $pktModal.find('.modal-title').html('Packet #' + pkt.number);
 
                 const $pktModalSrcHost = $pktModal.find('.host.src');
                 const $pktModalDstHost = $pktModal.find('.host.dst');
+                const $srcTitle = $pktModalSrcHost.find('.header-title');
+                const $dstTitle = $pktModalDstHost.find('.header-title');
 
-                $pktModalSrcHost.find('.header-title').html('SOURCE [ ' + pkt.source.label + ' ]');
-                $pktModalDstHost.find('.header-title').html('DESTINATION [ ' + pkt.destination.label + ' ]');
+                $srcTitle.html('SOURCE [ ' + pkt.source.label + ' ]');
+                $srcTitle.attr('title', pkt.source.title);
+                $dstTitle.html('DESTINATION [ ' + pkt.destination.label + ' ]');
+                $dstTitle.attr('title', pkt.destination.title);
 
                 $pktModal.modal();
             };

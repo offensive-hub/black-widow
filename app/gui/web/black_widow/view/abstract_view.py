@@ -39,6 +39,9 @@ class AbstractView(TemplateView):
     Abstract view extended by application views
     """
     name = None
+    error_templates = {
+        'root_required': 'error/root_required.html'
+    }
 
     def upload_file(self, tmp_file) -> str:
         """

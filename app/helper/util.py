@@ -119,6 +119,15 @@ def is_root() -> bool:
     return user['uid'] == 0
 
 
+def root_required():
+    """
+    If the current process has not root privileges, print the error and exits from app
+    """
+    if not is_root():
+        print("\nThis feature requires root privileges!\n")
+        exit(20)
+
+
 def whoami(check_sudo: bool = True) -> dict:
     name = None
     uid = None

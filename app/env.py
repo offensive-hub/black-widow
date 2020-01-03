@@ -34,14 +34,14 @@ PRIVATE_ENV_FILE = join(ROOT_PATH, '.env')
 APP_DEBUG = False
 APP_WEB_HOST = '0.0.0.0'
 APP_WEB_PORT = 80
-APP_TMP = join('/tmp', 'black-widow')
+APP_TMP = '/tmp/black-widow'
 FLAG_REGEX = '[A-Z0-9]{31}='
 
 EDITABLE_ENV = (
     'APP_DEBUG',
     'APP_WEB_HOST',
     'APP_WEB_PORT',
-    'APP_TMP',
+    'APP_SUDO',
     'FLAG_REGEX'
 )
 

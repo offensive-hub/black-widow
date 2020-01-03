@@ -53,6 +53,8 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
+            if not util.is_root():
+                return render(request, self.error_templates.get('root_required'))
             view_params = {
                 'interfaces': network.get_interfaces(),
                 'jobs': SniffingJobModel.all()
@@ -118,6 +120,8 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
+            if not util.is_root():
+                return render(request, self.error_templates.get('root_required'))
             request_params: dict = request.GET.dict()
             try:
                 sniffing_job_id = int(request_params.get('id'))
