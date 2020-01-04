@@ -537,6 +537,18 @@ nav.pagination.dark-theme li:first-child li span {
     color: #800b08;
 }
 
+#pkt-modal .info {
+    color: #958e8e;
+}
+
+#pkt-modal .info ul {
+    margin-bottom: 0;
+}
+
+#pkt-modal .info ul li span {
+    color: #fff;
+}
+
 @media screen and (max-width: 991px) {
     #pkt-modal .hosts .host .addresses > div:first-child {
         margin-bottom: 10px;

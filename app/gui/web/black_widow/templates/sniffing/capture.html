@@ -67,7 +67,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row hosts">
+                    <!-- Packet Hosts -->
+                    <div class="row hosts" id="pkt-modal-hosts" >
 
                         <!-- Source Host -->
                         <div class="col-12 col-md-6 src host">
@@ -188,7 +189,30 @@
                         </div>
 
                     </div>
-                    <p>Modal body text goes here.</p>
+
+                    <!-- Packet Info -->
+                    <div class="row info col-12" id="pkt-modal-info">
+                        <i class="material-icons" title="Packet Info">info</i>
+                        <div class="row" style="width: 100%;">
+                            <div class="col-12 col-md-6">
+                                <ul>
+                                    <li>Number: <span id="number"></span></li>
+                                    <li>Protocol: <span id="protocol"></span></li>
+                                    <li>Highest Layer: <span id="highest_layer"></span></li>
+                                    <li>Captured Length: <span id="captured_length"></span> bytes</li>
+                                    <li>Length: <span id="length"></span> bytes</li>
+                                </ul>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <ul>
+                                    <li>Transport Layer: <span id="transport_layer"></span></li>
+                                    <li>Sniff Time: <span id="sniff_time"></span></li>
+                                    <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
+                                    <li>Time: <span id="time"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -375,9 +399,13 @@
                     'signal': signal
                 }, function(data, textStatus, jqXHR) {
                     callback(data, textStatus, jqXHR);
-                }, function() {
-                    console.error('Sniffing requests error!');
-                    window.location.replace("/sniffing");
+                }, function(jqXHR) {
+                    if (jqXHR.responseJSON) {
+                        notify(jqXHR.responseJSON.message, 'warning');
+                    } else {
+                        console.error('Sniffing requests error!');
+                        window.location.replace("/sniffing");
+                    }
                 });
             };
 
@@ -445,8 +473,6 @@
              * @param pkt The packet Object
              */
             const showPkt = function(pkt) {
-                console.log(pkt);
-
                 $pktModal.find('.modal-title').html('Packet #' + pkt.number);
 
                 const $pktModalSrcHost = $pktModal.find('.host.src');
@@ -481,7 +507,18 @@
                 $dstIpHost.html(pkt.destination.ip_host);
                 $dstIpHost.attr('href', 'http://' + pkt.destination.ip_host);
 
+                const $info = $pktModal.find('#pkt-modal-info');
+                for (const key in pkt) {
+                    const $key = $info.find('#' + key);
+                    if ($key.length === 0) {
+                        continue;
+                    }
+                    $key.html(pkt[key]);
+                }
+
                 $pktModal.modal();
+
+                console.log(pkt);
             };
 
             updatePkts(300, true);

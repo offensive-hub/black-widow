@@ -202,20 +202,23 @@ def is_file(path: str) -> bool:
 # Elimina il file o la cartella passato per argomento
 # noinspection PyBroadException
 def delete(file):
+    attempts = 0
     while os.path.exists(file):
         try:
             if os.path.isfile(file):
                 os.remove(file)
-                return True
             elif os.path.islink(file):
                 os.unlink(file)
-                return True
             elif os.path.isdir(file):
                 shutil.rmtree(file)
-                return True
+        except PermissionError:
+            return False
         except Exception or IOError:
+            attempts += 1
+            if attempts >= 5:
+                return False
             time.sleep(0.5)
-    return False
+    return True
 
 
 def chmod(path, mode, recursive=False):

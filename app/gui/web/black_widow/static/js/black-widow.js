@@ -118,8 +118,8 @@ const request = function(
         success: function(data, textStatus, jqXHR) {
             responseSuccess(data, textStatus, jqXHR, successCallback);
         },
-        error: function(data, textStatus, jqXHR) {
-            responseError(data, textStatus, jqXHR, errorCallback);
+        error: function(jqXHR, textStatus, errorThrown) {
+            responseError(jqXHR, textStatus, errorThrown, errorCallback);
         }
     });
 };
@@ -182,4 +182,26 @@ const startSpinner = function() {
  */
 const stopSpinner = function() {
     $('#spinner').hide();
+};
+
+/**
+ *
+ * @param msg
+ * @param type success|warning|danger
+ * @param icon https://material.io/resources/icons
+ * @param from
+ * @param align
+ */
+const notify = function(msg, type='warning', icon='warning', from='top', align='right') {
+    $.notify({
+        icon: icon,
+        message: msg
+    },{
+        type: type,
+        timer: 3000,
+        placement: {
+            from: from,
+            align: align
+        }
+    });
 };

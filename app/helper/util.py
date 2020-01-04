@@ -30,6 +30,8 @@ import subprocess
 
 from datetime import datetime
 
+from app.env import IGNORE_NON_ROOT
+
 
 def now():
     return str(datetime.now()).replace(' ', '_')
@@ -115,6 +117,7 @@ def pid_exists(pid: int or None) -> bool:
 
 
 def is_root() -> bool:
+    if IGNORE_NON_ROOT: return True
     user = whoami(False)
     return user['uid'] == 0
 

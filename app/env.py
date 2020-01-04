@@ -35,6 +35,7 @@ APP_DEBUG = False
 APP_WEB_HOST = '0.0.0.0'
 APP_WEB_PORT = 80
 APP_TMP = '/tmp/black-widow'
+IGNORE_NON_ROOT = False
 FLAG_REGEX = '[A-Z0-9]{31}='
 
 EDITABLE_ENV = (
@@ -42,6 +43,7 @@ EDITABLE_ENV = (
     'APP_WEB_HOST',
     'APP_WEB_PORT',
     'APP_SUDO',
+    'IGNORE_NON_ROOT',
     'FLAG_REGEX'
 )
 
@@ -60,7 +62,7 @@ if isfile(PRIVATE_ENV_FILE):
             if len(key) == 0 or len(val) == 0:
                 raise EnvironmentError("Wrong environment in .env file: " + env)
             if key not in EDITABLE_ENV:
-                raise EnvironmentError("Not editable environment in .env file: " + env)
+                raise EnvironmentError("Non editable environment in .env file: " + env)
             if val[0] == "'" or val[0] == '"':
                 i = 0
                 val_ok = ''

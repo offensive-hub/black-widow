@@ -66,6 +66,10 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
+            if not util.is_root():
+                return JsonResponse({
+                    'message': 'You are not #root'
+                }, status=401)
             request_params: dict = request.POST.dict()
             if request_params.get('interfaces') is not None:
                 request_params['interfaces'] = request.POST.getlist('interfaces')
@@ -138,6 +142,10 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
+            if not util.is_root():
+                return JsonResponse({
+                    'message': 'You are not #root'
+                }, status=401)
             # noinspection PyTypeChecker
             sniffing_job: SniffingJobModel = None
             request_params: dict = request.POST.dict()
@@ -161,7 +169,10 @@ class Sniffing:
                 except ProcessLookupError:
                     Log.warning("The process " + str(sniffing_job.pid) + " does not exists")
                 if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
-                    sniffing_job.delete()
+                    if not sniffing_job.delete():
+                        return JsonResponse({
+                            'message': 'Unable to delete the job'
+                        }, status=400)
                 return JsonResponse({
                     'id': sniffing_job_id,
                     'signal': signal_job,

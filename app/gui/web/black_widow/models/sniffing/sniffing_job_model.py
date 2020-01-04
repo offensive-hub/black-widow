@@ -108,17 +108,19 @@ class SniffingJobModel(AbstractModel):
         Send a signal to process which is running this job
         :param sig: The signal as integer (eg. 9 for SIGKILL)
         """
-        Log.info("Sending signal " + str(sig) + " to job" + str(self.id) + ' (' + str(self.pid) + ')')
+        Log.info("Sending signal " + str(sig) + " to job #" + str(self.id) + ' (' + str(self.pid) + ')')
         self.status = sig
         os.kill(self.pid, sig)
         self.save()
-        Log.success("Signal " + str(sig) + " sent to job" + str(self.id) + ' (' + str(self.pid) + ')')
+        Log.success("Signal " + str(sig) + " sent to job #" + str(self.id) + ' (' + str(self.pid) + ')')
 
     def delete(self, using=None, keep_parents=False):
         if self.status not in (signal.SIGKILL, signal.SIGABRT):
             self.kill(signal.SIGKILL)
-        storage.delete(self.json_file)
-        storage.delete(self.pid_file)
+        if not storage.delete(self.json_file):
+            return False
+        if not storage.delete(self.pid_file):
+            return False
         return super(SniffingJobModel, self).delete(using, keep_parents)
 
     def __str__(self) -> str:
