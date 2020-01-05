@@ -564,20 +564,24 @@
                 // Source IP
                 const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
                 const $srcIpHost = $pktModalSrcHost.find('.ip-host');
+                const src_proto = 'http' + (parseInt(pkt.source.port) === 443 ? 's' : '');
+                const src_port = pkt.source.port ? (':' + pkt.source.port) : '';
                 $pktModalSrcHost.find('.ip-port').html(pkt.source.port);
                 $srcIpAddress.html(pkt.source.ip);
-                $srcIpAddress.attr('href', 'http://' + pkt.source.ip + (pkt.source.port ? ':' + pkt.source.port : ''));
+                $srcIpAddress.attr('href', src_proto + '://' + pkt.source.ip + src_port);
                 $srcIpHost.html(pkt.source.ip_host);
-                $srcIpHost.attr('href', 'http://' + pkt.source.ip_host + (pkt.source.port ? ':' + pkt.source.port : ''));
+                $srcIpHost.attr('href', src_proto + '://' + pkt.source.ip_host + src_port);
 
                 // Destination IP
                 const $dstIpAddress = $pktModalDstHost.find('.ip-address');
                 const $dstIpHost = $pktModalDstHost.find('.ip-host');
+                const dst_proto = 'http' + (parseInt(pkt.destination.port) === 443 ? 's' : '');
+                const dst_port = pkt.destination.port ? (':' + pkt.destination.port) : '';
                 $pktModalDstHost.find('.ip-port').html(pkt.destination.port);
                 $dstIpAddress.html(pkt.destination.ip);
-                $dstIpAddress.attr('href', 'http://' + pkt.destination.ip + (pkt.destination.port ? ':' + pkt.destination.port : ''));
+                $dstIpAddress.attr('href', dst_proto + '://' + pkt.destination.ip + dst_port);
                 $dstIpHost.html(pkt.destination.ip_host);
-                $dstIpHost.attr('href', 'http://' + pkt.destination.ip_host + (pkt.destination.port ? ':' + pkt.destination.port : ''));
+                $dstIpHost.attr('href', dst_proto + '://' + pkt.destination.ip_host + dst_port);
 
                 const $info = $pktModal.find('#pkt-modal-info');
                 for (const key in pkt) {
