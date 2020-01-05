@@ -38,8 +38,10 @@ class AppType:
 
 def make_temp_dir():
     app.helper.storage.check_folder(app.env.APP_TMP)
-    if not os.access(app.env.APP_TMP, os.W_OK):
+    try:
         app.helper.storage.chmod(app.env.APP_TMP, 0o0777, True)
+    except PermissionError:
+        pass
 
 
 # Startup

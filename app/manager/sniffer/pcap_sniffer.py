@@ -42,7 +42,7 @@ from pyshark.packet.packet import Packet
 
 from app.service import Log
 from app.helper.util import regex_is_string, root_required
-from app.helper.validators import is_hex, is_mac
+from app.helper.validators import is_hex, is_mac, is_int, is_ip
 
 from .pcap_sniffer_util import MacManufacturer
 from .pcap_sniffer_util import PcapLayerField
@@ -73,16 +73,18 @@ class PcapSniffer:
         :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None) (@see PcapSniffer._user_callback_example)
         """
+        root_required()
         self.count = 0  # Sniffed packets
+        self.max_count = pkt_count
         self.filters = filters
         self.src_file = src_file
         self.dest_file = dest_file
         self.limit_length = limit_length
         self.user_callback = callback
         self.interfaces = interfaces
-        if src_file is not None:
-            Log.info('Analyzing file: ' + src_file)
-            self.capture = pyshark.FileCapture(
+        if self.src_file is not None:
+            Log.info('Analyzing file: ' + self.src_file)
+            self._capture = pyshark.FileCapture(
                 input_file=self.src_file,
                 display_filter=self.filters,
                 output_file=self.dest_file,
@@ -92,7 +94,7 @@ class PcapSniffer:
             )
         else:
             Log.info('Analyzing live traffic')
-            self.capture = pyshark.LiveCapture(
+            self._capture = pyshark.LiveCapture(
                 interface=self.interfaces,
                 display_filter=self.filters,
                 output_file=self.dest_file,
@@ -100,7 +102,6 @@ class PcapSniffer:
                 # use_json=True
                 # debug=APP_DEBUG
             )
-        self.capture.apply_on_packets(self._callback, packet_count=pkt_count)
 
     @staticmethod
     def sniff(
@@ -123,8 +124,15 @@ class PcapSniffer:
         :param callback: The callback method to call (or None)
         :rtype: PcapSniffer
         """
-        root_required()
-        return PcapSniffer(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
+        pcap_sniffer = PcapSniffer(filters, src_file, dest_file, interfaces, limit_length, pkt_count, callback)
+        pcap_sniffer.start()
+        return pcap_sniffer
+
+    def start(self):
+        """
+        Starts the capture
+        """
+        self._capture.apply_on_packets(self._callback, packet_count=self.max_count)
 
     @staticmethod
     def print_pkt(pkt_dict: dict):
@@ -140,6 +148,44 @@ class PcapSniffer:
                 PcapSniffer._print_layer(value)
             else:
                 print(str(key) + ': ' + str(value))
+
+    def _callback(self, pkt: Packet):
+        """
+        :param pkt: The pyshark packet
+        """
+        pkt_dict = {
+            'number': str(pkt.number),
+            'time': str(pkt.frame_info.time_relative),
+            'length': str(pkt.length),
+            'captured_length': str(pkt.captured_length),
+            'interface_captured': str(pkt.interface_captured),
+            'highest_layer': str(pkt.highest_layer),
+            'sniff_time': str(pkt.sniff_time),
+            'sniff_timestamp': str(pkt.sniff_timestamp),
+            'transport_layer': str(pkt.transport_layer),
+            'protocol': str(pkt.highest_layer),
+            'frame_info': PcapSniffer._get_layer_dict(pkt.frame_info)[0],
+            'layers': []
+        }
+        for layer in pkt.layers:
+            layer_dict, src_dest_dict = PcapSniffer._get_layer_dict(layer)
+            pkt_dict['source'] = PcapSniffer._merge_addr(
+                pkt_dict.get('source'),
+                src_dest_dict.get('source')
+            )
+            pkt_dict['destination'] = PcapSniffer._merge_addr(
+                pkt_dict.get('destination'),
+                src_dest_dict.get('destination')
+            )
+            protocol = src_dest_dict.get('protocol')
+            if protocol is not None:
+                pkt_dict['protocol'] = protocol
+            pkt_dict['layers'].append(layer_dict)
+        if self.user_callback is not None:
+            self.user_callback(pkt_dict)
+        else:
+            PcapSniffer.print_pkt(pkt_dict)
+        self.count += 1
 
     # noinspection PyUnusedLocal
     @staticmethod
@@ -189,43 +235,6 @@ class PcapSniffer:
                 host['label'] = mac_manufacturer
                 host['title'] = mac
         return host
-
-    def _callback(self, pkt: Packet):
-        """
-        :param pkt: The pyshark packet
-        """
-        pkt_dict = {
-            'number': str(pkt.number),
-            'time': str(pkt.frame_info.time_relative),
-            'length': str(pkt.length),
-            'captured_length': str(pkt.captured_length),
-            'interface_captured': str(pkt.interface_captured),
-            'highest_layer': str(pkt.highest_layer),
-            'sniff_time': str(pkt.sniff_time),
-            'sniff_timestamp': str(pkt.sniff_timestamp),
-            'transport_layer': str(pkt.transport_layer),
-            'frame_info': PcapSniffer._get_layer_dict(pkt.frame_info)[0],
-            'layers': []
-        }
-        for layer in pkt.layers:
-            layer_dict, src_dest_dict = PcapSniffer._get_layer_dict(layer)
-            pkt_dict['source'] = PcapSniffer._merge_addr(
-                pkt_dict.get('source'),
-                src_dest_dict.get('source')
-            )
-            pkt_dict['destination'] = PcapSniffer._merge_addr(
-                pkt_dict.get('destination'),
-                src_dest_dict.get('destination')
-            )
-            protocol = src_dest_dict.get('protocol')
-            if protocol is not None:
-                pkt_dict['protocol'] = protocol
-            pkt_dict['layers'].append(layer_dict)
-        if self.user_callback is not None:
-            self.user_callback(pkt_dict)
-        else:
-            PcapSniffer.print_pkt(pkt_dict)
-        self.count += 1
 
     @staticmethod
     def _field_is_binary(field: PcapLayerField):
@@ -332,26 +341,31 @@ class PcapSniffer:
             'mac_manufacturer': None,
             'mac_lookup': None,
             'ip': None,
-            'ip_host': None
+            'ip_host': None,
+            'port': None
         }
         destination = {
             'mac': None,
             'mac_manufacturer': None,
             'mac_lookup': None,
             'ip': None,
-            'ip_host': None
+            'ip_host': None,
+            'port': None
         }
         protocol = None
 
         field_insert = set()
         for field in layer._get_all_fields_with_alternates():
             field: LayerField
+            if field.name in PcapLayerField.AMBIGUOUS_FIELD_NAMES:
+                continue
             field_unique_key = str(field.pos) + '_' + str(field.name)
-            if field_unique_key in field_insert and False:
+            if field_unique_key in field_insert:
                 continue
             pcap_layer_field: PcapLayerField = local_get_field_tree(field)
             if pcap_layer_field is None:
                 continue
+
             if pcap_layer_field.sanitized_name in PcapLayerField.PROTO_FIELDS:
                 protocol = pcap_layer_field.value
             else:
@@ -361,17 +375,22 @@ class PcapSniffer:
                 elif pcap_layer_field.sanitized_name in PcapLayerField.DST_FIELDS:
                     host = destination
                 if host is not None:
-                    try:
-                        if is_mac(pcap_layer_field.value):
-                            mac_manufacturer_result = MacManufacturer.lookup(pcap_layer_field.value)
-                            host['mac'] = pcap_layer_field.value
-                            host['mac_manufacturer'] = mac_manufacturer_result.get('manufacturer')
-                            host['mac_lookup'] = mac_manufacturer_result
-                        else:
+                    if is_mac(pcap_layer_field.value):
+                        mac_manufacturer_result = MacManufacturer.lookup(pcap_layer_field.value)
+                        host['mac'] = pcap_layer_field.value
+                        host['mac_manufacturer'] = mac_manufacturer_result.get('manufacturer')
+                        # noinspection PyTypeChecker
+                        host['mac_lookup'] = mac_manufacturer_result
+                    elif is_ip(pcap_layer_field.value):
+                        try:
                             host['ip'] = pcap_layer_field.value
                             host['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
-                    except socket.herror or socket.gaierror:
-                        pass
+                        except socket.herror or socket.gaierror:
+                            pass
+                    elif is_int(pcap_layer_field.value):
+                        # It's the port
+                        host['port'] = pcap_layer_field.value
+
             field_insert.add(field_unique_key)
 
         return {

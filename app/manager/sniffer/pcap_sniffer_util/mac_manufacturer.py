@@ -62,6 +62,7 @@ class MacManufacturer:
     _mac_manufacturer = None
 
     def __init__(self):
+        self._manufacturer_dict = dict()
         self._update_manufacturer_dict()
 
     @staticmethod

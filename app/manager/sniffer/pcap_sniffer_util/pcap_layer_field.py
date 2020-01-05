@@ -32,10 +32,17 @@ class PcapLayerField(Node):
     Packet Capture Layer Field
     """
 
-    SRC_FIELDS = ('src', 'src_host', 'src_hw_mac', 'src_proto_ipv4', 'ta', 'sa')
-    DST_FIELDS = ('dst', 'dst_host', 'dst_hw_mac', 'dst_proto_ipv4', 'ra', 'da')
+    SRC_FIELDS = ('src', 'src_host', 'src_hw_mac', 'src_proto_ipv4', 'ta', 'sa', 'srcport')
+    DST_FIELDS = ('dst', 'dst_host', 'dst_hw_mac', 'dst_proto_ipv4', 'ra', 'da', 'dstport')
 
     PROTO_FIELDS = ('proto', 'phy')
+
+    AMBIGUOUS_FIELD_NAMES = (
+        'ip.addr', 'ip.host',
+        'ipv6.addr', 'ipv6.host',
+        'udp.port',
+        'tcp.port'
+    )
 
     def __init__(self, layer_field: LayerField = None, sanitized_name: str = None, parent=None, children=None):
         """

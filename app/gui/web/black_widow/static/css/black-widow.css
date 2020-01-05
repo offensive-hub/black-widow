@@ -33,6 +33,7 @@
  *       |-- 0.4) Pagination
  *       |-- 0.5) Forms
  *       |-- 0.6) Spinner
+ *       |-- 0.7) Notifications
  *
  *  1) layout/base.html
  *
@@ -50,6 +51,10 @@
 .separator {
     margin-top: 30px;
     padding-top: 12px;
+}
+
+.separator:not(:last-child) {
+    margin-bottom: 30px;
 }
 
 .separator.row {
@@ -243,17 +248,16 @@ input.upload {
 .link {
     cursor: pointer;
 }
+
+/* btn-danger */
 .black-edition .btn.btn-danger {
     background-color: #8e0000;
     border-color: #2a0400;
 }
-.black-edition .btn.btn-danger:hover {
-    background-color: #a60002;
-    border-color: #890010;
-}
+.black-edition .btn.btn-danger:hover,
 .black-edition .btn.btn-danger:focus,
 .black-edition .btn.btn-danger.focus,
-.black-edition .btn.btn-danger:hover {
+.black-edition .btn.btn-danger.hover {
     background-color: #a60002;
     border-color: #890010;
 }
@@ -264,6 +268,27 @@ input.upload {
     background-color: #a60002;
     border-color: #890010;
     box-shadow: 0 2px 2px 0 rgba(244, 67, 54, 0.14), 0 3px 1px -2px rgba(244, 67, 54, 0.2), 0 1px 5px 0 rgba(244, 67, 54, 0.12);
+}
+
+/*  btn-abort */
+.black-edition .btn.btn-abort {
+    background-color: #131313;
+    border-color: #000;
+}
+.black-edition .btn.btn-abort:hover,
+.black-edition .btn.btn-abort:focus,
+.black-edition .btn.btn-abort.focus,
+.black-edition .btn.btn-abort.hover {
+    background-color: #1d1b1c;
+    border-color: #191919;
+}
+.black-edition .btn.btn-abort:active,
+.black-edition .btn.btn-abort.active,
+.open>.black-edition .btn.btn-abort.dropdown-toggle,
+.show>.black-edition .btn.btn-abort.dropdown-toggle {
+    background-color: #1d1b1c;
+    border-color: #191919;
+    box-shadow: 0 2px 2px 0 rgba(244, 224, 232, 0.14), 0 3px 1px -2px rgba(244, 228, 239, 0.2), 0 1px 5px 0 rgba(244, 212, 227, 0.12);
 }
 
 /******************/
@@ -467,6 +492,15 @@ nav.pagination.dark-theme li:first-child li span {
 }
 
 /********************/
+
+/*** 0.7) Notifications ***/
+
+.black-edition .alert.alert-warning {
+    background: linear-gradient(60deg, #1f1f1f,#1a1a1a);
+    box-shadow: 0 4px 20px 0 rgba(105, 105, 105, 0.39), 0 7px 10px -5px rgba(122, 122, 122, 0.4);
+}
+
+/**************************/
 
 
 /**********************************/

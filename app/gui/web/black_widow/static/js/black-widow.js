@@ -68,10 +68,10 @@ const urlParams = new URLSearchParams(window.location.search);
  * @param callback function|null
 */
 const responseSuccess = function(data, textStatus, jqXHR, callback=null) {
-    console.info("[RESPONSE SUCCESS]");
-    console.log('data:');
-    console.log(data);
-    console.log('textStatus: ' + textStatus);
+    // console.info("[RESPONSE SUCCESS]");
+    // console.log('data:');
+    // console.log(data);
+    // console.log('textStatus: ' + textStatus);
     if (callback !== null) {
         callback(data, textStatus, jqXHR);
     }
@@ -84,11 +84,11 @@ const responseSuccess = function(data, textStatus, jqXHR, callback=null) {
  * @param callback function|null
 */
 const responseError = function(jqXHR, textStatus, errorThrown, callback=null) {
-    console.error("[RESPONSE ERROR]");
-    console.log('jqXHR:');
-    console.log(jqXHR);
-    console.log('textStatus: ' + textStatus);
-    console.log('errorThrown: ' + errorThrown);
+    // console.error("[RESPONSE ERROR]");
+    // console.log('jqXHR:');
+    // console.log(jqXHR);
+    // console.log('textStatus: ' + textStatus);
+    // console.log('errorThrown: ' + errorThrown);
     if (callback !== null) {
         callback(jqXHR, textStatus, errorThrown);
     }
@@ -105,9 +105,6 @@ const request = function(
         url += '?' + $.param(data);
         data = null;
     }
-    console.log("[REQUEST]: " + method + ' ' + url);
-    console.log("[REQUEST DATA]:");
-    console.log(data);
     $.ajax({
         method: method,
         url: url,
@@ -122,14 +119,6 @@ const request = function(
             responseError(jqXHR, textStatus, errorThrown, errorCallback);
         }
     });
-};
-
-/**
- * @param field Object
- */
-const bestField = function(field) {
-    // noinspection JSUnresolvedVariable
-    return field[field.best];
 };
 
 /**
@@ -149,6 +138,14 @@ $.fn.insertTableRow = function (values, action = null) {
     if (action !== null && action !== undefined) {
         $tableRow.click(action);
     }
+};
+
+$.fn.visible = function() {
+    return this.css('visibility', 'visible');
+};
+
+$.fn.invisible = function() {
+    return this.css('visibility', 'hidden');
 };
 
 /**

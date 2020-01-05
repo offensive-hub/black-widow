@@ -23,15 +23,13 @@
 *********************************************************************************
 """
 
-import os
 import signal
 
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from app.gui.web.black_widow.models import SniffingJobModel
-from app.manager.sniffer import PcapSniffer
-from app.service import JsonSerializer, Log, MultiTask
+from app.service import Log
 from app.helper import network, util
 
 from .abstract_sniffing_view import AbstractSniffingView
@@ -79,36 +77,11 @@ class Sniffing:
             else:
                 request_params['pcap'] = None
 
-            json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_.json')
-
-            sniffing_job = SniffingJobModel()
-            sniffing_job.filters = request_params.get('filters')
-            sniffing_job.pcap_file = request_params.get('pcap')
-            sniffing_job.interfaces = request_params.get('interfaces')
-            sniffing_job.json_file = json_file
-
-            def _sniffer_callback(pkt: dict):
-                """
-                The callback function of packet sniffer.
-                This method writes the sniffed packets in a json file
-                :param pkt: The sniffed packet
-                """
-                JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
-
-            def _sniffer_target():
-                """
-                Starts the packet sniffing
-                """
-                PcapSniffer.sniff(
-                    filters=sniffing_job.filters,
-                    src_file=sniffing_job.pcap_file,
-                    interfaces=sniffing_job.interfaces,
-                    limit_length=10000,
-                    callback=_sniffer_callback
-                )
-
-            sniffing_job.pid_file = MultiTask.multiprocess(_sniffer_target, asynchronous=True, cpu=1)
-            sniffing_job.save()
+            sniffing_job = self.new_job(
+                request_params.get('filters'),
+                request_params.get('pcap'),
+                request_params.get('interfaces'),
+            )
 
             return redirect('sniffing/capture?id=' + str(sniffing_job.id))
 
@@ -164,15 +137,27 @@ class Sniffing:
             signal_job = request_params.get('signal')
             if signal_job is not None:
                 signal_job = int(signal_job)
+
+                if signal_job == 0:   # Custom signal 0 = Restart capturing
+                    sniffing_job_new = self.new_job(
+                        sniffing_job.filters,
+                        sniffing_job.pcap_file,
+                        sniffing_job.interfaces,
+                    )
+                    sniffing_job_id = sniffing_job_new.id
+                    signal_job = signal.SIGABRT
+
                 try:
                     sniffing_job.kill(signal_job)
                 except ProcessLookupError:
                     Log.warning("The process " + str(sniffing_job.pid) + " does not exists")
+
                 if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
                     if not sniffing_job.delete():
                         return JsonResponse({
                             'message': 'Unable to delete the job'
-                        }, status=400)
+                        })
+
                 return JsonResponse({
                     'id': sniffing_job_id,
                     'signal': signal_job,

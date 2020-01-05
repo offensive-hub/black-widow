@@ -26,8 +26,11 @@
 import os
 
 from app.env import APP_STORAGE_OUT
-from app.helper import storage
+from app.helper import storage, util
+from app.manager.sniffer import PcapSniffer
+from app.service import JsonSerializer, MultiTask
 
+from app.gui.web.black_widow.models import SniffingJobModel
 from app.gui.web.black_widow.view.abstract_view import AbstractView
 
 
@@ -39,3 +42,29 @@ class AbstractSniffingView(AbstractView):
     storage.check_folder(storage_out_dir)
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
+
+    def new_job(self, filters: str, pcap: str, interfaces: list) -> SniffingJobModel:
+        sniffing_job = SniffingJobModel()
+        sniffing_job.filters = filters
+        sniffing_job.pcap_file = pcap
+        sniffing_job.interfaces = interfaces
+        sniffing_job.json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_.json')
+
+        def _sniffer_callback(pkt: dict):
+            """
+            The callback function of packet sniffer.
+            This method writes the sniffed packets in a json file
+            :param pkt: The sniffed packet
+            """
+            JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
+
+        pcap_sniffer = PcapSniffer(
+            filters=sniffing_job.filters,
+            src_file=sniffing_job.pcap_file,
+            interfaces=sniffing_job.interfaces,
+            limit_length=10000,
+            callback=_sniffer_callback
+        )
+        sniffing_job.pid_file = MultiTask.multiprocess(pcap_sniffer.start, asynchronous=True, cpu=1)
+        sniffing_job.save()
+        return sniffing_job
