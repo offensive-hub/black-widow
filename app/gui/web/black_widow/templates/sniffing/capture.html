@@ -116,6 +116,10 @@
                                                         <a target="_blank" class="param ip-address"></a>
                                                     </div>
                                                     <div>
+                                                        <span>Port:</span>
+                                                        <span class="param ip-port"></span>
+                                                    </div>
+                                                    <div>
                                                         <span>Host:</span>
                                                         <a target="_blank" class="param ip-host"></a>
                                                     </div>
@@ -177,6 +181,10 @@
                                                     <div>
                                                         <span>Address:</span>
                                                         <a target="_blank" class="param ip-address"></a>
+                                                    </div>
+                                                    <div>
+                                                        <span>Port:</span>
+                                                        <span class="param ip-port"></span>
                                                     </div>
                                                     <div>
                                                         <span>Host:</span>
@@ -556,18 +564,20 @@
                 // Source IP
                 const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
                 const $srcIpHost = $pktModalSrcHost.find('.ip-host');
+                $pktModalSrcHost.find('.ip-port').html(pkt.source.port);
                 $srcIpAddress.html(pkt.source.ip);
-                $srcIpAddress.attr('href', 'http://' + pkt.source.ip);
+                $srcIpAddress.attr('href', 'http://' + pkt.source.ip + (pkt.source.port ? ':' + pkt.source.port : ''));
                 $srcIpHost.html(pkt.source.ip_host);
-                $srcIpHost.attr('href', 'http://' + pkt.source.ip_host);
+                $srcIpHost.attr('href', 'http://' + pkt.source.ip_host + (pkt.source.port ? ':' + pkt.source.port : ''));
 
                 // Destination IP
                 const $dstIpAddress = $pktModalDstHost.find('.ip-address');
                 const $dstIpHost = $pktModalDstHost.find('.ip-host');
+                $pktModalDstHost.find('.ip-port').html(pkt.destination.port);
                 $dstIpAddress.html(pkt.destination.ip);
-                $dstIpAddress.attr('href', 'http://' + pkt.destination.ip);
+                $dstIpAddress.attr('href', 'http://' + pkt.destination.ip + (pkt.destination.port ? ':' + pkt.destination.port : ''));
                 $dstIpHost.html(pkt.destination.ip_host);
-                $dstIpHost.attr('href', 'http://' + pkt.destination.ip_host);
+                $dstIpHost.attr('href', 'http://' + pkt.destination.ip_host + (pkt.destination.port ? ':' + pkt.destination.port : ''));
 
                 const $info = $pktModal.find('#pkt-modal-info');
                 for (const key in pkt) {
