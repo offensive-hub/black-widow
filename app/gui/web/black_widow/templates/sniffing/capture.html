@@ -198,29 +198,34 @@
 
                     </div>
 
-                    <div>
-                        <h2>Packet Info</h2>
+                    <div class="section">
+                        <h2>Packet</h2>
                         <!-- Packet Info -->
-                        <div class="row info col-12" id="pkt-modal-info">
-                            <div class="row" style="width: 100%;">
-                                <div class="col-12 col-md-6 col-lg-4">
-                                    <ul>
-                                        <li>Number: <span id="number"></span></li>
-                                        <li>Protocol: <span id="protocol"></span></li>
-                                        <li>Highest Layer: <span id="highest_layer"></span></li>
-                                        <li>Captured Length: <span id="captured_length"></span> bytes</li>
-                                        <li>Length: <span id="length"></span> bytes</li>
-                                    </ul>
-                                </div>
-                                <div class="col-12 col-md-7 col-lg-8">
-                                    <ul>
-                                        <li>Transport Layer: <span id="transport_layer"></span></li>
-                                        <li>Sniff Time: <span id="sniff_time"></span></li>
-                                        <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
-                                        <li>Time: <span id="time"></span></li>
-                                    </ul>
-                                </div>
+                        <div class="row info" id="pkt-modal-info">
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <ul>
+                                    <li>Number: <span id="number"></span></li>
+                                    <li>Protocol: <span id="protocol"></span></li>
+                                    <li>Highest Layer: <span id="highest_layer"></span></li>
+                                    <li>Captured Length: <span id="captured_length"></span> bytes</li>
+                                    <li>Length: <span id="length"></span> bytes</li>
+                                </ul>
                             </div>
+                            <div class="col-12 col-md-7 col-lg-8">
+                                <ul>
+                                    <li>Transport Layer: <span id="transport_layer"></span></li>
+                                    <li>Sniff Time: <span id="sniff_time"></span></li>
+                                    <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
+                                    <li>Time: <span id="time"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="separator row">
+                        <h2>Frame Info</h2>
+                        <!-- Frame Info -->
+                        <div id="pkt-modal-frame">
                         </div>
                     </div>
 
