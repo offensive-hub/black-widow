@@ -94,8 +94,12 @@
                                                         <span class="param mac-address"></span>
                                                     </div>
                                                     <div>
-                                                        <span>Manufacturer:</span>
-                                                        <span class="param mac-manufacturer"></span>
+                                                        <span>Vendor:</span>
+                                                        <span class="param mac-vendor"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span>Company:</span>
+                                                        <span class="param mac-company"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -153,8 +157,12 @@
                                                         <span class="param mac-address"></span>
                                                     </div>
                                                     <div>
-                                                        <span>Manufacturer:</span>
-                                                        <span class="param mac-manufacturer"></span>
+                                                        <span>Vendor:</span>
+                                                        <span class="param mac-vendor"></span>
+                                                    </div>
+                                                    <div>
+                                                        <span>Company:</span>
+                                                        <span class="param mac-company"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -190,29 +198,32 @@
 
                     </div>
 
-                    <!-- Packet Info -->
-                    <div class="row info col-12" id="pkt-modal-info">
-                        <i class="material-icons" title="Packet Info">info</i>
-                        <div class="row" style="width: 100%;">
-                            <div class="col-12 col-md-6">
-                                <ul>
-                                    <li>Number: <span id="number"></span></li>
-                                    <li>Protocol: <span id="protocol"></span></li>
-                                    <li>Highest Layer: <span id="highest_layer"></span></li>
-                                    <li>Captured Length: <span id="captured_length"></span> bytes</li>
-                                    <li>Length: <span id="length"></span> bytes</li>
-                                </ul>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <ul>
-                                    <li>Transport Layer: <span id="transport_layer"></span></li>
-                                    <li>Sniff Time: <span id="sniff_time"></span></li>
-                                    <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
-                                    <li>Time: <span id="time"></span></li>
-                                </ul>
+                    <div>
+                        <h2>Packet Info</h2>
+                        <!-- Packet Info -->
+                        <div class="row info col-12" id="pkt-modal-info">
+                            <div class="row" style="width: 100%;">
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <ul>
+                                        <li>Number: <span id="number"></span></li>
+                                        <li>Protocol: <span id="protocol"></span></li>
+                                        <li>Highest Layer: <span id="highest_layer"></span></li>
+                                        <li>Captured Length: <span id="captured_length"></span> bytes</li>
+                                        <li>Length: <span id="length"></span> bytes</li>
+                                    </ul>
+                                </div>
+                                <div class="col-12 col-md-7 col-lg-8">
+                                    <ul>
+                                        <li>Transport Layer: <span id="transport_layer"></span></li>
+                                        <li>Sniff Time: <span id="sniff_time"></span></li>
+                                        <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
+                                        <li>Time: <span id="time"></span></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -486,22 +497,27 @@
                 $dstTitle.html('DESTINATION [ ' + pkt.destination.label + ' ]');
                 $dstTitle.attr('title', pkt.destination.title);
 
+                // Source MAC
                 $pktModalSrcHost.find('.mac-address').html(pkt.source.mac);
-                $pktModalSrcHost.find('.mac-manufacturer').html(pkt.source.mac_manufacturer);
-                $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
-                $pktModalDstHost.find('.mac-manufacturer').html(pkt.destination.mac_manufacturer);
+                $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup.vendor);
+                $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup.company);
 
+                // Destination MAC
+                $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
+                $pktModalDstHost.find('.mac-vendor').html(pkt.destination.mac_lookup.vendor);
+                $pktModalDstHost.find('.mac-company').html(pkt.destination.mac_lookup.company);
+
+                // Source IP
                 const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
                 const $srcIpHost = $pktModalSrcHost.find('.ip-host');
-
                 $srcIpAddress.html(pkt.source.ip);
                 $srcIpAddress.attr('href', 'http://' + pkt.source.ip);
                 $srcIpHost.html(pkt.source.ip_host);
                 $srcIpHost.attr('href', 'http://' + pkt.source.ip_host);
 
+                // Destination IP
                 const $dstIpAddress = $pktModalDstHost.find('.ip-address');
                 const $dstIpHost = $pktModalDstHost.find('.ip-host');
-
                 $dstIpAddress.html(pkt.destination.ip);
                 $dstIpAddress.attr('href', 'http://' + pkt.destination.ip);
                 $dstIpHost.html(pkt.destination.ip_host);

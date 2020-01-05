@@ -26,12 +26,13 @@
  *
  *  0) GLOBAL
  *       |
-*        |-- 0.1) Cards
-*        |-- 0.2) Buttons
-*        |-- 0.3) Tables
-*        |-- 0.4) Pagination
-*        |-- 0.5) Forms
-*        |-- 0.6) Spinner
+ *       |-- 0.0) Generic
+ *       |-- 0.1) Cards
+ *       |-- 0.2) Buttons
+ *       |-- 0.3) Tables
+ *       |-- 0.4) Pagination
+ *       |-- 0.5) Forms
+ *       |-- 0.6) Spinner
  *
  *  1) layout/base.html
  *
@@ -42,6 +43,15 @@
 
 
 /*********** 0) GLOBAL ************/
+
+
+/*** 0.0) Generic ***/
+
+.separator.row {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 
 
 /*** 0.1) Cards ***/
@@ -103,15 +113,20 @@
     margin-left: 5px;
 }
 
-.modal .card .card-footer {
+.black-edition .modal .card .card-footer {
     border-top: 1px solid hsla(0, 0%, 0%, 0.23);
 }
 
-.modal .card .card-header-danger {
+.black-edition .modal .card .card-header-danger {
     background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
     color: #240606;
     box-shadow: 0 1px 20px 0 rgba(55, 7, 7, 0.56),0 7px 10px -5px rgba(74, 22, 18, 0.91) !important;
 }
+
+.black-edition .modal .separator {
+    background: #262626;
+}
+
 
 /* 
   ##Device = Desktops
@@ -543,6 +558,7 @@ nav.pagination.dark-theme li:first-child li span {
 
 #pkt-modal .info ul {
     margin-bottom: 0;
+    list-style-type: disclosure-closed;
 }
 
 #pkt-modal .info ul li span {

@@ -298,7 +298,7 @@ class PcapSniffer:
                         # Check brothers
                         member_brother = find_pcap_layer_field_parent(member_parent, True)
                         if member_brother is not None:
-                            return member_brother   # brother
+                            return member_brother  # brother
                     if key in parent_poss and member_parent.name != local_field.name:
                         member_parent: PcapLayerField
                         if not only_hex:
@@ -306,7 +306,7 @@ class PcapSniffer:
                         elif is_hex(member_parent.value) and \
                                 member_parent.pos == int(local_field.pos) and \
                                 not PcapSniffer._field_is_binary(member_parent):
-                            return member_parent    # brother
+                            return member_parent  # brother
                 return parent
 
             pcap_layer_field_parent = None
@@ -330,12 +330,14 @@ class PcapSniffer:
         source = {
             'mac': None,
             'mac_manufacturer': None,
+            'mac_lookup': None,
             'ip': None,
             'ip_host': None
         }
         destination = {
             'mac': None,
             'mac_manufacturer': None,
+            'mac_lookup': None,
             'ip': None,
             'ip_host': None
         }
@@ -348,39 +350,29 @@ class PcapSniffer:
             if field_unique_key in field_insert and False:
                 continue
             pcap_layer_field: PcapLayerField = local_get_field_tree(field)
-            if pcap_layer_field is not None:
-                if pcap_layer_field.sanitized_name in ('proto', 'phy'):
-                    protocol = pcap_layer_field.value
-                try:
-                    if pcap_layer_field.sanitized_name in (
-                            'src',
-                            'src_host',
-                            'src_hw_mac',
-                            'src_proto_ipv4',
-                            'ta', 'sa'
-                    ):
+            if pcap_layer_field is None:
+                continue
+            if pcap_layer_field.sanitized_name in PcapLayerField.PROTO_FIELDS:
+                protocol = pcap_layer_field.value
+            else:
+                host = None
+                if pcap_layer_field.sanitized_name in PcapLayerField.SRC_FIELDS:
+                    host = source
+                elif pcap_layer_field.sanitized_name in PcapLayerField.DST_FIELDS:
+                    host = destination
+                if host is not None:
+                    try:
                         if is_mac(pcap_layer_field.value):
-                            source['mac'] = pcap_layer_field.value
-                            source['mac_manufacturer'] = MacManufacturer.lookup(pcap_layer_field.value)
+                            mac_manufacturer_result = MacManufacturer.lookup(pcap_layer_field.value)
+                            host['mac'] = pcap_layer_field.value
+                            host['mac_manufacturer'] = mac_manufacturer_result.get('manufacturer')
+                            host['mac_lookup'] = mac_manufacturer_result
                         else:
-                            source['ip'] = pcap_layer_field.value
-                            source['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
-                    elif pcap_layer_field.sanitized_name in (
-                            'dst',
-                            'dst_host',
-                            'dst_hw_mac',
-                            'dst_proto_ipv4',
-                            'ra', 'da'
-                    ):
-                        if is_mac(pcap_layer_field.value):
-                            destination['mac'] = pcap_layer_field.value
-                            destination['mac_manufacturer'] = MacManufacturer.lookup(pcap_layer_field.value)
-                        else:
-                            destination['ip'] = pcap_layer_field.value
-                            destination['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
-                except socket.herror or socket.gaierror:
-                    pass
-                field_insert.add(field_unique_key)
+                            host['ip'] = pcap_layer_field.value
+                            host['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
+                    except socket.herror or socket.gaierror:
+                        pass
+            field_insert.add(field_unique_key)
 
         return {
                    'name': layer.layer_name.upper(),

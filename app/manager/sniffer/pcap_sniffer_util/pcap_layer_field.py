@@ -29,7 +29,13 @@ from pyshark.packet.fields import LayerField
 
 class PcapLayerField(Node):
     """
+    Packet Capture Layer Field
     """
+
+    SRC_FIELDS = ('src', 'src_host', 'src_hw_mac', 'src_proto_ipv4', 'ta', 'sa')
+    DST_FIELDS = ('dst', 'dst_host', 'dst_hw_mac', 'dst_proto_ipv4', 'ra', 'da')
+
+    PROTO_FIELDS = ('proto', 'phy')
 
     def __init__(self, layer_field: LayerField = None, sanitized_name: str = None, parent=None, children=None):
         """

@@ -65,21 +65,22 @@ class MacManufacturer:
         self._update_manufacturer_dict()
 
     @staticmethod
-    def lookup(mac: str) -> str or None:
+    def lookup(mac: str) -> dict:
         """
         Lookup the mac address
         :param mac: The mac address to lookup
-        :rtype: str or None
+        :return: The looked up mac
         """
         if MacManufacturer._mac_manufacturer is None:
             MacManufacturer._mac_manufacturer = MacManufacturer()
         mac_manufacturer_result = MacManufacturer._mac_manufacturer._lookup(mac)
-        mac_manufacturer = None
-        if type(mac_manufacturer_result) is dict:
-            mac_manufacturer = mac_manufacturer_result.get('vendor') + \
-                               '_' + \
-                               mac[9:]
-        return mac_manufacturer
+        if type(mac_manufacturer_result) is not dict:
+            return dict()
+        mac_manufacturer_result.update({
+            'mac_full': mac,
+            'manufacturer': mac_manufacturer_result.get('vendor') + '_' + mac[9:]
+        })
+        return mac_manufacturer_result
 
     def _lookup(self, mac: str) -> dict or None:
         """
