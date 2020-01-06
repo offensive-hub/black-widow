@@ -160,7 +160,15 @@
         <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
             <div class="container-fluid">
                 <div class="navbar-wrapper">
-                    <div id="page-title" class="navbar-brand">{{request.resolver_match.url_name}}</div>
+                    <div id="page-title" class="navbar-brand">
+                        <nav aria-label="breadcrumb">
+                            {% block breadcrumb %}
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active" aria-current="page">{{request.resolver_match.url_name}}</li>
+                            </ol>
+                            {% endblock %}
+                        </nav>
+                    </div>
                 </div>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
                     <span class="sr-only">Toggle navigation</span>
@@ -217,10 +225,6 @@
         </nav>
         <!-- End Navbar -->
         <div class="content">
-            <nav aria-label="breadcrumb">
-                {% block breadcrumb %}
-                {% endblock %}
-            </nav>
             <div class="container-fluid">
                 {% block content %}
                 {% endblock %}

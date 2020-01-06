@@ -82,6 +82,12 @@
 .card-hover {
     box-shadow: unset !important;
 }
+
+.card .card-body {
+    min-height: 50vh;
+    position: initial;
+}
+
 .black-edition .card-header-danger.card-header-sec {
     background: linear-gradient(60deg, rgb(155, 53, 50), rgb(164, 60, 56)) !important
 }
@@ -415,8 +421,14 @@ nav.pagination.dark-theme li:first-child li span {
     width: 100%;
     height: 100%;
     z-index: 100;
-    background: rgba(0, 0, 0, 0.51);
+    background: rgba(0, 0, 0, 0.5);
     display: grid;
+}
+
+.card .spinner-container {
+    border-radius: 6px;
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .spinner {
@@ -613,7 +625,6 @@ ul.accordion ul.inner a.toggle:hover {
 
 #page-title {
   text-transform: capitalize;
-  pointer-events: none;
 }
 
 .black-edition {
