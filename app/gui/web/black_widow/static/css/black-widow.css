@@ -524,7 +524,7 @@ ul.accordion .inner {
     list-style: none;
 }
 ul.accordion .inner li {
-    color: rgb(179, 179, 179);
+    color: rgb(159, 156, 156);
 }
 ul.accordion .inner.show {
     /*display: block;*/
@@ -532,18 +532,32 @@ ul.accordion .inner.show {
 ul.accordion li {
     margin: 0.5em 0;
 }
+ul.accordion li > ul {
+    margin-top: 15px;
+}
+ul.accordion li > span {
+    color: #fff;
+}
 ul.accordion li a.toggle {
     width: 100%;
     display: block;
     padding: 0.75em;
     transition: background 2s;
-    color: #2b0404;
     border-radius: 3px;
-    background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
     font-weight: bold;
 }
+ul.accordion li a.toggle > .arrow {
+    float: right;
+}
 ul.accordion li a.toggle:hover {
-    background: linear-gradient(60deg, #760006, #6f0000) !important;
+}
+ul.accordion li.layer a.toggle {
+    color: #2b0404;
+    background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
+    padding: 0.75em 0.75em 8px;
+}
+ul.accordion li.layer a.toggle:hover {
+    background: linear-gradient(60deg, #760006, #810000) !important;
 }
 
 /**********************/

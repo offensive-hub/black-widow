@@ -204,20 +204,32 @@ const notify = function(msg, type='warning', icon='warning', from='top', align='
 };
 
 const initAccordions = function() {
-    $('.toggle').click(function(e) {
-        e.preventDefault();
-
+    const $arrowRight = $('<i class="material-icons arrow">keyboard_arrow_right</i>');
+    const $toggle = $('.toggle');
+    $toggle.each(function() {
         const $this = $(this);
-
-        if ($this.next().hasClass('show')) {
-            $this.next().removeClass('show');
-            $this.next().slideUp(350);
-        } else {
-            $this.parent().parent().find('li .inner').removeClass('show');
-            $this.parent().parent().find('li .inner').slideUp(350);
-            $this.next().toggleClass('show');
-            $this.next().slideToggle(350);
+        if ($this.hasClass('accordion-initialized')) {
+            // Prevent issues caused by multiple "initAccordions()" calls
+            return;
         }
+        $this.addClass('accordion-initialized');
+        $this.append($arrowRight);
+        $this.click(function() {
+            if ($this.next().hasClass('show')) {
+                // Hide
+                $this.find('.arrow').html('keyboard_arrow_right');
+                $this.next().removeClass('show');
+                $this.next().slideUp(350);
+            } else {
+                // Show
+                $this.find('.arrow').html('keyboard_arrow_down');
+                $this.parent().parent().find('li .inner').removeClass('show');
+                $this.parent().parent().find('li .inner').slideUp(350);
+                $this.next().toggleClass('show');
+                $this.next().slideToggle(350);
+            }
+        });
     });
+
 };
 initAccordions();
