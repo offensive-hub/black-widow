@@ -50,7 +50,9 @@ class MacManufacturer:
     The Mac Manufacturer Lookup class
     """
 
-    _MANUFACTURERS_URL = 'https://code.wireshark.org/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
+    MANUFACTURERS_DOMAIN = 'code.wireshark.org'
+    
+    _MANUFACTURERS_URL = 'https://' + MANUFACTURERS_DOMAIN + '/review/gitweb?p=wireshark.git;a=blob_plain;f=manuf'
     _MANUFACTURERS_DETAIL_DICT = {
         0: 'mac',
         1: 'vendor',

@@ -53,6 +53,11 @@ class PcapSniffer:
     Packet Capture Manager
     """
 
+    try:
+        _DEFAULT_FILTERS = socket.gethostbyname(MacManufacturer.MANUFACTURERS_DOMAIN)
+    except socket.herror or socket.gaierror:
+        _DEFAULT_FILTERS = ''
+
     def __init__(
             self,
             filters: str = None,
@@ -76,6 +81,10 @@ class PcapSniffer:
         root_required()
         self.count = 0  # Sniffed packets
         self.max_count = pkt_count
+        if filters is not None and len(filters) > 0:
+            filters = ' and ' + filters
+        # Prevents the mac manufacturer lookup sniffing
+        filters = PcapSniffer._DEFAULT_FILTERS + filters
         self.filters = filters
         self.src_file = src_file
         self.dest_file = dest_file
