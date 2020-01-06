@@ -120,11 +120,10 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 ### Follow Us:
 &ensp;
-<a href="https://www.facebook.com/offensive.black.widow" title="Facebook"><img title="Facebook" src="https://it.facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png" width="32"/></a>
+[![Python 3.x](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow) 
 &ensp;
-<a href="https://www.instagram.com/8l4ck_w1d0w" title="Instagram"><img title="Instagram" src="https://instagram-brand.com/wp-content/uploads/2016/11/Instagram_AppIcon_Aug2017.png" width="32"/></a>
+[![Python 3.x](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w) 
 &ensp;
-<a href="https://twitter.com/Offensive_Hub" title="Twitter"><img title="Twitter" src="https://upload.wikimedia.org/wikipedia/it/0/09/Twitter_bird_logo.png" width="32"/></a>
+[![Python 3.x](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub) 
 &ensp;
-<a href="https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8" title="YouTube"><img title="YouTube" src="https://developers.google.com/site-assets/logo-youtube.svg" width="32"/></a>
-&ensp;
+[![Python 3.x](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8) 
