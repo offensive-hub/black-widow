@@ -56,7 +56,7 @@
 }
 
 .separator:not(:last-child) {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
 }
 
 .separator.row {
@@ -112,6 +112,12 @@
    padding-left: 8px;
    padding-right: 8px;
 }
+.modal .modal-body h2 {
+   margin-bottom: 15px;
+}
+.modal .card {
+    margin-bottom: 20px;
+}
 .modal .card-header h3:first-child {
     text-align: right;
 }
@@ -124,7 +130,6 @@
 .modal .card-header h3:not(.material-icons) {
     font-weight: bold;
 }
-
 .modal .card-footer .stats span {
     padding-top: 1px;
     margin-left: 5px;
