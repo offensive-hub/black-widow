@@ -584,8 +584,12 @@ ul.accordion ul.inner a.toggle {
     margin-bottom: 0;
     margin-top: 0;
     background: linear-gradient(60deg, #525252, #4e4d4d);
-    color: #000;
+    color: #151515;
     box-shadow: 0 1px 20px 0 rgba(30, 26, 26, 0.56),0 7px 10px -5px rgba(53, 51, 51, 0.91);
+}
+
+ul.accordion ul.inner a.toggle > span {
+    color: #000;
 }
 
 ul.accordion ul.inner a.toggle:hover {
