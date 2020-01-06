@@ -62,7 +62,6 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 ### Directories:
 ```
-TODO: fix the following directory tree
 [root]
   |
   |-- app/              # Main application package
