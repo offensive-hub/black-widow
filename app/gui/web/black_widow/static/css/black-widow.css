@@ -69,6 +69,10 @@
     background-color: unset;
 }
 
+#main-body {
+    min-height: 60vh;
+}
+
 
 
 /*** 0.1) Cards ***/
@@ -81,11 +85,6 @@
 }
 .card-hover {
     box-shadow: unset !important;
-}
-
-.card .card-body {
-    min-height: 50vh;
-    position: initial;
 }
 
 .black-edition .card-header-danger.card-header-sec {
@@ -426,9 +425,10 @@ nav.pagination.dark-theme li:first-child li span {
 }
 
 .card .spinner-container {
-    border-radius: 6px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
     z-index: 2;
-    background: rgba(0, 0, 0, 0.1);
+    background: transparent;
 }
 
 .spinner {

@@ -292,7 +292,7 @@
                     </button>
 
                 </div>
-                <div class="card-body" id="main_body">
+                <div class="card-body" id="main-body">
                     <div class="table-responsive">
                         <table class="table table-hover table-select" id="sniffed-pkts-table">
                             <thead class="">
@@ -345,6 +345,9 @@
             const $restartCaptureBtn = $('#restart-capture-btn');
             const $pagination = $('#pagination');
             const $pktModal = $('#pkt-modal');
+            const $mainBody = $('#main-body');
+
+            $mainBody.spinner('Setting up sniffer...');
 
             let currentPage = 1;
             let pages = 1;
@@ -487,6 +490,7 @@
              * Send a SIGHUP to the current job
              */
             const restartPkts = function() {
+                $mainBody.spinner('Restarting sniffer...');
                 pausePkts();
                 $sniffedPktsTable.find('tbody').html('');
                 $pagination.pagination({
@@ -504,6 +508,7 @@
                     jobId = data.id;
                     history.pushState('data', '', '/sniffing/capture?id=' + jobId);
                     playPkts();
+                    stopSpinner();
                 });
             };
             $restartCaptureBtn.click(restartPkts);
@@ -671,8 +676,6 @@
             };
 
             updatePkts(300, true);
-
-            $('#main_body').spinner('Setting up sniffer...');
         });
     </script>
 {% endblock %}
