@@ -1,9 +1,0 @@
-code {
-    white-space: unset !important;
-}
-pre > code {
-    color: #0006ff !important;
-}
-li > code {
-    color: #f00 !important;
-}
