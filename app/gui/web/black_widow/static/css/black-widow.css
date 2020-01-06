@@ -34,6 +34,7 @@
  *       |-- 0.5) Forms
  *       |-- 0.6) Spinner
  *       |-- 0.7) Notifications
+ *       |-- 0.8) Accordion
  *
  *  1) layout/base.html
  *
@@ -50,7 +51,8 @@
 
 .separator {
     margin-top: 30px;
-    padding-top: 12px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .separator:not(:last-child) {
@@ -60,6 +62,11 @@
 .separator.row {
     padding-left: 15px;
     padding-right: 15px;
+    display: block;
+}
+
+.breadcrumb {
+    background-color: unset;
 }
 
 
@@ -493,6 +500,7 @@ nav.pagination.dark-theme li:first-child li span {
 
 /********************/
 
+
 /*** 0.7) Notifications ***/
 
 .black-edition .alert.alert-warning {
@@ -501,6 +509,44 @@ nav.pagination.dark-theme li:first-child li span {
 }
 
 /**************************/
+
+
+/*** 0.8) Accordion ***/
+
+ul.accordion {
+    list-style: none;
+    padding: 0;
+}
+ul.accordion .inner {
+    padding-left: 1em;
+    overflow: hidden;
+    display: none;
+    list-style: none;
+}
+ul.accordion .inner li {
+    color: rgb(179, 179, 179);
+}
+ul.accordion .inner.show {
+    /*display: block;*/
+}
+ul.accordion li {
+    margin: 0.5em 0;
+}
+ul.accordion li a.toggle {
+    width: 100%;
+    display: block;
+    padding: 0.75em;
+    transition: background 2s;
+    color: #2b0404;
+    border-radius: 3px;
+    background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
+    font-weight: bold;
+}
+ul.accordion li a.toggle:hover {
+    background: linear-gradient(60deg, #760006, #6f0000) !important;
+}
+
+/**********************/
 
 
 /**********************************/

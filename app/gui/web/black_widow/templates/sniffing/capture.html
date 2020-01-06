@@ -47,6 +47,13 @@
     <link href="{% static 'css/plugins/simplePagination.css' %}" rel="stylesheet" />
 {% endblock %}
 
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/sniffing">Sniffing</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Capture</li>
+    </ol>
+{% endblock %}
+
 {% block content %}
     {% csrf_token %}
     <!-- TODO: UI to view the packet captured. Features:
@@ -55,6 +62,50 @@
             - Download ".pcap" file
             - Add timestamp to Jobs
     -->
+
+    <ul class="accordion">
+        <li>
+            <a class="toggle" href="javascript:void(0);">Item 1</a>
+            <ul class="inner">
+                <li>Option 1</li>
+                <li>Option 2</li>
+                <li>Option 3</li>
+            </ul>
+        </li>
+        <li>
+            <a class="toggle" href="javascript:void(0);">Item 2</a>
+            <ul class="inner">
+                <li>Option 1</li>
+                <li>Option 2</li>
+                <li>Option 3</li>
+            </ul>
+        </li>
+        <li>
+            <a class="toggle" href="javascript:void(0);">Item 3</a>
+            <ul class="inner">
+                <li>
+                    <a href="#" class="toggle">Open Inner</a>
+                    <div class="inner">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas tempus placerat fringilla. Duis a elit et dolor laoreet volutpat. Aliquam ultrices mauris id mattis imperdiet. Aenean cursus ultrices justo et varius. Suspendisse aliquam orci id dui dapibus
+                            blandit. In hac habitasse platea dictumst. Sed risus velit, pellentesque eu enim ac, ultricies pretium felis.
+                        </p>
+                    </div>
+                </li>
+
+                <li>
+                    <a href="#" class="toggle">Open Inner #2</a>
+                    <div class="inner">
+                        <p>
+                            Children will automatically close upon closing its parent.
+                        </p>
+                    </div>
+                </li>
+
+                <li>Option 3</li>
+            </ul>
+        </li>
+    </ul>
 
     <!-- Show packet modal -->
     <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -233,15 +284,15 @@
                     <!-- Frame Info -->
                     <div class="separator row">
                         <h2>Frame Info</h2>
-                        <div id="pkt-modal-frame">
-                        </div>
+                        <ul id="pkt-modal-frame" class="accordion frame">
+                        </ul>
                     </div>
 
                     <!-- Layers -->
                     <div class="section">
                         <h2>Layers</h2>
-                        <div id="pkt-modal-layers">
-                        </div>
+                        <ul id="pkt-modal-layers" class="accordion layers">
+                        </ul>
                     </div>
 
                 </div>
@@ -369,6 +420,7 @@
                             // Process paused
                             $pauseCaptureBtn.addClass('disabled').hide().invisible();
                             $playCaptureBtn.removeClass('disabled').show().visible();
+                            $stopCaptureBtn.removeClass('disabled').visible();
                         } else if (data.job.status === 'SIGKILL') {
                             // Process stopped
                             $pauseCaptureBtn.addClass('disabled').invisible();
@@ -583,6 +635,7 @@
                 $dstIpHost.html(pkt.destination.ip_host);
                 $dstIpHost.attr('href', dst_proto + '://' + pkt.destination.ip_host + dst_port);
 
+                // Packet Info
                 const $info = $pktModal.find('#pkt-modal-info');
                 for (const key in pkt) {
                     const $key = $info.find('#' + key);
@@ -592,9 +645,50 @@
                     $key.html(pkt[key]);
                 }
 
+                // Frame Info
+                const $frame = $pktModal.find('#pkt-modal-frame');
+                appendLayer($frame, pkt.frame_info);
+
+                // Layers
+                // TODO: insert Layers
+
+                initAccordions();
+
                 $pktModal.modal();
 
                 console.log(pkt);
+            };
+
+            const appendLayer = function ($parent, layer) {
+                const html_layer =
+                    '<li class="layer">' +
+                        '<a class="toggle" href="javascript:void(0);">' + layer.name + '</a>' +
+                        '<ul class="inner"></ul>' +
+                    '</li>';
+                const $layer = $(html_layer).appendTo($parent);
+                const $children = $layer.find('ul.inner');
+                for (const key in layer.fields) {
+                    const field = layer.fields[key];
+                    appendFieldRecursively($children, field);
+                }
+            };
+
+            const appendFieldRecursively = function ($parent, field) {
+                const html_field_str = field.label + ': <span>' + field.value + '</span>';
+                let html_field = '<li>';
+                if (field.children.length > 0) {
+                    html_field += '<a class="toggle" href="javascript:void(0);">' + html_field_str + '</a>';
+                    html_field += '<ul class="inner"></ul>';
+                } else {
+                    html_field += html_field_str;
+                }
+                html_field += '</li>';
+                const $field = $(html_field).appendTo($parent);
+                const $children = $field.find('ul.inner');
+                for (const key in field.children) {
+                    const child_field = children[key];
+                    appendFieldRecursively($children, child_field);
+                }
             };
 
             updatePkts(300, true);
