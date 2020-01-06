@@ -108,6 +108,50 @@
                         <p>SQL injection</p>
                     </a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'user' %}active{% endif %}">
+                    <a class="nav-link" href="/user">
+                        <i class="material-icons">person</i>
+                        <p>User Profile</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'tables' %}active{% endif %}">
+                    <a class="nav-link" href="/tables">
+                        <i class="material-icons">content_paste</i>
+                        <p>Table List</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'typography' %}active{% endif %}">
+                    <a class="nav-link" href="/typography">
+                        <i class="material-icons">library_books</i>
+                        <p>Typography</p>
+                    </a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'icons' %}active{% endif %}">
+                    <a class="nav-link" href="/icons">
+                        <i class="material-icons">bubble_chart</i>
+                        <p>Icons</p>
+                    </a>
+                </li>
+                <!--li class="nav-item {% if request.resolver_match.url_name == 'map' %}active{% endif %}">
+              <a class="nav-link" href="/map">
+                <i class="material-icons">location_ons</i>
+                <p>Maps</p>
+              </a>
+            </li-->
+                <li class="nav-item {% if request.resolver_match.url_name == 'notifications' %}active{% endif %}">
+                    <a class="nav-link" href="/notifications">
+                        <i class="material-icons">notifications</i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
+                <!--
+            <li class="nav-item active-pro {% if request.resolver_match.url_name == 'upgrade' %}active{% endif %}">
+              <a class="nav-link" href="/upgrade">
+                <i class="material-icons">unarchive</i>
+                <p>Upgrade to PRO</p>
+              </a>
+            </li>
+            -->
             </ul>
         </div>
     </div>
@@ -238,6 +282,18 @@
             <i class="fa fa-cog fa-2x"> </i>
         </a>
         <ul class="dropdown-menu">
+            {#            <li class="header-title"> Sidebar Filters</li>#}
+            {#            <li class="adjustments-line">#}
+            {#                <a href="javascript:void(0)" class="switch-trigger active-color">#}
+            {#                    <div class="badge-colors ml-auto mr-auto">#}
+            {#                        <span class="badge filter badge-purple" data-color="purple"></span>#}
+            {#                        <span class="badge filter badge-azure" data-color="azure"></span>#}
+            {#                        <span class="badge filter badge-green" data-color="green"></span>#}
+            {#                        <span class="badge filter badge-warning" data-color="orange"></span>#}
+            {#                        <span class="badge filter badge-danger active" data-color="danger"></span>#}
+            {#                    </div>#}
+            {#                </a>#}
+            {#            </li>#}
             <li class="header-title">Images</li>
             <li>
                 <a class="img-holder switch-trigger" href="javascript:void(0)">

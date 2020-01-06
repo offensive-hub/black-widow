@@ -106,7 +106,7 @@ class HttpRequest:
             if APP_DEBUG:
                 HttpRequest.print_response(response)
             return response
-        except requests.exceptions.ConnectionError or requests.exceptions.TooManyRedirects as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.TooManyRedirects) as e:
             Log.error('Unable to connect to ' + str(url))
             Log.error('Exception: ' + str(e))
         return None
@@ -141,7 +141,7 @@ class HttpRequest:
             if APP_DEBUG:
                 try:
                     print(response.json())
-                except JSONDecodeError or SimpleJSONDecodeError:
+                except (JSONDecodeError, SimpleJSONDecodeError):
                     print(response.text)
         return response_dict
 

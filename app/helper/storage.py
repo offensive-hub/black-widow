@@ -213,7 +213,7 @@ def delete(file):
                 shutil.rmtree(file)
         except PermissionError:
             return False
-        except Exception or IOError:
+        except (Exception, IOError):
             attempts += 1
             if attempts >= 5:
                 return False

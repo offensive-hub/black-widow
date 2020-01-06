@@ -83,7 +83,7 @@ class Sniffing:
                 request_params.get('interfaces'),
             )
 
-            return redirect('sniffing/capture?id=' + str(sniffing_job.id))
+            return redirect('/sniffing/capture?id=' + str(sniffing_job.id))
 
     class CaptureView(AbstractSniffingView):
         """
@@ -102,12 +102,12 @@ class Sniffing:
             request_params: dict = request.GET.dict()
             try:
                 sniffing_job_id = int(request_params.get('id'))
-            except ValueError:
-                return redirect('sniffing')
+            except (ValueError, TypeError):
+                return redirect('/sniffing')
             Log.info("Showing job #" + str(sniffing_job_id))
             sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
             if sniffing_job is None:
-                return redirect('sniffing')
+                return redirect('/sniffing')
             return render(request, self.template_name)
 
         def post(self, request):
@@ -128,6 +128,9 @@ class Sniffing:
                 sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
             except ValueError:
                 pass
+            except Exception as e:
+                print(type(e))
+                print(str(e))
 
             if sniffing_job is None:
                 return JsonResponse({

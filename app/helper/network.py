@@ -48,7 +48,7 @@ def get_ip_address():
         try:
             ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
             break
-        except KeyError or Exception:
+        except (KeyError, Exception):
             pass
     return ip
 

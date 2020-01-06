@@ -389,7 +389,7 @@ class PcapSniffer:
                         try:
                             host['ip'] = pcap_layer_field.value
                             host['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
-                        except socket.herror or socket.gaierror:
+                        except (socket.herror, socket.gaierror):
                             pass
                     elif is_int(pcap_layer_field.value):
                         # It's the port
@@ -426,7 +426,7 @@ class PcapSniffer:
         for domain in PcapSniffer._IGNORED_DOMAINS:
             try:
                 ignored_hosts += (socket.gethostbyname(domain),)
-            except socket.herror or socket.gaierror:
+            except (socket.herror, socket.gaierror):
                 pass
         return ignored_hosts
 
