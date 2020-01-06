@@ -42,7 +42,7 @@ EDITABLE_ENV = (
     'APP_DEBUG',
     'APP_WEB_HOST',
     'APP_WEB_PORT',
-    'APP_SUDO',
+    'APP_TMP',
     'IGNORE_NON_ROOT',
     'FLAG_REGEX'
 )
