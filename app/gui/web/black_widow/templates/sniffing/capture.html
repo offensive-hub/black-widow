@@ -436,10 +436,16 @@
                             }
                         });
 
-                        stopSpinner();
+                        if (data.total === 0) {
+                            $mainBody.spinner('Waiting packets...');
+                        }
+
+                        if (data.total > 0 && showingSpinner()) {
+                            stopSpinner();
+                        }
 
                         if (loop) {
-                            updatePkts(3000, loop);
+                            updatePkts(1000, loop);
                         }
                     }, function() {
                         console.error('Sniffing request error!');
@@ -507,8 +513,8 @@
                     {#console.log('Sniffing requests restarted!');#}
                     jobId = data.id;
                     history.pushState('data', '', '/sniffing/capture?id=' + jobId);
+                    $mainBody.spinner('Waiting packets...');
                     playPkts();
-                    stopSpinner();
                 });
             };
             $restartCaptureBtn.click(restartPkts);

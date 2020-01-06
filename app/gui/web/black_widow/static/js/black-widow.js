@@ -174,6 +174,14 @@ const startSpinner = function() {
     $('#spinner').show();
 };
 
+
+/**
+ * Show the spinner
+ */
+const showingSpinner = function() {
+    return $('#spinner').is(':visible');
+};
+
 /**
  * Hide the spinner
  */
