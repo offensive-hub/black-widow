@@ -62,7 +62,7 @@ class MacManufacturer:
     _mac_manufacturer = None
 
     def __init__(self):
-        self._manufacturer_dict = dict()
+        self._manufacturer_dict = JsonSerializer.get_dictionary(MacManufacturer._MANUFACTURERS_JSON)
         self._update_manufacturer_dict()
 
     @staticmethod
@@ -145,5 +145,3 @@ class MacManufacturer:
         if len(manufacturer_dict) > 0:
             self._manufacturer_dict = manufacturer_dict
             JsonSerializer.set_dictionary(self._manufacturer_dict, MacManufacturer._MANUFACTURERS_JSON)
-        else:
-            self._manufacturer_dict = JsonSerializer.get_dictionary(MacManufacturer._MANUFACTURERS_JSON)
