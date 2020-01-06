@@ -83,6 +83,15 @@
 .card-body-primary .card-category, .card-body-primary .card-title {
     color: #fff !important;
 }
+.card-job .card-header .card-category {
+    background: rgba(0, 0, 0, 0.08);
+    padding: 5px;
+    margin: 5px 0;
+}
+.card-job .card-header .card-category span {
+    font-weight: bold;
+    color: #fff;
+}
 .card-hover {
     box-shadow: unset !important;
 }

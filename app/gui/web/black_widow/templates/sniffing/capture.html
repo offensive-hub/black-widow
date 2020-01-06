@@ -58,9 +58,7 @@
     {% csrf_token %}
     <!-- TODO: UI to view the packet captured. Features:
             - Sorting/Search filters
-            - Reset pkts
             - Download ".pcap" file
-            - Add timestamp to Jobs
     -->
 
     <!-- Show packet modal -->
@@ -261,13 +259,15 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card card-job">
                 <div class="card-header card-header-danger">
                     <h4 class="card-title mt-0"> Network Traffic</h4>
-                    <p class="card-category">
-                        Here is the monitored traffic
+                    <p class="card-category interfaces">
+                        Interfaces: <span>{{ job.interfaces }}</span>
                     </p>
-
+                    <p class="card-category">
+                        Filters: <span>{{ job.filters }}</span>
+                    </p>
                     <button id="play-capture-btn" type="button" class="btn btn-success btn-action disabled" title="Start capturing packet"
                             style="display: none; visibility: hidden;">
                         <i class="material-icons" style="padding: 0;">play_arrow</i>

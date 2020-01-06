@@ -107,10 +107,12 @@ class Sniffing:
                 return redirect('/sniffing')
             Log.info("Showing job #" + str(sniffing_job_id))
             try:
-                SniffingJobModel.objects.get(id=sniffing_job_id)
+                sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
             except ObjectDoesNotExist:
                 return redirect('/sniffing')
-            return render(request, self.template_name)
+            return render(request, self.template_name, {
+                'job': sniffing_job
+            })
 
         def post(self, request):
             """
