@@ -2,6 +2,7 @@
 
 * [black-widow](README.md)
   * [arguments](app/arguments.md)
+  * [env](app/env.md)
   * [gui](app/gui.md)
   * [helpers](app/helpers.md)
     * [network](app/helpers/network.md)
