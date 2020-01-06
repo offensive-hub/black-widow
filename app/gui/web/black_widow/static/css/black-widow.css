@@ -84,7 +84,7 @@
     color: #fff !important;
 }
 .card-job .card-header .card-category {
-    background: rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.4);
     padding: 5px;
     margin: 5px 0;
 }
