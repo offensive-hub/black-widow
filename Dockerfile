@@ -23,13 +23,11 @@ RUN pip3 install --no-cache --upgrade pip setuptools wheel
 # Link pip3 >> pip
 RUN if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
 
-COPY requirements.txt ./
+# Copy all project files
+COPY . .
 
 # Install required pip modules
 RUN pip install --no-cache-dir -r ./docker/alpine_requirements.txt -U
-
-# Copy all project files
-COPY . .
 
 # Copy dist env to local env
 RUN ./black-widow.py --django migrate
