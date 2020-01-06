@@ -232,6 +232,14 @@ const initAccordions = function() {
                 $this.next().toggleClass('show');
                 $this.find('.arrow').html('keyboard_arrow_down');
                 $this.next().slideToggle(350);
+                let $container = $this.closest('.modal');
+                if ($container.length === 0) {
+                    $container = $('html');
+                }
+                setTimeout(function () {
+                    const top = $this.offset().top - $container.offset().top + $container.scrollTop();
+                    $container.animate({ scrollTop: top }, 300);
+                }, 350);
             }
         });
     });
