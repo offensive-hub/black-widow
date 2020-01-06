@@ -65,32 +65,39 @@ It provides easy ways to execute many kinds of information gatherings and attack
 TODO: fix the following directory tree
 [root]
   |
-  |-- app/      # Main application package
+  |-- app/              # Main application package
   |    |
-  |    |-- attack/         # Package per modalità di attacco
-  |    |-- defense/        # Package per modalità di difesa
+  |    |-- arguments/       # User input arguments parser (100%)
   |    |
-  |    |-- gui/            # Package per la grafica dell'applicazione
+  |    |-- attack/          # Attack modality package (0%)
+  |    |-- defense/         # Defense modality package (0%)
   |    |
-  |    |-- storage/        # Package per salvare i files (settings, output, ...)
+  |    |-- gui/             # Graphical User Interface package (100%)
   |    |
-  |    |-- utils/
+  |    |-- helpers/         # Helper methods package (100%)
+  |    |
+  |    |-- managers/        # Managers package
   |    |    |
-  |    |    |-- cluster/        # Package che fornisce metodi per condividere e ricevere info
-  |    |    |-- crypto/         # Package per criptare/decriptare/codificare/decodificare stringhe e files
-  |    |    |-- exceptions/     # Eventuali eccezioni personalizzate
-  |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
-  |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-  |    |    |-- html/           # Package che fornisce metodi per fare il parsing di un html
-  |    |    |-- requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
-  |    |    |-- settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-  |    |    |-- sniffing/       # Package che fornisce metodi per sniffing in una rete
-  |    |    |-- sql/            # Package che fornisce metodi per sql injection
+  |    |    |-- cluster/        # Cluster managers package (0%)
+  |    |    |-- crypto/         # Encryption managers package (70%)
+  |    |    |-- injection/      # Injection managers package (60%)
+  |    |    |-- parser/         # Parser managers package (100%)
+  |    |    |-- request/        # Request managers package (70%)
+  |    |    |-- sniffer/        # Sniffer managers package (95%)
   |    |
-  |    |-- env.py          # Variabili d'ambiente
+  |    |-- services/        # Services package
+  |    |    |
+  |    |    |-- logger.py       # Logger service (100%)
+  |    |    |-- multitask.py    # MultiTask service (100%)
+  |    |    |-- serializer.py   # PickleSerializer and JsonSerializer serivces (100%)
+  |    |
+  |    |-- storage/         # Storage directory
+  |    |
+  |    |-- env.py           # Environment variables management
   |
-  |-- black-widow.py   # Eseguibile principale
-  |-- test.py          # Eseguibile di testing
+  |-- .env              # Environment variables
+  |
+  |-- black-widow.py    # Main executable
 ```
 
 <br/>
