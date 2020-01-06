@@ -417,7 +417,7 @@ class PcapSniffer:
         if user_filters == '' and len(filters) > 0:
             filters = filters[:-5]  # remove last " and "
         else:
-            filters += user_filters
+            filters += '(' + user_filters + ')'
         return filters
 
     @staticmethod
