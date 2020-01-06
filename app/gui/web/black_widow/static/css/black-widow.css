@@ -584,14 +584,12 @@ ul.accordion li > ul:not(.inner) {
 ul.accordion li > ul.inner {
     margin-top: 0;
 }
-ul.accordion li:not(.layer):not(.children) {
-    max-height: 60vh;
-    overflow: auto;
-}
 ul.accordion .val-in {
     color: #fff;
     word-break: break-word;
-    display: contents;
+    display: inline-flex;
+    max-height: 60vh;
+    overflow: auto;
 }
 ul.accordion li a.toggle {
     width: 100%;

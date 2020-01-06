@@ -35,7 +35,7 @@ class PcapLayerField(Node):
     SRC_FIELDS = ('src', 'src_host', 'src_hw_mac', 'src_proto_ipv4', 'ta', 'sa', 'srcport')
     DST_FIELDS = ('dst', 'dst_host', 'dst_hw_mac', 'dst_proto_ipv4', 'ra', 'da', 'dstport')
 
-    PROTO_FIELDS = ('proto', 'phy', 'request_version')
+    PROTO_FIELDS = ('proto', 'phy', 'request_version', 'response_version')
 
     AMBIGUOUS_FIELD_NAMES = (
         'ip.addr', 'ip.host',
