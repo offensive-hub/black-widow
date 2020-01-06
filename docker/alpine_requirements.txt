@@ -8,6 +8,3 @@ sqlmap
 termcolor
 urllib3
 django
-numpy
-lxml
-netifaces

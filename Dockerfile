@@ -8,7 +8,9 @@ WORKDIR /usr/share/black-widow
 
 # Install required packages
 RUN apk --no-cache --update upgrade
-RUN apk --no-cache add ca-certificates tidyhtml python3 py3-numpy py3-lxml py3-netifaces tshark libc-dev
+RUN apk --no-cache add ca-certificates tidyhtml python3 tshark libc-dev
+# "pip" cannot install the following python packages:
+RUN apk --no-cache add py3-numpy py3-lxml py3-netifaces
 # libffi-dev gcc
 
 # Link python3 >> python
@@ -24,7 +26,7 @@ RUN if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
 COPY requirements.txt ./
 
 # Install required pip modules
-RUN pip install --no-cache-dir -r requirements.txt -U
+RUN pip install --no-cache-dir -r ./docker/alpine_requirements.txt -U
 
 # Copy all project files
 COPY . .
