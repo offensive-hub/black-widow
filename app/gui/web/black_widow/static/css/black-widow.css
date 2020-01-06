@@ -555,6 +555,7 @@ ul.accordion li.layer a.toggle {
     color: #2b0404;
     background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
     padding: 0.75em 0.75em 8px;
+    box-shadow: 0 1px 20px 0 rgba(55, 7, 7, 0.56),0 7px 10px -5px rgba(51, 11, 9, 0.91);
 }
 ul.accordion li.layer a.toggle:hover {
     background: linear-gradient(60deg, #760006, #810000) !important;
