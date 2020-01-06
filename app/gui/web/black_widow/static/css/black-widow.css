@@ -533,6 +533,9 @@ ul.accordion .inner li.children {
 ul.accordion li .inner.show {
     padding-top: 10px;
 }
+ul.accordion li:not(.layer) .inner {
+    transition: background 1s;
+}
 ul.accordion li:not(.layer) .inner.show {
     background: rgba(253, 253, 253, 0.05);
     border-bottom-left-radius: 3px;
@@ -560,14 +563,12 @@ ul.accordion li a.toggle {
     width: 100%;
     display: block;
     padding: 0.75em;
-    transition: background 2s;
+    transition: background .3s;
     border-radius: 3px;
     font-weight: bold;
 }
 ul.accordion li a.toggle > .arrow {
     float: right;
-}
-ul.accordion li a.toggle:hover {
 }
 
 ul.accordion li.layer a.toggle {
