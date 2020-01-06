@@ -346,13 +346,24 @@
             const $pagination = $('#pagination');
             const $pktModal = $('#pkt-modal');
 
+            let currentPage = 1;
+            let pages = 1;
+
+            if (window.location.hash.indexOf('#page-') === 0) {
+                const tmpCurrentPage = parseInt(window.location.hash.substr(6, 1));
+                if (tmpCurrentPage) {
+                    currentPage = tmpCurrentPage;
+                    pages = tmpCurrentPage;
+                }
+            }
+
             // Pagination
             $pagination.pagination({
                 dataSource: [],
                 pageNumber: 1,
                 items: 0,
-                pages: 1,
-                currentPage: 1,
+                pages: pages,
+                currentPage: currentPage,
                 itemsOnPage: 10,
                 cssStyle: 'dark-theme'
             });
@@ -561,8 +572,8 @@
 
                 // Source MAC
                 $pktModalSrcHost.find('.mac-address').html(pkt.source.mac);
-                $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup.vendor);
-                $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup.company);
+                $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.vendor : '');
+                $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.company : '');
 
                 // Destination MAC
                 $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
