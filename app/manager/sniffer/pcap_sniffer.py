@@ -53,10 +53,7 @@ class PcapSniffer:
     Packet Capture Manager
     """
 
-    try:
-        _DEFAULT_FILTERS = socket.gethostbyname(MacManufacturer.MANUFACTURERS_DOMAIN)
-    except socket.herror or socket.gaierror:
-        _DEFAULT_FILTERS = ''
+    _IGNORED_DOMAINS = (MacManufacturer.MANUFACTURERS_DOMAIN,)
 
     def __init__(
             self,
@@ -81,16 +78,14 @@ class PcapSniffer:
         root_required()
         self.count = 0  # Sniffed packets
         self.max_count = pkt_count
-        if filters is not None and len(filters) > 0:
-            filters = ' and ' + filters
         # Prevents the mac manufacturer lookup sniffing
-        filters = PcapSniffer._DEFAULT_FILTERS + filters
-        self.filters = filters
+        self.filters = PcapSniffer._get_filters(filters)
         self.src_file = src_file
         self.dest_file = dest_file
         self.limit_length = limit_length
         self.user_callback = callback
         self.interfaces = interfaces
+        Log.info('Analyzing filters: ' + str(self.filters))
         if self.src_file is not None:
             Log.info('Analyzing file: ' + self.src_file)
             self._capture = pyshark.FileCapture(
@@ -410,6 +405,30 @@ class PcapSniffer:
                    'destination': destination,
                    'protocol': protocol
                }
+
+    @staticmethod
+    def _get_filters(user_filters: str):
+        if type(user_filters) is not str:
+            user_filters = ''
+        ignored_hosts = PcapSniffer._ignored_hosts()
+        filters = ''
+        for host in ignored_hosts:
+            filters += 'ip.src != ' + host + ' and ip.dst != ' + host + ' and '
+        if user_filters == '' and len(filters) > 0:
+            filters = filters[:-5]  # remove last " and "
+        else:
+            filters += user_filters
+        return filters
+
+    @staticmethod
+    def _ignored_hosts() -> tuple:
+        ignored_hosts = ()
+        for domain in PcapSniffer._IGNORED_DOMAINS:
+            try:
+                ignored_hosts += (socket.gethostbyname(domain),)
+            except socket.herror or socket.gaierror:
+                pass
+        return ignored_hosts
 
     @staticmethod
     def _print_layer(layer_dict: dict):
