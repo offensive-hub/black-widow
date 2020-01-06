@@ -26,8 +26,8 @@
 import hashlib
 import json
 
-from app.manager.request import HttpRequest
-from app.service import Log
+from app.managers.request import HttpRequest
+from app.services import Log
 
 
 class Md5Crypto:

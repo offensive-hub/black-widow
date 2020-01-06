@@ -28,10 +28,10 @@ from html.parser import HTMLParser as PyHTMLParser
 from urllib.parse import urlparse
 from tidylib import tidy_document
 
-from app.manager.request import HttpRequest
-from app.service import Log
-from app.helper.validators import is_url
-from app.helper.util import is_listable
+from app.managers.request import HttpRequest
+from app.services import Log
+from app.helpers.validators import is_url
+from app.helpers.util import is_listable
 
 
 class HtmlParser(PyHTMLParser, ABC):

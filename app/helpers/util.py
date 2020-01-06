@@ -33,16 +33,27 @@ from datetime import datetime
 from app.env import IGNORE_NON_ROOT
 
 
-def now():
+def now() -> str:
+    """
+    :return: The current datetime as string
+    """
     return str(datetime.now()).replace(' ', '_')
 
 
-def timestamp():
+def timestamp() -> str:
+    """
+    :return: The current timestamp as string
+    """
     return str(datetime.timestamp(datetime.now()))
 
 
-# @return True se string contiene regex
 def regex_in_string(regex, string) -> bool:
+    """
+    Checks if the input string contains the input regex
+    :param regex: The regex to search
+    :param string: The string to check
+    :return: True if string contains regex, otherwise False
+    """
     reg = re.compile(regex)
     matches = re.findall(reg, string)
     return len(matches) > 0
@@ -106,7 +117,12 @@ def print_dict(dictionary: dict, depth: int = 0):
             print(space + ' [' + str(type(value)) + '] ' + str(value))
 
 
-def pid_exists(pid: int or None) -> bool:
+def pid_exists(pid: int) -> bool:
+    """
+    Checks if exists a process with input pid
+    :param pid: The pid to check
+    :return: True, if the pid exists, otherwise False
+    """
     if pid is None:
         return False
     try:
@@ -117,7 +133,12 @@ def pid_exists(pid: int or None) -> bool:
 
 
 def is_root() -> bool:
-    if IGNORE_NON_ROOT: return True
+    """
+    If IGNORE_NON_ROOT in .env is False, this method checks if the current user is root
+    :return: True, if the current user is root, otherwise False
+    """
+    if IGNORE_NON_ROOT:
+        return True
     user = whoami(False)
     return user['uid'] == 0
 
@@ -132,6 +153,11 @@ def root_required():
 
 
 def whoami(check_sudo: bool = True) -> dict:
+    """
+    Get the dictionary of current user info
+    :param check_sudo: True, if you want get the user which executed sudo command
+    :return: A dictionary with current user info
+    """
     name = None
     uid = None
     gid = None
@@ -166,9 +192,12 @@ def set_owner_process(user: dict):
     os.environ['HOME'] = new_home
 
 
-# Fa eseguire al sistema operativo i comandi in args
-# @param *args "cmd [argomenti]"        // ES: "netstat -tuan"
-def pexec(*args):
+def pexec(*args) -> list:
+    """
+    Executes through os stdin the input commands
+    :param args: cmd + args (eg1. "cmd" "[args]"), (eg2. "ls" "-l")
+    :return: The stdout of executed command
+    """
     p = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     list_stdout = []
     for line in p.stdout.readlines():

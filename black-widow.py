@@ -37,23 +37,23 @@ class AppType:
 
 
 def make_temp_dir():
-    app.helper.storage.check_folder(app.env.APP_TMP)
+    app.helpers.storage.check_folder(app.env.APP_TMP)
     try:
-        app.helper.storage.chmod(app.env.APP_TMP, 0o0777, True)
+        app.helpers.storage.chmod(app.env.APP_TMP, 0o0777, True)
     except PermissionError:
         pass
 
 
 # Startup
 def init(app_type):
-    app.service.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
-    app.service.Log.info('DEBUG is ' + str(app.env.APP_DEBUG))
+    app.services.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
+    app.services.Log.info('DEBUG is ' + str(app.env.APP_DEBUG))
 
 
 # Main function for TEST app
 def main_test():
     init(AppType.CMD)
-    ip = app.helper.network.get_ip_address()
+    ip = app.helpers.network.get_ip_address()
     print('ip: ' + str(ip))
 
 
@@ -68,8 +68,8 @@ def main_cmd(arguments):
     init(AppType.CMD)
     if arguments.django:
         django_args = str.split(arguments.django)
-        app.service.Log.info('Django manager executed')
-        app.service.Log.info('Django arguments: ' + str(django_args))
+        app.services.Log.info('Django manager executed')
+        app.services.Log.info('Django arguments: ' + str(django_args))
         app.gui.django_cmd(django_args)
         sys.exit(0)
 
@@ -77,18 +77,18 @@ def main_cmd(arguments):
         if arguments.pcap_int is None:
             print("\nChoose at least one interface (eg. --pcap-int=wlan0)\n")
             sys.exit(1)
-        app.manager.sniffer.PcapSniffer.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
-                                              dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
-                                              limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
-                                              callback=None)
+        app.managers.sniffer.PcapSniffer.sniff(src_file=arguments.pcap_src, interfaces=arguments.pcap_int,
+                                               dest_file=arguments.pcap_dest, filters=arguments.pcap_filters,
+                                               limit_length=arguments.pcap_limit, pkt_count=arguments.pcap_count,
+                                               callback=None)
     elif arguments.sql:
         if arguments.sql_url is None:
             print('Please, specify an url! (eg. --sql-url=https://black-widow.io)\n')
             sys.exit(1)
         if arguments.sql_deep:
-            app.manager.injection.SqlInjection.deep_inject_form(arguments.sql_url, arguments.sql_depth)
+            app.managers.injection.SqlInjection.deep_inject_form(arguments.sql_url, arguments.sql_depth)
         else:
-            app.manager.injection.SqlInjection.inject_form(arguments.sql_url)
+            app.managers.injection.SqlInjection.inject_form(arguments.sql_url)
 
 
 # Main function generic app

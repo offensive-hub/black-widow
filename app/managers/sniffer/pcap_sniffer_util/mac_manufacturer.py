@@ -41,8 +41,8 @@ from math import floor
 from os.path import join
 
 from app.env import APP_STORAGE
-from app.manager.request import HttpRequest
-from app.service import Log, JsonSerializer
+from app.managers.request import HttpRequest
+from app.services import Log, JsonSerializer
 
 
 class MacManufacturer:

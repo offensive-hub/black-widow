@@ -34,7 +34,7 @@ from threading import current_thread
 from termcolor import colored
 
 from app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
-from app.helper import storage
+from app.helpers import storage
 
 
 # Logger

@@ -31,9 +31,9 @@ from django.db import models
 from django.utils.timezone import now
 
 from app.gui.web.black_widow.models.abstract_model import AbstractModel
-from app.helper import storage
-from app.helper.util import sort_dict, pid_exists
-from app.service import MultiTask, JsonSerializer, Log
+from app.helpers import storage
+from app.helpers.util import sort_dict, pid_exists
+from app.services import MultiTask, JsonSerializer, Log
 
 
 class SniffingJobModel(AbstractModel):

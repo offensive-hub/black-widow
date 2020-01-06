@@ -30,8 +30,8 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from app.gui.web.black_widow.models import SniffingJobModel
-from app.service import Log
-from app.helper import network, util
+from app.services import Log
+from app.helpers import network, util
 
 from .abstract_sniffing_view import AbstractSniffingView
 

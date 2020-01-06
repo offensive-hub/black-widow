@@ -24,8 +24,8 @@
 """
 
 from app.env import APP_SETTINGS, APP_DEBUG   # Json file
-from app.service import Log, JsonSerializer
-from app.helper import validators
+from app.services import Log, JsonSerializer
+from app.helpers import validators
 
 from . import keys
 

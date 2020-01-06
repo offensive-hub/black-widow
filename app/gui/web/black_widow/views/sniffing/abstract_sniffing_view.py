@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* sql_view.py -- Django SQL Injection views.                                    *
+* abstract_sniffing_view.py -- Django Abstract Sniffing view.                   *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,55 +23,48 @@
 *********************************************************************************
 """
 
-from django.shortcuts import render, redirect
+import os
 
-from app.service import Log
+from app.env import APP_STORAGE_OUT
+from app.helpers import storage, util
+from app.managers.sniffer import PcapSniffer
+from app.services import JsonSerializer, MultiTask
 
-from .abstract_view import AbstractView
+from app.gui.web.black_widow.models import SniffingJobModel
+from app.gui.web.black_widow.views.abstract_view import AbstractView
 
 
-class Sql:
+class AbstractSniffingView(AbstractView):
     """
-    SQL injection Container View
+    Abstract Sniffing View
     """
-    class SettingsView(AbstractView):
-        """
-        SQL View
-        """
-        name = 'sql-injection'
-        template_name = 'sql/settings.html'
+    storage_out_dir = os.path.join(APP_STORAGE_OUT, 'sniffing')
+    storage.check_folder(storage_out_dir)
+    if not os.access(storage_out_dir, os.X_OK):
+        os.chmod(storage_out_dir, 0o0755)
 
-        def get(self, request, *args, **kwargs):
-            """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponse
-            """
-            # TODO: get current sql injection jobs
-            view_params = dict()
-            return render(request, self.template_name, view_params)
+    def new_job(self, filters: str, pcap: str, interfaces: list) -> SniffingJobModel:
+        sniffing_job = SniffingJobModel()
+        sniffing_job.filters = filters
+        sniffing_job.pcap_file = pcap
+        sniffing_job.interfaces = interfaces
+        sniffing_job.json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_.json')
 
-        def post(self, request):
+        def _sniffer_callback(pkt: dict):
             """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponseRedirect
+            The callback function of packet sniffer.
+            This method writes the sniffed packets in a json file
+            :param pkt: The sniffed packet
             """
-            # TODO: create new SQL injection job
-            job_id = 0
-            return redirect('sql/inject?job_id=' + str(job_id))
+            JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
 
-    class InjectView(AbstractView):
-        """
-        Injection View
-        """
-        name = 'sniffing'
-        template_name = 'sql/inject.html'
-
-        def get(self, request, *args, **kwargs):
-            """
-            :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponse
-            """
-            request_params: dict = request.GET.dict()
-            job_id = request_params.get('job_id')
-            Log.info("Showing job #" + str(job_id))
-            return render(request, self.template_name)
+        pcap_sniffer = PcapSniffer(
+            filters=sniffing_job.filters,
+            src_file=sniffing_job.pcap_file,
+            interfaces=sniffing_job.interfaces,
+            limit_length=10000,
+            callback=_sniffer_callback
+        )
+        sniffing_job.pid_file = MultiTask.multiprocess(pcap_sniffer.start, asynchronous=True, cpu=1)
+        sniffing_job.save()
+        return sniffing_job

@@ -27,11 +27,15 @@
 
 import re
 
-from app.helper.util import regex_is_string
+from app.helpers.util import regex_is_string
 
 
-# @return True se il parametro passato e' un ip address, False altrimenti
-def is_ip(ip_address):
+def is_ip(ip_address: str) -> bool:
+    """
+    Checks if the input ip_address is a valid ip address
+    :param ip_address: The ip address to check
+    :return: True, if text is valid ip address, otherwise False
+    """
     if type(ip_address) != str:
         return False
     regex = '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
@@ -39,8 +43,12 @@ def is_ip(ip_address):
     return reg.match(ip_address) is not None
 
 
-# @return True se il parametro passato e' un mac address, False altrimenti
-def is_mac(mac_address):
+def is_mac(mac_address: str) -> bool:
+    """
+    Checks if the input mac_address is a valid mac address
+    :param mac_address: The mac address to check
+    :return: True, if text is valid mac address, otherwise False
+    """
     if type(mac_address) != str:
         return False
     regex = '^\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}$'
@@ -48,8 +56,12 @@ def is_mac(mac_address):
     return reg.match(mac_address) is not None
 
 
-# @return True se il parametro passato è un url valido, False altrimenti
-def is_url(url):
+def is_url(url: str) -> bool:
+    """
+    Checks if the input text is an url
+    :param url: The string to check
+    :return: True, if the string is an url, otherwise False
+    """
     if type(url) != str:
         return False
     regex = re.compile(
@@ -66,7 +78,7 @@ def is_url(url):
 
 def is_hex(text: str) -> bool:
     """
-    Check if the input text is an hexadecimal value
+    Checks if the input text is an hexadecimal value
     :param text: The text to check
     :return: True, if text is an hexadecimal value, otherwise False
     """
@@ -75,7 +87,7 @@ def is_hex(text: str) -> bool:
 
 def is_int(text: str) -> bool:
     """
-    Check if the input text is a decimal value
+    Checks if the input text is a decimal value
     :param text: The text to check
     :return: True, if text is an decimal value, otherwise False
     """

@@ -83,7 +83,7 @@ def get_arguments():
         """
         Print the software header
         """
-        header_ascii = app.helper.storage.read_file(
+        header_ascii = app.helpers.storage.read_file(
             app.env.RES_PATH + '/' + str(app.env.APP_PROC) + '-ascii.txt'
         )
         header_ascii = header_ascii.replace('{version}', app.env.APP_VERSION)

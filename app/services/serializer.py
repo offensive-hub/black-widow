@@ -27,7 +27,7 @@ import json
 import os
 import pickle
 
-from app.helper import storage
+from app.helpers import storage
 
 
 class PickleSerializer:

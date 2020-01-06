@@ -26,9 +26,9 @@
 from urllib.parse import urlparse
 
 from app.env import APP_STORAGE_OUT
-from app.manager.parser import HtmlParser
-from app.service import Log, JsonSerializer
-from app.helper.util import now
+from app.managers.parser import HtmlParser
+from app.services import Log, JsonSerializer
+from app.helpers.util import now
 
 from .sql_injection_util import SqlmapClient
 

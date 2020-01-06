@@ -26,26 +26,26 @@
 from django.urls import path, re_path
 
 from app.gui.web.settings import STATIC_URL
-from . import view
+from . import views
 
 urlpatterns = [
-    path('', view.index, name='black widow'),
+    path('', views.index, name='black widow'),
 
     # --- SNIFFING --- #
-    path('sniffing', view.Sniffing.SettingsView.as_view(), name='sniffing'),
-    path('sniffing/capture', view.Sniffing.CaptureView.as_view(), name='sniffing'),
+    path('sniffing', views.Sniffing.SettingsView.as_view(), name='sniffing'),
+    path('sniffing/capture', views.Sniffing.CaptureView.as_view(), name='sniffing'),
 
     # --- SQL INJECTION --- #
-    path('sql', view.Sql.SettingsView.as_view(), name='sql injection'),
-    path('sql/inject', view.Sql.InjectView.as_view(), name='sql injection'),
+    path('sql', views.Sql.SettingsView.as_view(), name='sql injection'),
+    path('sql/inject', views.Sql.InjectView.as_view(), name='sql injection'),
 
-    path('user', view.user, name='user'),
-    path('tables', view.tables, name='tables'),
-    path('typography', view.typography, name='typography'),
-    path('icons', view.icons, name='icons'),
-    path('notifications', view.notifications, name='notifications'),
-    path('upgrade', view.upgrade, name='upgrade'),
+    path('user', views.user, name='user'),
+    path('tables', views.tables, name='tables'),
+    path('typography', views.typography, name='typography'),
+    path('icons', views.icons, name='icons'),
+    path('notifications', views.notifications, name='notifications'),
+    path('upgrade', views.upgrade, name='upgrade'),
 
     # static (non debug compatibility without web server)
-    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', view.static, name='static'),
+    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', views.static, name='static'),
 ]

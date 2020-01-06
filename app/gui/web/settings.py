@@ -34,7 +34,7 @@
 import os
 
 from app.env import APP_STORAGE, APP_WEB, APP_DEBUG
-from app.helper.network import get_ip_address
+from app.helpers.network import get_ip_address
 from app.gui.web.wsgi import WEB_PACKAGE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

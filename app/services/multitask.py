@@ -43,9 +43,9 @@ import signal
 import threading
 
 from app.env import APP_TMP
-from app.service import Log
-from app.helper import storage
-from app.helper.util import is_listable, timestamp
+from app.services import Log
+from app.helpers import storage
+from app.helpers.util import is_listable, timestamp
 
 
 # Classe sfruttata sia da MultiThreading che da MultiProcessing

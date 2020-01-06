@@ -29,8 +29,8 @@ from json.decoder import JSONDecodeError
 from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 
 from app.env import APP_VERSION, APP_NAME, APP_DEBUG
-from app.service import Log
-from app.helper.validators import is_url
+from app.services import Log
+from app.helpers.validators import is_url
 
 
 class HttpRequest:

@@ -33,10 +33,10 @@ from gunicorn.app.wsgiapp import run as gunicorn_run
 from django.core import management
 
 from app.env import EXEC_PATH, APP_NAME, APP_WEB_HOST, APP_WEB_PORT
-from app.service import MultiTask, Log
-from app.helper.network import get_ip_address
-from app.helper.storage import delete
-from app.helper.util import whoami, set_owner_process
+from app.services import MultiTask, Log
+from app.helpers.network import get_ip_address
+from app.helpers.storage import delete
+from app.helpers.util import whoami, set_owner_process
 from app.gui.web.wsgi import WEB_PACKAGE
 
 
