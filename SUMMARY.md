@@ -1,6 +1,6 @@
 # Table of contents
 
-* [black-widow](README.md)
+* [index](SUMMARY.md)
 * [arguments](app/arguments.md)
 * [env](app/env.md)
 * [gui](app/gui.md)
