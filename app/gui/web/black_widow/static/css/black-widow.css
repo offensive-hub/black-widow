@@ -73,6 +73,10 @@
     min-height: 60vh;
 }
 
+.black-edition code {
+    color: #ff0000;
+}
+
 
 
 /*** 0.1) Cards ***/
@@ -567,8 +571,11 @@ ul.accordion li:not(.layer) .inner.show {
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
-ul.accordion li {
+ul.accordion li:not(.alone), ul.accordion li:first-child {
     margin: 0.5em 0;
+}
+ul.accordion li.alone:not(:first-child) {
+    margin: 0;
 }
 ul.accordion li > ul:not(.inner) {
     margin-top: 15px;
@@ -581,9 +588,10 @@ ul.accordion li:not(.layer):not(.children) {
     max-height: 60vh;
     overflow: auto;
 }
-ul.accordion li > span {
+ul.accordion .val-in {
     color: #fff;
     word-break: break-word;
+    display: contents;
 }
 ul.accordion li a.toggle {
     width: 100%;

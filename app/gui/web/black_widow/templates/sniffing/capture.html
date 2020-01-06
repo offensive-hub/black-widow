@@ -659,21 +659,37 @@
             };
 
             const appendFieldRecursively = function ($parent, field) {
-                const html_field_str = field.label + ': <span>' + field.value + '</span>';
-                let html_field = '<li';
+                field.value = field.value.trim();
+                field.key = field.key.trim();
+                field.name = field.name.trim();
+
+                let htmlField = '<li';
                 if (field.children.length > 0) {
-                    html_field += ' class="children">';
-                    html_field +=
-                        '<a class="toggle" href="javascript:void(0);">' +
-                        html_field_str + '<i class="material-icons arrow">keyboard_arrow_right</i>' +
-                        '</a>';
-                    html_field += '<ul class="inner"></ul>';
+                    htmlField +=
+                        ' class="children">' +
+                        '<a class="toggle value" href="javascript:void(0);">' +
+                        '<i class="material-icons arrow">keyboard_arrow_right</i>' +
+                        '</a>' +
+                        '<ul class="inner"></ul>';
                 } else {
-                    html_field += '>';
-                    html_field += html_field_str;
+                    htmlField += ' class="value">';
                 }
-                html_field += '</li>';
-                const $field = $(html_field).appendTo($parent);
+                htmlField += '</li>';
+
+                const $field = $(htmlField).appendTo($parent);
+
+                if (!field.key && !field.name) {
+                    $field.addClass('alone');
+                    $field.text(field.value);   // Prevents style and script execution
+                } else {
+                    const htmlFieldStr = field.label + ': <div class="val-in">' + field.value + '</div>';
+                    if ($field.hasClass('value')) {
+                        $field.html(htmlFieldStr);
+                    } else {
+                        $field.find('.value').append(htmlFieldStr);
+                    }
+                }
+
                 const $children = $field.find('ul.inner');
                 for (let i in field.children) {
                     const child_field = field.children[i];
