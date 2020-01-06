@@ -1,0 +1,14 @@
+site_name: Black Widow documentation
+theme:
+  name: readthedocs
+  highlightjs: true
+  hljs_languages:
+    - yaml
+    - rust
+extra_css:
+  - css/extra.css
+extra:
+  version: 1.6.0#
+nav:
+  - Home: index.md
+  - Sniffer: sniffer/index.md

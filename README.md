@@ -60,35 +60,41 @@ It provides easy ways to execute many kinds of information gatherings and attack
 ### Directories:
 
 ```text
-TODO: fix the following directory tree
 [root]
   |
-  |-- app/      # Main application package
+  |-- app/              # Main application package
   |    |
-  |    |-- attack/         # Package per modalità di attacco
-  |    |-- defense/        # Package per modalità di difesa
+  |    |-- arguments/       # User input arguments parser (100%)
   |    |
-  |    |-- gui/            # Package per la grafica dell'applicazione
+  |    |-- attack/          # Attack modality package (0%)
+  |    |-- defense/         # Defense modality package (0%)
   |    |
-  |    |-- storage/        # Package per salvare i files (settings, output, ...)
+  |    |-- gui/             # Graphical User Interface package (100%)
   |    |
-  |    |-- utils/
+  |    |-- helpers/         # Helper methods package (100%)
+  |    |
+  |    |-- managers/        # Managers package
   |    |    |
-  |    |    |-- cluster/        # Package che fornisce metodi per condividere e ricevere info
-  |    |    |-- crypto/         # Package per criptare/decriptare/codificare/decodificare stringhe e files
-  |    |    |-- exceptions/     # Eventuali eccezioni personalizzate
-  |    |    |-- helpers/        # Package contenente helpers generici usati in più parti del programma
-  |    |    |-- history/        # Package che fornisce classi e funzioni per salvare cronologie di vario tipo
-  |    |    |-- html/           # Package che fornisce metodi per fare il parsing di un html
-  |    |    |-- requests/       # Package che fornisce metodi per effettuare richieste (anche multiple)
-  |    |    |-- settings/       # Package dedito al settaggio di parametri globali (es. IP gaming server, ...)
-  |    |    |-- sniffing/       # Package che fornisce metodi per sniffing in una rete
-  |    |    |-- sql/            # Package che fornisce metodi per sql injection
+  |    |    |-- cluster/        # Cluster managers package (0%)
+  |    |    |-- crypto/         # Encryption managers package (70%)
+  |    |    |-- injection/      # Injection managers package (60%)
+  |    |    |-- parser/         # Parser managers package (100%)
+  |    |    |-- request/        # Request managers package (70%)
+  |    |    |-- sniffer/        # Sniffer managers package (95%)
   |    |
-  |    |-- env.py          # Variabili d'ambiente
+  |    |-- services/        # Services package
+  |    |    |
+  |    |    |-- logger.py       # Logger service (100%)
+  |    |    |-- multitask.py    # MultiTask service (100%)
+  |    |    |-- serializer.py   # PickleSerializer and JsonSerializer serivces (100%)
+  |    |
+  |    |-- storage/         # Storage directory
+  |    |
+  |    |-- env.py           # Environment variables management
   |
-  |-- black-widow.py   # Eseguibile principale
-  |-- test.py          # Eseguibile di testing
+  |-- .env              # Environment variables
+  |
+  |-- black-widow.py    # Main executable
 ```
 
 ### Links:
@@ -113,4 +119,12 @@ TODO: fix the following directory tree
 * [Material Dashboard](https://github.com/creativetimofficial/material-dashboard)
 
 ### Follow Us:
-
+&ensp;
+<a href="https://www.facebook.com/offensive.black.widow" title="Facebook"><img title="Facebook" src="https://it.facebookbrand.com/wp-content/uploads/2019/04/f_logo_RGB-Hex-Blue_512.png" width="32"/></a>
+&ensp;
+<a href="https://www.instagram.com/8l4ck_w1d0w" title="Instagram"><img title="Instagram" src="https://instagram-brand.com/wp-content/uploads/2016/11/Instagram_AppIcon_Aug2017.png" width="32"/></a>
+&ensp;
+<a href="https://twitter.com/Offensive_Hub" title="Twitter"><img title="Twitter" src="https://upload.wikimedia.org/wikipedia/it/0/09/Twitter_bird_logo.png" width="32"/></a>
+&ensp;
+<a href="https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8" title="YouTube"><img title="YouTube" src="https://developers.google.com/site-assets/logo-youtube.svg" width="32"/></a>
+&ensp;
