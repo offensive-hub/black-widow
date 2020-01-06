@@ -41,7 +41,8 @@ class PcapLayerField(Node):
         'ip.addr', 'ip.host',
         'ipv6.addr', 'ipv6.host',
         'udp.port',
-        'tcp.port'
+        'tcp.port',
+        'tcp.segment_data'
     )
 
     def __init__(self, layer_field: LayerField = None, sanitized_name: str = None, parent=None, children=None):

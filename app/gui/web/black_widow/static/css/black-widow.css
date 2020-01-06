@@ -526,17 +526,35 @@ ul.accordion .inner {
 ul.accordion .inner li {
     color: rgb(159, 156, 156);
 }
-ul.accordion .inner.show {
-    /*display: block;*/
+ul.accordion .inner li.children {
+    margin-bottom: 1em;
+    margin-top: 0.7em;
+}
+ul.accordion li .inner.show {
+    padding-top: 10px;
+}
+ul.accordion li:not(.layer) .inner.show {
+    background: rgba(253, 253, 253, 0.05);
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 ul.accordion li {
     margin: 0.5em 0;
 }
-ul.accordion li > ul {
+ul.accordion li > ul:not(.inner) {
     margin-top: 15px;
+    margin-bottom: 15px;
+}
+ul.accordion li > ul.inner {
+    margin-top: 0;
+}
+ul.accordion li:not(.layer):not(.children) {
+    max-height: 60vh;
+    overflow: auto;
 }
 ul.accordion li > span {
     color: #fff;
+    word-break: break-word;
 }
 ul.accordion li a.toggle {
     width: 100%;
@@ -551,14 +569,27 @@ ul.accordion li a.toggle > .arrow {
 }
 ul.accordion li a.toggle:hover {
 }
+
 ul.accordion li.layer a.toggle {
     color: #2b0404;
-    background: linear-gradient(60deg,#5b0d0b,#6f0b08) !important;
+    background: linear-gradient(60deg,#5b0d0b,#6f0b08);
     padding: 0.75em 0.75em 8px;
     box-shadow: 0 1px 20px 0 rgba(55, 7, 7, 0.56),0 7px 10px -5px rgba(51, 11, 9, 0.91);
 }
 ul.accordion li.layer a.toggle:hover {
-    background: linear-gradient(60deg, #760006, #810000) !important;
+    background: linear-gradient(60deg, #760006, #810000);
+}
+
+ul.accordion ul.inner a.toggle {
+    margin-bottom: 0;
+    margin-top: 0;
+    background: linear-gradient(60deg, #525252, #4e4d4d);
+    color: #000;
+    box-shadow: 0 1px 20px 0 rgba(30, 26, 26, 0.56),0 7px 10px -5px rgba(53, 51, 51, 0.91);
+}
+
+ul.accordion ul.inner a.toggle:hover {
+    background: linear-gradient(60deg, #7a7a7a, #878585) !important;
 }
 
 /**********************/

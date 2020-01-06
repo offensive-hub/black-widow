@@ -204,16 +204,10 @@ const notify = function(msg, type='warning', icon='warning', from='top', align='
 };
 
 const initAccordions = function() {
-    const $arrowRight = $('<i class="material-icons arrow">keyboard_arrow_right</i>');
     const $toggle = $('.toggle');
     $toggle.each(function() {
         const $this = $(this);
-        if ($this.hasClass('accordion-initialized')) {
-            // Prevent issues caused by multiple "initAccordions()" calls
-            return;
-        }
-        $this.addClass('accordion-initialized');
-        $this.append($arrowRight);
+        $this.unbind();
         $this.click(function() {
             if ($this.next().hasClass('show')) {
                 // Hide
@@ -222,10 +216,13 @@ const initAccordions = function() {
                 $this.next().slideUp(350);
             } else {
                 // Show
-                $this.find('.arrow').html('keyboard_arrow_down');
-                $this.parent().parent().find('li .inner').removeClass('show');
-                $this.parent().parent().find('li .inner').slideUp(350);
+                const $parent = $this.parent().parent();
+                $parent.find('.arrow').html('keyboard_arrow_right');
+                const $innerParent = $parent.find('li .inner');
+                $innerParent.removeClass('show');
+                $innerParent.slideUp(350);
                 $this.next().toggleClass('show');
+                $this.find('.arrow').html('keyboard_arrow_down');
                 $this.next().slideToggle(350);
             }
         });
