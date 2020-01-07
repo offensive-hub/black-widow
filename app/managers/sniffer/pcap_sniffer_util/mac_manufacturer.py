@@ -40,9 +40,9 @@
 from math import floor
 from os.path import join
 
-from app.env import APP_STORAGE
-from app.managers.request import HttpRequest
-from app.services import Log, JsonSerializer
+from black_widow.app.env import APP_STORAGE
+from black_widow.app.managers.request import HttpRequest
+from black_widow.app.services import Log, JsonSerializer
 
 
 class MacManufacturer:

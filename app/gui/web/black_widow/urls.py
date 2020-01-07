@@ -25,7 +25,7 @@
 
 from django.urls import path, re_path
 
-from app.gui.web.settings import STATIC_URL
+from black_widow.app.gui.web.settings import STATIC_URL
 from . import views
 
 urlpatterns = [

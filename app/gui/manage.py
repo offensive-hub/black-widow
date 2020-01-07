@@ -32,12 +32,12 @@ import webbrowser
 from gunicorn.app.wsgiapp import run as gunicorn_run
 from django.core import management
 
-from app.env import EXEC_PATH, APP_NAME, APP_WEB_HOST, APP_WEB_PORT
-from app.services import MultiTask, Log
-from app.helpers.network import get_ip_address
-from app.helpers.storage import delete
-from app.helpers.util import whoami, set_owner_process
-from app.gui.web.wsgi import WEB_PACKAGE
+from black_widow.app.env import EXEC_PATH, APP_NAME, APP_WEB_HOST, APP_WEB_PORT
+from black_widow.app.services import MultiTask, Log
+from black_widow.app.helpers.network import get_ip_address
+from black_widow.app.helpers.storage import delete
+from black_widow.app.helpers.util import whoami, set_owner_process
+from black_widow.app.gui.web.wsgi import WEB_PACKAGE
 
 
 def django_gui():

@@ -35,9 +35,9 @@ from pprint import pprint
 from sqlmap.lib.utils.api import server as sqlmap_server
 from time import sleep
 
-from app.managers.request import HttpRequest
-from app.services import Log, MultiTask
-from app.helpers.network import check_socket
+from black_widow.app.managers.request import HttpRequest
+from black_widow.app.services import Log, MultiTask
+from black_widow.app.helpers.network import check_socket
 
 from .sqlmaptask import SqlmapTask
 

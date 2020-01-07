@@ -33,8 +33,8 @@ from multiprocessing.process import current_process
 from threading import current_thread
 from termcolor import colored
 
-from app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
-from app.helpers import storage
+from black_widow.app.env import APP_LOGFILE, APP_PROC, APP_DEBUG
+from black_widow.app.helpers import storage
 
 
 # Logger

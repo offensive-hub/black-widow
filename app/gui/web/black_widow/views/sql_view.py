@@ -25,7 +25,7 @@
 
 from django.shortcuts import render, redirect
 
-from app.services import Log
+from black_widow.app.services import Log
 
 from .abstract_view import AbstractView
 

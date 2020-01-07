@@ -25,8 +25,8 @@
 
 import requests
 
-from app.managers.request import HttpRequest
-from app.services import Log, JsonSerializer
+from black_widow.app.managers.request import HttpRequest
+from black_widow.app.services import Log, JsonSerializer
 
 
 class SqlmapTask:

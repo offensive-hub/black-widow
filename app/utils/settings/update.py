@@ -23,9 +23,9 @@
 *********************************************************************************
 """
 
-from app.env import APP_SETTINGS, APP_DEBUG   # Json file
-from app.services import Log, JsonSerializer
-from app.helpers import validators
+from black_widow.app.env import APP_SETTINGS, APP_DEBUG   # Json file
+from black_widow.app.services import Log, JsonSerializer
+from black_widow.app.helpers import validators
 
 from . import keys
 

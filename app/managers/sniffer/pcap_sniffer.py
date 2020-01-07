@@ -40,9 +40,9 @@ from pyshark.packet.fields import LayerField
 from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
-from app.services import Log
-from app.helpers.util import regex_is_string, root_required
-from app.helpers.validators import is_hex, is_mac, is_int, is_ip
+from black_widow.app.services import Log
+from black_widow.app.helpers.util import regex_is_string, root_required
+from black_widow.app.helpers.validators import is_hex, is_mac, is_int, is_ip
 
 from .pcap_sniffer_util import MacManufacturer
 from .pcap_sniffer_util import PcapLayerField

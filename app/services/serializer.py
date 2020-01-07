@@ -27,7 +27,7 @@ import json
 import os
 import pickle
 
-from app.helpers import storage
+from black_widow.app.helpers import storage
 
 
 class PickleSerializer:

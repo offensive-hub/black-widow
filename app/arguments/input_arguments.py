@@ -25,7 +25,8 @@
 
 import sys
 import argparse
-import app
+
+from black_widow import app
 
 
 def create_parser():

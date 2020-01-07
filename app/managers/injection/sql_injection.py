@@ -25,10 +25,10 @@
 
 from urllib.parse import urlparse
 
-from app.env import APP_STORAGE_OUT
-from app.managers.parser import HtmlParser
-from app.services import Log, JsonSerializer
-from app.helpers.util import now
+from black_widow.app.env import APP_STORAGE_OUT
+from black_widow.app.managers.parser import HtmlParser
+from black_widow.app.services import Log, JsonSerializer
+from black_widow.app.helpers.util import now
 
 from .sql_injection_util import SqlmapClient
 

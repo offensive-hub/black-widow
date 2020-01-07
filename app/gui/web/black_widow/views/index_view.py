@@ -28,7 +28,7 @@ import os
 from django.http import HttpResponseNotFound, FileResponse
 from django.shortcuts import render
 
-from app.gui.web.settings import STATICFILES_DIRS
+from black_widow.app.gui.web.settings import STATICFILES_DIRS
 
 
 def index(request):

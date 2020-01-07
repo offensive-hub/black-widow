@@ -30,10 +30,10 @@ from time import sleep
 from django.db import models
 from django.utils.timezone import now
 
-from app.gui.web.black_widow.models.abstract_model import AbstractModel
-from app.helpers import storage
-from app.helpers.util import sort_dict, pid_exists
-from app.services import MultiTask, JsonSerializer, Log
+from black_widow.app.gui.web.black_widow.models.abstract_model import AbstractModel
+from black_widow.app.helpers import storage
+from black_widow.app.helpers.util import sort_dict, pid_exists
+from black_widow.app.services import MultiTask, JsonSerializer, Log
 
 
 class SniffingJobModel(AbstractModel):

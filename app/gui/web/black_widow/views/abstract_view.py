@@ -29,9 +29,9 @@ import math
 from os.path import join
 from django.views.generic import TemplateView
 
-from app.helpers.util import is_listable, timestamp
-from app.helpers import storage
-from app.env import APP_TMP
+from black_widow.app.helpers.util import is_listable, timestamp
+from black_widow.app.helpers import storage
+from black_widow.app.env import APP_TMP
 
 
 class AbstractView(TemplateView):

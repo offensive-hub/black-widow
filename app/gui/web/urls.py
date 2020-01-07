@@ -38,7 +38,7 @@
 
 from django.urls import include, path
 
-from app.gui.web.wsgi import WEB_PACKAGE
+from black_widow.app.gui.web.wsgi import WEB_PACKAGE
 
 
 urlpatterns = [

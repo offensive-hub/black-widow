@@ -42,10 +42,10 @@ import os
 import signal
 import threading
 
-from app.env import APP_TMP
-from app.services import Log
-from app.helpers import storage
-from app.helpers.util import is_listable, timestamp
+from black_widow.app.env import APP_TMP
+from black_widow.app.services import Log
+from black_widow.app.helpers import storage
+from black_widow.app.helpers.util import is_listable, timestamp
 
 
 # Classe sfruttata sia da MultiThreading che da MultiProcessing

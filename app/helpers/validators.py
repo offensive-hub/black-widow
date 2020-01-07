@@ -27,7 +27,7 @@
 
 import re
 
-from app.helpers.util import regex_is_string
+from black_widow.app.helpers.util import regex_is_string
 
 
 def is_ip(ip_address: str) -> bool:

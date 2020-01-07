@@ -29,9 +29,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from app.gui.web.black_widow.models import SniffingJobModel
-from app.services import Log
-from app.helpers import network, util
+from black_widow.app.gui.web.black_widow.models import SniffingJobModel
+from black_widow.app.services import Log
+from black_widow.app.helpers import network, util
 
 from .abstract_sniffing_view import AbstractSniffingView
 

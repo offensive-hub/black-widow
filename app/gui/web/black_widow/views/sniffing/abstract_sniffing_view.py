@@ -25,13 +25,13 @@
 
 import os
 
-from app.env import APP_STORAGE_OUT
-from app.helpers import storage, util
-from app.managers.sniffer import PcapSniffer
-from app.services import JsonSerializer, MultiTask
+from black_widow.app.env import APP_STORAGE_OUT
+from black_widow.app.helpers import storage, util
+from black_widow.app.managers.sniffer import PcapSniffer
+from black_widow.app.services import JsonSerializer, MultiTask
 
-from app.gui.web.black_widow.models import SniffingJobModel
-from app.gui.web.black_widow.views.abstract_view import AbstractView
+from black_widow.app.gui.web.black_widow.models import SniffingJobModel
+from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 
 
 class AbstractSniffingView(AbstractView):

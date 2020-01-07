@@ -30,7 +30,7 @@ import subprocess
 
 from datetime import datetime
 
-from app.env import IGNORE_NON_ROOT
+from black_widow.app.env import IGNORE_NON_ROOT
 
 
 def now() -> str:

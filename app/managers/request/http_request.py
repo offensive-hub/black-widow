@@ -28,9 +28,9 @@ import requests
 from json.decoder import JSONDecodeError
 from simplejson.errors import JSONDecodeError as SimpleJSONDecodeError
 
-from app.env import APP_VERSION, APP_NAME, APP_DEBUG
-from app.services import Log
-from app.helpers.validators import is_url
+from black_widow.app.env import APP_VERSION, APP_NAME, APP_DEBUG
+from black_widow.app.services import Log
+from black_widow.app.helpers.validators import is_url
 
 
 class HttpRequest:
