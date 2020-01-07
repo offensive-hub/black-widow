@@ -590,6 +590,7 @@ ul.accordion .val-in {
     display: inline-flex;
     max-height: 60vh;
     overflow: auto;
+    font-weight: normal;
 }
 ul.accordion li a.toggle {
     width: 100%;
