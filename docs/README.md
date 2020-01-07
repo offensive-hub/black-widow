@@ -2,7 +2,7 @@
 description: black-widow package index
 ---
 
-# docs
+# index
 
 * [arguments](https://github.com/offensive-hub/black-widow/tree/0fbcf5d8ad2e5c34936ceefb71aba999bc4b1abf/docs/arguments.md)
 * [env](https://github.com/offensive-hub/black-widow/tree/0fbcf5d8ad2e5c34936ceefb71aba999bc4b1abf/docs/env.md)
