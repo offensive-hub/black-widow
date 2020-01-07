@@ -39,7 +39,8 @@ class Sql:
         SQL View
         """
         name = 'sql-injection'
-        template_name = 'sql/settings.html'
+        # template_name = 'sql/settings.html'
+        template_name = 'error/not_implemented.html'
 
         def get(self, request, *args, **kwargs):
             """
@@ -64,7 +65,8 @@ class Sql:
         Injection View
         """
         name = 'sniffing'
-        template_name = 'sql/inject.html'
+        # template_name = 'sql/inject.html'
+        template_name = 'error/not_implemented.html'
 
         def get(self, request, *args, **kwargs):
             """
