@@ -2,7 +2,7 @@
 description: Graphical User Interface
 ---
 
-# GUI
+# gui
 
 ## **black-widow** provides a very modern, simple and fast graphical user interface.
 
