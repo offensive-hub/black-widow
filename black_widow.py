@@ -47,6 +47,7 @@ def make_temp_dir():
 
 # Startup
 def init(app_type):
+    make_temp_dir()
     app.gui.django_cmd('migrate')
     app.services.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
     app.services.Log.info('DEBUG is ' + str(app.env.APP_DEBUG))
@@ -96,14 +97,9 @@ def main_cmd(arguments):
 # Main function generic app
 def main():
     arguments = app.arguments.get_arguments()
-    make_temp_dir()
     if arguments.gui:
         main_gui()
     elif arguments.test:
         main_test()
     else:
         main_cmd(arguments)
-
-
-if __name__ == "__main__":
-    main()
