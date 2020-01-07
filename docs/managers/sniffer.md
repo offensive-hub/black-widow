@@ -2,5 +2,5 @@
 description: Packet sniffing manager
 ---
 
-# Sniffer
+# sniffer
 

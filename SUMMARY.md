@@ -9,7 +9,7 @@
     * [injection](docs/managers/injection.md)
     * [parser](docs/managers/parser.md)
     * [request](docs/managers/request.md)
-    * [Sniffer](docs/managers/sniffer.md)
+    * [sniffer](docs/managers/sniffer.md)
   * [services](docs/services/README.md)
     * [logger](docs/services/logger.md)
     * [multitask](docs/services/multitask.md)
@@ -19,5 +19,5 @@
     * [storage](docs/helpers/storage.md)
     * [util](docs/helpers/util.md)
     * [validators](docs/helpers/validators.md)
-  * [env](docs/env.md)
+  * [env.py](docs/env.py.md)
 
