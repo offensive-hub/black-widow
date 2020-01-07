@@ -1,14 +1,9 @@
 # Table of contents
 
-* [black-widow](docs/README.md)
-  * [arguments](docs/arguments.md)
-  * [env](docs/env.md)
+* [Introduction](README.md)
+* [docs](docs/README.md)
   * [gui](docs/gui.md)
-  * [helpers](docs/helpers/README.md)
-    * [network](docs/helpers/network.md)
-    * [storage](docs/helpers/storage.md)
-    * [util](docs/helpers/util.md)
-    * [validators](docs/helpers/validators.md)
+  * [arguments](docs/arguments.md)
   * [managers](docs/managers/README.md)
     * [crypto](docs/managers/crypto.md)
     * [injection](docs/managers/injection.md)
@@ -19,4 +14,10 @@
     * [logger](docs/services/logger.md)
     * [multitask](docs/services/multitask.md)
     * [serializer](docs/services/serializer.md)
+  * [helpers](docs/helpers/README.md)
+    * [network](docs/helpers/network.md)
+    * [storage](docs/helpers/storage.md)
+    * [util](docs/helpers/util.md)
+    * [validators](docs/helpers/validators.md)
+  * [env](docs/env.md)
 
