@@ -10,7 +10,7 @@ Unlike most cyber security and penetration testing tools, black-widow has a pret
 
 ![](../.gitbook/assets/settings_02.jpg)
 
-The package [app.gui](https://github.com/offensive-hub/black-widow/tree/master/app/gui) implements a complete **Django** application which interface with **black-widow** [managers](https://github.com/offensive-hub/black-widow/tree/d27ab206e1f23e2c9da5f737cc148b0776b30abb/docs/managers/README.md).
+The package [app.gui](https://github.com/offensive-hub/black-widow/tree/master/app/gui) implements a complete **Django** application which interface with **black-widow** [managers](managers/).
 
 The Django application use a [SQLight](https://sqlite.org/index.html) database to save the necessary data. That database is stored on default black-widow [storage](https://github.com/offensive-hub/black-widow/tree/master/app/storage) path.
 
