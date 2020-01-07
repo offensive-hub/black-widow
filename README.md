@@ -32,7 +32,7 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### ![DOCKER\_IMAGE](https://docs.docker.com/favicons/docs@2x.ico) Docker installation
+### Docker installation
 
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 2. Run docker:
@@ -40,7 +40,7 @@ black-widow provides easy ways to execute many kinds of information gatherings a
    * GUI: `docker run -d -p 8095:80 --rm offensive/black-widow -g`
      * Than visit: [http://localhost:8095](http://localhost:8095/)
 
-### Default installation
+### Manual installation
 
 1. `sudo apt-get update && sudo apt-get install tidy clang tshark`
 2. `git clone git@github.com:offensive-hub/black-widow.git`
