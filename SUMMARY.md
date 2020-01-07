@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Introduction](README.md)
+* [black-widow](README.md)
 * [Docs](docs/README.md)
   * [gui](docs/gui.md)
   * [arguments](docs/arguments.md)
