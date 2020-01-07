@@ -120,5 +120,5 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 ### Follow Us:
 
-  [![Python 3.x](.gitbook/assets/facebook-icon.png)](https://www.facebook.com/offensive.black.widow)   [![Python 3.x](.gitbook/assets/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w)   [![Python 3.x](.gitbook/assets/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![Python 3.x](.gitbook/assets/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
+  [![Facebook](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow)   [![Instagram](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w)   [![Twitter](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![YouTube](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
 
