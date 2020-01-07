@@ -24,6 +24,7 @@
 """
 
 from os.path import dirname, join, isfile
+from pathlib import Path
 
 # ------- Black-widow files ------- #
 APP_PATH = dirname(__file__)    # /path/to/app
@@ -87,7 +88,8 @@ APP_PROC = 'black-widow'
 # App files
 APP_MAIN_FILENAME = APP_PROC + '.py'
 APP_LOGFILE = join(APP_TMP, APP_PROC + '.log')
-APP_STORAGE = join(APP_PATH, 'storage')
+# APP_STORAGE = join(APP_PATH, 'storage')
+APP_STORAGE = join(str(Path.home()), 'black_widow')
 APP_STORAGE_OUT = join(APP_STORAGE, 'out')
 APP_WEB_ROOT = join(APP_PATH, 'gui', 'web')
 APP_WEB = join(APP_WEB_ROOT, 'black_widow')
