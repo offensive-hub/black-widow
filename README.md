@@ -1,6 +1,12 @@
-# Black Widow
+---
+description: >-
+  black-widow: the most useful, powerful and complete offensive penetration
+  testing tool
+---
 
-[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow) 
+# black-widow
+
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
 ![image](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/black-widow-img.png)
 
@@ -119,11 +125,6 @@ It provides easy ways to execute many kinds of information gatherings and attack
 * [Material Dashboard](https://github.com/creativetimofficial/material-dashboard)
 
 ### Follow Us:
-&ensp;
-[![Python 3.x](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow) 
-&ensp;
-[![Python 3.x](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w) 
-&ensp;
-[![Python 3.x](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub) 
-&ensp;
-[![Python 3.x](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8) 
+
+  [![Python 3.x](.gitbook/assets/facebook-icon.png)](https://www.facebook.com/offensive.black.widow)   [![Python 3.x](.gitbook/assets/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w)   [![Python 3.x](.gitbook/assets/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![Python 3.x](.gitbook/assets/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
+
