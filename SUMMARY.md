@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Introduction](README.md)
-* [index](docs/README.md)
+* [Docs](docs/README.md)
   * [gui](docs/gui.md)
   * [arguments](docs/arguments.md)
   * [managers](docs/managers/README.md)
