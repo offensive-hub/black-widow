@@ -1,4 +1,4 @@
-# Introduction
+# black-widow
 
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
@@ -14,7 +14,7 @@ It provides easy ways to execute many kinds of information gatherings and attack
 * Written in Python
 * Continuously updated and extended
 
-### Features:
+### Features
 
 * [x] Localhost Web GUI
 * [x] Sniffing
@@ -28,7 +28,7 @@ It provides easy ways to execute many kinds of information gatherings and attack
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### ![DOCKER\_IMAGE](https://docs.docker.com/favicons/docs@2x.ico) Docker installation:
+### ![DOCKER\_IMAGE](https://docs.docker.com/favicons/docs@2x.ico) Docker installation
 
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 2. Run docker:
@@ -36,7 +36,7 @@ It provides easy ways to execute many kinds of information gatherings and attack
    * GUI: `docker run -d -p 8095:80 --rm offensive/black-widow -g`
      * Than visit: [http://localhost:8095](http://localhost:8095/)
 
-### Default installation:
+### Default installation
 
 1. `sudo apt-get update && sudo apt-get install tidy clang tshark`
 2. `git clone git@github.com:offensive-hub/black-widow.git`
@@ -45,19 +45,19 @@ It provides easy ways to execute many kinds of information gatherings and attack
 5. `./black-widow.py --django migrate`
 6. `sudo ./black-widow.py <arguments>`
 
-### Run:
+### Run
 
 * **GUI:** `sudo ./black-widow.py -g`
 * **Command line:** `sudo ./black-widow.py <arguments>`
 
-### Debug:
+### Debug
 
 * Run django \(examples\):
   * `./black-widow.py --django runserver`
   * `./black-widow.py --django help`
   * `./black-widow.py --django "help createsuperuser"`
 
-### Project layout:
+### Project layout
 
 ```text
 [root]
@@ -97,28 +97,28 @@ It provides easy ways to execute many kinds of information gatherings and attack
   |-- black-widow.py    # Main executable
 ```
 
-### Links:
+### Links
 
 * Homepage: [https://black-widow.io](https://black-widow.io)
 * GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
 * Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 * Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
 
-### Contacts:
+### Contacts
 
 * [offensive-hub@protonmail.com](mailto:offensive-hub@protonmail.com)
 
-### Authors:
+### Authors
 
 * [Fabrizio Fubelli](https://fabrizio.fubelli.org)
 
-### Thanks to:
+### Thanks to
 
 * [PyShark](https://github.com/KimiNewt/pyshark)
 * [Sqlmap](https://github.com/sqlmapproject/sqlmap)
 * [Material Dashboard](https://github.com/creativetimofficial/material-dashboard)
 
-### Follow Us:
+### Follow Us
 
   [![Facebook](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow)   [![Instagram](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w)   [![Twitter](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![YouTube](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
 
