@@ -1,6 +1,9 @@
-# index
+---
+description: black-widow project index
+---
 
-* [index](summary.md)
+# Index
+
 * [arguments](arguments.md)
 * [env](env.md)
 * [gui](gui.md)
