@@ -1,3 +1,9 @@
+---
+description: >-
+  black-widow is one of the most useful, powerful and complete offensive
+  penetration testing tool
+---
+
 # black-widow
 
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
@@ -6,9 +12,7 @@
 
 ## Offensive penetration testing tool \(Open Source\)
 
-**black-widow** is one of the most useful, powerful and complete offensive penetration testing tool.
-
-It provides easy ways to execute many kinds of information gatherings and attacks.
+black-widow provides easy ways to execute many kinds of information gatherings and attacks.
 
 * Fully Open Source
 * Written in Python
@@ -120,5 +124,5 @@ It provides easy ways to execute many kinds of information gatherings and attack
 
 ### Follow Us
 
-  [![Facebook](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow)   [![Instagram](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w)   [![Twitter](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![YouTube](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
+[![Facebook](.gitbook/assets/facebook-icon.png)](https://www.facebook.com/offensive.black.widow) [![Instagram](.gitbook/assets/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w) [![Twitter](.gitbook/assets/twitter-icon.png)](https://twitter.com/Offensive_Hub) [![YouTube](.gitbook/assets/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
 
