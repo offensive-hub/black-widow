@@ -1,8 +1,8 @@
 ---
-description: black-widow project index
+description: black-widow package index
 ---
 
-# Index
+# package index
 
 * [arguments](arguments.md)
 * [env](env.md)
