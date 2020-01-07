@@ -6,11 +6,11 @@ description: Graphical User Interface
 
 ## **black-widow** provides a very modern, simple and fast graphical user interface.
 
-Unlike most cyber security and penetration testing tools, black-widow has a pretty **Web GUI** built with [**Django**](https://www.djangoproject.com/) and served by the integrated ****[**Gunicorn Server**](https://gunicorn.org/).
+Unlike most cyber security and penetration testing tools, black-widow has a pretty **Web GUI** built with [**Django**](https://www.djangoproject.com/) and served by the integrated [**Gunicorn Server**](https://gunicorn.org/).
 
-![](../.gitbook/assets/settings_02.jpg)
+![](.gitbook/assets/settings_02.jpg)
 
-The package [app.gui](https://github.com/offensive-hub/black-widow/tree/master/app/gui) implements a complete **Django** application which interface with **black-widow** [managers](managers/).
+The package [app.gui](https://github.com/offensive-hub/black-widow/tree/master/app/gui) implements a complete **Django** application which interface with **black-widow** [managers](https://github.com/offensive-hub/black-widow/tree/d27ab206e1f23e2c9da5f737cc148b0776b30abb/docs/managers/README.md).
 
 The Django application use a [SQLight](https://sqlite.org/index.html) database to save the necessary data. That database is stored on default black-widow [storage](https://github.com/offensive-hub/black-widow/tree/master/app/storage) path.
 
