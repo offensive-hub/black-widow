@@ -33,7 +33,7 @@ PRIVATE_ENV_FILE = join(ROOT_PATH, '.env')
 
 # ----- Editable environments ----- #
 APP_DEBUG = False
-APP_WEB_HOST = '0.0.0.0'
+APP_WEB_HOST = '127.0.0.1'
 APP_WEB_PORT = 8295
 APP_TMP = '/tmp/black-widow'
 IGNORE_NON_ROOT = False

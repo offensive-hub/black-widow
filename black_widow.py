@@ -98,7 +98,5 @@ def main():
     arguments = app.arguments.get_arguments()
     if arguments.gui:
         main_gui()
-    elif arguments.test:
-        main_test()
     else:
         main_cmd(arguments)
