@@ -8,7 +8,7 @@ description: Graphical User Interface
 
 Unlike most cyber security and penetration testing tools, black-widow has a pretty **Web GUI** built with [**Django**](https://www.djangoproject.com/) and served by the integrated [**Gunicorn Server**](https://gunicorn.org/).
 
-![](.gitbook/assets/settings_02.jpg)
+![](../.gitbook/assets/settings_02.jpg)
 
 The package [app.gui](https://github.com/offensive-hub/black-widow/tree/master/app/gui) implements a complete **Django** application which interface with **black-widow** [managers](https://github.com/offensive-hub/black-widow/tree/d27ab206e1f23e2c9da5f737cc148b0776b30abb/docs/managers/README.md).
 

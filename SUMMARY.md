@@ -1,7 +1,7 @@
 # Table of contents
 
 * [black-widow](README.md)
-* [package index](summary.md)
+* [package index](docs-1.md)
 * [docs](docs/README.md)
   * [arguments](docs/arguments.md)
   * [env](docs/env.md)
