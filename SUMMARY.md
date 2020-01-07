@@ -1,8 +1,6 @@
 # Table of contents
 
-* [black-widow](README.md)
-* [package index](summary.md)
-* [docs](docs/README.md)
+* [black-widow](docs/README.md)
   * [arguments](docs/arguments.md)
   * [env](docs/env.md)
   * [gui](docs/gui.md)

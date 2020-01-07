@@ -127,3 +127,13 @@ It provides easy ways to execute many kinds of information gatherings and attack
 [![Python 3.x](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub) 
 &ensp;
 [![Python 3.x](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8) 
+
+### Follow Us:
+&ensp;
+[![Python 3.x](resources/social/facebook-icon.png)](https://www.facebook.com/offensive.black.widow) 
+&ensp;
+[![Python 3.x](resources/social/instagram-icon.png)](https://www.instagram.com/8l4ck_w1d0w) 
+&ensp;
+[![Python 3.x](resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub) 
+&ensp;
+[![Python 3.x](resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8) 
