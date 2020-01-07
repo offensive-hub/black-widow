@@ -33,7 +33,7 @@ PRIVATE_ENV_FILE = join(ROOT_PATH, '.env')
 # ----- Editable environments ----- #
 APP_DEBUG = False
 APP_WEB_HOST = '0.0.0.0'
-APP_WEB_PORT = 80
+APP_WEB_PORT = 8295
 APP_TMP = '/tmp/black-widow'
 IGNORE_NON_ROOT = False
 FLAG_REGEX = '[A-Z0-9]{31}='

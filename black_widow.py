@@ -48,7 +48,6 @@ def make_temp_dir():
 # Startup
 def init(app_type):
     make_temp_dir()
-    app.gui.django_cmd('migrate')
     app.services.Log.info(app.env.APP_NAME + ' ' + str(app_type) + ' started, PID=' + str(os.getpid()))
     app.services.Log.info('DEBUG is ' + str(app.env.APP_DEBUG))
 

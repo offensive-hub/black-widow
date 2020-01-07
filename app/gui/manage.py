@@ -45,11 +45,12 @@ def django_gui():
     bind_host = _get_bind_socket()
     Log.info("Starting " + str(APP_NAME) + ' GUI')
     sys.argv = [sys.argv[0], 'web.wsgi', '-b', bind_host]
+    django_cmd(['migrate'])
     _launch_browser(bind_host)
     gunicorn_run()
 
 
-def django_cmd(args):
+def django_cmd(args: list):
     # Go to "web" directory
     if 'runserver' not in args:
         os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
