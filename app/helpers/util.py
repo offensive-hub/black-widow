@@ -140,7 +140,7 @@ def is_root() -> bool:
     if IGNORE_NON_ROOT:
         return True
     user = whoami(False)
-    return user['uid'] == 0
+    return user['uid'] == 0 or user['sudo']
 
 
 def root_required():
