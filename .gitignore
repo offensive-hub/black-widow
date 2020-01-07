@@ -115,3 +115,6 @@ ctf.py
 
 # docker useful scripts
 docker/docker-*.sh
+
+# packaging files
+/__init__.py
