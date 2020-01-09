@@ -2,7 +2,7 @@
 description: black-widow package index
 ---
 
-# Docs
+# Index
 
 * [gui](gui.md)
 * [arguments](arguments.md)
