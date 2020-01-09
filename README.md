@@ -32,7 +32,11 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### Docker installation
+### ![](resources/logos/pypi.png) PyPI installation
+
+    sudo pip3 install black-widow
+
+### ![](resources/logos/docker-hub.png) Docker installation
 
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 2. Run docker:
@@ -128,12 +132,12 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 
 > # 1st level Sponsors
 >
->  [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=300)](https://offensivehub.net)
+>  [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=300)](https://offensivehub.org)
 
 > ## 2nd level Sponsors
 >
->   [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=125)](https://offensivehub.net)
+>   [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=125)](https://offensivehub.org)
 
 > ### 3th level Sponsors
 >
->   [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=35)](https://offensivehub.net)
+>   [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=35)](https://offensivehub.org)
