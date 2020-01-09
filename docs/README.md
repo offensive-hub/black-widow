@@ -2,7 +2,7 @@
 description: Documentation index
 ---
 
-# black-widow documentation
+# Docs
 
 ### Documentation Website: [https://docs.black-widow.io](https://docs.black-widow.io/docs)
 
