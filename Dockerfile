@@ -29,7 +29,7 @@ RUN pip3 install --no-cache-dir -r ./black_widow/docker/alpine_requirements.txt 
 
 RUN mv ./black_widow/docker/* ./
 
-RUN touch ./black_widow/__init__.py
+RUN echo -e 'from .black_widow import main\n' > ./black_widow/__init__.py
 
 # Copy docker environments
 COPY .env.docker ./black_widow/.env
