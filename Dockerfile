@@ -27,15 +27,15 @@ COPY . ./black_widow/
 # Install required pip modules
 RUN pip3 install --no-cache-dir -r ./black_widow/docker/alpine_requirements.txt -U && rm ./black_widow/docker/alpine_requirements.txt
 
-RUN mv ./black_widow/docker/* ./
+RUN mv ./black_widow/docker/* ./ && rm -rf ./black_widow/docker
 
+# black_widow needs to be a package to execute gunicorn on docker
 RUN echo -e 'from .black_widow import main\n' > ./black_widow/__init__.py
 
 # Copy docker environments
 COPY .env.docker ./black_widow/.env
 
 # Create a symbolic link in a global environments folder
-# RUN ln -s /usr/share/black-widow/black-widow.py /usr/bin/black-widow
 RUN ln -s /usr/share/offensive-hub/black-widow.sh /usr/bin/black-widow
 
 # Clean

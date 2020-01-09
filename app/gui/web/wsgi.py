@@ -35,9 +35,9 @@ from os.path import dirname
 from django.core.wsgi import get_wsgi_application
 
 
-WEB_PACKAGE = 'app.gui.web'
+WEB_PACKAGE = 'black_widow.app.gui.web'
 
-root_path = dirname(dirname(dirname(dirname(__file__))))    # to access at "app" package
+root_path = dirname(dirname(dirname(dirname(dirname(__file__)))))    # to access at "black_widow" package
 sys.path.insert(0, root_path)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", WEB_PACKAGE + ".settings")
