@@ -8,7 +8,7 @@ description: >-
 
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
-![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/black-widow-img.png)
+![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/black-widow.jpg)
 
 ## Offensive penetration testing tool \(Open Source\)
 
@@ -32,11 +32,11 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### ![](resources/logos/pypi.png) PyPI installation
+### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png) PyPI installation
 
     sudo pip3 install black-widow
 
-### ![](resources/logos/docker-hub.png) Docker installation
+### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/docker-hub.png) Docker installation
 
 1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
 2. Run docker:
