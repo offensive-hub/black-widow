@@ -1,1 +1,0 @@
-from .sniffing import SniffingJobModel

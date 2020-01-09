@@ -97,21 +97,11 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs documentation
-/site
-
 # mypy
 .mypy_cache/
 
 # IntelliJ
 .idea
 
-# ctf
-ctf
-ctf.py
-
 # old files
 *.old.*
-
-# docker useful scripts
-docker/docker-*.sh
