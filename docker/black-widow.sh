@@ -15,6 +15,9 @@ do
     shift
 done
 
+# Executes migrations
+./black-widow.py --django migrate
+
 # shellcheck disable=SC2039
 if ( "${gui}" );then
     cd black_widow/app/gui || exit 1
