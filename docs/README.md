@@ -1,8 +1,10 @@
 ---
-description: black-widow package index
+description: Documentation index
 ---
 
-# Index
+# black-widow documentation
+
+### Documentation Website: [https://docs.black-widow.io](https://docs.black-widow.io/docs)
 
 * [gui](gui.md)
 * [arguments](arguments.md)

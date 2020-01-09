@@ -1,7 +1,7 @@
 # Table of contents
 
 * [black-widow](README.md)
-* [Index](docs/README.md)
+* [black-widow documentation](docs/README.md)
   * [gui](docs/gui.md)
   * [arguments](docs/arguments.md)
   * [managers](docs/managers/README.md)
