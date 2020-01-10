@@ -38,6 +38,8 @@ class HttpRequest:
     HttpRequest Manager
     """
 
+    DEFAULT_TIMEOUT = 30    # seconds
+
     class Type:
         """ Request Types """
         GET = 'get'
@@ -63,7 +65,8 @@ class HttpRequest:
             request_type: str = Type.GET,
             data=None,
             json: dict or list = None,
-            headers: dict = None
+            headers: dict = None,
+            timeout: int = DEFAULT_TIMEOUT
     ) -> requests.Response or None:
         """
         Make a request to chosen url
@@ -73,6 +76,7 @@ class HttpRequest:
             object to send in the body of the :class:`Request`
         :param json: (optional) json data to send in the body of the :class:`Request`
         :param headers: The headers to send
+        :param timeout: The request timeout
         :return The response of request, or None (if the request fail)
         """
         if headers is None:
@@ -91,15 +95,15 @@ class HttpRequest:
             return None
         try:
             if request_type == HttpRequest.Type.GET:
-                response = requests.get(url, data, headers=req_headers)
+                response = requests.get(url, data, headers=req_headers, timeout=timeout)
             elif request_type == HttpRequest.Type.POST:
-                response = requests.post(url, data, json, headers=req_headers)
+                response = requests.post(url, data, json, headers=req_headers, timeout=timeout)
             elif request_type == HttpRequest.Type.PUT:
-                response = requests.put(url, data, headers=req_headers)
+                response = requests.put(url, data, headers=req_headers, timeout=timeout)
             elif request_type == HttpRequest.Type.PATCH:
-                response = requests.patch(url, data, headers=req_headers)
+                response = requests.patch(url, data, headers=req_headers, timeout=timeout)
             elif request_type == HttpRequest.Type.DELETE:
-                response = requests.delete(url, headers=req_headers)
+                response = requests.delete(url, headers=req_headers, timeout=timeout)
             else:
                 Log.error(str(request_type) + ' is not a valid request type!')
                 return None

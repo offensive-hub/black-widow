@@ -98,7 +98,7 @@ class MacManufacturer:
         return None
 
     def _update_manufacturer_dict(self):
-        manufacturer_response = HttpRequest.request(MacManufacturer._MANUFACTURERS_URL)
+        manufacturer_response = HttpRequest.request(MacManufacturer._MANUFACTURERS_URL, timeout=10)
         if manufacturer_response is None:
             return
         if manufacturer_response.text is None:
