@@ -71,7 +71,7 @@ class HtmlParser(PyHTMLParser, ABC):
     _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img']
 
     def __init__(self, relevant: bool = False):
-        super().__init__(self)
+        super().__init__()
         self.tags = {}
         self.relevant = relevant
         self.queue_tag_ignored = []
