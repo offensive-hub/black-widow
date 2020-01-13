@@ -87,6 +87,9 @@ def main_cmd(arguments):
         if arguments.sql_url is None:
             print('Specify an url! (eg. --sql-url=https://black-widow.io)\n')
             sys.exit(1)
+        if not app.helpers.validators.is_url(arguments.sql_url):
+            print('"' + arguments.sql_url + '" is not a valid URL!\n')
+            sys.exit(1)
         if arguments.sql_deep:
             app.managers.injection.SqlInjection.deep_inject_form(arguments.sql_url, arguments.sql_depth)
         else:
