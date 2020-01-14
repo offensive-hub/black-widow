@@ -35,6 +35,9 @@ RUN echo -e 'from .black_widow import main\n' > ./black_widow/__init__.py
 # Copy docker environments
 COPY .env.docker ./black_widow/.env
 
+# Create the symbolic link for gunicorn
+RUN ln -s ./black_widow/app/gui/web/wsgi.py ./black_widow/app/gui/web.wsgi
+
 # Create a symbolic link in a global environments folder
 RUN ln -s /usr/share/offensive-hub/black-widow.sh /usr/bin/black-widow
 
