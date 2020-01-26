@@ -32,11 +32,25 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation
+### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation (ubutu/debian)
 
     sudo add-apt-repository ppa:offensive-hub/black-widow
     sudo apt-get update
     sudo apt-get install black-widow
+
+### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation (other distro)
+
+ 1) Put the following text on `/etc/apt/sources.list.d/black-widow.list` file:
+    ```text
+    deb http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu focal main 
+    deb-src http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu focal main 
+    ```
+ 2) Execute the following commands:
+    ```text
+    sudo sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5D26C76613E84EA9
+    sudo apt-get update
+    sudo apt-get install black-widow
+    ```
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png)   PyPI installation
 
