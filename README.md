@@ -34,7 +34,9 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation
 
-    sudo apt-add-repository 'http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu xenial main'
+    sudo add-apt-repository ppa:offensive-hub/black-widow
+    sudo apt-get update
+    sudo apt-get install black-widow
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png)   PyPI installation
 
