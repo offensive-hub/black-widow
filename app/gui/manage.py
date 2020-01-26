@@ -70,7 +70,7 @@ def _launch_browser(bind_host: str):
         """
         set_owner_process(user)
         Log.info('Launching browser with User: ' + str(whoami(False)))
-        webbrowser.open(bind_host)
+        webbrowser.open('http://' + bind_host)
         Log.success('Web browser opened')
 
     pidfile = MultiTask.multiprocess(browser_target, asynchronous=True, cpu=1)
