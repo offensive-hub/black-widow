@@ -32,6 +32,10 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
+### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation
+
+    sudo apt-add-repository 'http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu xenial main'
+
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png)   PyPI installation
 
     sudo pip3 install black-widow
