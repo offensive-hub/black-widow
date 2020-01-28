@@ -24,8 +24,10 @@
 """
 
 import getpass
+import random
 import re
 import os
+import string
 import subprocess
 
 from datetime import datetime
@@ -116,6 +118,25 @@ def print_dict(dictionary: dict, depth: int = 0):
         else:
             print(space + ' [' + str(type(value)) + '] ' + str(value))
 
+
+def rand_str(special: bool = True, length: int = 10) -> str:
+    """
+    Generates a random string
+    :param special: True if you want to include special chars, otherwise False
+    :param length: The generated string length
+    :return: A random string
+    """
+    if length <= 1:
+        return ''
+    chars = string.ascii_letters + string.digits + string.punctuation
+    if special:
+        chars += string.punctuation
+    return ''.join(random.choice(chars) for _ in range(length))
+
+
+#################
+# Process Utils #
+#################
 
 def pid_exists(pid: int) -> bool:
     """

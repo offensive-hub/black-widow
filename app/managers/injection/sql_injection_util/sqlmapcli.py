@@ -38,6 +38,7 @@ from time import sleep
 from black_widow.app.managers.request import HttpRequest
 from black_widow.app.services import Log, MultiTask
 from black_widow.app.helpers.network import check_socket
+from black_widow.app.helpers.util import rand_str
 
 from .sqlmaptask import SqlmapTask
 
@@ -107,12 +108,15 @@ class SqlmapClient:
             page_forms: list    # The forms in page returned by url
             for page_form in page_forms:
                 page_form: dict    # The attributes and inputs of form
-                action = page_form.get('action')
-                inputs = page_form.get('inputs')
-                method = page_form.get('method')
+                action: str = page_form.get('action')
+                inputs: dict = page_form.get('inputs')
+                method: str = page_form.get('method')
+
+                if 'password' not in inputs:
+                    continue
 
                 task_options = {
-                    # 'dbms': 'MySQL',
+                    'dbms': 'MySQL',
                     'cookie': cookies,
                     'agent': HttpRequest.default_agent(),
                     'referer': url,
@@ -125,12 +129,15 @@ class SqlmapClient:
 
                 csrf_token = SqlmapClient.__get_csrf_token(inputs)
                 if csrf_token is not None:
+                    csrf_token_name = csrf_token.get('name')
                     task_options.update({
                         'csrfUrl': url,
                         'csrfMethod': HttpRequest.Type.GET,
-                        'csrfToken': csrf_token,
+                        'csrfToken': csrf_token_name,
                     })
 
+                # pprint(task_options)
+                # exit(0)
                 # Foreach form, will created a new SqlmapTask
                 sqlmap_task = SqlmapClient._task_new()
                 sqlmap_task.option_set(task_options)
@@ -177,13 +184,33 @@ class SqlmapClient:
         return SqlmapTask.task_new(client.base_url)
 
     @staticmethod
-    def __get_csrf_token(inputs: dict):
-        for input in inputs:
-            print(input)
-        exit(0)
+    def __get_csrf_token(inputs: dict) -> dict:
+        csrf_field = None
+        for name, input_field in inputs.items():
+            if input_field.get('type') != 'hidden':
+                continue
+            name_lower: str = name.lower()
+            if 'csrf' in name_lower:
+                return input_field
+            if 'token' in name_lower:
+                csrf_field = input_field
+        return csrf_field
 
     @staticmethod
-    def __get_data(inputs: dict):
-        for input in inputs:
-            print(input)
-        exit(0)
+    def __get_data(inputs: dict) -> str:
+        data = ''
+        for name, input_field in inputs.items():
+            input_type = input_field.get('type').lower()
+            value = input_field.get('value')
+            if value is None or value == '':
+                if input_type == 'email':
+                    value = 'email@example.com'
+                elif type == 'password':
+                    value = rand_str()
+                else:
+                    value = '1'
+            data += name + '=' + value + '&'
+        if len(data) > 0:
+            # Remove last "&"
+            data = data[0:-1]
+        return data

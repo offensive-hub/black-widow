@@ -62,5 +62,6 @@ databases.
 
 
 ## Database Query
+
 A database query is a way to interact with a database.
 Through that, you can get, edit and delete a database records.
