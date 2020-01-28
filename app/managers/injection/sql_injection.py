@@ -39,26 +39,26 @@ class SqlInjection:
     """
 
     @staticmethod
-    def inject_form(url=None, html=None):
+    def inject_form(url=None, html=None) -> dict:
         """
         Search a form in the page returned by url (or inside the html).
         :param url: str The url to visit (or None)
         :param html: str the html code to analyze (or None)
-        :return A list of parsed forms like [ form_1, form_2 ]
+        :return A dictionary of SQL injection tasks
         """
         parsed_forms = dict()
         parsed_forms[url], cookies = HtmlParser.form_parse(url, html)
         Log.success('Html parsed! Found '+str(len(parsed_forms[url]))+' forms')
-        SqlmapClient.try_inject(parsed_forms, cookies)
+        return SqlmapClient.try_inject(parsed_forms, cookies)
 
     @staticmethod
-    def deep_inject_form(url, max_depth):
+    def deep_inject_form(url, max_depth) -> dict:
         """
         Search a form in the page returned by url.
         If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
         :param url: str The url to visit
         :param max_depth: int The max depth during the visit
-        :return A dictionary of parsed forms like { '<visited_url>': [ form_1, form_2, ... }
+        :return A dictionary of SQL injection tasks
         """
 
         base_url = urlparse(url).netloc
@@ -99,7 +99,4 @@ class SqlInjection:
         Log.success('Result wrote in ' + out_file)
 
         Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')
-
-        SqlmapClient.try_inject(parsed_forms, cookies)
-
-        return parsed_forms
+        return SqlmapClient.try_inject(parsed_forms, cookies)

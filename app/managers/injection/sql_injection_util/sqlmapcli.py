@@ -31,7 +31,6 @@
 *********************************************************************************
 """
 
-from pprint import pprint
 from sqlmap.lib.utils.api import server as sqlmap_server
 from time import sleep
 
@@ -91,7 +90,7 @@ class SqlmapClient:
     def try_inject(
             forms: dict,
             cookies: str = '',
-            delay: int = 0,
+            delay: int = 1,
             random_agent: bool = False
     ) -> dict:
         """
@@ -112,12 +111,9 @@ class SqlmapClient:
                 inputs: dict = page_form.get('inputs')
                 method: str = page_form.get('method')
 
-                if 'password' not in inputs:
-                    continue
-
                 task_options = {
                     'dbms': 'MySQL',
-                    'cookie': cookies,
+                    # 'cookie': cookies,
                     'agent': HttpRequest.default_agent(),
                     'referer': url,
                     'delay': delay,
@@ -136,31 +132,15 @@ class SqlmapClient:
                         'csrfToken': csrf_token_name,
                     })
 
-                # pprint(task_options)
-                # exit(0)
-                # Foreach form, will created a new SqlmapTask
+                # for key, value in task_options.items():
+                #     print('---------- ' + key + ': ----------')
+                #     print(value)
+
                 sqlmap_task = SqlmapClient._task_new()
                 sqlmap_task.option_set(task_options)
-                # sqlmap_task.option_get([
-                #     'referer',
-                #     'agent',
-                #     'referer',
-                #     'delay',
-                #     'randomAgent',
-                #     'method',
-                #     'url'
-                # ])
-                # option_list = sqlmap_task.option_list()
-                # pprint(option_list)
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
 
-                # TODO: scan
-                pprint(sqlmap_task.scan_start())
-                sleep(5)
-                pprint(sqlmap_task.scan_status())
-                sleep(6)
-                pprint(sqlmap_task.scan_log())
-
+                sqlmap_task.scan_start()
 
         return sqlmap_tasks
 
