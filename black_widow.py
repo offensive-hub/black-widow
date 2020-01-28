@@ -2,9 +2,9 @@
 # coding=utf-8
 
 """
-****************************   🕷️  Black-Widow  🕷️   ****************************
+****************************   🕷️  Black-Widow  🕷️   *****************************
 *                                                                               *
-* black-widow.py -- Main black-widow executable.                                *
+* black_widow.py -- Main black-widow file.                                      *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *

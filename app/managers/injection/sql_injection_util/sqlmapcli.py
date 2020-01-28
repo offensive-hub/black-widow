@@ -120,18 +120,28 @@ class SqlmapClient:
                     'delay': delay,
                     'randomAgent': random_agent,
                     'method': method,
-                    'url': action
+                    'url': action,
+                    'csrfUrl': url,
+                    'csrfMethod': HttpRequest.Type.GET,
+                    # 'csrfToken': '_token'
                 })
-                sqlmap_task.option_get([
-                    'referer',
-                    'agent',
-                    'referer',
-                    'delay',
-                    'randomAgent',
-                    'method',
-                    'url'
-                ])
+                # sqlmap_task.option_get([
+                #     'referer',
+                #     'agent',
+                #     'referer',
+                #     'delay',
+                #     'randomAgent',
+                #     'method',
+                #     'url'
+                # ])
+                # option_list = sqlmap_task.option_list()
+                # pprint(option_list)
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
+                pprint(sqlmap_task.scan_data())
+                sleep(1)
+                pprint(sqlmap_task.scan_status())
+                sleep(4)
+                pprint(sqlmap_task.scan_status())
 
         return sqlmap_tasks
 

@@ -58,20 +58,32 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/docker-hub.png)   Docker installation
 
-1. If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
-2. Run docker:
-   * Command line: `docker run --rm offensive/black-widow [arguments]`
-   * GUI: `docker run -d -p 8095:80 --rm offensive/black-widow -g`
-     * Than visit: [http://localhost:8095](http://localhost:8095/)
+ 1) If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
+ 2) Run docker:
+    * GUI: `docker run -d -p 8095:80 offensive/black-widow -g`
+      * Than visit: [http://localhost:8095](http://localhost:8095/)
+    * Command line: `docker run offensive/black-widow <arguments>`
 
 ### Manual installation
 
-1. `sudo apt-get update && sudo apt-get install tidy clang tshark`
-2. `git clone git@github.com:offensive-hub/black-widow.git`
-3. `cd black-widow`
-4. `sudo pip3 install -U -r requirements.txt`
-5. `./black-widow.py --django migrate`
-6. `sudo ./black-widow.py <arguments>`
+ 1) `sudo apt-get update && sudo apt-get install tidy clang tshark`
+ 2) `mkdir black-widow`
+ 3) `cd black-widow`
+ 4) `touch black-widow.py && chmod +x black-widow.py`
+ 5) Copy and paste the following code in file `black-widow.py`:
+    ```python
+    #!/usr/bin/env python3
+    
+    from black_widow import main
+    
+    if __name__ == "__main__":
+        main()
+    
+    ```
+ 6) `git clone git@github.com:offensive-hub/black-widow.git black_widow`
+ 7) `sudo pip3 install -U -r black_widow/requirements.txt`
+ 8) `./black-widow.py --django migrate`
+ 9) Now you can run **black-widow** with: `./black-widow.py <arguments>`
 
 ### Run
 

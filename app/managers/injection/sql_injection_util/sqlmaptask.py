@@ -51,7 +51,7 @@ class SqlmapTask:
         :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
         :rtype: dict
         """
-        r_data = SqlmapTask.request(base_url + '/admin/list')
+        r_data = SqlmapTask._request(base_url + '/admin/list')
         tasks = dict()
         for task_id, task in r_data['tasks'].items():
             tasks[task_id] = SqlmapTask(task_id, base_url)
@@ -63,7 +63,7 @@ class SqlmapTask:
         Flush task spool (delete all tasks)
         :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
         """
-        SqlmapTask.request(base_url + '/admin/flush')
+        SqlmapTask._request(base_url + '/admin/flush')
 
     #############################
     # Task management functions #
@@ -76,15 +76,71 @@ class SqlmapTask:
         :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
         :rtype: SqlmapTask
         """
-        r_data = SqlmapTask.request(base_url + '/task/new')
+        r_data = SqlmapTask._request(base_url + '/task/new')
         return SqlmapTask(r_data['taskid'], base_url)
+
+    ###############
+    # Delete task #
+    ###############
+
+    def task_delete(self):
+        """
+        Delete this existing task
+        """
+        return self.__task_request('delete')
+
+    ##################################
+    # Sqlmap core interact functions #
+    ##################################
+
+    def option_list(self) -> dict:
+        """
+        List options for this task
+        """
+        return self.__option_request('list')
+
+    def option_get(self, options: list) -> dict:
+        """
+        Get value of option(s) for this task
+        :param options: The options to get (eg. [ "cookie", "headers", "referer", ... ])
+        """
+        return self.__option_request('get', HttpRequest.Type.POST, options)
+
+    def option_set(self, options: dict) -> dict:
+        """
+        Get value of option(s) for this task
+        :param options: The options to set (eg. { "referer": "https://example.com" ])
+        """
+        return self.__option_request('set', HttpRequest.Type.POST, options)
+
+    ################
+    # Handle scans #
+    ################
+
+    def scan_kill(self) -> dict:
+        """
+        Kill the scan
+        """
+        return self.__scan_request('kill')
+
+    def scan_status(self) -> dict:
+        """
+        Returns status of the scan
+        """
+        return self.__scan_request('status')
+
+    def scan_data(self) -> dict:
+        """
+        Retrieve the data of the scan
+        """
+        return self.__scan_request('data')
 
     ###################
     # Utils functions #
     ###################
 
     @staticmethod
-    def request(url: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
+    def _request(url: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         Send a request to sqlmap-api server and then load the data json as dict
         :param url: The sqlmap-api url (eg. "http://127.0.0.1:8775/task/new")
@@ -100,61 +156,9 @@ class SqlmapTask:
             raise requests.RequestException('Request to ' + url + ' failed')
         return r_data
 
-    ##################################
-    # Sqlmap core interact functions #
-    ##################################
+    """ Private methods """
 
-    def option_list(self):
-        """
-        List options for this task
-        """
-        self._option_request('list')
-
-    def option_get(self, options: list):
-        """
-        Get value of option(s) for this task
-        :param options: The options to get (eg. [ "cookie", "headers", "referer", ... ])
-        """
-        self._option_request('get', HttpRequest.Type.POST, options)
-
-    def option_set(self, options: dict):
-        """
-        Get value of option(s) for this task
-        :param options: The options to set (eg. { "referer": "https://example.com" ])
-        """
-        self._option_request('set', HttpRequest.Type.POST, options)
-
-    """ Public methods """
-
-    def task_delete(self):
-        """
-        Delete this existing task
-        """
-        self._task_request('delete')
-
-    # Handle scans
-
-    def scan_kill(self):
-        """
-        Kill the scan
-        """
-        self._scan_request('kill')
-
-    def scan_status(self):
-        """
-        Returns status of the scan
-        """
-        self._scan_request('status')
-
-    def scan_data(self):
-        """
-        Retrieve the data of the scan
-        """
-        self._scan_request('data')
-
-    """ Protected methods """
-
-    def _request(self, path: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
+    def __request(self, path: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param path: The path for request (eg. "/task/<id>/start")
         :param request_type: get|post|put|patch|delete
@@ -162,31 +166,36 @@ class SqlmapTask:
         :rtype: dict
         """
         url = self.base_url + path
-        return SqlmapTask.request(url, request_type, json)
+        return SqlmapTask._request(url, request_type, json)
 
-    def _option_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
+    def __option_request(
+            self,
+            action: str,
+            request_type: str = HttpRequest.Type.GET,
+            json: dict or list = None
+    ) -> dict:
         """
         :param action: The action of option request (eg. "list")
         :param request_type: get|post|put|patch|delete
         :param json: The json to send
         :rtype: dict
         """
-        return self._request('/option/' + self.id + '/' + action, request_type, json)
+        return self.__request('/option/' + self.id + '/' + action, request_type, json)
 
-    def _task_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
+    def __task_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param action: The action of task request (eg. "delete")
         :param request_type: get|post|put|patch|delete
         :param json: The json to send
         :rtype: dict
         """
-        return self._request('/task/' + self.id + '/' + action, request_type, json)
+        return self.__request('/task/' + self.id + '/' + action, request_type, json)
 
-    def _scan_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
+    def __scan_request(self, action: str, request_type: str = HttpRequest.Type.GET, json: dict or list = None) -> dict:
         """
         :param action: The action of scan request (eg. "kill")
         :param request_type: get|post|put|patch|delete
         :param json: The json to send
         :rtype: dict
         """
-        return self._request('/scan/' + self.id + '/' + action, request_type, json)
+        return self.__request('/scan/' + self.id + '/' + action, request_type, json)
