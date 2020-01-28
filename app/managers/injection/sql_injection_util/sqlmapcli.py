@@ -110,10 +110,9 @@ class SqlmapClient:
                 action = page_form.get('action')
                 inputs = page_form.get('inputs')
                 method = page_form.get('method')
-                # Foreach form, will created a new SqlmapTask
-                pprint(inputs)
-                sqlmap_task = SqlmapClient._task_new()
-                sqlmap_task.option_set({
+
+                task_options = {
+                    # 'dbms': 'MySQL',
                     'cookie': cookies,
                     'agent': HttpRequest.default_agent(),
                     'referer': url,
@@ -121,10 +120,20 @@ class SqlmapClient:
                     'randomAgent': random_agent,
                     'method': method,
                     'url': action,
-                    'csrfUrl': url,
-                    'csrfMethod': HttpRequest.Type.GET,
-                    # 'csrfToken': '_token'
-                })
+                    'data': SqlmapClient.__get_data(inputs)
+                }
+
+                csrf_token = SqlmapClient.__get_csrf_token(inputs)
+                if csrf_token is not None:
+                    task_options.update({
+                        'csrfUrl': url,
+                        'csrfMethod': HttpRequest.Type.GET,
+                        'csrfToken': csrf_token,
+                    })
+
+                # Foreach form, will created a new SqlmapTask
+                sqlmap_task = SqlmapClient._task_new()
+                sqlmap_task.option_set(task_options)
                 # sqlmap_task.option_get([
                 #     'referer',
                 #     'agent',
@@ -137,11 +146,14 @@ class SqlmapClient:
                 # option_list = sqlmap_task.option_list()
                 # pprint(option_list)
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
-                pprint(sqlmap_task.scan_data())
-                sleep(1)
+
+                # TODO: scan
+                pprint(sqlmap_task.scan_start())
+                sleep(5)
                 pprint(sqlmap_task.scan_status())
-                sleep(4)
-                pprint(sqlmap_task.scan_status())
+                sleep(6)
+                pprint(sqlmap_task.scan_log())
+
 
         return sqlmap_tasks
 
@@ -163,3 +175,15 @@ class SqlmapClient:
         """
         client = SqlmapClient._get_client()
         return SqlmapTask.task_new(client.base_url)
+
+    @staticmethod
+    def __get_csrf_token(inputs: dict):
+        for input in inputs:
+            print(input)
+        exit(0)
+
+    @staticmethod
+    def __get_data(inputs: dict):
+        for input in inputs:
+            print(input)
+        exit(0)

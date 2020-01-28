@@ -117,6 +117,18 @@ class SqlmapTask:
     # Handle scans #
     ################
 
+    def scan_start(self):
+        """
+        Launch the scan
+        """
+        return self.__scan_request('start', HttpRequest.Type.POST, {})
+
+    def scan_stop(self):
+        """
+        Stop the scan
+        """
+        return self.__scan_request('stop')
+
     def scan_kill(self) -> dict:
         """
         Kill the scan
@@ -135,6 +147,12 @@ class SqlmapTask:
         """
         return self.__scan_request('data')
 
+    def scan_log(self) -> dict:
+        """
+        Retrieve the log messages of the scan
+        """
+        return self.__scan_request('log')
+
     ###################
     # Utils functions #
     ###################
@@ -151,7 +169,11 @@ class SqlmapTask:
         response = HttpRequest.request(url, request_type, json=json)
         r_data = JsonSerializer.load_json(response.text)
         Log.info('Response data of ' + url + ': ' + str(r_data))
-        if not r_data['success']:
+        success = r_data.get('success')
+        if success is None:
+            # The response has not the status management
+            return r_data
+        if not success:
             Log.error('Response data of ' + url + ' has { success: False }')
             raise requests.RequestException('Request to ' + url + ' failed')
         return r_data
