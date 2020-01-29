@@ -6,27 +6,29 @@ query on a database.
 Usually this method is used by exploiting a vulnerable web application
 page.
 
-To understand how to this method works, you should have notion about the
+To understand how this method works, you should have notion about the
 following things:
  * Website
  * Relational database
  * SQL query
 
 ## Website
-A website is a web application that provide contents and, sometime,
+
+A website is a web application that provides contents and, sometime,
 services.
 For example **[https://www.amazon.com/](https://www.amazon.com/)**
 is a web application which provides both, because you can look at
 products (content) and buy them (service).
 
-Typically, a web application which provides services, interfaces with
-a database, where stores the data, by launching **queries** on that.
+Typically, a web application which provides services or many complex
+contents, interfaces with a database, where stores the data, by
+launching **queries** on that.
 
 ## Database
 
-A database is a storage of structured data.
+A database is a storage of structured data, saved on a computer.
 
-The database are **3 categories** of databases:
+Now there are **3 categories** of database:
  * Relational
  * Business intelligence
  * NoSQL
@@ -59,6 +61,7 @@ databases.
  * Mckoi
  * Presto
  * Altibase
+ * ...
 
 
 ## Database Query
