@@ -22,10 +22,12 @@
 *                                                                               *
 *********************************************************************************
 """
-
+from pprint import pprint
+from time import sleep
 from urllib.parse import urlparse
 
 from black_widow.app.env import APP_STORAGE_OUT
+from black_widow.app.managers.injection.sql_injection_util.sqlmaptask import SqlmapTask
 from black_widow.app.managers.parser import HtmlParser
 from black_widow.app.services import Log, JsonSerializer
 from black_widow.app.helpers.util import now
@@ -39,9 +41,34 @@ class SqlInjection:
     """
 
     @staticmethod
-    def inject_form(url=None, html=None) -> dict:
+    def inject(
+            deep: bool,
+            forms: bool,
+            url: str = None,
+            html: str = None,
+            max_depth: int = None,
+            listen: bool = False
+    ):
+        # TODO: implement method:
+        #       this method should be the only one public
+        return
+
+    @staticmethod
+    def inject_url(url: str, listen: bool = False) -> SqlmapTask:
+        task = SqlmapClient.try_inject_url(url)
+        if listen:
+            SqlInjection.__listen_task(task)
+        return task
+
+    @staticmethod
+    def deep_inject_url(url: str, listen: bool = False) -> SqlmapTask:
+        pass
+
+    @staticmethod
+    def inject_form(url: str = None, html: str = None, listen: bool = False) -> dict:
         """
         Search a form in the page returned by url (or inside the html).
+        :param listen: True if this method should listen and print the SQL tasks, otherwise False
         :param url: str The url to visit (or None)
         :param html: str the html code to analyze (or None)
         :return A dictionary of SQL injection tasks
@@ -49,13 +76,17 @@ class SqlInjection:
         parsed_forms = dict()
         parsed_forms[url], cookies = HtmlParser.form_parse(url, html)
         Log.success('Html parsed! Found '+str(len(parsed_forms[url]))+' forms')
-        return SqlmapClient.try_inject(parsed_forms, cookies)
+        tasks = SqlmapClient.try_inject_forms(parsed_forms, cookies)
+        if listen:
+            SqlInjection.__listen_tasks(tasks)
+        return tasks
 
     @staticmethod
-    def deep_inject_form(url, max_depth) -> dict:
+    def deep_inject_form(url, max_depth, listen: bool = False) -> dict:
         """
         Search a form in the page returned by url.
         If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
+        :param listen: True if this method should listen and print the SQL tasks, otherwise False
         :param url: str The url to visit
         :param max_depth: int The max depth during the visit
         :return A dictionary of SQL injection tasks
@@ -93,10 +124,36 @@ class SqlInjection:
             return request_cookies
 
         cookies = _deep_inject_form(url)
-
         Log.info('Writing result in ' + out_file + '...')
         JsonSerializer.set_dictionary(parsed_forms, out_file)
         Log.success('Result wrote in ' + out_file)
-
         Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')
-        return SqlmapClient.try_inject(parsed_forms, cookies)
+        tasks = SqlmapClient.try_inject_forms(parsed_forms, cookies)
+        if listen:
+            SqlInjection.__listen_tasks(tasks)
+        return tasks
+
+    @staticmethod
+    def __listen_tasks(tasks: dict):
+        while True:
+            sleep(5)
+            for task_id, task in tasks.items():
+                SqlInjection.__print_task(task)
+
+    @staticmethod
+    def __listen_task(task: SqlmapTask):
+        while True:
+            sleep(5)
+            SqlInjection.__print_task(task)
+
+    @staticmethod
+    def __print_task(task: SqlmapTask):
+        scan_log = task.scan_log()
+        scan_data = task.scan_data()
+        print('')
+        print('[SQL injection] Scan Log:')
+        pprint(scan_log)
+        print('')
+        print('[SQL injection] Scan Data:')
+        pprint(scan_data)
+        print('')

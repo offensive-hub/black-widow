@@ -91,9 +91,17 @@ def main_cmd(arguments):
             print('"' + arguments.sql_url + '" is not a valid URL!\n')
             sys.exit(1)
         if arguments.sql_deep:
-            app.managers.injection.SqlInjection.deep_inject_form(arguments.sql_url, arguments.sql_depth)
+            app.managers.injection.SqlInjection.deep_inject_form(
+                arguments.sql_url,
+                arguments.sql_depth,
+                listen=True
+            )
         else:
-            app.managers.injection.SqlInjection.inject_form(arguments.sql_url)
+            if arguments.sql_forms:
+                fun = app.managers.injection.SqlInjection.inject_form
+            else:
+                fun = app.managers.injection.SqlInjection.inject_url
+            fun(arguments.sql_url, listen=True)
 
 
 # Main function generic app

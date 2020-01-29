@@ -87,7 +87,27 @@ class SqlmapClient:
         return SqlmapTask.task_flush(client.base_url)
 
     @staticmethod
-    def try_inject(
+    def try_inject_url(
+            url: str,
+            cookies: str = '',
+            delay: int = 1,
+            random_agent: bool = False
+    ) -> SqlmapTask:
+        task_options = {
+            'dbms': 'MySQL',
+            'cookie': cookies,
+            'referer': url,
+            'delay': delay,
+            'randomAgent': random_agent,
+            'url': url,
+        }
+        sqlmap_task = SqlmapClient._task_new()
+        sqlmap_task.option_set(task_options)
+        sqlmap_task.scan_start()
+        return sqlmap_task
+
+    @staticmethod
+    def try_inject_forms(
             forms: dict,
             cookies: str = '',
             delay: int = 1,
@@ -111,10 +131,15 @@ class SqlmapClient:
                 inputs: dict = page_form.get('inputs')
                 method: str = page_form.get('method')
 
+                if random_agent:
+                    agent = None
+                else:
+                    agent = HttpRequest.default_agent()
+
                 task_options = {
                     'dbms': 'MySQL',
-                    # 'cookie': cookies,
-                    'agent': HttpRequest.default_agent(),
+                    'cookie': cookies,
+                    'agent': agent,
                     'referer': url,
                     'delay': delay,
                     'randomAgent': random_agent,
