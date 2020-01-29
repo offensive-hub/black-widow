@@ -49,12 +49,6 @@
     </ol>
 {% endblock %}
 
-
-<!-- TODO: UI to view the packet captured. Features:
-        - Sorting/Search filters
-        - Download ".pcap" file
--->
-
 {% block absolute %}
     <!-- Show packet modal -->
     <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
@@ -254,6 +248,11 @@
 {% endblock %}
 
 {% block card_header %}
+    <!-- TODO features:
+            - Sorting/Search filters
+            - Download ".pcap" file
+            - Keys to decrypt traffic
+    -->
     <h4 class="card-title mt-0"> Network Traffic</h4>
     <p class="card-category interfaces">
         Interfaces: <span>{{ job.interfaces }}</span>
