@@ -26,7 +26,6 @@
 from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
-from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 from black_widow.app.gui.web.black_widow.views.web.parsing.abstract_web_parsing_view import AbstractWebParsingView
 
 
@@ -59,21 +58,25 @@ class WebParsing:
             :return: django.http.HttpResponseRedirect
             """
             request_params: dict = request.POST.dict()
-            print(request_params)
-
-            web_parsing_job = self.new_job(
+            job = self.new_job(
                 request_params.get('url'),
                 request_params.get('type'),
                 request_params.get('depth'),
                 request_params.get('tags'),
                 request_params.get('cookies')
             )
+            return redirect('/web/parsing/parse?id=' + str(job.id))
 
-            return redirect('/web/parsing/parse?id=' + str(web_parsing_job.id))
-
-    class ParseView(AbstractView):
+    class ParseView(AbstractWebParsingView):
         """
         Web Parsing Parse View
         """
         name = 'web parsing'
         template_name = 'web/parsing/parse.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            return self._get_job(request, redirect_url='/web/parsing')

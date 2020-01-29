@@ -1,4 +1,4 @@
-{% extends 'layout/base.html' %}
+{% extends 'layout/job.html' %}
 {% comment %}
     <!--
     *********************************************************************************
@@ -54,6 +54,24 @@
     </ol>
 {% endblock %}
 
-{% block content %}
-    {% csrf_token %}
+{% block absolute %}
+    <!-- Show parsed page modal -->
+    <!-- TODO: make modal -->
 {% endblock %}
+
+{% block card_header %}
+    <!-- TODO features:
+            - Sorting/Search filters
+            - Download ".pcap" file
+            - Keys to decrypt traffic
+    -->
+    <h4 class="card-title mt-0">Web Parsing</h4>
+    <p class="card-category interfaces">
+        Interfaces: <span>{{ job.interfaces }}</span>
+    </p>
+    <p class="card-category">
+        Filters: <span>{{ job.filters }}</span>
+    </p>
+{% endblock %}
+
+

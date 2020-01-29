@@ -32,15 +32,17 @@ from black_widow.app.managers.sniffer import PcapSniffer
 from black_widow.app.services import JsonSerializer, MultiTask
 
 from black_widow.app.gui.web.black_widow.models import SniffingJobModel
-from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
+from black_widow.app.gui.web.black_widow.views.abstract_job_view import AbstractJobView
 
 
-class AbstractSniffingView(AbstractView):
+class AbstractSniffingView(AbstractJobView):
     """
     Abstract Sniffing View
     """
     storage_out_dir = os.path.join(APP_STORAGE_OUT, 'sniffing')
     check_folder(storage_out_dir)
+    model_class = SniffingJobModel
+
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
 

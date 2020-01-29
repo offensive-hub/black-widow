@@ -25,7 +25,6 @@
 
 import signal
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
@@ -78,13 +77,13 @@ class Sniffing:
             else:
                 request_params['pcap'] = None
 
-            sniffing_job = self.new_job(
+            job = self.new_job(
                 request_params.get('filters'),
                 request_params.get('pcap'),
                 request_params.get('interfaces'),
             )
 
-            return redirect('/sniffing/capture?id=' + str(sniffing_job.id))
+            return redirect('/sniffing/capture?id=' + str(job.id))
 
     class CaptureView(AbstractSniffingView):
         """
@@ -100,19 +99,8 @@ class Sniffing:
             """
             if not util.is_root():
                 return render(request, self.error_templates.get('root_required'))
-            request_params: dict = request.GET.dict()
-            try:
-                sniffing_job_id = int(request_params.get('id'))
-            except (ValueError, TypeError):
-                return redirect('/sniffing')
-            Log.info("Showing job #" + str(sniffing_job_id))
-            try:
-                sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
-            except ObjectDoesNotExist:
-                return redirect('/sniffing')
-            return render(request, self.template_name, {
-                'job': sniffing_job
-            })
+
+            return self._get_job(request, redirect_url='/sniffing')
 
         def post(self, request):
             """
@@ -120,19 +108,19 @@ class Sniffing:
             :return: django.http.HttpResponse
             """
             # noinspection PyTypeChecker
-            sniffing_job: SniffingJobModel = None
+            job: SniffingJobModel = None
             request_params: dict = request.POST.dict()
-            sniffing_job_id = request_params.get('id')
+            job_id = request_params.get('id')
             try:
-                sniffing_job_id = int(sniffing_job_id)
-                sniffing_job = SniffingJobModel.objects.get(id=sniffing_job_id)
+                job_id = int(job_id)
+                job = SniffingJobModel.objects.get(id=job_id)
             except ValueError:
                 pass
             except Exception as e:
                 print(type(e))
                 print(str(e))
 
-            if sniffing_job is None:
+            if job is None:
                 return JsonResponse({
                     'message': 'Unable to find the requested job'
                 }, status=400)
@@ -142,38 +130,38 @@ class Sniffing:
                 signal_job = int(signal_job)
 
                 if signal_job == 0:   # Custom signal 0 = Restart capturing
-                    sniffing_job_new = self.new_job(
-                        sniffing_job.filters,
-                        sniffing_job.pcap_file,
-                        sniffing_job.interfaces,
+                    job_new = self.new_job(
+                        job.filters,
+                        job.pcap_file,
+                        job.interfaces,
                     )
-                    sniffing_job_id = sniffing_job_new.id
+                    job_id = job_new.id
                     signal_job = signal.SIGABRT
 
                 try:
-                    sniffing_job.kill(signal_job)
+                    job.kill(signal_job)
                 except ProcessLookupError:
-                    Log.warning("The process " + str(sniffing_job.pid) + " does not exists")
+                    Log.warning("The process " + str(job.pid) + " does not exists")
 
                 if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
-                    if not sniffing_job.delete():
+                    if not job.delete():
                         return JsonResponse({
                             'message': 'Unable to delete the job'
                         })
 
                 return JsonResponse({
-                    'id': sniffing_job_id,
+                    'id': job_id,
                     'signal': signal_job,
                     'message': 'Signal sent'
                 }, status=200)
 
             page = request_params.get('page')
             page_size = request_params.get('page_size')
-            pagination = self.pagination(sniffing_job.json_dict, page, page_size)
+            pagination = self.pagination(job.json_dict, page, page_size)
             pagination.update({
                 'job': {
-                    'id': sniffing_job_id,
-                    'status': sniffing_job.status_name
+                    'id': job_id,
+                    'status': job.status_name
                 }
             })
 

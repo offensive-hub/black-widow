@@ -32,15 +32,16 @@ from black_widow.app.helpers.util import now
 from black_widow.app.managers.parser import HtmlParser
 from black_widow.app.services import JsonSerializer, MultiTask
 
-from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
+from black_widow.app.gui.web.black_widow.views.abstract_job_view import AbstractJobView
 
 
-class AbstractWebParsingView(AbstractView):
+class AbstractWebParsingView(AbstractJobView):
     """
     Abstract Web Parsing View
     """
     storage_out_dir = os.path.join(APP_STORAGE_OUT, 'web_parsing')
     check_folder(storage_out_dir)
+    model_class = WebParsingJobModel
 
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
