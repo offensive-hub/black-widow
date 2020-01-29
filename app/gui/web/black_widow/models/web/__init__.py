@@ -1,1 +1,1 @@
-from .sniffing_job_model import SniffingJobModel
+from .parsing import WebParsingJobModel

@@ -55,14 +55,14 @@
                             <div class="nav-tabs-wrapper">
                                 <ul class="nav nav-tabs" data-tabs="tabs">
                                     <li class="nav-item">
-                                        <a class="nav-link active" href="#show-injections" data-toggle="tab">
-                                            <i class="material-icons">playlist_play</i> Show Injections
+                                        <a class="nav-link active" href="#show-parsings" data-toggle="tab">
+                                            <i class="material-icons">playlist_play</i> Show Parsings
                                             <div class="ripple-container"></div>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="#new-injection" data-toggle="tab">
-                                            <i class="material-icons">fiber_new</i> New Injection
+                                        <a class="nav-link" href="#new-parsing" data-toggle="tab">
+                                            <i class="material-icons">fiber_new</i> New Parsing
                                             <div class="ripple-container"></div>
                                         </a>
                                     </li>
@@ -75,21 +75,23 @@
                     <div class="card-body-primary card-body">
                         <div class="tab-content">
 
-                            <!-- Show Injections -->
-                            <div class="tab-pane active" id="show-injections">
+                            <!-- Show Parsings -->
+                            <div class="tab-pane active" id="show-parsings">
                                 <table class="table table-hover table-select">
                                     <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Url</th>
+                                        <th>Type</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for id,job in jobs.items %}
-                                        <tr class="link" href="/sql/injection?job_id={{ job.id }}">
+                                        <tr class="link" href="/web/parsings/parse?job_id={{ job.id }}">
                                             <td>{{ job.id }}</td>
                                             <td>{{ job.url }}</td>
+                                            <td>{{ job.parsing_type }}</td>
                                             <td>{{ job.status }}</td>
                                         </tr>
                                     {% endfor %}
@@ -97,15 +99,15 @@
                                 </table>
                             </div>
 
-                            <!-- New Injection -->
-                            <div class="tab-pane" id="new-injection">
+                            <!-- New Parsing -->
+                            <div class="tab-pane" id="new-parsing">
                                 <div class="row">
                                     <!-- URL -->
                                     <div class="col-lg-7 col-md-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">URL *</h4>
-                                                <p class="card-category">URL to inject</p>
+                                                <p class="card-category">URL to parse/crawl</p>
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
@@ -130,21 +132,18 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
-                                                    <div class="tab-pane active" id="filters">
-                                                        <div class="form-check form-check-radio">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input" type="radio" name="type" id="single-page" value="single-page" checked>
-                                                                Single Page
-                                                                <span class="circle"><span class="check"></span></span>
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check form-check-radio">
-                                                            <label class="form-check-label">
-                                                                <input class="form-check-input" type="radio" name="type" id="crawl-website" value="crawl-website">
-                                                                Website Crawling
-                                                                <span class="circle"><span class="check"></span></span>
-                                                            </label>
-                                                        </div>
+                                                    <div class="tab-pane active checkbox-required" id="types">
+
+                                                        {% for type in types %}
+                                                            <div class="form-check form-check-radio">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="type" id="{{ type.0 }}" value="{{ type.0 }}">
+                                                                    {{ type.1 }}
+                                                                    <span class="circle"><span class="check"></span></span>
+                                                                </label>
+                                                            </div>
+
+                                                        {% endfor %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -156,7 +155,7 @@
                                 <div class="row">
                                     <div class="col">
                                         <button type="submit" class="btn btn-success">
-                                            Inject !
+                                            Parse !
                                             <i class="material-icons">play_arrow</i>
                                         </button>
                                     </div>

@@ -23,6 +23,9 @@
 *********************************************************************************
 """
 
+from django.shortcuts import render
+
+from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
 from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 
 
@@ -36,6 +39,17 @@ class WebParsing:
         """
         name = 'web parsing'
         template_name = 'web/parsing/settings.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+            view_params = {
+                'types': WebParsingJobModel.TYPES,
+                'jobs': WebParsingJobModel.all()
+            }
+            return render(request, self.template_name, view_params)
 
     class ParseView(AbstractView):
         """

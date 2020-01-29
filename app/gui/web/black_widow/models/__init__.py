@@ -1,1 +1,2 @@
-from .sniffing import SniffingJobModel
+from .sniffing import *
+from .web import *

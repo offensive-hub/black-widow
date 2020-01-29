@@ -23,11 +23,8 @@
 *********************************************************************************
 """
 
-import signal
-
 from time import sleep
 from django.db import models
-from django.utils.timezone import now
 
 from black_widow.app.gui.web.black_widow.models.abstract_job_model import AbstractJobModel
 from black_widow.app.helpers import storage
@@ -43,7 +40,6 @@ class SniffingJobModel(AbstractJobModel):
     _interfaces: str or None = models.TextField(null=False)
     json_file: str = models.CharField(max_length=250, null=False)
     pcap_file: str = models.CharField(max_length=250, null=True)
-    created_at: str = models.DateTimeField(default=now, editable=False)
 
     @staticmethod
     def all() -> models.query.QuerySet:
@@ -80,10 +76,7 @@ class SniffingJobModel(AbstractJobModel):
         )))
 
     def delete(self, using=None, keep_parents=False):
-        self.kill(signal.SIGKILL)
         if not storage.delete(self.json_file):
-            return False
-        if not storage.delete(self.pid_file):
             return False
         return super(SniffingJobModel, self).delete(using, keep_parents)
 

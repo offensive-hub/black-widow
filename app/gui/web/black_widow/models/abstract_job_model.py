@@ -30,6 +30,7 @@ from django.db import models
 from django.utils.timezone import now
 
 from black_widow.app.gui.web.black_widow.models.abstract_model import AbstractModel
+from black_widow.app.helpers import storage
 from black_widow.app.helpers.util import pid_exists
 from black_widow.app.services import MultiTask, Log
 
@@ -42,6 +43,9 @@ class AbstractJobModel(AbstractModel):
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
     created_at: str = models.DateTimeField(default=now, editable=False)
+
+    class Meta:
+        abstract = True
 
     @staticmethod
     def _all(model_class) -> models.query.QuerySet:
@@ -86,3 +90,9 @@ class AbstractJobModel(AbstractModel):
         os.kill(self.pid, sig)
         self.save()
         Log.success("Signal " + str(sig) + " sent to job #" + str(self.id) + ' (' + str(self.pid) + ')')
+
+    def delete(self, using=None, keep_parents=False):
+        self.kill(signal.SIGKILL)
+        if not storage.delete(self.pid_file):
+            return False
+        return super(AbstractJobModel, self).delete(using, keep_parents)

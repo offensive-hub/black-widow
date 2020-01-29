@@ -39,9 +39,7 @@ class HtmlParser(PyHTMLParser, ABC):
     HtmlParser Manager
     """
 
-    _relevant_tags = {
-        'a': ['href'],
-        'form': ['id', 'action', 'method'],
+    _input_tags = {
         'input': [
             'id', 'name', 'type',
             'min', 'max',
@@ -62,12 +60,18 @@ class HtmlParser(PyHTMLParser, ABC):
         ],
         'option': [
             'id', 'value', 'selected'
-        ],
+        ]
+    }
+
+    _relevant_tags = {
+        'a': ['href'],
+        'form': ['id', 'action', 'method'],
         'script': ['src', 'data', 'type'],  # { 'src': '/some/script.js', 'data': 'function() ...' }
         'link': ['href'],  # { 'href': '*.xml' }
         'html': [],
         'body': []
     }
+    _relevant_tags.update(_input_tags)
 
     # Attributes witch contain URLs
     _url_attrs = ['href', 'src', 'action']
@@ -129,7 +133,7 @@ class HtmlParser(PyHTMLParser, ABC):
             return inputs
         if type(parsed) == dict:
             tag = parsed.get('tag')
-            if tag in ('input', 'textarea'):
+            if tag in HtmlParser._input_tags:
                 attrs = parsed.get('attrs')
                 form_input = {'tag': tag}
                 for key, value in attrs.items():
