@@ -84,7 +84,12 @@ class HttpRequest:
         if headers is None:
             headers = {}
         if type(cookies) is str:
-            cookies = dict((k.strip(), v.strip()) for k, v in (c.split('=') for c in cookies.split(';')))
+            try:
+                cookies = dict((k.strip(), v.strip()) for k, v in (c.split('=') for c in cookies.split(';')))
+            except ValueError:
+                # Wrong or empty cookies
+                cookies = None
+                pass
 
         req_headers = {
             'User-Agent': str(APP_NAME) + ' ' + str(APP_VERSION)

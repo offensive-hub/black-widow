@@ -43,7 +43,8 @@ class WebParsingJobModel(AbstractJobModel):
     PARSE_TAGS = (
         (HtmlParser.TYPE_ALL, 'All Tags'),
         (HtmlParser.TYPE_RELEVANT, 'Relevant Tags (a, script, link, Form Tags)'),
-        (HtmlParser.TYPE_FORM, 'Form Tags (form, input, textarea, select, option)')
+        (HtmlParser.TYPE_FORM, 'Form Tags (form, input, textarea, select, option)'),
+        (HtmlParser.TYPE_META, 'Meta Tags (meta)')
     )
 
     url: str = models.CharField(null=False, max_length=512)

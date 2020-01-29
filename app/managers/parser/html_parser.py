@@ -42,7 +42,7 @@ class HtmlParser(PyHTMLParser, ABC):
     TYPE_ALL = 'all_parse'
     TYPE_RELEVANT = 'relevant_parse'
     TYPE_FORM = 'form_parse'
-    TYPES = (TYPE_ALL, TYPE_RELEVANT, TYPE_FORM)
+    TYPE_META = 'meta_parse'
 
     _input_tags = {
         'input': [
@@ -68,6 +68,10 @@ class HtmlParser(PyHTMLParser, ABC):
         ]
     }
 
+    _meta_tags = {
+        'meta': ['property', 'content', 'itemtrop', 'name', 'charset'],
+    }
+
     _relevant_tags = {
         'a': ['href'],
         'form': ['id', 'action', 'method'],
@@ -77,6 +81,7 @@ class HtmlParser(PyHTMLParser, ABC):
         'body': []
     }
     _relevant_tags.update(_input_tags)
+    _relevant_tags.update(_meta_tags)
 
     # Attributes witch contain URLs
     _url_attrs = ['href', 'src', 'action']
@@ -99,7 +104,7 @@ class HtmlParser(PyHTMLParser, ABC):
     def crawl(url: str, parsing_type: str, callback, depth: int = 0, cookies: str = None):
         """
         :param url: The url to crawl/parse
-        :param parsing_type: HtmlParse.TYPE_ALL | HtmlParse.TYPE_RELEVANT | HtmlParse.TYPE_FORM
+        :param parsing_type: HtmlParse.TYPE_ALL | HtmlParse.TYPE_RELEVANT | HtmlParse.TYPE_FORM | HtmlParse.TYPE_META
         :param callback: The callback method to call foreach visited page
         :param depth: The max crawling depth (0 to execute a normal page parsing)
         :param cookies: The cookies to use on parsing
@@ -135,6 +140,9 @@ class HtmlParser(PyHTMLParser, ABC):
             if parsing_type == HtmlParser.TYPE_FORM:
                 # Find forms in page
                 callback(HtmlParser.find_forms(parsed, href))
+            elif parsing_type == HtmlParser.TYPE_META:
+                # Find metadata in page
+                callback(HtmlParser.find_meta(parsed))
             else:
                 callback(parsed)
 
@@ -156,7 +164,7 @@ class HtmlParser(PyHTMLParser, ABC):
         :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
-        return HtmlParser._abstract_parse(url, html, False, cookies)
+        return HtmlParser.__abstract_parse(url, html, False, cookies)
 
     @staticmethod
     def relevant_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
@@ -167,7 +175,7 @@ class HtmlParser(PyHTMLParser, ABC):
         :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
-        return HtmlParser._abstract_parse(url, html, True, cookies)
+        return HtmlParser.__abstract_parse(url, html, True, cookies)
 
     @staticmethod
     def form_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
@@ -182,30 +190,13 @@ class HtmlParser(PyHTMLParser, ABC):
         return HtmlParser.find_forms(parsed_html, url), cookies
 
     @staticmethod
-    def find_inputs(parsed: dict or list) -> dict:
+    def find_meta(parsed: dict or list) -> dict:
         """
-        Search inputs inside a parsed html (dict)
+        Search metadata inside a parsed html (dict)
         :param parsed: A parsed html
-        :return: A dictionary of input tags like {'input[name]': {'attr1': 'attr1_val' ...}}
+        :return: A dictionary of metadata tags like {'meta[name]': {'attr1': 'attr1_val' ...}}
         """
-        inputs = {}
-        if parsed is None:
-            return inputs
-        if type(parsed) == dict:
-            tag = parsed.get('tag')
-            if tag in HtmlParser._input_tags:
-                attrs = parsed.get('attrs')
-                form_input = {'tag': tag}
-                for key, value in attrs.items():
-                    form_input[key] = value
-                inputs[attrs.get('name')] = form_input
-            inputs.update(HtmlParser.find_inputs(parsed.get('children')))
-        elif type(parsed) == list:
-            for value in parsed:
-                inputs.update(HtmlParser.find_inputs(value))
-        else:
-            Log.error(str(parsed) + ' is not a valid parsed content!')
-        return inputs
+        return HtmlParser.__find_tags(parsed, HtmlParser._meta_tags)
 
     @staticmethod
     def find_forms(parsed: dict or list, url=None) -> list:
@@ -230,7 +221,7 @@ class HtmlParser(PyHTMLParser, ABC):
                 form = {
                     'method': method,
                     'action': action,
-                    'inputs': HtmlParser.find_inputs(parsed.get('children'))
+                    'inputs': HtmlParser.__find_inputs(parsed.get('children'))
                 }
                 forms.append(form)
             forms += HtmlParser.find_forms(parsed.get('children'), url)
@@ -303,11 +294,12 @@ class HtmlParser(PyHTMLParser, ABC):
         return (
             HtmlParser.TYPE_ALL,
             HtmlParser.TYPE_RELEVANT,
-            HtmlParser.TYPE_FORM
+            HtmlParser.TYPE_FORM,
+            HtmlParser.TYPE_META
         )
 
     @staticmethod
-    def _abstract_parse(url: str, html: str, relevant: bool, cookies: str = None) -> (dict, str):
+    def __abstract_parse(url: str, html: str, relevant: bool, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing
         :param url: The url to parse (or None)
@@ -317,7 +309,46 @@ class HtmlParser(PyHTMLParser, ABC):
         :return: dictionary of tags, cookies
         """
         parser = HtmlParser(relevant)
-        return parser._parse(url, html, cookies)
+        return parser.__parse(url, html, cookies)
+
+    @staticmethod
+    def __find_tags(parsed: dict or list, tags: dict) -> dict:
+        """
+        Search a certain kinds of tag inside a parsed html (dict)
+        :param parsed: A parsed html
+        :tags parsed: The tags to find
+        :return: A dictionary of tags like {'tag[name]': {'attr1': 'attr1_val' ...}}
+        """
+        found_tags = {}
+        if parsed is None:
+            return found_tags
+        if type(parsed) is dict:
+            tag = parsed.get('tag')
+            if tag in tags:
+                attrs = parsed.get('attrs')
+                form_input = {'tag': tag}
+                for key, value in attrs.items():
+                    form_input[key] = value
+                name = attrs.get('name')
+                if name is None:
+                    name = attrs.get('property')
+                found_tags[name] = form_input
+            found_tags.update(HtmlParser.__find_tags(parsed.get('children'), tags))
+        elif type(parsed) == list:
+            for value in parsed:
+                found_tags.update(HtmlParser.__find_tags(value, tags))
+        else:
+            Log.error(str(parsed) + ' is not a valid parsed content!')
+        return found_tags
+
+    @staticmethod
+    def __find_inputs(parsed: dict or list) -> dict:
+        """
+        Search inputs inside a parsed html (dict)
+        :param parsed: A parsed html
+        :return: A dictionary of input tags like {'input[name]': {'attr1': 'attr1_val' ...}}
+        """
+        return HtmlParser.__find_tags(parsed, HtmlParser._input_tags)
 
     def handle_starttag(self, tag: str, attrs):
         """
@@ -359,7 +390,7 @@ class HtmlParser(PyHTMLParser, ABC):
         if len(self.queue_tag) == 0:
             return
         cur_tag = self.queue_tag.pop()
-        self._nest_tag(cur_tag)
+        self.__nest_tag(cur_tag)
 
     def handle_data(self, data: str):
         """
@@ -373,7 +404,7 @@ class HtmlParser(PyHTMLParser, ABC):
             cur_tag['data'] = data
             self.queue_tag[-1] = cur_tag
 
-    def _parse(self, url: str = None, html: str = None, cookies: str = None) -> (dict, str):
+    def __parse(self, url: str = None, html: str = None, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing ALL found tags
         :param url: The url to parse (or None)
@@ -406,7 +437,7 @@ class HtmlParser(PyHTMLParser, ABC):
         self.feed(sorted_html)
         return self.tags, cookies
 
-    def _nest_tag(self, tag_dict: dict):
+    def __nest_tag(self, tag_dict: dict):
         """
         Insert the input tag inside the last one of queue
         :param tag_dict: A parsed-tag dictionary
