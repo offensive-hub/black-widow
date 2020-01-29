@@ -202,6 +202,8 @@ def is_file(path: str) -> bool:
 # Elimina il file o la cartella passato per argomento
 # noinspection PyBroadException
 def delete(file):
+    if file is None:
+        return True
     attempts = 0
     while os.path.exists(file):
         try:

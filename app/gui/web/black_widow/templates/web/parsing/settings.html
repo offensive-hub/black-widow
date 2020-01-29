@@ -84,17 +84,19 @@
                                         <th>Url</th>
                                         <th>Type</th>
                                         <th>Tags</th>
+                                        <th>Depth</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for id,job in jobs.items %}
-                                        <tr class="link" href="/web/parsings/parse?job_id={{ job.id }}">
+                                    {% for job in jobs %}
+                                        <tr class="link" href="/web/parsing/parse?job_id={{ job.id }}">
                                             <td>{{ job.id }}</td>
                                             <td>{{ job.url }}</td>
                                             <td>{{ job.parsing_type }}</td>
                                             <td>{{ job.parsing_tags }}</td>
-                                            <td>{{ job.status }}</td>
+                                            <td>{{ job.depth }}</td>
+                                            <td>{{ job.status_name }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -115,8 +117,8 @@
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="url">
                                                         <div class="form-group">
-                                                            <label for="url" class="bmd-label-floating">Write URL here...</label>
-                                                            <input required="required" value="{{ url }}" type="text" class="form-control" id="url" name="url">
+                                                            <label for="url-input" class="bmd-label-floating">Write URL here...</label>
+                                                            <input required="required" value="{{ url }}" type="text" class="form-control" id="url-input" name="url">
                                                             <span class="bmd-help">(eg. https://black-widow.io)</span>
                                                         </div>
                                                     </div>
@@ -126,15 +128,15 @@
                                     </div>
 
                                     <!-- Type -->
-                                    <div class="col-xl-3 col-lg-6">
+                                    <div class="col-xl-6 col-lg-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">Type</h4>
                                                 <div class="card-category">Single Page / Website Crawling</div>
                                             </div>
                                             <div class="card-body">
-                                                <div class="tab-content">
-                                                    <div class="tab-pane active checkbox-required" id="types" label="type">
+                                                <div class="tab-content row" style="margin: 0;">
+                                                    <div class="tab-pane active checkbox-required col-md-6 col-12" label="type" id="types">
 
                                                         {% for type in types %}
                                                             <div class="form-check form-check-radio">
@@ -146,11 +148,35 @@
                                                             </div>
 
                                                         {% endfor %}
+                                                    </div>
 
-                                                        <div show-on="WEBSITE_CRAWLING" class="form-group" style="display: none; margin-left: 26px; margin-top: 22px; width: 80px;">
-                                                            <label for="depth" class="bmd-label-floating">Depth</label>
-                                                            <input value="-1" type="number" class="form-control" id="depth" name="depth">
+                                                    <div class="tab-pane active col-md-6 col-12" id="depth">
+                                                        <div show-on="website_crawling" class="form-group" style="display: none; margin-top: 15px; width: 80px;">
+                                                            <label for="depth-input" class="bmd-label-floating">Depth</label>
+                                                            <input value="-1" type="number" class="form-control" id="depth-input" name="depth">
                                                             <span class="bmd-help" style="display: block;">< 0 = no limit</span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cookies -->
+                                    <div class="col-xl-6 col-lg-6">
+                                        <div class="card card-hover">
+                                            <div class="card-header card-header-danger card-header-sec">
+                                                <h4 class="card-title ">Cookies</h4>
+                                                <p class="card-category">Paste the cookies to use (if necessary)</p>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active">
+                                                        <div class="form-group">
+                                                            <label for="cookies-input" class="bmd-label-floating">Paste cookies here...</label>
+                                                            <textarea class="form-control" id="cookies-input" name="cookies"></textarea>
+                                                            <span class="bmd-help">(eg. PHPSESSID=cthocsqs8233jk4043b0lc89l3; security_level=0)</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -159,7 +185,7 @@
                                     </div>
 
                                     <!-- Tags -->
-                                    <div class="col-xl-3 col-lg-6">
+                                    <div class="col-xl-6 col-lg-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">Tags</h4>
@@ -167,7 +193,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
-                                                    <div class="tab-pane active checkbox-required" id="tags" label="tag">
+                                                    <div class="tab-pane active checkbox-required" label="tag">
 
                                                         {% for tag in tags %}
                                                             <div class="form-check form-check-radio">

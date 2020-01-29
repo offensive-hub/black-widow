@@ -27,13 +27,14 @@ from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
 from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
+from black_widow.app.gui.web.black_widow.views.web.parsing.abstract_web_parsing_view import AbstractWebParsingView
 
 
 class WebParsing:
     """
     Web Parsing Container View
     """
-    class SettingsView(AbstractView):
+    class SettingsView(AbstractWebParsingView):
         """
         Web Parsing Settings View
         """
@@ -60,13 +61,15 @@ class WebParsing:
             request_params: dict = request.POST.dict()
             print(request_params)
 
-            # sniffing_job = self.new_job(
-            #     request_params.get('filters'),
-            #     request_params.get('pcap'),
-            #     request_params.get('interfaces'),
-            # )
+            web_parsing_job = self.new_job(
+                request_params.get('url'),
+                request_params.get('type'),
+                request_params.get('depth'),
+                request_params.get('tags'),
+                request_params.get('cookies')
+            )
 
-            return redirect('/web/parsing/parse?id=' + str(sniffing_job.id))
+            return redirect('/web/parsing/parse?id=' + str(web_parsing_job.id))
 
     class ParseView(AbstractView):
         """

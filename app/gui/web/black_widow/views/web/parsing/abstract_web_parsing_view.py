@@ -45,13 +45,19 @@ class AbstractWebParsingView(AbstractView):
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
 
-    def new_job(self, url: str, parsing_type: str, depth: int, tags: str) -> WebParsingJobModel:
+    def new_job(self, url: str, parsing_type: str, depth: str, tags: str, cookies: str) -> WebParsingJobModel:
+        if parsing_type == WebParsingJobModel.TYPE_SINGLE_PAGE:
+            depth = 0
+        else:
+            depth = int(depth)
+
         web_parsing_job = WebParsingJobModel()
         web_parsing_job.url = url
         web_parsing_job.parsing_type = parsing_type
         web_parsing_job.parsing_tags = tags
         web_parsing_job.depth = depth
         web_parsing_job.json_file = os.path.join(self.storage_out_dir, now() + '_WEB_PARSING_.json')
+        web_parsing_job.cookies = cookies
 
         def _web_parsing_callback(parsed_page: dict):
             """
@@ -59,11 +65,17 @@ class AbstractWebParsingView(AbstractView):
             This method writes the parsed pages in a json file
             :param parsed_page: The parsed page
             """
-            JsonSerializer.add_item_to_dict(None, parsed_page, web_parsing_job.json_file)
+            JsonSerializer.add_item_to_dict(parsed_page.get('url'), parsed_page, web_parsing_job.json_file)
 
         web_parsing_job.pid_file = MultiTask.multiprocess(
             HtmlParser.crawl,
-            (url, parsing_type, _web_parsing_callback, depth),
+            (
+                url,
+                tags,
+                _web_parsing_callback,
+                depth,
+                cookies,
+            ),
             asynchronous=True,
             cpu=1
         )

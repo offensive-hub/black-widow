@@ -1,4 +1,4 @@
-{% extends 'layout/base.html' %}
+{% extends 'layout/job.html' %}
 {% comment %}
     <!--
     *********************************************************************************
@@ -41,26 +41,21 @@
     *********************************************************************************
     -->
 {% endcomment %}
-{% load static %}
-
-{% block style %}
-    <link href="{% static 'css/plugins/simplePagination.css' %}" rel="stylesheet" />
-{% endblock %}
 
 {% block breadcrumb %}
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/sniffing">Sniffing</a></li>
+        <li class="breadcrumb-item"><a class="parent" href="/sniffing">Sniffing</a></li>
         <li class="breadcrumb-item active" aria-current="page">Capture</li>
     </ol>
 {% endblock %}
 
-{% block content %}
-    {% csrf_token %}
-    <!-- TODO: UI to view the packet captured. Features:
-            - Sorting/Search filters
-            - Download ".pcap" file
-    -->
 
+<!-- TODO: UI to view the packet captured. Features:
+        - Sorting/Search filters
+        - Download ".pcap" file
+-->
+
+{% block absolute %}
     <!-- Show packet modal -->
     <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -256,448 +251,212 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-job">
-                <div class="card-header card-header-danger">
-                    <h4 class="card-title mt-0"> Network Traffic</h4>
-                    <p class="card-category interfaces">
-                        Interfaces: <span>{{ job.interfaces }}</span>
-                    </p>
-                    <p class="card-category">
-                        Filters: <span>{{ job.filters }}</span>
-                    </p>
-                    <button id="play-capture-btn" type="button" class="btn btn-success btn-action disabled" title="Start capturing packet"
-                            style="display: none; visibility: hidden;">
-                        <i class="material-icons" style="padding: 0;">play_arrow</i>
-                    </button>
+{% block card_header %}
+    <h4 class="card-title mt-0"> Network Traffic</h4>
+    <p class="card-category interfaces">
+        Interfaces: <span>{{ job.interfaces }}</span>
+    </p>
+    <p class="card-category">
+        Filters: <span>{{ job.filters }}</span>
+    </p>
+{% endblock %}
 
-                    <button id="pause-capture-btn" type="button" class="btn btn-warning btn-action" title="Pause capturing packet"
-                            style="visibility: hidden;">
-                        <i class="material-icons" style="padding: 0;">pause</i>
-                    </button>
-
-                    <button id="stop-capture-btn" type="button" class="btn btn-danger btn-action" title="Stop capturing packet"
-                            style="visibility: hidden;">
-                        <i class="material-icons" style="padding: 0;">stop</i>
-                    </button>
-
-                    <button id="delete-capture-btn" type="button" class="btn btn-abort btn-action" title="Delete current capture">
-                        <i class="material-icons" style="padding: 0;">delete_forever</i>
-                    </button>
-
-                    <button id="restart-capture-btn" type="button" class="btn btn-abort btn-action" title="Restart current capture">
-                        <i class="material-icons" style="padding: 0;">rotate_right</i> <!-- rotate_right -->
-                    </button>
-
-                </div>
-                <div class="card-body" id="main-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-select" id="sniffed-pkts-table">
-                            <thead class="">
-                            <tr>
-                                <th>
-                                    No.
-                                </th>
-                                <th>
-                                    Time
-                                </th>
-                                <th>
-                                    Source
-                                </th>
-                                <th>
-                                    Destination
-                                </th>
-                                <th>
-                                    Protocol
-                                </th>
-                                <th>
-                                    Length (bytes)
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <nav class="pagination justify-content-center" id="pagination">
-            </nav>
-
-        </div>
-    </div>
+{% block table %}
+    <table class="table table-hover table-select">
+        <thead class="">
+        <tr>
+            <th>
+                No.
+            </th>
+            <th>
+                Time
+            </th>
+            <th>
+                Source
+            </th>
+            <th>
+                Destination
+            </th>
+            <th>
+                Protocol
+            </th>
+            <th>
+                Length (bytes)
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 {% endblock %}
 
 {% block script %}
-    <script type="application/javascript" src="{% static 'js/plugins/simplePagination.js' %}"></script>
-    <!--suppress JSUnfilteredForInLoop, JSUnresolvedVariable -->
+    {{ block.super }}
+    <!--suppress JSUnfilteredForInLoop -->
     <script type="application/javascript">
-        $(function() {
-            let jobId = urlParams.get('id');
-            const $sniffedPktsTable = $('#sniffed-pkts-table');
-            const $playCaptureBtn = $('#play-capture-btn');
-            const $pauseCaptureBtn = $('#pause-capture-btn');
-            const $stopCaptureBtn = $('#stop-capture-btn');
-            const $deleteCaptureBtn = $('#delete-capture-btn');
-            const $restartCaptureBtn = $('#restart-capture-btn');
-            const $pagination = $('#pagination');
-            const $pktModal = $('#pkt-modal');
-            const $mainBody = $('#main-body');
+        const $pktModal = $('#pkt-modal');
+        const $dataTable = $('#data-table').find('table').first();
 
-            $mainBody.spinner('Setting up sniffer...');
+        const showJobData = function(result) {
+            for (let key in result) {
+                // noinspection JSUnfilteredForInLoop
+                let pkt = result[key];
+                const source_name = pkt.source ? pkt.source.label : undefined;
+                const source_title = pkt.source ? pkt.source.title : undefined;
+                const destination_name = pkt.destination ? pkt.destination.label : undefined;
+                const destination_title = pkt.destination ? pkt.destination.title : undefined;
+                $dataTable.insertTableRow([
+                    {name: pkt.number},                   // No.
+                    {name: pkt.time},                     // Time
+                    {
+                        name: source_name,                // Source
+                        title: source_title
+                    },
+                    {
+                        name: destination_name,           // Destination
+                        title: destination_title
+                    },
+                    {name: pkt.protocol},                 // Protocol
+                    {name: pkt.length},                   // Length (bytes)
+                ], function() {
+                    showPkt(pkt);
+                });
+            }
+        };
 
-            let currentPage = 1;
-            let pages = 1;
+        /**
+         * Show in a model the packet
+         * @param pkt The packet Object
+         */
+        const showPkt = function(pkt) {
+            $pktModal.find('.modal-title').html('Packet #' + pkt.number);
 
-            if (window.location.hash.indexOf('#page-') === 0) {
-                const tmpCurrentPage = parseInt(window.location.hash.substr(6, 1));
-                if (tmpCurrentPage) {
-                    currentPage = tmpCurrentPage;
-                    pages = tmpCurrentPage;
+            const $pktModalSrcHost = $pktModal.find('.host.src');
+            const $pktModalDstHost = $pktModal.find('.host.dst');
+
+            const $srcTitle = $pktModalSrcHost.find('.header-title');
+            const $dstTitle = $pktModalDstHost.find('.header-title');
+
+            $srcTitle.html('SOURCE [ ' + pkt.source.label + ' ]');
+            $srcTitle.attr('title', pkt.source.title);
+            $dstTitle.html('DESTINATION [ ' + pkt.destination.label + ' ]');
+            $dstTitle.attr('title', pkt.destination.title);
+
+            // Source MAC
+            $pktModalSrcHost.find('.mac-address').html(pkt.source.mac);
+            $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.vendor : '');
+            $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.company : '');
+
+            // Destination MAC
+            $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
+            $pktModalDstHost.find('.mac-vendor').html(pkt.destination.mac_lookup.vendor);
+            $pktModalDstHost.find('.mac-company').html(pkt.destination.mac_lookup.company);
+
+            // Source IP
+            const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
+            const $srcIpHost = $pktModalSrcHost.find('.ip-host');
+            const src_proto = 'http' + (parseInt(pkt.source.port) === 443 ? 's' : '');
+            const src_port = pkt.source.port ? (':' + pkt.source.port) : '';
+            $pktModalSrcHost.find('.ip-port').html(pkt.source.port);
+            $srcIpAddress.html(pkt.source.ip);
+            $srcIpAddress.attr('href', src_proto + '://' + pkt.source.ip + src_port);
+            $srcIpHost.html(pkt.source.ip_host);
+            $srcIpHost.attr('href', src_proto + '://' + pkt.source.ip_host + src_port);
+
+            // Destination IP
+            const $dstIpAddress = $pktModalDstHost.find('.ip-address');
+            const $dstIpHost = $pktModalDstHost.find('.ip-host');
+            const dst_proto = 'http' + (parseInt(pkt.destination.port) === 443 ? 's' : '');
+            const dst_port = pkt.destination.port ? (':' + pkt.destination.port) : '';
+            $pktModalDstHost.find('.ip-port').html(pkt.destination.port);
+            $dstIpAddress.html(pkt.destination.ip);
+            $dstIpAddress.attr('href', dst_proto + '://' + pkt.destination.ip + dst_port);
+            $dstIpHost.html(pkt.destination.ip_host);
+            $dstIpHost.attr('href', dst_proto + '://' + pkt.destination.ip_host + dst_port);
+
+            // Packet Info
+            const $info = $pktModal.find('#pkt-modal-info');
+            for (const key in pkt) {
+                const $key = $info.find('#' + key);
+                if ($key.length === 0) {
+                    continue;
+                }
+                $key.html(pkt[key]);
+            }
+
+            // Frame Info
+            const $frame = $pktModal.find('#pkt-modal-frame');
+            $frame.html('');
+            appendLayer($frame, pkt.frame_info);
+
+            // Layers
+            const $layers = $pktModal.find('#pkt-modal-layers');
+            $layers.html('');
+            for (let i in pkt.layers) {
+                const layer = pkt.layers[i];
+                appendLayer($layers, layer);
+            }
+
+            initAccordions();
+
+            $pktModal.modal();
+        };
+
+        const appendLayer = function ($parent, layer) {
+            const html_layer =
+                '<li class="layer">' +
+                '<a class="toggle" href="javascript:void(0);">' + layer.name +
+                '<i class="material-icons arrow">keyboard_arrow_right</i>' +
+                '</a>' +
+                '<ul class="inner"></ul>' +
+                '</li>';
+            const $layer = $(html_layer).appendTo($parent);
+            const $children = $layer.find('ul.inner');
+            for (let i in layer.fields) {
+                const field = layer.fields[i];
+                appendFieldRecursively($children, field);
+            }
+        };
+
+        const appendFieldRecursively = function ($parent, field) {
+            field.value = field.value.trim();
+            field.key = field.key.trim();
+            field.name = field.name.trim();
+
+            let htmlField = '<li';
+            if (field.children.length > 0) {
+                htmlField +=
+                    ' class="children">' +
+                    '<a class="toggle value" href="javascript:void(0);">' +
+                    '<i class="material-icons arrow">keyboard_arrow_right</i>' +
+                    '</a>' +
+                    '<ul class="inner"></ul>';
+            } else {
+                htmlField += ' class="value">';
+            }
+            htmlField += '</li>';
+
+            const $field = $(htmlField).appendTo($parent);
+
+            if (!field.key && !field.name) {
+                $field.addClass('alone');
+                $field.text(field.value);   // Prevents style and script execution
+            } else {
+                const htmlFieldStr = field.label + ': <div class="val-in">' + field.value + '</div>';
+                if ($field.hasClass('value')) {
+                    $field.html(htmlFieldStr);
+                } else {
+                    $field.find('.value').append(htmlFieldStr);
                 }
             }
 
-            // Pagination
-            $pagination.pagination({
-                dataSource: [],
-                pageNumber: 1,
-                items: 0,
-                pages: pages,
-                currentPage: currentPage,
-                itemsOnPage: 10,
-                cssStyle: 'dark-theme'
-            });
-
-            const updatePkts = function(sleep, loop=false) {
-                window.setTimeout(function() {
-                    if (loop && $pauseCaptureBtn.hasClass('disabled')) {
-                        return;
-                    }
-                    request('POST', '/sniffing/capture', {
-                        'id': jobId,
-                        'page':  $pagination.pagination('getCurrentPage'),
-                        'page_size': 10
-                    }, function(data) {
-                        if (data.job.status === 'SIGCONT') {
-                            // Process running
-                            $pauseCaptureBtn.removeClass('disabled').show().visible();
-                            $playCaptureBtn.addClass('disabled').hide().invisible();
-                            $stopCaptureBtn.removeClass('disabled').visible();
-                        } else if (data.job.status === 'SIGSTOP') {
-                            // Process paused
-                            $pauseCaptureBtn.addClass('disabled').hide().invisible();
-                            $playCaptureBtn.removeClass('disabled').show().visible();
-                            $stopCaptureBtn.removeClass('disabled').visible();
-                        } else if (data.job.status === 'SIGKILL') {
-                            // Process stopped
-                            $pauseCaptureBtn.addClass('disabled').invisible();
-                            $playCaptureBtn.addClass('disabled').invisible();
-                            $stopCaptureBtn.addClass('disabled').invisible();
-                        }
-                        $sniffedPktsTable.find('tbody').html('');
-                        for (let key in data.result) {
-                            let pkt = data.result[key];
-                            const source_name = pkt.source ? pkt.source.label : undefined;
-                            const source_title = pkt.source ? pkt.source.title : undefined;
-                            const destination_name = pkt.destination ? pkt.destination.label : undefined;
-                            const destination_title = pkt.destination ? pkt.destination.title : undefined;
-                            $sniffedPktsTable.insertTableRow([
-                                {name: pkt.number},                   // No.
-                                {name: pkt.time},                     // Time
-                                {
-                                    name: source_name,                // Source
-                                    title: source_title
-                                },
-                                {
-                                    name: destination_name,           // Destination
-                                    title: destination_title
-                                },
-                                {name: pkt.protocol},                 // Protocol
-                                {name: pkt.length},                   // Length (bytes)
-                            ], function() {
-                                showPkt(pkt);
-                            });
-                        }
-
-                        // Pagination
-                        $pagination.pagination({
-                            dataSource: Object.values(data.result),
-                            pageNumber: data.page,
-                            items: data.total,
-                            pages: data.page_end,
-                            currentPage: $pagination.pagination('getCurrentPage'),
-                            itemsOnPage: 10,
-                            cssStyle: 'dark-theme',
-                            onPageClick: function() {
-                                updatePkts(0, false);
-                            }
-                        });
-
-                        if (data.total === 0) {
-                            $mainBody.spinner('Waiting packets...');
-                        }
-
-                        if (data.total > 0 && showingSpinner()) {
-                            stopSpinner();
-                        }
-
-                        if (loop) {
-                            updatePkts(1000, loop);
-                        }
-                    }, function() {
-                        console.error('Sniffing request error!');
-                        window.location.replace("/sniffing");
-                        {#$stopCaptureBtn.addClass('disabled');#}
-                        {#$pauseCaptureBtn.addClass('disabled');#}
-                        {#$playCaptureBtn.addClass('disabled');#}
-                    });
-                }, sleep);
-            };
-
-            /**
-             * Send a signal to job
-             * @param signal The numeric signal to send
-             * @param callback The callback to call after signal
-             */
-            const signPkts = function(signal, callback) {
-                request('POST', '/sniffing/capture', {
-                    'id': jobId,
-                    'signal': signal
-                }, function(data, textStatus, jqXHR) {
-                    callback(data, textStatus, jqXHR);
-                }, function(jqXHR) {
-                    if (jqXHR.responseJSON) {
-                        notify(jqXHR.responseJSON.message, 'warning');
-                    } else {
-                        console.error('Sniffing requests error!');
-                        window.location.replace("/sniffing");
-                    }
-                });
-            };
-
-            /**
-             * Send a SIGABRT to the current job
-             */
-            const deletePkts = function() {
-                if (confirm("This job will be permanently deleted. Are you sure ?")) {
-                    // 6 = SIGABRT
-                    signPkts(6, function() {
-                        {#console.log('Sniffing requests aborted!');#}
-                        window.location.replace("/sniffing");
-                    });
-                }
-            };
-            $deleteCaptureBtn.click(deletePkts);
-
-            /**
-             * Send a SIGHUP to the current job
-             */
-            const restartPkts = function() {
-                $mainBody.spinner('Restarting sniffer...');
-                pausePkts();
-                $sniffedPktsTable.find('tbody').html('');
-                $pagination.pagination({
-                    dataSource: [],
-                    pageNumber: 1,
-                    items: 0,
-                    pages: 1,
-                    currentPage: 1,
-                    itemsOnPage: 10,
-                    cssStyle: 'dark-theme'
-                });
-                // 0 = SIGRESTART (custom signal)
-                signPkts(0, function(data) {
-                    {#console.log('Sniffing requests restarted!');#}
-                    jobId = data.id;
-                    history.pushState('data', '', '/sniffing/capture?id=' + jobId);
-                    $mainBody.spinner('Waiting packets...');
-                    playPkts();
-                });
-            };
-            $restartCaptureBtn.click(restartPkts);
-
-            /**
-             * Send a SIGKILL to the current job
-             */
-            const stopPkts = function() {
-                // 9 = SIGKILL
-                signPkts(9, function() {
-                    {#console.log('Sniffing requests stopped!');#}
-                    $stopCaptureBtn.addClass('disabled').invisible();
-                    $pauseCaptureBtn.addClass('disabled').invisible();
-                    $playCaptureBtn.addClass('disabled').invisible();
-                });
-            };
-            $stopCaptureBtn.click(stopPkts);
-
-            /**
-             * Send a SIGSTOP to the current job
-             */
-            const pausePkts = function() {
-                // 19 = SIGSTOP
-                signPkts(19, function() {
-                    {#console.log('Sniffing requests paused!');#}
-                    $playCaptureBtn.removeClass('disabled').show().visible();
-                    $pauseCaptureBtn.addClass('disabled').hide().invisible();
-                    $stopCaptureBtn.removeClass('disabled').visible();
-                });
-
-            };
-            $pauseCaptureBtn.click(pausePkts);
-
-            /**
-             * Send a SIGCONT to the current job
-             */
-            const playPkts = function() {
-                // 18 = SIGCONT
-                signPkts(18, function() {
-                    {#console.log('Sniffing requests played!');#}
-                    $playCaptureBtn.addClass('disabled').hide().invisible();
-                    $pauseCaptureBtn.removeClass('disabled').show().visible();
-                    $stopCaptureBtn.removeClass('disabled').visible();
-                    updatePkts(300, true);
-                });
-            };
-            $playCaptureBtn.click(playPkts);
-
-            /**
-             * Show in a model the packet
-             * @param pkt The packet Object
-             */
-            const showPkt = function(pkt) {
-                $pktModal.find('.modal-title').html('Packet #' + pkt.number);
-
-                const $pktModalSrcHost = $pktModal.find('.host.src');
-                const $pktModalDstHost = $pktModal.find('.host.dst');
-
-                const $srcTitle = $pktModalSrcHost.find('.header-title');
-                const $dstTitle = $pktModalDstHost.find('.header-title');
-
-                $srcTitle.html('SOURCE [ ' + pkt.source.label + ' ]');
-                $srcTitle.attr('title', pkt.source.title);
-                $dstTitle.html('DESTINATION [ ' + pkt.destination.label + ' ]');
-                $dstTitle.attr('title', pkt.destination.title);
-
-                // Source MAC
-                $pktModalSrcHost.find('.mac-address').html(pkt.source.mac);
-                $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.vendor : '');
-                $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.company : '');
-
-                // Destination MAC
-                $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
-                $pktModalDstHost.find('.mac-vendor').html(pkt.destination.mac_lookup.vendor);
-                $pktModalDstHost.find('.mac-company').html(pkt.destination.mac_lookup.company);
-
-                // Source IP
-                const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
-                const $srcIpHost = $pktModalSrcHost.find('.ip-host');
-                const src_proto = 'http' + (parseInt(pkt.source.port) === 443 ? 's' : '');
-                const src_port = pkt.source.port ? (':' + pkt.source.port) : '';
-                $pktModalSrcHost.find('.ip-port').html(pkt.source.port);
-                $srcIpAddress.html(pkt.source.ip);
-                $srcIpAddress.attr('href', src_proto + '://' + pkt.source.ip + src_port);
-                $srcIpHost.html(pkt.source.ip_host);
-                $srcIpHost.attr('href', src_proto + '://' + pkt.source.ip_host + src_port);
-
-                // Destination IP
-                const $dstIpAddress = $pktModalDstHost.find('.ip-address');
-                const $dstIpHost = $pktModalDstHost.find('.ip-host');
-                const dst_proto = 'http' + (parseInt(pkt.destination.port) === 443 ? 's' : '');
-                const dst_port = pkt.destination.port ? (':' + pkt.destination.port) : '';
-                $pktModalDstHost.find('.ip-port').html(pkt.destination.port);
-                $dstIpAddress.html(pkt.destination.ip);
-                $dstIpAddress.attr('href', dst_proto + '://' + pkt.destination.ip + dst_port);
-                $dstIpHost.html(pkt.destination.ip_host);
-                $dstIpHost.attr('href', dst_proto + '://' + pkt.destination.ip_host + dst_port);
-
-                // Packet Info
-                const $info = $pktModal.find('#pkt-modal-info');
-                for (const key in pkt) {
-                    const $key = $info.find('#' + key);
-                    if ($key.length === 0) {
-                        continue;
-                    }
-                    $key.html(pkt[key]);
-                }
-
-                // Frame Info
-                const $frame = $pktModal.find('#pkt-modal-frame');
-                $frame.html('');
-                appendLayer($frame, pkt.frame_info);
-
-                // Layers
-                const $layers = $pktModal.find('#pkt-modal-layers');
-                $layers.html('');
-                for (let i in pkt.layers) {
-                    const layer = pkt.layers[i];
-                    appendLayer($layers, layer);
-                }
-
-                initAccordions();
-
-                $pktModal.modal();
-                // console.log(pkt);
-            };
-
-            const appendLayer = function ($parent, layer) {
-                const html_layer =
-                    '<li class="layer">' +
-                    '<a class="toggle" href="javascript:void(0);">' + layer.name +
-                    '<i class="material-icons arrow">keyboard_arrow_right</i>' +
-                    '</a>' +
-                    '<ul class="inner"></ul>' +
-                    '</li>';
-                const $layer = $(html_layer).appendTo($parent);
-                const $children = $layer.find('ul.inner');
-                for (let i in layer.fields) {
-                    const field = layer.fields[i];
-                    appendFieldRecursively($children, field);
-                }
-            };
-
-            const appendFieldRecursively = function ($parent, field) {
-                field.value = field.value.trim();
-                field.key = field.key.trim();
-                field.name = field.name.trim();
-
-                let htmlField = '<li';
-                if (field.children.length > 0) {
-                    htmlField +=
-                        ' class="children">' +
-                        '<a class="toggle value" href="javascript:void(0);">' +
-                        '<i class="material-icons arrow">keyboard_arrow_right</i>' +
-                        '</a>' +
-                        '<ul class="inner"></ul>';
-                } else {
-                    htmlField += ' class="value">';
-                }
-                htmlField += '</li>';
-
-                const $field = $(htmlField).appendTo($parent);
-
-                if (!field.key && !field.name) {
-                    $field.addClass('alone');
-                    $field.text(field.value);   // Prevents style and script execution
-                } else {
-                    const htmlFieldStr = field.label + ': <div class="val-in">' + field.value + '</div>';
-                    if ($field.hasClass('value')) {
-                        $field.html(htmlFieldStr);
-                    } else {
-                        $field.find('.value').append(htmlFieldStr);
-                    }
-                }
-
-                const $children = $field.find('ul.inner');
-                for (let i in field.children) {
-                    const child_field = field.children[i];
-                    appendFieldRecursively($children, child_field);
-                }
-            };
-
-            updatePkts(300, true);
-        });
+            const $children = $field.find('ul.inner');
+            for (let i in field.children) {
+                const child_field = field.children[i];
+                appendFieldRecursively($children, child_field);
+            }
+        };
     </script>
 {% endblock %}

@@ -66,7 +66,8 @@ class HttpRequest:
             data=None,
             json: dict or list = None,
             headers: dict = None,
-            timeout: int = DEFAULT_TIMEOUT
+            timeout: int = DEFAULT_TIMEOUT,
+            cookies: str or dict = None
     ) -> requests.Response or None:
         """
         Make a request to chosen url
@@ -77,10 +78,14 @@ class HttpRequest:
         :param json: (optional) json data to send in the body of the :class:`Request`
         :param headers: The headers to send
         :param timeout: The request timeout
+        :param cookies: The request cookies
         :return The response of request, or None (if the request fail)
         """
         if headers is None:
             headers = {}
+        if type(cookies) is str:
+            cookies = dict((k.strip(), v.strip()) for k, v in (c.split('=') for c in cookies.split(';')))
+
         req_headers = {
             'User-Agent': str(APP_NAME) + ' ' + str(APP_VERSION)
         }
@@ -95,15 +100,15 @@ class HttpRequest:
             return None
         try:
             if request_type == HttpRequest.Type.GET:
-                response = requests.get(url, data, headers=req_headers, timeout=timeout)
+                response = requests.get(url, data, headers=req_headers, timeout=timeout, cookies=cookies)
             elif request_type == HttpRequest.Type.POST:
-                response = requests.post(url, data, json, headers=req_headers, timeout=timeout)
+                response = requests.post(url, data, json, headers=req_headers, timeout=timeout, cookies=cookies)
             elif request_type == HttpRequest.Type.PUT:
-                response = requests.put(url, data, headers=req_headers, timeout=timeout)
+                response = requests.put(url, data, headers=req_headers, timeout=timeout, cookies=cookies)
             elif request_type == HttpRequest.Type.PATCH:
-                response = requests.patch(url, data, headers=req_headers, timeout=timeout)
+                response = requests.patch(url, data, headers=req_headers, timeout=timeout, cookies=cookies)
             elif request_type == HttpRequest.Type.DELETE:
-                response = requests.delete(url, headers=req_headers, timeout=timeout)
+                response = requests.delete(url, headers=req_headers, timeout=timeout, cookies=cookies)
             else:
                 Log.error(str(request_type) + ' is not a valid request type!')
                 return None

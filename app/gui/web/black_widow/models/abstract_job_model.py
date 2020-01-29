@@ -89,7 +89,11 @@ class AbstractJobModel(AbstractModel):
             return
         Log.info("Sending signal " + str(sig) + " to job #" + str(self.id) + ' (' + str(self.pid) + ')')
         self.status = sig
-        os.kill(self.pid, sig)
+        try:
+            os.kill(self.pid, sig)
+        except ProcessLookupError:
+            # Process does not exists
+            pass
         self.save()
         Log.success("Signal " + str(sig) + " sent to job #" + str(self.id) + ' (' + str(self.pid) + ')')
 

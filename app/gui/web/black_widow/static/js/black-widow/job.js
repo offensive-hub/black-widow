@@ -1,0 +1,224 @@
+/********************************************************************************
+ *                                                                               *
+ * job.js -- black-widow jobs javascript                                         *
+ *                                                                               *
+ ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
+ *                                                                               *
+ * This file is part of black-widow.                                             *
+ *                                                                               *
+ * black-widow is free software: you can redistribute it and/or modify           *
+ * it under the terms of the GNU General Public License as published by          *
+ * the Free Software Foundation, either version 3 of the License, or             *
+ * (at your option) any later version.                                           *
+ *                                                                               *
+ * black-widow is distributed in the hope that it will be useful,                *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                 *
+ * GNU General Public License for more details.                                  *
+ *                                                                               *
+ * You should have received a copy of the GNU General Public License             *
+ * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
+ *                                                                               *
+ ********************************************************************************/
+
+$(function() {
+    let jobId = urlParams.get('id');
+    const $dataTable = $('#data-table').find('table').first();
+    const $playBtn = $('#play-btn');
+    const $pauseBtn = $('#pause-btn');
+    const $stopBtn = $('#stop-btn');
+    const $deleteBtn = $('#delete-btn');
+    const $restartBtn = $('#restart-btn');
+    const $pagination = $('#pagination');
+    const $mainBody = $('#main-body');
+    const parentUrl = $('ol.breadcrumb').find('.parent').attr('href');
+
+    $mainBody.spinner('Setting up job...');
+
+    let currentPage = 1;
+    let pages = 1;
+
+    if (window.location.hash.indexOf('#page-') === 0) {
+        const tmpCurrentPage = parseInt(window.location.hash.substr(6, 1));
+        if (tmpCurrentPage) {
+            currentPage = tmpCurrentPage;
+            pages = tmpCurrentPage;
+        }
+    }
+
+    // Pagination
+    $pagination.pagination({
+        dataSource: [],
+        pageNumber: 1,
+        items: 0,
+        pages: pages,
+        currentPage: currentPage,
+        itemsOnPage: 10,
+        cssStyle: 'dark-theme'
+    });
+
+    const updateData = function(sleep, loop=false) {
+        window.setTimeout(function() {
+            if (loop && $pauseBtn.hasClass('disabled')) {
+                return;
+            }
+            request('POST', window.location.pathname, {
+                'id': jobId,
+                'page':  $pagination.pagination('getCurrentPage'),
+                'page_size': 10
+            }, function(data) {
+                if (data.job.status === 'SIGCONT') {
+                    // Process running
+                    $pauseBtn.removeClass('disabled').show().visible();
+                    $playBtn.addClass('disabled').hide().invisible();
+                    $stopBtn.removeClass('disabled').visible();
+                } else if (data.job.status === 'SIGSTOP') {
+                    // Process paused
+                    $pauseBtn.addClass('disabled').hide().invisible();
+                    $playBtn.removeClass('disabled').show().visible();
+                    $stopBtn.removeClass('disabled').visible();
+                } else if (data.job.status === 'SIGKILL') {
+                    // Process stopped
+                    $pauseBtn.addClass('disabled').invisible();
+                    $playBtn.addClass('disabled').invisible();
+                    $stopBtn.addClass('disabled').invisible();
+                }
+                $dataTable.find('tbody').html('');
+
+                showJobData(data.result);
+
+                // Pagination
+                $pagination.pagination({
+                    dataSource: Object.values(data.result),
+                    pageNumber: data.page,
+                    items: data.total,
+                    pages: data.page_end,
+                    currentPage: $pagination.pagination('getCurrentPage'),
+                    itemsOnPage: 10,
+                    cssStyle: 'dark-theme',
+                    onPageClick: function() {
+                        updateData(0, false);
+                    }
+                });
+
+                if (data.total === 0) {
+                    $mainBody.spinner('Waiting data...');
+                }
+
+                if (data.total > 0 && showingSpinner()) {
+                    stopSpinner();
+                }
+
+                if (loop) {
+                    updateData(1000, loop);
+                }
+            }, function() {
+                console.error('Request error!');
+                window.location.replace(parentUrl);
+            });
+        }, sleep);
+    };
+
+    /**
+     * Send a signal to job
+     * @param signal The numeric signal to send
+     * @param callback The callback to call after signal
+     */
+    const signJob = function(signal, callback) {
+        request('POST', window.location.pathname, {
+            'id': jobId,
+            'signal': signal
+        }, function(data, textStatus, jqXHR) {
+            callback(data, textStatus, jqXHR);
+        }, function(jqXHR) {
+            if (jqXHR.responseJSON) {
+                notify(jqXHR.responseJSON.message, 'warning');
+            } else {
+                console.error('Request error!');
+                window.location.replace(parentUrl);
+            }
+        });
+    };
+
+    /**
+     * Send a SIGABRT to the current job
+     */
+    const deleteJob = function() {
+        if (confirm("This job will be permanently deleted. Are you sure ?")) {
+            // 6 = SIGABRT
+            signJob(6, function() {
+                window.location.replace($('ol.breadcrumb').find('.parent').attr('href'));
+            });
+        }
+    };
+    $deleteBtn.click(deleteJob);
+
+    /**
+     * Send a SIGHUP to the current job
+     */
+    const restartJob = function() {
+        $mainBody.spinner('Restarting job...');
+        pauseJob();
+        $dataTable.find('tbody').html('');
+        $pagination.pagination({
+            dataSource: [],
+            pageNumber: 1,
+            items: 0,
+            pages: 1,
+            currentPage: 1,
+            itemsOnPage: 10,
+            cssStyle: 'dark-theme'
+        });
+        // 0 = SIGRESTART (custom signal)
+        signJob(0, function(data) {
+            jobId = data.id;
+            history.pushState('data', '', window.location.pathname + '?id=' + jobId);
+            $mainBody.spinner('Waiting data...');
+            playJob();
+        });
+    };
+    $restartBtn.click(restartJob);
+
+    /**
+     * Send a SIGKILL to the current job
+     */
+    const stopJob = function() {
+        // 9 = SIGKILL
+        signJob(9, function() {
+            $stopBtn.addClass('disabled').invisible();
+            $pauseBtn.addClass('disabled').invisible();
+            $playBtn.addClass('disabled').invisible();
+        });
+    };
+    $stopBtn.click(stopJob);
+
+    /**
+     * Send a SIGSTOP to the current job
+     */
+    const pauseJob = function() {
+        // 19 = SIGSTOP
+        signJob(19, function() {
+            $playBtn.removeClass('disabled').show().visible();
+            $pauseBtn.addClass('disabled').hide().invisible();
+            $stopBtn.removeClass('disabled').visible();
+        });
+
+    };
+    $pauseBtn.click(pauseJob);
+
+    /**
+     * Send a SIGCONT to the current job
+     */
+    const playJob = function() {
+        // 18 = SIGCONT
+        signJob(18, function() {
+            $playBtn.addClass('disabled').hide().invisible();
+            $pauseBtn.removeClass('disabled').show().visible();
+            $stopBtn.removeClass('disabled').visible();
+            updateData(300, true);
+        });
+    };
+    $playBtn.click(playJob);
+
+    updateData(300, true);
+});

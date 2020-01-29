@@ -42,6 +42,7 @@ class HtmlParser(PyHTMLParser, ABC):
     TYPE_ALL = 'all_parse'
     TYPE_RELEVANT = 'relevant_parse'
     TYPE_FORM = 'form_parse'
+    TYPES = (TYPE_ALL, TYPE_RELEVANT, TYPE_FORM)
 
     _input_tags = {
         'input': [
@@ -95,15 +96,27 @@ class HtmlParser(PyHTMLParser, ABC):
         self.url_scheme = ''
 
     @staticmethod
-    def crawl(url: str, parsing_type: str, callback, depth: int = 0):
+    def crawl(url: str, parsing_type: str, callback, depth: int = 0, cookies: str = None):
         """
         :param url: The url to crawl/parse
-        :param parsing_type: TYPE_ALL | TYPE_RELEVANT | TYPE_FORM
+        :param parsing_type: HtmlParse.TYPE_ALL | HtmlParse.TYPE_RELEVANT | HtmlParse.TYPE_FORM
         :param callback: The callback method to call foreach visited page
         :param depth: The max crawling depth (0 to execute a normal page parsing)
+        :param cookies: The cookies to use on parsing
         """
+        if not is_url(url):
+            raise ValueError('url must be a valid url')
+        if parsing_type not in HtmlParser.types():
+            raise ValueError('parsing_type must be one of ' + str(HtmlParser.types()))
+        if not callable(callback):
+            raise ValueError('callback is not callable')
+        if type(depth) is not int:
+            raise ValueError('dept must be an integer')
+        if cookies is not None and type(cookies) is not str:
+            raise ValueError('cookies must be a string')
+
         base_url = urlparse(url).netloc
-        parsed_urls = dict()
+        parsed_urls = set()
 
         def _crawl(href: str, curr_depth: int = 0):
             if href in parsed_urls or \
@@ -111,37 +124,61 @@ class HtmlParser(PyHTMLParser, ABC):
                     (depth is not None and curr_depth > depth):
                 return
 
+            # Visit the current href
+            if parsing_type == HtmlParser.TYPE_ALL:
+                parsed, _ = HtmlParser.all_parse(href, cookies=cookies)
+            else:
+                parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
+
+            parsed['url'] = href
+
+            if parsing_type == HtmlParser.TYPE_FORM:
+                # Find forms in page
+                callback(HtmlParser.find_forms(parsed, href))
+            else:
+                callback(parsed)
+
+            parsed_urls.add(href)
+
+            # Find adjacent links
+            links = HtmlParser.find_links(parsed)
+            for link in links:
+                _crawl(link, curr_depth + 1)
+
         _crawl(url)
 
     @staticmethod
-    def all_parse(url: str = None, html: str = None) -> (dict, str):
+    def all_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing ALL found tags
         :param url: The url to parse (or None)
         :param html: The html page to parse as string (or None)
+        :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
-        return HtmlParser._abstract_parse(url, html, False)
+        return HtmlParser._abstract_parse(url, html, False, cookies)
 
     @staticmethod
-    def relevant_parse(url: str = None, html: str = None) -> (dict, str):
+    def relevant_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing only tags in HtmlParse._relevant_tags
         :param url: The url to parse (or None)
         :param html: The html page to parse as string (or None)
+        :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
-        return HtmlParser._abstract_parse(url, html, True)
+        return HtmlParser._abstract_parse(url, html, True, cookies)
 
     @staticmethod
-    def form_parse(url: str = None, html: str = None) -> (dict, str):
+    def form_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing only tags in HtmlParse._relevant_tags
         :param url: The url to parse (or None)
         :param html: The html page to parse as string (or None)
+        :param cookies: The cookies to use on parsing
         :return: dictionary of form tags, cookies
         """
-        parsed_html, cookies = HtmlParser.relevant_parse(url, html)
+        parsed_html, cookies = HtmlParser.relevant_parse(url, html, cookies)
         return HtmlParser.find_forms(parsed_html, url), cookies
 
     @staticmethod
@@ -262,16 +299,25 @@ class HtmlParser(PyHTMLParser, ABC):
             Log.error(str(parsed) + ' is not a valid parsed content!')
 
     @staticmethod
-    def _abstract_parse(url: str, html: str, relevant: bool) -> (dict, str):
+    def types() -> tuple:
+        return (
+            HtmlParser.TYPE_ALL,
+            HtmlParser.TYPE_RELEVANT,
+            HtmlParser.TYPE_FORM
+        )
+
+    @staticmethod
+    def _abstract_parse(url: str, html: str, relevant: bool, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing
         :param url: The url to parse (or None)
         :param html: The html page to parse as string (or None)
         :param relevant: True if should be processed only the tags in HtmlParse._relevant_tags
+        :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
         parser = HtmlParser(relevant)
-        return parser._parse(url, html)
+        return parser._parse(url, html, cookies)
 
     def handle_starttag(self, tag: str, attrs):
         """
@@ -292,7 +338,7 @@ class HtmlParser(PyHTMLParser, ABC):
                         else:
                             if attr_value[0:1] != '/':
                                 attr_value = '/' + attr_value
-                            attr_value = self.base_url + attr_value
+                            attr_value = self.url + attr_value
                     tag_attrs[attr_key] = attr_value
             cur_tag = {'tag': tag, 'attrs': tag_attrs}
             self.queue_tag.append(cur_tag)
@@ -327,22 +373,22 @@ class HtmlParser(PyHTMLParser, ABC):
             cur_tag['data'] = data
             self.queue_tag[-1] = cur_tag
 
-    def _parse(self, url: str = None, html: str = None) -> (dict, str):
+    def _parse(self, url: str = None, html: str = None, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing ALL found tags
         :param url: The url to parse (or None)
         :param html: The html page to parse as string (or None)
+        :param cookies: The cookies to use on parsing
         :return: dictionary of tags, cookies
         """
         self.url = None
         self.base_url = None
-        cookies = ''
         if url is not None:
             self.url = url
             url_parsed = urlparse(url)
             self.url_scheme = str(url_parsed.scheme)
             self.base_url = self.url_scheme + '://' + str(url_parsed.netloc)
-            r = HttpRequest.request(url)
+            r = HttpRequest.request(url, cookies=cookies)
             if r is None:
                 return None
             try:
@@ -352,8 +398,9 @@ class HtmlParser(PyHTMLParser, ABC):
                 html = r.text
             if r.headers is not None:
                 for k in r.headers.keys():
-                    if k == 'Set-Cookie' or k == 'set-cookie' or k == 'Set-cookie':
-                        cookies = r.headers.get('Set-Cookie')
+                    k: str
+                    if k.lower() == 'set-cookie':
+                        cookies = r.headers.get(k)
                         break
         sorted_html, errors = tidy_document(html)   # Sort html (and fix errors)
         self.feed(sorted_html)

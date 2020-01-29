@@ -174,8 +174,8 @@ class MultiTask:
                         try:
                             os.kill(pid, signal.SIGKILL)
                             Log.info('Process ' + str(pid) + ' killed!')
-                        except Exception as e:
-                            Log.error(str(e))
+                        except Exception as ex:
+                            Log.error(str(ex))
                     Log.info(self.tag + 'end')
                 else:
                     Log.info('Ignoring other threads')
@@ -205,7 +205,11 @@ class MultiTask:
 
         if self.tasks_type == MultiTask.MULTI_PROCESSING:
             pids = []
-            signal.signal(signal.SIGCHLD, signal.SIG_IGN)   # Ignore child exit status
+            try:
+                signal.signal(signal.SIGCHLD, signal.SIG_IGN)   # Ignore child exit status
+            except ValueError as e:
+                # Probably you have executed Django
+                Log.error(str(e))
             for task in self.tasks:
                 task.start()
                 # noinspection PyUnresolvedReferences

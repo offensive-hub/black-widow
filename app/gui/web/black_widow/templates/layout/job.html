@@ -3,7 +3,7 @@
     <!--
     *********************************************************************************
     *                                                                               *
-    * parse.html -- HTML file.                                                      *
+    * job.html -- HTML file.                                                        *
     *                                                                               *
     ************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
     *                                                                               *
@@ -44,16 +44,64 @@
 {% load static %}
 
 {% block style %}
+    {{ block.super }}
     <link href="{% static 'css/plugins/simplePagination.css' %}" rel="stylesheet" />
 {% endblock %}
 
-{% block breadcrumb %}
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="parent" href="/web/parsing">Web Parsing</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Parse</li>
-    </ol>
+{% block content %}
+
+    {% block absolute %}
+    {% endblock %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-job">
+                <div class="card-header card-header-danger">
+
+                    {% block card_header %}
+                    {% endblock %}
+
+                    <button id="play-btn" type="button" class="btn btn-success btn-action disabled" title="Start job"
+                            style="display: none; visibility: hidden;">
+                        <i class="material-icons" style="padding: 0;">play_arrow</i>
+                    </button>
+
+                    <button id="pause-btn" type="button" class="btn btn-warning btn-action" title="Pause job"
+                            style="visibility: hidden;">
+                        <i class="material-icons" style="padding: 0;">pause</i>
+                    </button>
+
+                    <button id="stop-btn" type="button" class="btn btn-danger btn-action" title="Stop job"
+                            style="visibility: hidden;">
+                        <i class="material-icons" style="padding: 0;">stop</i>
+                    </button>
+
+                    <button id="delete-btn" type="button" class="btn btn-abort btn-action" title="Delete current job">
+                        <i class="material-icons" style="padding: 0;">delete_forever</i>
+                    </button>
+
+                    <button id="restart-btn" type="button" class="btn btn-abort btn-action" title="Restart current job">
+                        <i class="material-icons" style="padding: 0;">rotate_right</i>
+                    </button>
+
+                </div>
+                <div class="card-body" id="main-body">
+                    <div class="table-responsive" id="data-table">
+                        {% block table %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+
+            <nav class="pagination justify-content-center" id="pagination">
+            </nav>
+
+        </div>
+    </div>
+
 {% endblock %}
 
-{% block content %}
-    {% csrf_token %}
+{% block script %}
+    <script type="application/javascript" src="{% static 'js/plugins/simplePagination.js' %}"></script>
+    <script type="application/javascript" src="{% static 'js/black-widow/job.js' %}"></script>
 {% endblock %}

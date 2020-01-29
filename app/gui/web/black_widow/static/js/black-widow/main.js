@@ -1,6 +1,6 @@
 /********************************************************************************
  *                                                                               *
- * black-widow.js -- Main black-widow javascript                                 *
+ * main.js -- Main black-widow javascript                                        *
  *                                                                               *
  ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
  *                                                                               *

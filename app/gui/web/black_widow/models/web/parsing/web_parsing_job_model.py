@@ -47,21 +47,38 @@ class WebParsingJobModel(AbstractJobModel):
     )
 
     url: str = models.CharField(null=False, max_length=512)
-    parsing_type: str = models.CharField(
+    _parsing_type: str = models.CharField(
         null=False,
         choices=TYPES,
         max_length=50
     )
-    parsing_tags: str = models.CharField(
+    _parsing_tags: str = models.CharField(
         null=False,
         choices=PARSE_TAGS,
         max_length=50
     )
-    depth: int = models.IntegerField(null=True)
+    depth: int = models.IntegerField(null=False)
+    cookies: str = models.TextField(null=True)
 
     @staticmethod
     def all() -> models.query.QuerySet:
         return AbstractJobModel._all(WebParsingJobModel)
+
+    @property
+    def parsing_type(self):
+        return dict(WebParsingJobModel.TYPES).get(self._parsing_type)
+
+    @parsing_type.setter
+    def parsing_type(self, value: str):
+        self._parsing_type = value
+
+    @property
+    def parsing_tags(self):
+        return dict(WebParsingJobModel.PARSE_TAGS).get(self._parsing_tags)
+
+    @parsing_tags.setter
+    def parsing_tags(self, value: str):
+        self._parsing_tags = value
 
     def __str__(self) -> str:
         return 'SniffingJobModel(' + str({
