@@ -1,7 +1,25 @@
-"""
+{% extends 'layout/base.html' %}
+{% comment %}
+<!--
 *********************************************************************************
 *                                                                               *
-* urls.py -- Django urls of black-widow.                                        *
+* parse.html -- HTML file.                                                      *
+*                                                                               *
+************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
+*                                                                               *
+* =========================================================                     *
+* Material Dashboard Dark Edition - v2.1.0                                      *
+* =========================================================                     *
+*                                                                               *
+* Product Page: https://www.creative-tim.com/product/material-dashboard-dark    *
+* Copyright 2019 Creative Tim (http://www.creative-tim.com)                     *
+*                                                                               *
+* Coded by www.creative-tim.com                                                 *
+*                                                                               *
+* =========================================================                     *
+*                                                                               *
+* The above copyright notice and this permission notice shall be included in    *
+* all copies or substantial portions of the Software.                           *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -21,35 +39,8 @@
 * along with black-widow.  If not, see <http://www.gnu.org/licenses/>.          *
 *                                                                               *
 *********************************************************************************
-"""
+-->
+{% endcomment %}
+{% block content %}
 
-from django.urls import path, re_path
-
-from black_widow.app.gui.web.settings import STATIC_URL
-from . import views
-
-urlpatterns = [
-    path('', views.index, name='black widow'),
-
-    # --- SNIFFING --- #
-    path('sniffing', views.Sniffing.SettingsView.as_view(), name='sniffing'),
-    path('sniffing/capture', views.Sniffing.CaptureView.as_view(), name='sniffing'),
-
-    # --- WEB PARSING --- #
-    path('web/parsing', views.WebParsing.SettingsView.as_view(), name='web parsing'),
-    path('web/parsing/parse', views.WebParsing.ParseView.as_view(), name='web parsing'),
-
-    # --- SQL INJECTION --- #
-    path('sql', views.Sql.SettingsView.as_view(), name='sql injection'),
-    path('sql/inject', views.Sql.InjectView.as_view(), name='sql injection'),
-
-    path('user', views.user, name='user'),
-    path('tables', views.tables, name='tables'),
-    path('typography', views.typography, name='typography'),
-    path('icons', views.icons, name='icons'),
-    path('notifications', views.notifications, name='notifications'),
-    path('upgrade', views.upgrade, name='upgrade'),
-
-    # static (non debug compatibility without web server)
-    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', views.static, name='static'),
-]
+{% endblock %}

@@ -69,7 +69,7 @@ def create_parser():
     options_sql.add_argument("--sql-deep", help="Crawl the website in search for forms", action="store_true")
     options_sql.add_argument("--sql-url", help="The url where search for forms", type=str, metavar='URL')
     options_sql.add_argument("--sql-depth", help="Max crawling depth", type=int, metavar='INTEGER')
-    options_sql.add_argument("--sql-forms", help="Parse the forms on page", type=bool, metavar='BOOLEAN')
+    options_sql.add_argument("--sql-forms", help="Parse the forms on page", action="store_true")
 
     return parser
 

@@ -26,7 +26,8 @@
 import os
 
 from black_widow.app.env import APP_STORAGE_OUT
-from black_widow.app.helpers import storage, util
+from black_widow.app.helpers.storage import check_folder
+from black_widow.app.helpers.util import now
 from black_widow.app.managers.sniffer import PcapSniffer
 from black_widow.app.services import JsonSerializer, MultiTask
 
@@ -39,7 +40,7 @@ class AbstractSniffingView(AbstractView):
     Abstract Sniffing View
     """
     storage_out_dir = os.path.join(APP_STORAGE_OUT, 'sniffing')
-    storage.check_folder(storage_out_dir)
+    check_folder(storage_out_dir)
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
 
@@ -48,7 +49,7 @@ class AbstractSniffingView(AbstractView):
         sniffing_job.filters = filters
         sniffing_job.pcap_file = pcap
         sniffing_job.interfaces = interfaces
-        sniffing_job.json_file = os.path.join(self.storage_out_dir, util.now() + '_SNIFFING_.json')
+        sniffing_job.json_file = os.path.join(self.storage_out_dir, now() + '_SNIFFING_.json')
 
         def _sniffer_callback(pkt: dict):
             """

@@ -40,9 +40,8 @@ class HtmlParser(PyHTMLParser, ABC):
     """
 
     _relevant_tags = {
-        'a': ['href'],  # { 'href': 'https://...' }
+        'a': ['href'],
         'form': ['id', 'action', 'method'],
-        # { 'action': 'https://...', 'method': 'GET', 'inputs': {'name': ['attr1', 'attr2']} }
         'input': [
             'id', 'name', 'type',
             'min', 'max',
@@ -57,6 +56,12 @@ class HtmlParser(PyHTMLParser, ABC):
             'required',
             'minlength',
             'maxlength'
+        ],
+        'select': [
+            'id', 'name', 'required'
+        ],
+        'option': [
+            'id', 'value', 'selected'
         ],
         'script': ['src', 'data', 'type'],  # { 'src': '/some/script.js', 'data': 'function() ...' }
         'link': ['href'],  # { 'href': '*.xml' }

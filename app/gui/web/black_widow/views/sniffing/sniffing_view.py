@@ -42,7 +42,7 @@ class Sniffing:
     """
     class SettingsView(AbstractSniffingView):
         """
-        Sniffing View
+        Sniffing Settings View
         """
         name = 'sniffing'
         template_name = 'sniffing/settings.html'
@@ -88,7 +88,7 @@ class Sniffing:
 
     class CaptureView(AbstractSniffingView):
         """
-        Capture View
+        Sniffing Capture View
         """
         name = 'sniffing'
         template_name = 'sniffing/capture.html'

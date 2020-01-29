@@ -102,6 +102,12 @@
                         <p>Sniffing</p>
                     </a>
                 </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'web parsing' %}active{% endif %}">
+                    <a class="nav-link" href="/web/parsing">
+                        <i class="material-icons">web</i>
+                        <p>Web Parsing</p>
+                    </a>
+                </li>
                 <li class="nav-item {% if request.resolver_match.url_name == 'sql injection' %}active{% endif %}">
                     <a class="nav-link" href="/sql">
                         <i class="material-icons">storage</i>

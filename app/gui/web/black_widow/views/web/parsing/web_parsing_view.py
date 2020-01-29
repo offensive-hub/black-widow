@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* urls.py -- Django urls of black-widow.                                        *
+* web_parsing_view.py -- Django Web Parsing view.                               *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,33 +23,23 @@
 *********************************************************************************
 """
 
-from django.urls import path, re_path
+from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 
-from black_widow.app.gui.web.settings import STATIC_URL
-from . import views
 
-urlpatterns = [
-    path('', views.index, name='black widow'),
+class WebParsing:
+    """
+    Web Parsing Container View
+    """
+    class SettingsView(AbstractView):
+        """
+        Web Parsing Settings View
+        """
+        name = 'web parsing'
+        template_name = 'web/parsing/settings.html'
 
-    # --- SNIFFING --- #
-    path('sniffing', views.Sniffing.SettingsView.as_view(), name='sniffing'),
-    path('sniffing/capture', views.Sniffing.CaptureView.as_view(), name='sniffing'),
-
-    # --- WEB PARSING --- #
-    path('web/parsing', views.WebParsing.SettingsView.as_view(), name='web parsing'),
-    path('web/parsing/parse', views.WebParsing.ParseView.as_view(), name='web parsing'),
-
-    # --- SQL INJECTION --- #
-    path('sql', views.Sql.SettingsView.as_view(), name='sql injection'),
-    path('sql/inject', views.Sql.InjectView.as_view(), name='sql injection'),
-
-    path('user', views.user, name='user'),
-    path('tables', views.tables, name='tables'),
-    path('typography', views.typography, name='typography'),
-    path('icons', views.icons, name='icons'),
-    path('notifications', views.notifications, name='notifications'),
-    path('upgrade', views.upgrade, name='upgrade'),
-
-    # static (non debug compatibility without web server)
-    re_path(r'^' + STATIC_URL[1:] + '(?P<path>.*)$', views.static, name='static'),
-]
+    class ParseView(AbstractView):
+        """
+        Web Parsing Parse View
+        """
+        name = 'web parsing'
+        template_name = 'web/parsing/parse.html'

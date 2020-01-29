@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* sniffing_job_model.py -- A sniffing job info model                            *
+* web_parsing_model.py -- A web parsing job info model                          *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -35,15 +35,12 @@ from black_widow.app.helpers.util import sort_dict
 from black_widow.app.services import JsonSerializer
 
 
-class SniffingJobModel(AbstractJobModel):
+class WebParsingJobModel(AbstractJobModel):
     """
-    Django Sniffing Job Model
+    Django Web Parsing Job Model
     """
-    filters: str = models.TextField(null=True)
-    _interfaces: str or None = models.TextField(null=False)
     json_file: str = models.CharField(max_length=250, null=False)
-    pcap_file: str = models.CharField(max_length=250, null=True)
-    created_at: str = models.DateTimeField(default=now, editable=False)
+
 
     @staticmethod
     def all() -> models.query.QuerySet:
