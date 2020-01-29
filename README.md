@@ -57,12 +57,10 @@ black-widow provides easy ways to execute many kinds of information gatherings a
     sudo pip3 install black-widow
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/docker-hub.png)   Docker installation
-
- 1) If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
- 2) Run docker:
-    * GUI: `docker run -d -p 8095:80 offensive/black-widow -g`
-      * Than visit: [http://localhost:8095](http://localhost:8095/)
-    * Command line: `docker run offensive/black-widow <arguments>`
+If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
+  * GUI: `docker run -d -p 8095:80 offensive/black-widow -g`
+    * Than visit: [http://localhost:8095](http://localhost:8095/)
+  * Command line: `docker run --rm offensive/black-widow <arguments>`
 
 ### Manual installation
 

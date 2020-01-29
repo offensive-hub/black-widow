@@ -3,7 +3,7 @@
 <!--
 *********************************************************************************
 *                                                                               *
-* sniffing.html -- HTML file.                                                   *
+* settings.html -- HTML file.                                                   *
 *                                                                               *
 ************ IMPORTANT MATERIAL DASHBOARD DARK EDITION LICENSE TERMS ************
 *                                                                               *
@@ -42,7 +42,7 @@
 -->
 {% endcomment %}
 {% block content %}
-    <form method="post" enctype="multipart/form-data" id="sniffing-settings-form">
+    <form method="post" id="web-parsing-settings-form">
         {% csrf_token %}
         <div class="row">
 
@@ -105,7 +105,7 @@
                             <div class="tab-pane" id="new-parsing">
                                 <div class="row">
                                     <!-- URL -->
-                                    <div class="col-lg-7 col-md-6">
+                                    <div class="col-xl-6 col-lg-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">URL *</h4>
@@ -115,8 +115,8 @@
                                                 <div class="tab-content">
                                                     <div class="tab-pane active" id="url">
                                                         <div class="form-group">
-                                                            <label for="filters-input" class="bmd-label-floating">Write URL here...</label>
-                                                            <input value="{{url}}" type="text" class="form-control" id="filters-input" name="url">
+                                                            <label for="url" class="bmd-label-floating">Write URL here...</label>
+                                                            <input required="required" value="{{ url }}" type="text" class="form-control" id="url" name="url">
                                                             <span class="bmd-help">(eg. https://black-widow.io)</span>
                                                         </div>
                                                     </div>
@@ -126,7 +126,7 @@
                                     </div>
 
                                     <!-- Type -->
-                                    <div class="col-lg-5 col-md-6">
+                                    <div class="col-xl-3 col-lg-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">Type</h4>
@@ -134,7 +134,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
-                                                    <div class="tab-pane active checkbox-required" id="types">
+                                                    <div class="tab-pane active checkbox-required" id="types" label="type">
 
                                                         {% for type in types %}
                                                             <div class="form-check form-check-radio">
@@ -146,6 +146,12 @@
                                                             </div>
 
                                                         {% endfor %}
+
+                                                        <div show-on="WEBSITE_CRAWLING" class="form-group" style="display: none; margin-left: 26px; margin-top: 22px; width: 80px;">
+                                                            <label for="depth" class="bmd-label-floating">Depth</label>
+                                                            <input value="-1" type="number" class="form-control" id="depth" name="depth">
+                                                            <span class="bmd-help" style="display: block;">< 0 = no limit</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -153,7 +159,7 @@
                                     </div>
 
                                     <!-- Tags -->
-                                    <div class="col-lg-5 col-md-6">
+                                    <div class="col-xl-3 col-lg-6">
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">Tags</h4>
@@ -161,7 +167,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
-                                                    <div class="tab-pane active checkbox-required" id="types">
+                                                    <div class="tab-pane active checkbox-required" id="tags" label="tag">
 
                                                         {% for tag in tags %}
                                                             <div class="form-check form-check-radio">
@@ -193,13 +199,29 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
 
-
         </div>
 
-
     </form>
+{% endblock %}
+
+{% block script %}
+    <script type="application/javascript">
+    $(function() {
+        const typeCheckedId = $('input[name="type"]:checked').attr('id');
+        if (typeCheckedId) {
+            // show current checked type subsection
+            $('[show-on="'+ typeCheckedId +'"]').show();
+        }
+        const $showOn = $('[show-on]');
+        const $type = $('input[name="type"]');
+        $type.click(function () {
+            const id = $(this).attr('id');
+            $showOn.hide();
+            $('[show-on="'+ id +'"]').show();
+        });
+    });
+    </script>
 {% endblock %}

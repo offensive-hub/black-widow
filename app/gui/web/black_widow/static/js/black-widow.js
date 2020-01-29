@@ -26,8 +26,7 @@ $(function() {
         $('[href="' + window.location.hash + '"').click();
     }
     $('[href^="#"]').click(function () {
-        const $this = $(this);
-        window.location.hash = $this.attr('href');
+        window.location.hash = $(this).attr('href');
     });
     $('button.upload').click(function() {
         const $label = $(this).parent();
@@ -47,15 +46,19 @@ $(function() {
             return false;
         }
         const $this = $(this);
-        const $checkboxRequired = $this.find('.checkbox-required');
-        if ($checkboxRequired.length > 0) {
+        const $checkboxesRequired = $this.find('.checkbox-required');
+        let result = true;
+        $checkboxesRequired.each(function () {
+            const $checkboxRequired = $(this);
             const $checkboxes = $checkboxRequired.find('input[type="checkbox"]:checked');
-            if ($checkboxes.length === 0) {
+            const $radios = $checkboxRequired.find('input[type="radio"]:checked');
+            if ($checkboxes.length === 0 && $radios.length === 0) {
+                console.log($checkboxRequired);
                 alert('Chose at least one ' + $checkboxRequired.attr('label') + ' !');
-                return false;
+                result = false;
             }
-        }
-        return true;
+        });
+        return result;
     });
     $('.link').click(function() {
         const $this = $(this);

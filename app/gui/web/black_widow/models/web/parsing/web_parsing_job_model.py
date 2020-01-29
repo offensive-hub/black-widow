@@ -40,7 +40,7 @@ class WebParsingJobModel(AbstractJobModel):
     )
 
     PARSE_ALL_TAGS = ('ALL_TAGS', 'All Tags')
-    PARSE_RELEVANT_TAGS = ('RELEVANT_TAGS', 'Relevant Tags (a, form, script, link)')
+    PARSE_RELEVANT_TAGS = ('RELEVANT_TAGS', 'Relevant Tags (a, script, link, Form Tags)')
     PARSE_FORM_TAGS = ('FORM_TAGS', 'Form Tags (form, input, textarea, select, option)')
     PARSE_TAGS = (
         PARSE_ALL_TAGS,
