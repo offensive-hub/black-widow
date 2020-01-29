@@ -39,6 +39,10 @@ class HtmlParser(PyHTMLParser, ABC):
     HtmlParser Manager
     """
 
+    TYPE_ALL = 'all_parse'
+    TYPE_RELEVANT = 'relevant_parse'
+    TYPE_FORM = 'form_parse'
+
     _input_tags = {
         'input': [
             'id', 'name', 'type',
@@ -91,7 +95,26 @@ class HtmlParser(PyHTMLParser, ABC):
         self.url_scheme = ''
 
     @staticmethod
-    def parse(url: str = None, html: str = None) -> (dict, str):
+    def crawl(url: str, parsing_type: str, callback, depth: int = 0):
+        """
+        :param url: The url to crawl/parse
+        :param parsing_type: TYPE_ALL | TYPE_RELEVANT | TYPE_FORM
+        :param callback: The callback method to call foreach visited page
+        :param depth: The max crawling depth (0 to execute a normal page parsing)
+        """
+        base_url = urlparse(url).netloc
+        parsed_urls = dict()
+
+        def _crawl(href: str, curr_depth: int = 0):
+            if href in parsed_urls or \
+                    urlparse(href).netloc != base_url or \
+                    (depth is not None and curr_depth > depth):
+                return
+
+        _crawl(url)
+
+    @staticmethod
+    def all_parse(url: str = None, html: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing by processing ALL found tags
         :param url: The url to parse (or None)

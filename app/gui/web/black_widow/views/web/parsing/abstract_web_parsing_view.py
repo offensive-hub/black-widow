@@ -1,7 +1,7 @@
 """
 *********************************************************************************
 *                                                                               *
-* web_parsing_model.py -- A web parsing job info model                          *
+* abstract_web_parsing_view.py -- Django Abstract Web Parsing view              *
 *                                                                               *
 ********************** IMPORTANT BLACK-WIDOW LICENSE TERMS **********************
 *                                                                               *
@@ -23,53 +23,51 @@
 *********************************************************************************
 """
 
-from django.db import models
+import os
 
-from black_widow.app.gui.web.black_widow.models.abstract_job_model import AbstractJobModel
+from black_widow.app.env import APP_STORAGE_OUT
+from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
+from black_widow.app.helpers.storage import check_folder
+from black_widow.app.helpers.util import now
 from black_widow.app.managers.parser import HtmlParser
+from black_widow.app.services import JsonSerializer, MultiTask
+
+from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 
 
-class WebParsingJobModel(AbstractJobModel):
+class AbstractWebParsingView(AbstractView):
     """
-    Django Web Parsing Job Model
+    Abstract Web Parsing View
     """
-    TYPE_SINGLE_PAGE = 'single_page'
-    TYPE_WEBSITE_CRAWLING = 'website_crawling'
-    TYPES = (
-        (TYPE_SINGLE_PAGE, 'Single Page'),
-        (TYPE_WEBSITE_CRAWLING, 'Website Crawling')
-    )
+    storage_out_dir = os.path.join(APP_STORAGE_OUT, 'web_parsing')
+    check_folder(storage_out_dir)
 
-    PARSE_TAGS = (
-        (HtmlParser.TYPE_ALL, 'All Tags'),
-        (HtmlParser.TYPE_RELEVANT, 'Relevant Tags (a, script, link, Form Tags)'),
-        (HtmlParser.TYPE_FORM, 'Form Tags (form, input, textarea, select, option)')
-    )
+    if not os.access(storage_out_dir, os.X_OK):
+        os.chmod(storage_out_dir, 0o0755)
 
-    url: str = models.CharField(null=False, max_length=512)
-    parsing_type: str = models.CharField(
-        null=False,
-        choices=TYPES,
-        max_length=50
-    )
-    parsing_tags: str = models.CharField(
-        null=False,
-        choices=PARSE_TAGS,
-        max_length=50
-    )
-    depth: int = models.IntegerField(null=True)
+    def new_job(self, url: str, parsing_type: str, depth: int, tags: str) -> WebParsingJobModel:
+        web_parsing_job = WebParsingJobModel()
+        web_parsing_job.url = url
+        web_parsing_job.parsing_type = parsing_type
+        web_parsing_job.parsing_tags = tags
+        web_parsing_job.depth = depth
+        web_parsing_job.json_file = os.path.join(self.storage_out_dir, now() + '_WEB_PARSING_.json')
 
-    @staticmethod
-    def all() -> models.query.QuerySet:
-        return AbstractJobModel._all(WebParsingJobModel)
+        def _web_parsing_callback(parsed_page: dict):
+            """
+            The callback function of crawler.
+            This method writes the parsed pages in a json file
+            :param parsed_page: The parsed page
+            """
+            JsonSerializer.add_item_to_dict(None, parsed_page, web_parsing_job.json_file)
 
-    def __str__(self) -> str:
-        return 'SniffingJobModel(' + str({
-            'id': self.id,
-            'pid': self.pid,
-            'pid_file': self.pid_file,
-            'status': self.status_name,
-            'type': self.parsing_type,
-            'tags': self.parsing_tags,
-            'depth': self.depth,
-        }) + ')'
+        web_parsing_job.pid_file = MultiTask.multiprocess(
+            HtmlParser.crawl,
+            (url, parsing_type, _web_parsing_callback, depth),
+            asynchronous=True,
+            cpu=1
+        )
+
+        web_parsing_job.save()
+
+        return web_parsing_job

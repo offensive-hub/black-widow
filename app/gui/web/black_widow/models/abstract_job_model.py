@@ -25,20 +25,22 @@
 
 import os
 import signal
+from time import sleep
 
 from django.db import models
 from django.utils.timezone import now
 
 from black_widow.app.gui.web.black_widow.models.abstract_model import AbstractModel
 from black_widow.app.helpers import storage
-from black_widow.app.helpers.util import pid_exists
-from black_widow.app.services import MultiTask, Log
+from black_widow.app.helpers.util import pid_exists, sort_dict
+from black_widow.app.services import MultiTask, Log, JsonSerializer
 
 
 class AbstractJobModel(AbstractModel):
     """
     Django Abstract Job Model
     """
+    json_file: str = models.CharField(max_length=250, null=False)
     status: int = models.PositiveIntegerField(null=False, default=signal.SIGCONT)
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
@@ -93,6 +95,25 @@ class AbstractJobModel(AbstractModel):
 
     def delete(self, using=None, keep_parents=False):
         self.kill(signal.SIGKILL)
+        if not storage.delete(self.json_file):
+            return False
         if not storage.delete(self.pid_file):
             return False
         return super(AbstractJobModel, self).delete(using, keep_parents)
+
+    @property
+    def json_dict(self) -> dict:
+        attempts = 0
+        json_dict = JsonSerializer.get_dictionary(self.json_file)
+        while len(json_dict) == 0:
+            sleep(0.2)
+            # Prevents parallel access errors to file
+            json_dict = JsonSerializer.get_dictionary(self.json_file)
+            attempts += 1
+            if attempts >= 5:
+                break
+        return sort_dict(dict(sorted(
+            json_dict.items(),
+            key=lambda e: int(e[1]['number']),
+            reverse=True
+        )))

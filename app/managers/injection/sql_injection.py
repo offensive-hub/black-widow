@@ -105,6 +105,8 @@ class SqlInjection:
 
             # Visit the current href
             parsed_relevant, request_cookies = HtmlParser.relevant_parse(href)
+
+            # Find forms in page
             parsed_forms[href] = HtmlParser.find_forms(parsed_relevant, href)
 
             # Find adjacent links

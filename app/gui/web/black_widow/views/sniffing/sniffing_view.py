@@ -119,10 +119,6 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            if not util.is_root():
-                return JsonResponse({
-                    'message': 'You are not #root'
-                }, status=401)
             # noinspection PyTypeChecker
             sniffing_job: SniffingJobModel = None
             request_params: dict = request.POST.dict()

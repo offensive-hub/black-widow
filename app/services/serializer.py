@@ -100,6 +100,8 @@ class JsonSerializer:
         :param file: The file where dictionary is dumped
         """
         dictionary = JsonSerializer.get_dictionary(file)
+        if key is None:
+            key = len(dictionary)
         dictionary[key] = value
         JsonSerializer.set_dictionary(dictionary, file)
 

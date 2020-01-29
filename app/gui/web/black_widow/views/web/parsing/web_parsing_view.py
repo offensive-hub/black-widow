@@ -23,7 +23,7 @@
 *********************************************************************************
 """
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
 from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
@@ -51,6 +51,22 @@ class WebParsing:
                 'jobs': WebParsingJobModel.all()
             }
             return render(request, self.template_name, view_params)
+
+        def post(self, request):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponseRedirect
+            """
+            request_params: dict = request.POST.dict()
+            print(request_params)
+
+            # sniffing_job = self.new_job(
+            #     request_params.get('filters'),
+            #     request_params.get('pcap'),
+            #     request_params.get('interfaces'),
+            # )
+
+            return redirect('/web/parsing/parse?id=' + str(sniffing_job.id))
 
     class ParseView(AbstractView):
         """

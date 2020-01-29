@@ -23,13 +23,10 @@
 *********************************************************************************
 """
 
-from time import sleep
 from django.db import models
 
 from black_widow.app.gui.web.black_widow.models.abstract_job_model import AbstractJobModel
 from black_widow.app.helpers import storage
-from black_widow.app.helpers.util import sort_dict
-from black_widow.app.services import JsonSerializer
 
 
 class SniffingJobModel(AbstractJobModel):
@@ -38,7 +35,6 @@ class SniffingJobModel(AbstractJobModel):
     """
     filters: str = models.TextField(null=True)
     _interfaces: str or None = models.TextField(null=False)
-    json_file: str = models.CharField(max_length=250, null=False)
     pcap_file: str = models.CharField(max_length=250, null=True)
 
     @staticmethod
@@ -58,25 +54,8 @@ class SniffingJobModel(AbstractJobModel):
         else:
             self._interfaces = ';'.join(value)
 
-    @property
-    def json_dict(self) -> dict:
-        attempts = 0
-        json_dict = JsonSerializer.get_dictionary(self.json_file)
-        while len(json_dict) == 0:
-            sleep(0.2)
-            # Prevents parallel access errors to file
-            json_dict = JsonSerializer.get_dictionary(self.json_file)
-            attempts += 1
-            if attempts >= 5:
-                break
-        return sort_dict(dict(sorted(
-            json_dict.items(),
-            key=lambda e: int(e[1]['number']),
-            reverse=True
-        )))
-
     def delete(self, using=None, keep_parents=False):
-        if not storage.delete(self.json_file):
+        if not storage.delete(self.pcap_file):
             return False
         return super(SniffingJobModel, self).delete(using, keep_parents)
 
