@@ -32,11 +32,20 @@ class WebParsingJobModel(AbstractJobModel):
     """
     Django Web Parsing Job Model
     """
-    TYPE_SINGLE_PAGE = 'Single Page'
-    TYPE_WEBSITE_CRAWLING = 'Website Crawling'
+    TYPE_SINGLE_PAGE = ('SINGLE_PAGE', 'Single Page')
+    TYPE_WEBSITE_CRAWLING = ('WEBSITE_CRAWLING', 'Website Crawling')
     TYPES = (
-        ('1', TYPE_SINGLE_PAGE),
-        ('2', TYPE_WEBSITE_CRAWLING)
+        TYPE_SINGLE_PAGE,
+        TYPE_WEBSITE_CRAWLING
+    )
+
+    PARSE_ALL_TAGS = ('ALL_TAGS', 'All Tags')
+    PARSE_RELEVANT_TAGS = ('RELEVANT_TAGS', 'Relevant Tags (a, form, script, link)')
+    PARSE_FORM_TAGS = ('FORM_TAGS', 'Form Tags (form, input, textarea, select, option)')
+    PARSE_TAGS = (
+        PARSE_ALL_TAGS,
+        PARSE_RELEVANT_TAGS,
+        PARSE_FORM_TAGS
     )
 
     parsing_type: str = models.CharField(
@@ -44,6 +53,13 @@ class WebParsingJobModel(AbstractJobModel):
         choices=TYPES,
         max_length=50
     )
+
+    parsing_tags: str = models.CharField(
+        null=False,
+        choices=PARSE_TAGS,
+        max_length=50
+    )
+
     depth: int = models.IntegerField(null=True)
 
     @staticmethod

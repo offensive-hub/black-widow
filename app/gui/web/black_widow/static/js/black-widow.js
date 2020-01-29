@@ -22,6 +22,13 @@
  ********************************************************************************/
 
 $(function() {
+    if (window.location.hash) {
+        $('[href="' + window.location.hash + '"').click();
+    }
+    $('[href^="#"]').click(function () {
+        const $this = $(this);
+        window.location.hash = $this.attr('href');
+    });
     $('button.upload').click(function() {
         const $label = $(this).parent();
         $label.click();
@@ -56,7 +63,7 @@ $(function() {
         if (href !== null && href !== undefined) {
             window.location.href = href;
         }
-    })
+    });
 });
 
 const urlParams = new URLSearchParams(window.location.search);

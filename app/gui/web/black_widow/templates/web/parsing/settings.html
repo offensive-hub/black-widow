@@ -83,6 +83,7 @@
                                         <th>#</th>
                                         <th>Url</th>
                                         <th>Type</th>
+                                        <th>Tags</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
@@ -92,6 +93,7 @@
                                             <td>{{ job.id }}</td>
                                             <td>{{ job.url }}</td>
                                             <td>{{ job.parsing_type }}</td>
+                                            <td>{{ job.parsing_tags }}</td>
                                             <td>{{ job.status }}</td>
                                         </tr>
                                     {% endfor %}
@@ -107,7 +109,7 @@
                                         <div class="card card-hover">
                                             <div class="card-header card-header-danger card-header-sec">
                                                 <h4 class="card-title ">URL *</h4>
-                                                <p class="card-category">URL to parse/crawl</p>
+                                                <p class="card-category">URL to parse / crawl</p>
                                             </div>
                                             <div class="card-body">
                                                 <div class="tab-content">
@@ -139,6 +141,33 @@
                                                                 <label class="form-check-label">
                                                                     <input class="form-check-input" type="radio" name="type" id="{{ type.0 }}" value="{{ type.0 }}">
                                                                     {{ type.1 }}
+                                                                    <span class="circle"><span class="check"></span></span>
+                                                                </label>
+                                                            </div>
+
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Tags -->
+                                    <div class="col-lg-5 col-md-6">
+                                        <div class="card card-hover">
+                                            <div class="card-header card-header-danger card-header-sec">
+                                                <h4 class="card-title ">Tags</h4>
+                                                <div class="card-category">What do you want to parse ?</div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active checkbox-required" id="types">
+
+                                                        {% for tag in tags %}
+                                                            <div class="form-check form-check-radio">
+                                                                <label class="form-check-label">
+                                                                    <input class="form-check-input" type="radio" name="tag" id="{{ tag.0 }}" value="{{ tag.0 }}">
+                                                                    {{ tag.1 }}
                                                                     <span class="circle"><span class="check"></span></span>
                                                                 </label>
                                                             </div>

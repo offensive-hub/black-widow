@@ -47,6 +47,7 @@ class WebParsing:
             """
             view_params = {
                 'types': WebParsingJobModel.TYPES,
+                'tags': WebParsingJobModel.PARSE_TAGS,
                 'jobs': WebParsingJobModel.all()
             }
             return render(request, self.template_name, view_params)
