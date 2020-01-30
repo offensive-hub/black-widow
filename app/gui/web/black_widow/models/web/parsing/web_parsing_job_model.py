@@ -88,7 +88,7 @@ class WebParsingJobModel(AbstractJobModel):
         self._parsing_tags = value
 
     def __str__(self) -> str:
-        return 'SniffingJobModel(' + str({
+        return 'WebParsingJobModel(' + str({
             'id': self.id,
             'pid': self.pid,
             'pid_file': self.pid_file,

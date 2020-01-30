@@ -74,7 +74,7 @@ class Sniffing:
             else:
                 request_params['pcap'] = None
 
-            job = self.new_job(
+            job = self._new_job(
                 request_params.get('filters'),
                 request_params.get('pcap'),
                 request_params.get('interfaces'),

@@ -22,7 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
-
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
@@ -58,7 +58,7 @@ class WebParsing:
             :return: django.http.HttpResponseRedirect
             """
             request_params: dict = request.POST.dict()
-            job = self.new_job(
+            job = self._new_job(
                 request_params.get('url'),
                 request_params.get('type'),
                 request_params.get('depth'),
@@ -80,3 +80,10 @@ class WebParsing:
             :return: django.http.HttpResponse
             """
             return self._get_job(request, redirect_url='/web/parsing')
+
+        def post(self, request) -> JsonResponse:
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.JsonResponse
+            """
+            return self._post_job(request)

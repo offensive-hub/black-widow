@@ -46,7 +46,7 @@ class AbstractSniffingView(AbstractJobView):
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
 
-    def new_job(self, filters: str, pcap: str, interfaces: list) -> SniffingJobModel:
+    def _new_job(self, filters: str, pcap: str, interfaces: list) -> SniffingJobModel:
         sniffing_job = SniffingJobModel()
         sniffing_job.filters = filters
         sniffing_job.pcap_file = pcap
@@ -72,8 +72,8 @@ class AbstractSniffingView(AbstractJobView):
         sniffing_job.save()
         return sniffing_job
 
-    def _copy_job(self, job: SniffingJobModel):
-        return self.new_job(
+    def _copy_job(self, job: SniffingJobModel) -> SniffingJobModel:
+        return self._new_job(
             job.filters,
             job.pcap_file,
             job.interfaces,

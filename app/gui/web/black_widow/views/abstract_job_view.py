@@ -22,6 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
+
 import signal
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -79,8 +80,7 @@ class AbstractJobView(AbstractView):
         except ValueError:
             pass
         except Exception as e:
-            print(type(e))
-            print(str(e))
+            Log.error(str(e))
 
         if job is None:
             return JsonResponse({
