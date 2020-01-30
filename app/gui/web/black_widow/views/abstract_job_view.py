@@ -114,6 +114,7 @@ class AbstractJobView(AbstractView):
                 'message': 'Signal sent'
             }, status=200)
 
+        job.self_check()
         page = request_params.get('page')
         page_size = request_params.get('page_size')
         pagination = self.pagination(job.json_dict, page, page_size)

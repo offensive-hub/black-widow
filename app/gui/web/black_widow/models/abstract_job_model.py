@@ -61,11 +61,13 @@ class AbstractJobModel(AbstractModel):
         jobs = model_class.objects.all().order_by('-id')
         for job in jobs:
             job: AbstractJobModel
-            if job.status not in (signal.SIGKILL, signal.SIGABRT):
-                if not pid_exists(job.pid):
-                    job.status = signal.SIGKILL
-                    job.save()
+            job.self_check()
         return jobs
+
+    def self_check(self):
+        if self.status not in (signal.SIGKILL, signal.SIGABRT):
+            self.status = signal.SIGKILL
+            self.save()
 
     @property
     def pid_file(self) -> str:
