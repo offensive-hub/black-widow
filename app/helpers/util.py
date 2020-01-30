@@ -105,6 +105,19 @@ def sort_dict(dictionary: dict) -> dict:
     return sorted_dictionary
 
 
+def reverse_dict(dictionary: dict) -> dict:
+    """
+    :param dictionary: The dictionary to sort
+    :return: The sorted dictionary
+    """
+    reversed_dictionary = dict()
+    keys = list(dictionary.keys())
+    keys.reverse()
+    for k in keys:
+        reversed_dictionary[k] = dictionary[k]
+    return reversed_dictionary
+
+
 def print_dict(dictionary: dict, depth: int = 0):
     """
     :type dictionary: dict

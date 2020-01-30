@@ -155,6 +155,8 @@ class HtmlParser(PyHTMLParser, ABC):
                 _crawl(link, curr_depth + 1)
 
         _crawl(url)
+        Log.success(url + 'crawling done!')
+        return True
 
     @staticmethod
     def all_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):

@@ -34,7 +34,7 @@ from django.utils.timezone import now
 
 from black_widow.app.gui.web.black_widow.models.abstract_model import AbstractModel
 from black_widow.app.helpers import storage
-from black_widow.app.helpers.util import pid_exists, sort_dict
+from black_widow.app.helpers.util import pid_exists, sort_dict, reverse_dict
 from black_widow.app.services import MultiTask, Log, JsonSerializer
 
 
@@ -120,7 +120,7 @@ class AbstractJobModel(AbstractModel):
             if attempts >= 5:
                 break
         if self.json_sort_value is None:
-            return json_dict
+            return reverse_dict(json_dict)
         return sort_dict(dict(sorted(
             json_dict.items(),
             key=lambda e: int(e[1][self.json_sort_value]),
