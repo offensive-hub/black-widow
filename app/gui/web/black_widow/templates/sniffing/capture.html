@@ -254,12 +254,14 @@
             - Keys to decrypt traffic
     -->
     <h4 class="card-title mt-0">Network Traffic</h4>
-    <p class="card-category interfaces">
-        Interfaces: <span>{{ job.interfaces }}</span>
-    </p>
-    <p class="card-category">
-        Filters: <span>{{ job.filters }}</span>
-    </p>
+    <div class="card-category interfaces">
+        <div class="card-category-label">Interfaces:</div>
+        <span class="card-category-content">{{ job.interfaces }}</span>
+    </div>
+    <div class="card-category">
+        <div class="card-category-label">Filters:</div>
+        <span class="card-category-content">{{ job.filters }}</span>
+    </div>
 {% endblock %}
 
 {% block table %}

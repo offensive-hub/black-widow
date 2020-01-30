@@ -120,8 +120,12 @@ class HttpRequest:
             if APP_DEBUG:
                 HttpRequest.print_response(response)
             return response
-        except (requests.exceptions.ConnectionError, requests.exceptions.TooManyRedirects) as e:
-            Log.error('Unable to connect to ' + str(url))
+        except (
+                requests.exceptions.ConnectionError,
+                requests.exceptions.TooManyRedirects,
+                requests.exceptions.ReadTimeout
+        ) as e:
+            Log.error('Unable to complete request to ' + str(url))
             Log.error('Exception: ' + str(e))
         return None
 

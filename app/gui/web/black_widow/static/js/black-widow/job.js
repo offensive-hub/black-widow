@@ -110,7 +110,7 @@ $(function() {
                 }
 
                 if (loop) {
-                    updateData(1000, loop);
+                    updateData(1300, loop);
                 }
             }, function() {
                 console.error('Request error!');

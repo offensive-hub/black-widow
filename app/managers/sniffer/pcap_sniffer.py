@@ -388,6 +388,7 @@ class PcapSniffer:
                     elif is_ip(pcap_layer_field.value):
                         try:
                             host['ip'] = pcap_layer_field.value
+                            # noinspection PyTypeChecker
                             host['ip_host'] = socket.gethostbyaddr(pcap_layer_field.value)[0]
                         except (socket.herror, socket.gaierror):
                             pass

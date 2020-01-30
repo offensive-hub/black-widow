@@ -77,6 +77,9 @@
     color: #ff0000;
 }
 
+strong {
+    font-weight: bold;
+}
 
 
 /*** 0.1) Cards ***/
@@ -96,6 +99,15 @@
     font-weight: bold;
     color: #fff;
 }
+
+.card-category .card-category-label {
+    float: left;
+    padding: 0 7px 0 3px;
+}
+.card-category .card-category-content {
+
+}
+
 .card-hover {
     box-shadow: unset !important;
 }
