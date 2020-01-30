@@ -22,16 +22,19 @@
 *                                                                               *
 *********************************************************************************
 """
+import signal
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 
+from black_widow.app.gui.web.black_widow.models.abstract_job_model import AbstractJobModel
 from black_widow.app.gui.web.black_widow.views.abstract_view import AbstractView
 from black_widow.app.services import Log
 
 
 class AbstractJobView(AbstractView):
-    model_class = None
+    model_class: AbstractJobModel = None
 
     """
     Abstract Job View
@@ -60,3 +63,67 @@ class AbstractJobView(AbstractView):
         return render(request, self.template_name, {
             'job': sniffing_job
         })
+
+    def _post_job(self, request) -> JsonResponse:
+        """
+        :type request: django.core.handlers.wsgi.WSGIRequest
+        :return: django.http.JsonResponse
+        """
+        # noinspection PyTypeChecker
+        job: AbstractJobModel = None
+        request_params: dict = request.POST.dict()
+        job_id = request_params.get('id')
+        try:
+            job_id = int(job_id)
+            job = self.model_class.objects.get(id=job_id)
+        except ValueError:
+            pass
+        except Exception as e:
+            print(type(e))
+            print(str(e))
+
+        if job is None:
+            return JsonResponse({
+                'message': 'Unable to find the requested job'
+            }, status=400)
+
+        signal_job = request_params.get('signal')
+        if signal_job is not None:
+            signal_job = int(signal_job)
+
+            if signal_job == 0:   # Custom signal 0 = Restart capturing
+                job_new = self._copy_job(job)
+                job_id = job_new.id
+                signal_job = signal.SIGABRT
+
+            try:
+                job.kill(signal_job)
+            except ProcessLookupError:
+                Log.warning("The process " + str(job.pid) + " does not exists")
+
+            if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
+                if not job.delete():
+                    return JsonResponse({
+                        'message': 'Unable to delete the job'
+                    }, status=400)
+
+            return JsonResponse({
+                'id': job_id,
+                'signal': signal_job,
+                'message': 'Signal sent'
+            }, status=200)
+
+        page = request_params.get('page')
+        page_size = request_params.get('page_size')
+        pagination = self.pagination(job.json_dict, page, page_size)
+        pagination.update({
+            'job': {
+                'id': job_id,
+                'status': job.status_name
+            }
+        })
+
+        return JsonResponse(pagination, status=200)
+
+    def _copy_job(self, job: AbstractJobModel) -> AbstractJobModel:
+        raise NotImplementedError("Abstract method _copy_job")

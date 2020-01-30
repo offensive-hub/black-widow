@@ -23,13 +23,10 @@
 *********************************************************************************
 """
 
-import signal
-
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import SniffingJobModel
-from black_widow.app.services import Log
 from black_widow.app.helpers import network, util
 
 from .abstract_sniffing_view import AbstractSniffingView
@@ -102,67 +99,9 @@ class Sniffing:
 
             return self._get_job(request, redirect_url='/sniffing')
 
-        def post(self, request):
+        def post(self, request) -> JsonResponse:
             """
             :type request: django.core.handlers.wsgi.WSGIRequest
-            :return: django.http.HttpResponse
+            :return: django.http.JsonResponse
             """
-            # noinspection PyTypeChecker
-            job: SniffingJobModel = None
-            request_params: dict = request.POST.dict()
-            job_id = request_params.get('id')
-            try:
-                job_id = int(job_id)
-                job = SniffingJobModel.objects.get(id=job_id)
-            except ValueError:
-                pass
-            except Exception as e:
-                print(type(e))
-                print(str(e))
-
-            if job is None:
-                return JsonResponse({
-                    'message': 'Unable to find the requested job'
-                }, status=400)
-
-            signal_job = request_params.get('signal')
-            if signal_job is not None:
-                signal_job = int(signal_job)
-
-                if signal_job == 0:   # Custom signal 0 = Restart capturing
-                    job_new = self.new_job(
-                        job.filters,
-                        job.pcap_file,
-                        job.interfaces,
-                    )
-                    job_id = job_new.id
-                    signal_job = signal.SIGABRT
-
-                try:
-                    job.kill(signal_job)
-                except ProcessLookupError:
-                    Log.warning("The process " + str(job.pid) + " does not exists")
-
-                if signal_job == signal.SIGABRT:    # 6 = Abort permanently by cleaning job
-                    if not job.delete():
-                        return JsonResponse({
-                            'message': 'Unable to delete the job'
-                        })
-
-                return JsonResponse({
-                    'id': job_id,
-                    'signal': signal_job,
-                    'message': 'Signal sent'
-                }, status=200)
-
-            page = request_params.get('page')
-            page_size = request_params.get('page_size')
-            pagination = self.pagination(job.json_dict, page, page_size)
-            pagination.update({
-                'job': {
-                    'id': job_id,
-                    'status': job.status_name
-                }
-            })
-
-            return JsonResponse(pagination, status=200)
+            return self._post_job(request)

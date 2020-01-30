@@ -46,7 +46,14 @@ class AbstractWebParsingView(AbstractJobView):
     if not os.access(storage_out_dir, os.X_OK):
         os.chmod(storage_out_dir, 0o0755)
 
-    def new_job(self, url: str, parsing_type: str, depth: str, tags: str, cookies: str) -> WebParsingJobModel:
+    def new_job(
+            self,
+            url: str,
+            parsing_type: str,
+            depth: int or str,
+            tags: str,
+            cookies: str
+    ) -> WebParsingJobModel:
         if parsing_type == WebParsingJobModel.TYPE_SINGLE_PAGE:
             depth = 0
         else:
@@ -82,5 +89,13 @@ class AbstractWebParsingView(AbstractJobView):
         )
 
         web_parsing_job.save()
-
         return web_parsing_job
+
+    def _copy_job(self, job: WebParsingJobModel) -> WebParsingJobModel:
+        return self.new_job(
+            job.url,
+            job.parsing_type_key(),
+            job.depth,
+            job.parsing_tags_key(),
+            job.cookies
+        )

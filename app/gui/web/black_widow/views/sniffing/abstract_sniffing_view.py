@@ -71,3 +71,10 @@ class AbstractSniffingView(AbstractJobView):
         sniffing_job.pid_file = MultiTask.multiprocess(pcap_sniffer.start, asynchronous=True, cpu=1)
         sniffing_job.save()
         return sniffing_job
+
+    def _copy_job(self, job: SniffingJobModel):
+        return self.new_job(
+            job.filters,
+            job.pcap_file,
+            job.interfaces,
+        )

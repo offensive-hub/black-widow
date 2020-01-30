@@ -25,6 +25,8 @@
 
 import os
 import signal
+
+from datetime import datetime
 from time import sleep
 
 from django.db import models
@@ -44,7 +46,7 @@ class AbstractJobModel(AbstractModel):
     status: int = models.PositiveIntegerField(null=False, default=signal.SIGCONT)
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
-    created_at: str = models.DateTimeField(default=now, editable=False)
+    created_at: datetime = models.DateTimeField(default=now, editable=False)
 
     class Meta:
         abstract = True

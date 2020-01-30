@@ -49,38 +49,38 @@ def timestamp() -> str:
     return str(datetime.timestamp(datetime.now()))
 
 
-def regex_in_string(regex, string) -> bool:
+def regex_in_string(regex, text) -> bool:
     """
     Checks if the input string contains the input regex
     :param regex: The regex to search
-    :param string: The string to check
+    :param text: The string to check
     :return: True if string contains regex, otherwise False
     """
     reg = re.compile(regex)
-    matches = re.findall(reg, string)
+    matches = re.findall(reg, text)
     return len(matches) > 0
 
 
-def regex_is_string(regex, string) -> bool:
+def regex_is_string(regex, text) -> bool:
     """
     Check if a string is equals to input regex
     :param regex: The regex to compare
-    :param string: The string to compare
+    :param text: The string to compare
     :return: True, if the regex is equals to string
     """
     reg = re.compile(regex)
-    return bool(reg.match(string))
+    return bool(reg.match(text))
 
 
-def replace_regex(regex, replace, string) -> str:
+def replace_regex(regex, replace, text) -> str:
     """
     Replace the regex in the string with another string
     :param regex: The regex to found
     :param replace: The replacer string
-    :param string: The string where find and replace the regex
+    :param text: The string where find and replace the regex
     :return: The input string with replaced regex
     """
-    return re.sub(regex, replace, string, flags=re.M)
+    return re.sub(regex, replace, text, flags=re.M)
 
 
 def is_listable(obj) -> bool:

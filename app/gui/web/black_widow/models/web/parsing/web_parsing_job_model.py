@@ -65,6 +65,9 @@ class WebParsingJobModel(AbstractJobModel):
     def all() -> models.query.QuerySet:
         return AbstractJobModel._all(WebParsingJobModel)
 
+    def parsing_type_key(self):
+        return self._parsing_type
+
     @property
     def parsing_type(self):
         return dict(WebParsingJobModel.TYPES).get(self._parsing_type)
@@ -72,6 +75,9 @@ class WebParsingJobModel(AbstractJobModel):
     @parsing_type.setter
     def parsing_type(self, value: str):
         self._parsing_type = value
+
+    def parsing_tags_key(self):
+        return self._parsing_tags
 
     @property
     def parsing_tags(self):
