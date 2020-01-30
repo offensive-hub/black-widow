@@ -82,6 +82,7 @@
         <thead>
         <tr>
             <th>URL</th>
+            <th>Results</th>
         </tr>
         </thead>
         <tbody>
@@ -99,8 +100,10 @@
             for (let key in result) {
                 // noinspection JSUnfilteredForInLoop
                 let page = result[key];
+                let count = Object.entries(page).length - 1;
                 $dataTable.insertTableRow([
                     {name: page.url},                     // URL
+                    {name: count},                        // Results
                 ], function() {
                     showPage(page);
                 });

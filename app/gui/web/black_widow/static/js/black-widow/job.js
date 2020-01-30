@@ -26,6 +26,7 @@ $(function() {
     let lastProcessStatus = null;
     let lastJobDataCount = 0;
     let lastJobDataPage = -1;
+    let emptyCount = -1;
 
     const $dataTable = $('#data-table').find('table').first();
     const $playBtn = $('#play-btn');
@@ -122,7 +123,10 @@ $(function() {
                         stopSpinner();
                     }
                 } else if (data.job.status === 'SIGKILL') {
-                    loop = false;
+                    emptyCount += 1;
+                    if (emptyCount >= 6) {
+                        loop = false;
+                    }
                 }
 
                 if (loop) {
@@ -187,6 +191,7 @@ $(function() {
         });
         lastJobDataCount = 0;
         lastJobDataPage = -1;
+        emptyCount = 0;
         // 0 = SIGRESTART (custom signal)
         signJob(0, function(data) {
             jobId = data.id;
