@@ -55,7 +55,7 @@
 {% endblock %}
 
 {% block absolute %}
-    <!-- Show parsed page modal -->
+    <!-- Parsed page modal -->
     <!-- TODO: make modal -->
 {% endblock %}
 
@@ -66,12 +66,53 @@
             - Keys to decrypt traffic
     -->
     <h4 class="card-title mt-0">Web Parsing</h4>
-    <p class="card-category interfaces">
-        Interfaces: <span>{{ job.interfaces }}</span>
-    </p>
-    <p class="card-category">
-        Filters: <span>{{ job.filters }}</span>
-    </p>
+    <div class="card-category card-info">
+        <div class="card-category-label">URL:</div>
+        <span class="card-category-content"><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></span>
+    </div>
+    <div class="card-category card-info">
+        <div class="card-category-label">Tags:</div>
+        <span class="card-category-content">{{ job.parsing_tags }}</span>
+    </div>
 {% endblock %}
 
 
+{% block table %}
+    <table class="table table-hover table-select">
+        <thead>
+        <tr>
+            <th>URL</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+    <script type="application/javascript">
+        const $pktModal = $('#pkt-modal');
+        const $dataTable = $('#data-table').find('table').first();
+
+        const showJobData = function(result) {
+            for (let key in result) {
+                // noinspection JSUnfilteredForInLoop
+                let page = result[key];
+                $dataTable.insertTableRow([
+                    {name: page.url},                     // URL
+                ], function() {
+                    showPage(page);
+                });
+            }
+        };
+
+        /**
+         * Show the parsed page in a modal
+         * @param page The page Object
+         */
+        const showPage = function (page) {
+            console.log('TODO: implement showPage()')
+        }
+    </script>
+{% endblock %}

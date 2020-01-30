@@ -50,7 +50,7 @@
 {% endblock %}
 
 {% block absolute %}
-    <!-- Show packet modal -->
+    <!-- Packet modal -->
     <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -254,11 +254,11 @@
             - Keys to decrypt traffic
     -->
     <h4 class="card-title mt-0">Network Traffic</h4>
-    <div class="card-category interfaces">
+    <div class="card-category card-info">
         <div class="card-category-label">Interfaces:</div>
         <span class="card-category-content">{{ job.interfaces }}</span>
     </div>
-    <div class="card-category">
+    <div class="card-category card-info">
         <div class="card-category-label">Filters:</div>
         <span class="card-category-content">{{ job.filters }}</span>
     </div>
@@ -268,24 +268,12 @@
     <table class="table table-hover table-select">
         <thead>
         <tr>
-            <th>
-                No.
-            </th>
-            <th>
-                Time
-            </th>
-            <th>
-                Source
-            </th>
-            <th>
-                Destination
-            </th>
-            <th>
-                Protocol
-            </th>
-            <th>
-                Length (bytes)
-            </th>
+            <th>No.</th>
+            <th>Time</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Protocol</th>
+            <th>Length (bytes)</th>
         </tr>
         </thead>
         <tbody>
@@ -328,7 +316,7 @@
         };
 
         /**
-         * Show in a model the packet
+         * Show the packet in a modal
          * @param pkt The packet Object
          */
         const showPkt = function(pkt) {

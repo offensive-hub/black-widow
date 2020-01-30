@@ -100,12 +100,12 @@ strong {
     color: #fff;
 }
 
+.card-category.card-info {
+    display: flow-root;
+}
 .card-category .card-category-label {
     float: left;
     padding: 0 7px 0 3px;
-}
-.card-category .card-category-content {
-
 }
 
 .card-hover {

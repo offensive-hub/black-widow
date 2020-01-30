@@ -44,14 +44,15 @@ class AbstractJobView(AbstractView):
         """
         Show the requested job
         :type request: django.core.handlers.wsgi.WSGIRequest
-        :param redirect_url:
-        :return:
+        :param redirect_url: The url to redirect the request in case of errors
+        :return: django.http.HttpResponse
         """
         request_params: dict = request.GET.dict()
 
         try:
             job_id = int(request_params.get('id'))
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as e:
+            Log.error(str(e))
             return redirect(redirect_url)
 
         Log.info("Showing job #" + str(job_id))

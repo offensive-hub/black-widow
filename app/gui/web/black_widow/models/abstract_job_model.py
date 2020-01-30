@@ -47,6 +47,7 @@ class AbstractJobModel(AbstractModel):
     pid: int = models.PositiveIntegerField(null=False)
     _pid_file: str = models.CharField(max_length=250, null=False)
     created_at: datetime = models.DateTimeField(default=now, editable=False)
+    json_sort_value: str = None
 
     class Meta:
         abstract = True
@@ -118,8 +119,10 @@ class AbstractJobModel(AbstractModel):
             attempts += 1
             if attempts >= 5:
                 break
+        if self.json_sort_value is None:
+            return json_dict
         return sort_dict(dict(sorted(
             json_dict.items(),
-            key=lambda e: int(e[1]['number']),
+            key=lambda e: int(e[1][self.json_sort_value]),
             reverse=True
         )))

@@ -36,6 +36,7 @@ class SniffingJobModel(AbstractJobModel):
     filters: str = models.TextField(null=True)
     _interfaces: str or None = models.TextField(null=False)
     pcap_file: str = models.CharField(max_length=250, null=True)
+    json_sort_value = 'number'
 
     @staticmethod
     def all() -> models.query.QuerySet:

@@ -135,18 +135,19 @@ class HtmlParser(PyHTMLParser, ABC):
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
 
-            parsed['url'] = href
+            parsed_urls.add(href)
 
             if parsing_type == HtmlParser.TYPE_FORM:
                 # Find forms in page
-                callback(HtmlParser.find_forms(parsed, href))
+                parsed_page = HtmlParser.find_forms(parsed, href)
             elif parsing_type == HtmlParser.TYPE_META:
                 # Find metadata in page
-                callback(HtmlParser.find_meta(parsed))
+                parsed_page = HtmlParser.find_meta(parsed)
             else:
-                callback(parsed)
+                parsed_page = parsed
 
-            parsed_urls.add(href)
+            parsed_page['url'] = href
+            callback(parsed_page)
 
             # Find adjacent links
             links = HtmlParser.find_links(parsed)
