@@ -47,11 +47,11 @@ class AbstractSniffingView(AbstractJobView):
         os.chmod(storage_out_dir, 0o0755)
 
     def _new_job(self, filters: str, pcap: str, interfaces: list) -> SniffingJobModel:
-        sniffing_job = SniffingJobModel()
-        sniffing_job.filters = filters
-        sniffing_job.pcap_file = pcap
-        sniffing_job.interfaces = interfaces
-        sniffing_job.json_file = os.path.join(self.storage_out_dir, now() + '_SNIFFING_.json')
+        job = SniffingJobModel()
+        job.filters = filters
+        job.pcap_file = pcap
+        job.interfaces = interfaces
+        job.json_file = os.path.join(self.storage_out_dir, now() + '_SNIFFING_.json')
 
         def _sniffer_callback(pkt: dict):
             """
@@ -59,18 +59,20 @@ class AbstractSniffingView(AbstractJobView):
             This method writes the sniffed packets in a json file
             :param pkt: The sniffed packet
             """
-            JsonSerializer.add_item_to_dict(pkt['number'], pkt, sniffing_job.json_file)
+            JsonSerializer.add_item_to_dict(pkt['number'], pkt, job.json_file)
 
         pcap_sniffer = PcapSniffer(
-            filters=sniffing_job.filters,
-            src_file=sniffing_job.pcap_file,
-            interfaces=sniffing_job.interfaces,
+            filters=job.filters,
+            src_file=job.pcap_file,
+            interfaces=job.interfaces,
             limit_length=10000,
             callback=_sniffer_callback
         )
-        sniffing_job.pid_file = MultiTask.multiprocess(pcap_sniffer.start, asynchronous=True, cpu=1)
-        sniffing_job.save()
-        return sniffing_job
+
+        job.pid_file = MultiTask.multiprocess(pcap_sniffer.start, asynchronous=True, cpu=1)
+        job.save()
+
+        return job
 
     def _copy_job(self, job: SniffingJobModel) -> SniffingJobModel:
         return self._new_job(

@@ -59,13 +59,13 @@ class AbstractWebParsingView(AbstractJobView):
         else:
             depth = int(depth)
 
-        web_parsing_job = WebParsingJobModel()
-        web_parsing_job.url = url
-        web_parsing_job.parsing_type = parsing_type
-        web_parsing_job.parsing_tags = tags
-        web_parsing_job.depth = depth
-        web_parsing_job.json_file = os.path.join(self.storage_out_dir, now() + '_WEB_PARSING_.json')
-        web_parsing_job.cookies = cookies
+        job = WebParsingJobModel()
+        job.url = url
+        job.parsing_type = parsing_type
+        job.parsing_tags = tags
+        job.depth = depth
+        job.json_file = os.path.join(self.storage_out_dir, now() + '_WEB_PARSING_.json')
+        job.cookies = cookies
 
         def _web_parsing_callback(parsed_page: dict):
             """
@@ -73,9 +73,9 @@ class AbstractWebParsingView(AbstractJobView):
             This method writes the parsed pages in a json file
             :param parsed_page: The parsed page
             """
-            JsonSerializer.add_item_to_dict(parsed_page.get('url'), parsed_page, web_parsing_job.json_file)
+            JsonSerializer.add_item_to_dict(parsed_page.get('url'), parsed_page, job.json_file)
 
-        web_parsing_job.pid_file = MultiTask.multiprocess(
+        job.pid_file = MultiTask.multiprocess(
             HtmlParser.crawl,
             (
                 url,
@@ -88,8 +88,8 @@ class AbstractWebParsingView(AbstractJobView):
             cpu=1
         )
 
-        web_parsing_job.save()
-        return web_parsing_job
+        job.save()
+        return job
 
     def _copy_job(self, job: WebParsingJobModel) -> WebParsingJobModel:
         return self._new_job(
