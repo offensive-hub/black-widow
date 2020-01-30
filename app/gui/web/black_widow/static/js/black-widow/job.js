@@ -23,6 +23,9 @@
 
 $(function() {
     let jobId = urlParams.get('id');
+    let lastProcessStatus = null;
+    let lastJobDataCount = 0;
+
     const $dataTable = $('#data-table').find('table').first();
     const $playBtn = $('#play-btn');
     const $pauseBtn = $('#pause-btn');
@@ -67,46 +70,55 @@ $(function() {
                 'page':  $pagination.pagination('getCurrentPage'),
                 'page_size': 10
             }, function(data) {
-                if (data.job.status === 'SIGCONT') {
-                    // Process running
-                    $pauseBtn.removeClass('disabled').show().visible();
-                    $playBtn.addClass('disabled').hide().invisible();
-                    $stopBtn.removeClass('disabled').visible();
-                } else if (data.job.status === 'SIGSTOP') {
-                    // Process paused
-                    $pauseBtn.addClass('disabled').hide().invisible();
-                    $playBtn.removeClass('disabled').show().visible();
-                    $stopBtn.removeClass('disabled').visible();
-                } else if (data.job.status === 'SIGKILL') {
-                    // Process stopped
-                    $pauseBtn.addClass('disabled').invisible();
-                    $playBtn.addClass('disabled').invisible();
-                    $stopBtn.addClass('disabled').invisible();
-                }
-                $dataTable.find('tbody').html('');
-
-                showJobData(data.result);
-
-                // Pagination
-                $pagination.pagination({
-                    dataSource: Object.values(data.result),
-                    pageNumber: data.page,
-                    items: data.total,
-                    pages: data.page_end,
-                    currentPage: $pagination.pagination('getCurrentPage'),
-                    itemsOnPage: 10,
-                    cssStyle: 'dark-theme',
-                    onPageClick: function() {
-                        updateData(0, false);
+                if (data.job.status !== lastProcessStatus) {
+                    lastProcessStatus = data.job.status;
+                    if (data.job.status === 'SIGCONT') {
+                        // Process running
+                        $pauseBtn.removeClass('disabled').show().visible();
+                        $playBtn.addClass('disabled').hide().invisible();
+                        $stopBtn.removeClass('disabled').visible();
+                    } else if (data.job.status === 'SIGSTOP') {
+                        // Process paused
+                        $pauseBtn.addClass('disabled').hide().invisible();
+                        $playBtn.removeClass('disabled').show().visible();
+                        $stopBtn.removeClass('disabled').visible();
+                    } else if (data.job.status === 'SIGKILL') {
+                        // Process stopped
+                        if (showingSpinner()) {
+                            stopSpinner();
+                        }
+                        $pauseBtn.addClass('disabled').invisible();
+                        $playBtn.addClass('disabled').invisible();
+                        $stopBtn.addClass('disabled').invisible();
                     }
-                });
-
-                if (data.total === 0) {
-                    $mainBody.spinner('Waiting data...');
                 }
 
-                if (data.total > 0 && showingSpinner()) {
-                    stopSpinner();
+                if (lastJobDataCount !== data.total) {
+                    lastJobDataCount = data.total;
+                    $dataTable.find('tbody').html('');
+                    showJobData(data.result);
+
+                    // Pagination
+                    $pagination.pagination({
+                        dataSource: Object.values(data.result),
+                        pageNumber: data.page,
+                        items: data.total,
+                        pages: data.page_end,
+                        currentPage: $pagination.pagination('getCurrentPage'),
+                        itemsOnPage: 10,
+                        cssStyle: 'dark-theme',
+                        onPageClick: function() {
+                            updateData(0, false);
+                        }
+                    });
+
+                    if (data.total === 0) {
+                        $mainBody.spinner('Waiting data...');
+                    }
+
+                    if (data.total > 0 && showingSpinner()) {
+                        stopSpinner();
+                    }
                 }
 
                 if (loop) {
