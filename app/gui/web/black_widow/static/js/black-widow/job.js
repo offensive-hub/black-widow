@@ -27,6 +27,7 @@ $(function() {
     let lastJobDataCount = 0;
     let lastJobDataPage = -1;
     let emptyCount = -1;
+    let jobRestarted = false;
 
     const $dataTable = $('#data-table').find('table').first();
     const $playBtn = $('#play-btn');
@@ -64,6 +65,10 @@ $(function() {
 
     const updateData = function(sleep, loop=false) {
         window.setTimeout(function() {
+            if (jobRestarted) {
+                jobRestarted = false;
+                return;
+            }
             if (loop && $pauseBtn.hasClass('disabled')) {
                 return;
             }
@@ -89,7 +94,7 @@ $(function() {
                         if (showingSpinner()) {
                             stopSpinner();
                         }
-                        $pauseBtn.addClass('disabled').invisible();
+                        $pauseBtn.removeClass('disabled').invisible();
                         $playBtn.addClass('disabled').invisible();
                         $stopBtn.addClass('disabled').invisible();
                     }
@@ -131,6 +136,8 @@ $(function() {
 
                 if (loop) {
                     updateData(1300, loop);
+                } else {
+                    console.log('Retrying data stopped. Refresh the page to re-enable that.');
                 }
             }, function() {
                 console.error('Request error!');
@@ -178,6 +185,7 @@ $(function() {
      */
     const restartJob = function() {
         $mainBody.spinner('Restarting job...');
+        jobRestarted = true;
         pauseJob();
         $dataTable.find('tbody').html('');
         $pagination.pagination({

@@ -69,8 +69,10 @@ class HtmlParser(PyHTMLParser, ABC):
     }
 
     _meta_tags = {
-        'meta': ['property', 'content', 'itemtrop', 'name', 'charset'],
+        'meta': ['name', 'itemprop', 'property', 'content', 'charset'],
     }
+
+    _tag_names = ('name', 'itemprop', 'property')
 
     _relevant_tags = {
         'a': ['href'],
@@ -331,9 +333,11 @@ class HtmlParser(PyHTMLParser, ABC):
                 form_input = {'tag': tag}
                 for key, value in attrs.items():
                     form_input[key] = value
-                name = attrs.get('name')
-                if name is None:
-                    name = attrs.get('property')
+                name = None
+                for tag_name in HtmlParser._tag_names:
+                    name = attrs.get(tag_name)
+                    if name is not None:
+                        break
                 found_tags[name] = form_input
             found_tags.update(HtmlParser.__find_tags(parsed.get('children'), tags))
         elif type(parsed) == list:
