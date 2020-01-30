@@ -25,6 +25,7 @@ $(function() {
     let jobId = urlParams.get('id');
     let lastProcessStatus = null;
     let lastJobDataCount = 0;
+    let lastJobDataPage = -1;
 
     const $dataTable = $('#data-table').find('table').first();
     const $playBtn = $('#play-btn');
@@ -93,8 +94,9 @@ $(function() {
                     }
                 }
 
-                if (lastJobDataCount !== data.total) {
+                if (lastJobDataCount !== data.total || lastJobDataPage !== data.page) {
                     lastJobDataCount = data.total;
+                    lastJobDataPage = data.page;
                     $dataTable.find('tbody').html('');
                     showJobData(data.result);
 
