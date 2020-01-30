@@ -114,13 +114,15 @@ $(function() {
                         }
                     });
 
-                    if (data.total === 0) {
+                    if (data.total === 0 && data.job.status !== 'SIGKILL') {
                         $mainBody.spinner('Waiting data...');
                     }
 
                     if (data.total > 0 && showingSpinner()) {
                         stopSpinner();
                     }
+                } else if (data.job.status === 'SIGKILL') {
+                    loop = false;
                 }
 
                 if (loop) {
@@ -183,6 +185,8 @@ $(function() {
             itemsOnPage: 10,
             cssStyle: 'dark-theme'
         });
+        lastJobDataCount = 0;
+        lastJobDataPage = -1;
         // 0 = SIGRESTART (custom signal)
         signJob(0, function(data) {
             jobId = data.id;
