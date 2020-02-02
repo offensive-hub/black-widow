@@ -184,7 +184,6 @@ class HtmlParser(PyHTMLParser, ABC):
 
             # Find adjacent links
             links = HtmlParser.find_links(parsed)
-            print(links)
             for link in links:
                 _crawl(link, curr_depth + 1)
 
