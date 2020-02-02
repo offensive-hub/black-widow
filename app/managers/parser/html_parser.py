@@ -70,8 +70,9 @@ class HtmlParser(PyHTMLParser, ABC):
 
     _xmp_tags = {
         'x:xmpmeta': ['xmlns:x', 'x:xmptk'],
-        'rdf:RDF': ['xmlns:rdf'],
-        'rdf:Description': [
+        'rdf:rdf': ['xmlns:rdf'],
+        'rdf:description': [
+            'data',
             'rdf:about',
             'xmlns:dc',
             'xmlns:xmp',
@@ -80,11 +81,24 @@ class HtmlParser(PyHTMLParser, ABC):
             'xmpRights:Marked',
             'xmpRights:Marked'
         ],
-        'dc:creator': ['data'],
-        'rdf:Seq': ['data'],
+        'rdf:seq': ['data'],
         'rdf:li': ['data'],
+        'rdf:alt': ['data'],
+        'dc:contributor': ['data'],
+        'dc:coverage': ['data'],
+        'dc:creator': ['data'],
+        'dc:date': ['data'],
+        'dc:description': ['data'],
+        'dc:format': ['data'],
+        'dc:identifier': ['data'],
+        'dc:language': ['data'],
+        'dc:publisher': ['data'],
+        'dc:relation': ['data'],
+        'dc:rights': ['data'],
+        'dc:source': ['data'],
+        'dc:subject': ['data'],
         'dc:title': ['data'],
-        'rdf:Alt': ['data']
+        'dc:type': ['data']
     }
 
     _meta_tags = {
@@ -374,7 +388,9 @@ class HtmlParser(PyHTMLParser, ABC):
         if parsed is None:
             return found_tag
         if type(parsed) is dict:
-            tag = parsed.get('tag')
+            tag: str = parsed.get('tag')
+            if tag is not None:
+                tag = tag.lower()
             if tag in tags:
                 attrs = parsed.get('attrs')
                 # Tag

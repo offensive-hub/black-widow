@@ -85,6 +85,7 @@ $(function() {
                         $pauseBtn.removeClass('disabled').show().visible();
                         $playBtn.addClass('disabled').hide().invisible();
                         $stopBtn.removeClass('disabled').visible();
+                        emptyCount = 0;
                     } else if (data.job.status === 'SIGSTOP') {
                         // Process paused
                         $pauseBtn.addClass('disabled').hide().invisible();
@@ -128,6 +129,7 @@ $(function() {
                     if (data.total > 0 && showingSpinner()) {
                         stopSpinner();
                     }
+                    emptyCount = 0;
                 } else if (data.job.status === 'SIGKILL') {
                     emptyCount += 1;
                     if (emptyCount >= 6) {
