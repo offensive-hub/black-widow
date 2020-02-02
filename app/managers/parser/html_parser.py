@@ -29,7 +29,7 @@ from urllib.parse import urlparse
 from tidylib import tidy_document
 
 from black_widow.app.managers.request import HttpRequest
-from black_widow.app.services import Log
+from black_widow.app.services import Log, JsonSerializer
 from black_widow.app.helpers.validators import is_url
 from black_widow.app.helpers.util import is_listable
 
@@ -144,12 +144,16 @@ class HtmlParser(PyHTMLParser, ABC):
             raise ValueError('cookies must be a string')
 
         base_url = urlparse(url).netloc
+        base_urls = (base_url, )
+        if base_url[0:4] != 'www.':
+            base_urls += ('www.' + str(base_url),)
         parsed_urls = set()
+        parsed_hashes = set()
 
         def _crawl(href: str, curr_depth: int = 0):
             if href in parsed_urls or \
-                    urlparse(href).netloc != base_url or \
-                    (0 <= depth < curr_depth):
+                    urlparse(href).netloc not in base_urls or \
+                    (0 <= depth and (depth < curr_depth)):
                 return
 
             # Visit the current href
@@ -157,6 +161,12 @@ class HtmlParser(PyHTMLParser, ABC):
                 parsed, _ = HtmlParser.all_parse(href, cookies=cookies)
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
+
+            parsed_hash = hash(JsonSerializer.dump_json(parsed))
+            if parsed_hash in parsed_hashes:
+                return
+
+            parsed_hashes.add(parsed_hash)
 
             parsed_urls.add(href)
 
@@ -174,6 +184,7 @@ class HtmlParser(PyHTMLParser, ABC):
 
             # Find adjacent links
             links = HtmlParser.find_links(parsed)
+            print(links)
             for link in links:
                 _crawl(link, curr_depth + 1)
 
@@ -282,7 +293,7 @@ class HtmlParser(PyHTMLParser, ABC):
         links = set()
         if parsed is None:
             return links
-        if type(parsed) == dict:
+        if type(parsed) is dict:
             attrs = parsed.get('attrs')
             if attrs is not None:
                 url = None
@@ -290,10 +301,15 @@ class HtmlParser(PyHTMLParser, ABC):
                     url = attrs.get('action')
                 elif 'a' == parsed.get('tag'):
                     url = attrs.get('href')
+                    if url is not None and 'email-protection' in url:
+                        # Skip email protections
+                        url = None
+                elif 'img' == parsed.get('tag'):
+                    url = attrs.get('src')
                 if url is not None:
                     links.add(url)
             links = links.union(HtmlParser.find_links(parsed.get('children')))
-        elif type(parsed) == list:
+        elif type(parsed) is list:
             for value in parsed:
                 links = links.union(HtmlParser.find_links(value))
         else:
@@ -316,10 +332,6 @@ class HtmlParser(PyHTMLParser, ABC):
                 elif is_listable(value):
                     print((space + '  ') + str(key) + ':')
                     HtmlParser.print_parsed(value, depth + 2)
-                    # print((space+'  ') + str(key) + ':')
-                    # subspace = ' ' * (depth+1)
-                    # for el in dict:
-                    #  if (is_listable(el)):
                 else:
                     print((space + '  ') + str(key) + ': ' + str(value))
             print(space + '}')
@@ -359,7 +371,6 @@ class HtmlParser(PyHTMLParser, ABC):
         :tags parsed: The tags to find
         :return: A dictionary of tags like {'tag[name]': {'attr1': 'attr1_val' ...}}
         """
-        print(parsed)
         found_tag = {}
         if parsed is None:
             return found_tag
@@ -439,12 +450,18 @@ class HtmlParser(PyHTMLParser, ABC):
                 attr_value = str(attr[1])
                 if (not self.relevant) or attr_key in HtmlParser._relevant_tags.get(tag):
                     if self.base_url is not None and attr_key in HtmlParser._url_attrs and (not is_url(attr_value)):
+                        if attr_value[0] == '#':
+                            continue
                         if attr_value[0:2] == '//':
                             attr_value = self.url_scheme + ':' + attr_value
                         else:
-                            if attr_value[0:1] != '/':
+                            if attr_value[0] != '/' and self.url[len(self.url) - 1] != '/':
                                 attr_value = '/' + attr_value
+                            elif attr_value[0] == '/' and self.url[len(self.url) - 1] == '/':
+                                attr_value = attr_value[1:]
                             attr_value = self.url + attr_value
+                    if 'email-protection' in attr_value:
+                        attr_value = 'email-protection'
                     tag_attrs[attr_key] = attr_value
             cur_tag = {'tag': tag, 'attrs': tag_attrs}
             self.queue_tag.append(cur_tag)
