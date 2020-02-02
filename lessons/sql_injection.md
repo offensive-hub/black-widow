@@ -39,7 +39,7 @@ databases.
 An SQL database is primarily a set of tables.
 Each table contains records, which can referer to records from other
 tables. This is the reason of the name "relation database".
-Usually, every relational database table has the column **id**"
+Usually, every relational database table has the column "**id**"
 (a diminuitive of **identifier**), because every record needs to have
 an unique identifier, to identify easily and fastly that.
 
