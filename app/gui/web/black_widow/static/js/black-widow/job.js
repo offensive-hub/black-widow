@@ -66,6 +66,7 @@ $(function() {
     const updateData = function(sleep, loop=false) {
         window.setTimeout(function() {
             if (jobRestarted) {
+                console.log('jobRestarted');
                 jobRestarted = false;
                 return;
             }
@@ -205,7 +206,11 @@ $(function() {
             jobId = data.id;
             history.pushState('data', '', window.location.pathname + '?id=' + jobId);
             $mainBody.spinner('Waiting data...');
-            playJob();
+            setTimeout(function() {
+                jobRestarted = false;
+                playJob();
+            }, 1400);
+
         });
     };
     $restartBtn.click(restartJob);

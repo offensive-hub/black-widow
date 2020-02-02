@@ -55,7 +55,7 @@ class HtmlParser(PyHTMLParser, ABC):
             'value'
         ],
         'textarea': [
-            'id', 'name',
+            'id', 'name', 'data',
             'required',
             'minlength',
             'maxlength'
@@ -68,11 +68,32 @@ class HtmlParser(PyHTMLParser, ABC):
         ]
     }
 
-    _meta_tags = {
-        'meta': ['name', 'itemprop', 'property', 'content', 'charset'],
+    _xmp_tags = {
+        'x:xmpmeta': ['xmlns:x', 'x:xmptk'],
+        'rdf:RDF': ['xmlns:rdf'],
+        'rdf:Description': [
+            'rdf:about',
+            'xmlns:dc',
+            'xmlns:xmp',
+            'xmlns:xmpRights',
+            'xmp:CreatorTool',
+            'xmpRights:Marked',
+            'xmpRights:Marked'
+        ],
+        'dc:creator': ['data'],
+        'rdf:Seq': ['data'],
+        'rdf:li': ['data'],
+        'dc:title': ['data'],
+        'rdf:Alt': ['data']
     }
 
+    _meta_tags = {
+        'meta': ['name', 'itemprop', 'property', 'content', 'charset']
+    }
+    _meta_tags.update(_xmp_tags)
+
     _tag_names = ('name', 'itemprop', 'property')
+    _tag_key_names = ('charset',)
 
     _relevant_tags = {
         'a': ['href'],
@@ -108,7 +129,7 @@ class HtmlParser(PyHTMLParser, ABC):
         :param url: The url to crawl/parse
         :param parsing_type: HtmlParse.TYPE_ALL | HtmlParse.TYPE_RELEVANT | HtmlParse.TYPE_FORM | HtmlParse.TYPE_META
         :param callback: The callback method to call foreach visited page
-        :param depth: The max crawling depth (0 to execute a normal page parsing)
+        :param depth: The max crawling depth (0 to execute a normal page parsing, < 0 for no limit)
         :param cookies: The cookies to use on parsing
         """
         if not is_url(url):
@@ -128,7 +149,7 @@ class HtmlParser(PyHTMLParser, ABC):
         def _crawl(href: str, curr_depth: int = 0):
             if href in parsed_urls or \
                     urlparse(href).netloc != base_url or \
-                    (depth is not None and curr_depth > depth):
+                    (0 <= depth < curr_depth):
                 return
 
             # Visit the current href
@@ -157,7 +178,7 @@ class HtmlParser(PyHTMLParser, ABC):
                 _crawl(link, curr_depth + 1)
 
         _crawl(url)
-        Log.success(url + 'crawling done!')
+        Log.success(url + ' crawling done!')
 
     @staticmethod
     def all_parse(url: str = None, html: str = None, cookies: str = None) -> (dict, str):
@@ -203,16 +224,16 @@ class HtmlParser(PyHTMLParser, ABC):
         return HtmlParser.__find_tags(parsed, HtmlParser._meta_tags)
 
     @staticmethod
-    def find_forms(parsed: dict or list, url=None) -> list:
+    def find_forms(parsed: dict or list, url=None) -> dict:
         """
         Search forms inside parsed html (dict)
         :param parsed: A parsed html
         :param url: The parsed url (or None)
         :return: The list of found forms
         """
-        forms = []
+        form = dict()
         if parsed is None:
-            return forms
+            return form
         if type(parsed) == dict:
             if 'form' == parsed.get('tag'):
                 attrs = parsed.get('attrs')
@@ -227,14 +248,29 @@ class HtmlParser(PyHTMLParser, ABC):
                     'action': action,
                     'inputs': HtmlParser.__find_inputs(parsed.get('children'))
                 }
-                forms.append(form)
-            forms += HtmlParser.find_forms(parsed.get('children'), url)
-        elif type(parsed) == list:
+            children = HtmlParser.find_forms(parsed.get('children'), url)
+            if children is not None:
+                if len(children) > 0:
+                    if len(form) > 0:
+                        form['children'] = children
+                    else:
+                        if len(children) > 1:
+                            form = children
+                        else:
+                            form = children.get(0)
+        elif type(parsed) is list:
+            children = dict()
+            index = 0
             for value in parsed:
-                forms += HtmlParser.find_forms(value, url)
+                child = HtmlParser.find_forms(value, url)
+                if len(child) > 0:
+                    children[index] = child
+                    index += 1
+            # noinspection PyTypeChecker
+            form.update(children)
         else:
             Log.error(str(parsed) + ' is not a valid parsed content!')
-        return forms
+        return form
 
     @staticmethod
     def find_links(parsed: dict or list) -> set:
@@ -323,29 +359,62 @@ class HtmlParser(PyHTMLParser, ABC):
         :tags parsed: The tags to find
         :return: A dictionary of tags like {'tag[name]': {'attr1': 'attr1_val' ...}}
         """
-        found_tags = {}
+        print(parsed)
+        found_tag = {}
         if parsed is None:
-            return found_tags
+            return found_tag
         if type(parsed) is dict:
             tag = parsed.get('tag')
             if tag in tags:
                 attrs = parsed.get('attrs')
-                form_input = {'tag': tag}
+                # Tag
+                found_tag = {'tag': tag}
+                # Tag attrs
+                found_tag_attrs = dict()
                 for key, value in attrs.items():
-                    form_input[key] = value
+                    found_tag_attrs[key] = value.strip()
+                found_tag['attrs'] = found_tag_attrs
+                # Tag data
+                found_tag['data'] = parsed.get('data')
+                # Tag name
                 name = None
                 for tag_name in HtmlParser._tag_names:
                     name = attrs.get(tag_name)
                     if name is not None:
                         break
-                found_tags[name] = form_input
-            found_tags.update(HtmlParser.__find_tags(parsed.get('children'), tags))
-        elif type(parsed) == list:
+                if name is None:
+                    for tag_key in HtmlParser._tag_key_names:
+                        name = attrs.get(tag_key)
+                        if name is not None:
+                            name = tag_key
+                            break
+                if name is None:
+                    name = tag
+                found_tag['name'] = name
+            # Tag children
+            children = HtmlParser.__find_tags(parsed.get('children'), tags)
+            if children is not None:
+                if len(children) > 0:
+                    if len(found_tag) > 0:
+                        found_tag['children'] = children
+                    else:
+                        if len(children) > 1:
+                            found_tag = children
+                        else:
+                            found_tag = children.get(0)
+        elif type(parsed) is list:
+            children = dict()
+            index = 0
             for value in parsed:
-                found_tags.update(HtmlParser.__find_tags(value, tags))
+                child = HtmlParser.__find_tags(value, tags)
+                if len(child) > 0:
+                    children[index] = child
+                    index += 1
+            # noinspection PyTypeChecker
+            found_tag = children
         else:
             Log.error(str(parsed) + ' is not a valid parsed content!')
-        return found_tags
+        return found_tag
 
     @staticmethod
     def __find_inputs(parsed: dict or list) -> dict:
@@ -407,7 +476,7 @@ class HtmlParser(PyHTMLParser, ABC):
             return
         cur_tag = self.queue_tag[-1]
         if (not self.relevant) or 'data' in HtmlParser._relevant_tags.get(cur_tag.get('tag')):
-            cur_tag['data'] = data
+            cur_tag['data'] = data.strip()
             self.queue_tag[-1] = cur_tag
 
     def __parse(self, url: str = None, html: str = None, cookies: str = None) -> (dict, str):
@@ -420,6 +489,7 @@ class HtmlParser(PyHTMLParser, ABC):
         """
         self.url = None
         self.base_url = None
+        is_image = False
         if url is not None:
             self.url = url
             url_parsed = urlparse(url)
@@ -434,12 +504,21 @@ class HtmlParser(PyHTMLParser, ABC):
             except ValueError:
                 html = r.text
             if r.headers is not None:
-                for k in r.headers.keys():
+                for k, v in r.headers.items():
                     k: str
+                    v: str
                     if k.lower() == 'set-cookie':
-                        cookies = r.headers.get(k)
-                        break
-        sorted_html, errors = tidy_document(html)   # Sort html (and fix errors)
+                        cookies = v
+            if HttpRequest.is_image(r):
+                is_image = True
+                xmp_start = html.find('<x:xmpmeta')
+                xmp_end = html.find('</x:xmpmeta')
+                xmp_str = html[xmp_start:xmp_end+12]
+                html = xmp_str
+        if is_image:
+            sorted_html = html
+        else:
+            sorted_html, errors = tidy_document(html)   # Sort html (and fix errors)
         self.feed(sorted_html)
         return self.tags, cookies
 

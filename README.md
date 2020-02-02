@@ -141,6 +141,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 * PyPI: [https://pypi.org/project/black-widow](https://pypi.org/project/black-widow/)
 * GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
 * Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
+* PPA: [Launchpad.net](https://launchpad.net/~offensive-hub/+archive/ubuntu/black-widow)
 * Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
 
 ### Contacts

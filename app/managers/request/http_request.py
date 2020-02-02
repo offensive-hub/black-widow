@@ -164,6 +164,10 @@ class HttpRequest:
         return response_dict
 
     @staticmethod
+    def is_image(response: requests.Response) -> bool:
+        return HttpRequest.__check_header(response, 'content-type', 'image')
+
+    @staticmethod
     def default_agent() -> str:
         """
         :return The black-widow agent
@@ -191,3 +195,15 @@ class HttpRequest:
             if len(data) > limit:
                 data = '[truncated]' + data[0:limit]
             Log.info('      |-- data: ' + data)
+
+    @staticmethod
+    def __check_header(response: requests.Response, header: str, header_value: str) -> bool:
+        if response.headers is None:
+            return False
+        for key, value in response.headers.items():
+            key: str
+            value: str
+            if key.lower() != header.lower():
+                continue
+            return value.lower().split('/')[0] == header_value.lower()
+        return False
