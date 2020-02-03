@@ -56,8 +56,32 @@
 
 {% block modal-body %}
     <!-- Tag Tree -->
-    <div class="section row treeview" id="page-modal-tree" type="{{ job.parsing_type }}">
-        <h2>Tree</h2>
+    <div class="section tree">
+        <h2>Tags</h2>
+        <div class="tree-container">
+            <ul class="first-ul" id="tag-tree" type="{{ job.parsing_type }}">
+                <li><span class="caret">Beverages</span>
+                    <ul class="nested">
+                        <li>Water</li>
+                        <li>Coffee</li>
+                        <li><span class="caret">Tea</span>
+                            <ul class="nested">
+                                <li>Black Tea</li>
+                                <li>White Tea</li>
+                                <li><span class="caret">Green Tea</span>
+                                    <ul class="nested">
+                                        <li>Sencha</li>
+                                        <li>Gyokuro</li>
+                                        <li>Matcha</li>
+                                        <li>Pi Lo Chun</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <!-- Separator -->
@@ -103,11 +127,12 @@
 
 {% block script %}
     {{ block.super }}
+    <!--suppress JSUnfilteredForInLoop -->
     <script type="application/javascript">
         const $jobModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
-        const $jobModalTree = $('#page-modal-tree');
-        const type = $jobModalTree.attr('type');
+        const $tagTree = $('#tag-tree');
+        const type = $tagTree.attr('type');
 
         const showJobData = function(result) {
             for (let key in result) {
@@ -131,9 +156,20 @@
          * @param page The page Object
          */
         const showPage = function(page) {
-            console.log(page);
+            // console.log(page);
+
             const anchor = '<a target="_black" href="' + page.url+'">' + page.url + '</a>';
             $jobModal.find('.modal-title').html(anchor);
+
+            for (let key in page) {
+                console.log(key);
+                const tag = page[key];
+                console.log(tag);
+            }
+
+
+            // $tagTree.html('');
+
             $jobModal.modal();
         };
     </script>

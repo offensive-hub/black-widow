@@ -65,7 +65,7 @@ class AbstractJobModel(AbstractModel):
         return jobs
 
     def self_check(self):
-        if self.status not in (signal.SIGKILL, signal.SIGABRT):
+        if self.status not in (signal.SIGKILL, signal.SIGABRT) and not pid_exists(self.pid):
             self.status = signal.SIGKILL
             self.save()
 

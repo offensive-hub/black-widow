@@ -35,6 +35,7 @@
  *       |-- 0.6) Spinner
  *       |-- 0.7) Notifications
  *       |-- 0.8) Accordion
+ *       |-- 0.9) Tree
  *
  *  1) layout/base.html
  *
@@ -48,6 +49,10 @@
 
 
 /*** 0.0) Generic ***/
+
+html, body {
+    /*word-break: break-all;*/
+}
 
 .separator {
     margin-top: 30px;
@@ -351,7 +356,12 @@ table > thead > tr > th {
 }
 
 #data-table td {
-    word-break: break-all;
+    /*word-break: normal;*/
+}
+
+table td {
+    /*word-break: normal;*/
+    white-space: nowrap;
 }
 
 /*******************/
@@ -647,6 +657,71 @@ ul.accordion ul.inner a.toggle:hover {
 }
 
 /**********************/
+
+
+/*** 0.9) Tree ***/
+
+.tree-container {
+    overflow: auto;
+    margin: auto;
+}
+
+/* Remove default bullets */
+.tree ul, .first-ul {
+    list-style-type: none;
+}
+
+/* Remove margins and padding from the parent ul */
+.tree .first-ul {
+    padding: 0;
+    word-break: keep-all;
+}
+
+/* Style the caret/arrow */
+.tree .caret {
+    cursor: pointer;
+    user-select: none; /* Prevent text selection */
+}
+
+/* Create the caret/arrow with a unicode, and style it */
+.tree .caret::before {
+    content: "\25B6";
+    color: #ff0000;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+.tree .caret-down::before {
+    transform: rotate(90deg);
+}
+
+/* Hide the nested list */
+.tree .nested {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}
+
+/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+.tree .active {
+    visibility: visible;
+    height: auto;
+    overflow: unset;
+}
+
+.tree {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tree h2 {
+    width: 100%;
+}
+
+/*****************/
+
+
 
 
 /**********************************/

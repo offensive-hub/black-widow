@@ -221,7 +221,7 @@ const notify = function(msg, type='warning', icon='warning', from='top', align='
     });
 };
 
-const initAccordions = function() {
+const initAccordions = function () {
     const $toggle = $('.toggle');
     $toggle.each(function() {
         const $this = $(this);
@@ -253,6 +253,22 @@ const initAccordions = function() {
             }
         });
     });
-
 };
 initAccordions();
+
+const initTree = function () {
+    const $toggler = $(".tree").find('.caret');
+    $toggler.unbind();
+    $toggler.click(function () {
+        const $this = $(this);
+        $this.parent().find('.nested').first().toggleClass('active');
+        $this.toggleClass('caret-down');
+    });
+    // for (let i = 0; i < $toggler.length; i++) {
+    //     toggler[i].addEventListener("click", function() {
+    //         this.parentElement.querySelector(".nested").classList.toggle("active");
+    //         this.classList.toggle("caret-down");
+    //     });
+    // }
+};
+initTree();

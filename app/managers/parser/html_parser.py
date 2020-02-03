@@ -279,10 +279,11 @@ class HtmlParser(PyHTMLParser, ABC):
                     if len(form) > 0:
                         form['children'] = children
                     else:
-                        if len(children) > 1:
-                            form = children
-                        else:
-                            form = children.get(0)
+                        form = children
+                        # if len(children) > 1:
+                        #     form = children
+                        # else:
+                        #     form = children.get(0)
         elif type(parsed) is list:
             children = dict()
             index = 0
@@ -425,10 +426,11 @@ class HtmlParser(PyHTMLParser, ABC):
                     if len(found_tag) > 0:
                         found_tag['children'] = children
                     else:
-                        if len(children) > 1:
-                            found_tag = children
-                        else:
-                            found_tag = children.get(0)
+                        found_tag = children
+                        # if len(children) > 1:
+                        #     found_tag = children
+                        # else:
+                        #     found_tag = children.get(0)
         elif type(parsed) is list:
             children = dict()
             index = 0
