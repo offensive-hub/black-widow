@@ -58,7 +58,7 @@ So the table **receipts**, will contains the column **order_id**,
 which contains the **id** of the order.
 
 An order referer to a customer, so the table **orders** will has the 
-column **customer_id*.
+column **customer_id**.
 
 #### Relational database list:
  * MySQL
