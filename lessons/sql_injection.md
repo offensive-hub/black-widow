@@ -10,7 +10,7 @@ To understand how this method works, you should have notion about the
 following things:
  * [Website](#website)
  * [Relational database](#database)
- * SQL query
+ * [SQL query](#database-query)
 
 ## Website
 
