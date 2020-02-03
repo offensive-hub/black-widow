@@ -8,7 +8,7 @@ page.
 
 To understand how this method works, you should have notion about the
 following things:
- * Website
+ * [Website](#website)
  * Relational database
  * SQL query
 
