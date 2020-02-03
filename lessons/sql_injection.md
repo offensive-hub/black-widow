@@ -111,6 +111,4 @@ WHERE order_id = 130;
 ```
 
 There are many complex queries that you can launch on a relational
-database, but for now, we don't need know everything about
-SQL queries.
-
+database, but for now, we don't need to know everything about those.
