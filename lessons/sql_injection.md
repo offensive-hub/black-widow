@@ -9,7 +9,7 @@ page.
 To understand how this method works, you should have notion about the
 following things:
  * [Website](#website)
- * Relational database
+ * [Relational database](#database)
  * SQL query
 
 ## Website
