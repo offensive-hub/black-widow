@@ -54,9 +54,20 @@
     </ol>
 {% endblock %}
 
-{% block absolute %}
-    <!-- Parsed page modal -->
-    <!-- TODO: make modal -->
+{% block modal-body %}
+    <!-- Tag Tree -->
+    <div class="section row treeview" id="page-modal-tree" type="{{ job.parsing_type }}">
+        <h2>Tree</h2>
+    </div>
+
+    <!-- Separator -->
+    <div class="separator row">
+        <h2>Separator</h2>
+    </div>
+
+    <div class="section">
+        <h2>Section</h2>
+    </div>
 {% endblock %}
 
 {% block card_header %}
@@ -93,8 +104,10 @@
 {% block script %}
     {{ block.super }}
     <script type="application/javascript">
-        const $pktModal = $('#pkt-modal');
+        const $jobModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
+        const $jobModalTree = $('#page-modal-tree');
+        const type = $jobModalTree.attr('type');
 
         const showJobData = function(result) {
             for (let key in result) {
@@ -107,6 +120,9 @@
                 ], function() {
                     showPage(page);
                 });
+                if (type === 'Single Page') {
+                    showPage(page);
+                }
             }
         };
 
@@ -114,8 +130,13 @@
          * Show the parsed page in a modal
          * @param page The page Object
          */
-        const showPage = function (page) {
-            console.log('TODO: implement showPage('+page.url+')')
-        }
+        const showPage = function(page) {
+            console.log(page);
+            const anchor = '<a target="_black" href="' + page.url+'">' + page.url + '</a>';
+            $jobModal.find('.modal-title').html(anchor);
+            $jobModal.modal();
+        };
     </script>
+
+    {{ job.parsing_type }}
 {% endblock %}

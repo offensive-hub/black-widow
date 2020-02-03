@@ -266,7 +266,7 @@
     {{ block.super }}
     <!--suppress JSUnfilteredForInLoop -->
     <script type="application/javascript">
-        const $pktModal = $('#job-modal');
+        const $jobModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
 
         const showJobData = function(result) {
@@ -291,6 +291,8 @@
                     {name: pkt.protocol},                 // Protocol
                     {name: pkt.length},                   // Length (bytes)
                 ], function() {
+
+
                     showPkt(pkt);
                 });
             }
@@ -301,13 +303,13 @@
          * @param pkt The packet Object
          */
         const showPkt = function(pkt) {
-            $pktModal.find('.modal-title').html('Packet #' + pkt.number);
+            $jobModal.find('.modal-title').html('Packet #' + pkt.number);
 
-            const $pktModalSrcHost = $pktModal.find('.host.src');
-            const $pktModalDstHost = $pktModal.find('.host.dst');
+            const $jobModalSrcHost = $jobModal.find('.host.src');
+            const $jobModalDstHost = $jobModal.find('.host.dst');
 
-            const $srcTitle = $pktModalSrcHost.find('.header-title');
-            const $dstTitle = $pktModalDstHost.find('.header-title');
+            const $srcTitle = $jobModalSrcHost.find('.header-title');
+            const $dstTitle = $jobModalDstHost.find('.header-title');
 
             $srcTitle.html('SOURCE [ ' + pkt.source.label + ' ]');
             $srcTitle.attr('title', pkt.source.title);
@@ -315,39 +317,39 @@
             $dstTitle.attr('title', pkt.destination.title);
 
             // Source MAC
-            $pktModalSrcHost.find('.mac-address').html(pkt.source.mac);
-            $pktModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.vendor : '');
-            $pktModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.company : '');
+            $jobModalSrcHost.find('.mac-address').html(pkt.source.mac);
+            $jobModalSrcHost.find('.mac-vendor').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.vendor : '');
+            $jobModalSrcHost.find('.mac-company').html(pkt.source.mac_lookup ? pkt.source.mac_lookup.company : '');
 
             // Destination MAC
-            $pktModalDstHost.find('.mac-address').html(pkt.destination.mac);
-            $pktModalDstHost.find('.mac-vendor').html(pkt.destination.mac_lookup.vendor);
-            $pktModalDstHost.find('.mac-company').html(pkt.destination.mac_lookup.company);
+            $jobModalDstHost.find('.mac-address').html(pkt.destination.mac);
+            $jobModalDstHost.find('.mac-vendor').html(pkt.destination.mac_lookup.vendor);
+            $jobModalDstHost.find('.mac-company').html(pkt.destination.mac_lookup.company);
 
             // Source IP
-            const $srcIpAddress = $pktModalSrcHost.find('.ip-address');
-            const $srcIpHost = $pktModalSrcHost.find('.ip-host');
+            const $srcIpAddress = $jobModalSrcHost.find('.ip-address');
+            const $srcIpHost = $jobModalSrcHost.find('.ip-host');
             const src_proto = 'http' + (parseInt(pkt.source.port) === 443 ? 's' : '');
             const src_port = pkt.source.port ? (':' + pkt.source.port) : '';
-            $pktModalSrcHost.find('.ip-port').html(pkt.source.port);
+            $jobModalSrcHost.find('.ip-port').html(pkt.source.port);
             $srcIpAddress.html(pkt.source.ip);
             $srcIpAddress.attr('href', src_proto + '://' + pkt.source.ip + src_port);
             $srcIpHost.html(pkt.source.ip_host);
             $srcIpHost.attr('href', src_proto + '://' + pkt.source.ip_host + src_port);
 
             // Destination IP
-            const $dstIpAddress = $pktModalDstHost.find('.ip-address');
-            const $dstIpHost = $pktModalDstHost.find('.ip-host');
+            const $dstIpAddress = $jobModalDstHost.find('.ip-address');
+            const $dstIpHost = $jobModalDstHost.find('.ip-host');
             const dst_proto = 'http' + (parseInt(pkt.destination.port) === 443 ? 's' : '');
             const dst_port = pkt.destination.port ? (':' + pkt.destination.port) : '';
-            $pktModalDstHost.find('.ip-port').html(pkt.destination.port);
+            $jobModalDstHost.find('.ip-port').html(pkt.destination.port);
             $dstIpAddress.html(pkt.destination.ip);
             $dstIpAddress.attr('href', dst_proto + '://' + pkt.destination.ip + dst_port);
             $dstIpHost.html(pkt.destination.ip_host);
             $dstIpHost.attr('href', dst_proto + '://' + pkt.destination.ip_host + dst_port);
 
             // Packet Info
-            const $info = $pktModal.find('#pkt-modal-info');
+            const $info = $jobModal.find('#pkt-modal-info');
             for (const key in pkt) {
                 const $key = $info.find('#' + key);
                 if ($key.length === 0) {
@@ -357,12 +359,12 @@
             }
 
             // Frame Info
-            const $frame = $pktModal.find('#pkt-modal-frame');
+            const $frame = $jobModal.find('#pkt-modal-frame');
             $frame.html('');
             appendLayer($frame, pkt.frame_info);
 
             // Layers
-            const $layers = $pktModal.find('#pkt-modal-layers');
+            const $layers = $jobModal.find('#pkt-modal-layers');
             $layers.html('');
             for (let i in pkt.layers) {
                 const layer = pkt.layers[i];
@@ -371,7 +373,7 @@
 
             initAccordions();
 
-            $pktModal.modal();
+            $jobModal.modal();
         };
 
         const appendLayer = function ($parent, layer) {

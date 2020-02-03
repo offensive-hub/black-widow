@@ -58,12 +58,12 @@ class AbstractJobView(AbstractView):
         Log.info("Showing job #" + str(job_id))
 
         try:
-            sniffing_job = self.model_class.objects.get(id=job_id)
+            job = self.model_class.objects.get(id=job_id)
         except ObjectDoesNotExist:
             return redirect(redirect_url)
 
         return render(request, self.template_name, {
-            'job': sniffing_job
+            'job': job
         })
 
     def _post_job(self, request) -> JsonResponse:

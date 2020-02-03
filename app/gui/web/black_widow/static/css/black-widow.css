@@ -683,6 +683,10 @@ ul.accordion ul.inner a.toggle:hover {
     }
 }
 
+/*#job-modal .modal-title a {*/
+/*    color: #da0500;*/
+/*}*/
+
 #job-modal > .modal-dialog > .modal-content {
     height: 100%;
 }

@@ -111,6 +111,7 @@ class HtmlParser(PyHTMLParser, ABC):
 
     _relevant_tags = {
         'a': ['href'],
+        'img': ['src'],
         'form': ['id', 'action', 'method'],
         'script': ['src', 'data', 'type'],  # { 'src': '/some/script.js', 'data': 'function() ...' }
         'link': ['href'],  # { 'href': '*.xml' }
@@ -560,6 +561,7 @@ class HtmlParser(PyHTMLParser, ABC):
         :param tag_dict: A parsed-tag dictionary
         :return: void
         """
+        print(tag_dict)
         queue_tag_len = len(self.queue_tag)
         if queue_tag_len == 0:
             parent = self.tags
