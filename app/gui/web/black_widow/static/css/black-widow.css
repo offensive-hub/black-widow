@@ -678,84 +678,84 @@ ul.accordion ul.inner a.toggle:hover {
 /******** 2) capture.html *********/
 
 @media screen and (min-width: 576px) {
-    #pkt-modal > .modal-dialog {
+    #job-modal > .modal-dialog {
         max-width: 90vw;
     }
 }
 
-#pkt-modal > .modal-dialog > .modal-content {
+#job-modal > .modal-dialog > .modal-content {
     height: 100%;
 }
 
-#pkt-modal .hosts .host {
+#job-modal .hosts .host {
     min-height: 180px;
     display: grid;
 }
 
-#pkt-modal .hosts .host > .col-12 {
+#job-modal .hosts .host > .col-12 {
     padding: 0;
 }
 
-#pkt-modal .hosts .host .addresses {
+#job-modal .hosts .host .addresses {
     margin-top: 5px;
     margin-bottom: 20px;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr {
+#job-modal .hosts .host .addresses .card.addr {
     background: #958e8e;
     color: #000;
     margin: 0;
     padding: 10px;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .material-icons {
+#job-modal .hosts .host .addresses .card.addr .material-icons {
     width: 24px;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .label {
+#job-modal .hosts .host .addresses .card.addr .label {
     display: flow-root;
     font-weight: bold;
     border-bottom: 1px solid hsla(0, 0%, 0%, 0.23);
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .label span {
+#job-modal .hosts .host .addresses .card.addr .label span {
     padding-top: 3px;
     float: right;
     margin-right: 5px;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .params {
+#job-modal .hosts .host .addresses .card.addr .params {
     padding-top: 5px;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .params .param {
+#job-modal .hosts .host .addresses .card.addr .params .param {
     font-weight: bold;
 }
 
-#pkt-modal .hosts .host .addresses .card.addr .params a.param {
+#job-modal .hosts .host .addresses .card.addr .params a.param {
     color: #800b08;
 }
 
-#pkt-modal .info {
+#job-modal .info {
     color: #958e8e;
 }
 
-#pkt-modal .info ul {
+#job-modal .info ul {
     margin-bottom: 0;
     list-style-type: disclosure-closed;
 }
 
-#pkt-modal .info ul li span {
+#job-modal .info ul li span {
     color: #fff;
 }
 
 @media screen and (max-width: 991px) {
-    #pkt-modal .hosts .host .addresses > div:first-child {
+    #job-modal .hosts .host .addresses > div:first-child {
         margin-bottom: 10px;
     }
 }
 
-#pkt-modal .host-icon-container {
+#job-modal .host-icon-container {
     top: 0;
     bottom: 0;
     left: 0;
@@ -765,7 +765,7 @@ ul.accordion ul.inner a.toggle:hover {
     opacity: 0.1;
 }
 
-#pkt-modal .host-icon-container .host-icon {
+#job-modal .host-icon-container .host-icon {
     margin: auto;
     font-size: 20vw;
 }

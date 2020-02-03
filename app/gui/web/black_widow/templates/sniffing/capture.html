@@ -49,201 +49,182 @@
     </ol>
 {% endblock %}
 
-{% block absolute %}
-    <!-- Packet modal -->
-    <div id="pkt-modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+{% block modal-body %}
+    <!-- Hosts -->
+    <div class="section row hosts" id="pkt-modal-hosts" >
+
+        <!-- Source Host -->
+        <div class="col-12 col-md-6 src host">
+            <div class="card">
+                <div class="card-header card-header-danger">
+                    <div class="row">
+                        <h3 class="material-icons col-3">laptop_mac</h3>
+                        <h3 class="header-title col-9">Source</h3>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <!-- Hosts -->
-                    <div class="section row hosts" id="pkt-modal-hosts" >
-
-                        <!-- Source Host -->
-                        <div class="col-12 col-md-6 src host">
-                            <div class="card">
-                                <div class="card-header card-header-danger">
-                                    <div class="row">
-                                        <h3 class="material-icons col-3">laptop_mac</h3>
-                                        <h3 class="header-title col-9">Source</h3>
-                                    </div>
+                <div class="card-body">
+                    <h4 class="card-title">Source</h4>
+                    <div class="row addresses">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="card addr">
+                                <div class="label">
+                                    <i class="material-icons">developer_board</i>
+                                    <span>MAC</span>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="card-title">Source</h4>
-                                    <div class="row addresses">
-                                        <div class="col-sm-12 col-lg-6">
-                                            <div class="card addr">
-                                                <div class="label">
-                                                    <i class="material-icons">developer_board</i>
-                                                    <span>MAC</span>
-                                                </div>
-                                                <div class="params">
-                                                    <div>
-                                                        <span>Address:</span>
-                                                        <span class="param mac-address"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Vendor:</span>
-                                                        <span class="param mac-vendor"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Company:</span>
-                                                        <span class="param mac-company"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-lg-6">
-                                            <div class="card addr">
-                                                <div class="label">
-                                                    <i class="material-icons">router</i>
-                                                    <span>IP</span>
-                                                </div>
-                                                <div class="params">
-                                                    <div>
-                                                        <span>Address:</span>
-                                                        <a target="_blank" class="param ip-address"></a>
-                                                    </div>
-                                                    <div>
-                                                        <span>Port:</span>
-                                                        <span class="param ip-port"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Host:</span>
-                                                        <a target="_blank" class="param ip-host"></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="params">
+                                    <div>
+                                        <span>Address:</span>
+                                        <span class="param mac-address"></span>
                                     </div>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="stats">
-                                        <i class="material-icons">desktop_mac</i>
-                                        <span>transmitter host</span>
+                                    <div>
+                                        <span>Vendor:</span>
+                                        <span class="param mac-vendor"></span>
+                                    </div>
+                                    <div>
+                                        <span>Company:</span>
+                                        <span class="param mac-company"></span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Destination Host -->
-                        <div class="col-12 col-md-6 dst host">
-                            <div class="card">
-                                <div class="card-header card-header-danger">
-                                    <div class="row">
-                                        <h3 class="material-icons col-3">laptop_chromebook</h3>
-                                        <h3 class="header-title col-9">Destination</h3>
-                                    </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="card addr">
+                                <div class="label">
+                                    <i class="material-icons">router</i>
+                                    <span>IP</span>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="card-title">Destination</h4>
-                                    <div class="row addresses">
-                                        <div class="col-sm-12 col-lg-6">
-                                            <div class="card addr">
-                                                <div class="label">
-                                                    <i class="material-icons">developer_board</i>
-                                                    <span>MAC</span>
-                                                </div>
-                                                <div class="params">
-                                                    <div>
-                                                        <span>Address:</span>
-                                                        <span class="param mac-address"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Vendor:</span>
-                                                        <span class="param mac-vendor"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Company:</span>
-                                                        <span class="param mac-company"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-12 col-lg-6">
-                                            <div class="card addr">
-                                                <div class="label">
-                                                    <i class="material-icons">router</i>
-                                                    <span>IP</span>
-                                                </div>
-                                                <div class="params">
-                                                    <div>
-                                                        <span>Address:</span>
-                                                        <a target="_blank" class="param ip-address"></a>
-                                                    </div>
-                                                    <div>
-                                                        <span>Port:</span>
-                                                        <span class="param ip-port"></span>
-                                                    </div>
-                                                    <div>
-                                                        <span>Host:</span>
-                                                        <a target="_blank" class="param ip-host"></a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="params">
+                                    <div>
+                                        <span>Address:</span>
+                                        <a target="_blank" class="param ip-address"></a>
                                     </div>
-                                </div>
-                                <div class="card-footer">
-                                    <div class="stats">
-                                        <i class="material-icons">desktop_windows</i>
-                                        <span>receiver host</span>
+                                    <div>
+                                        <span>Port:</span>
+                                        <span class="param ip-port"></span>
+                                    </div>
+                                    <div>
+                                        <span>Host:</span>
+                                        <a target="_blank" class="param ip-host"></a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-                    <!-- Packet Info -->
-                    <div class="section">
-                        <h2>Packet</h2>
-                        <div class="row info" id="pkt-modal-info">
-                            <div class="col-12 col-md-6 col-lg-4">
-                                <ul>
-                                    <li>Number: <span id="number"></span></li>
-                                    <li>Protocol: <span id="protocol"></span></li>
-                                    <li>Highest Layer: <span id="highest_layer"></span></li>
-                                    <li>Captured Length: <span id="captured_length"></span> bytes</li>
-                                    <li>Length: <span id="length"></span> bytes</li>
-                                </ul>
-                            </div>
-                            <div class="col-12 col-md-7 col-lg-8">
-                                <ul>
-                                    <li>Transport Layer: <span id="transport_layer"></span></li>
-                                    <li>Sniff Time: <span id="sniff_time"></span></li>
-                                    <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
-                                    <li>Time: <span id="time"></span></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Frame Info -->
-                    <div class="separator row">
-                        <h2>Frame Info</h2>
-                        <ul id="pkt-modal-frame" class="accordion frame">
-                        </ul>
-                    </div>
-
-                    <!-- Layers -->
-                    <div class="section">
-                        <h2>Layers</h2>
-                        <ul id="pkt-modal-layers" class="accordion layers">
-                        </ul>
-                    </div>
-
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">desktop_mac</i>
+                        <span>transmitter host</span>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Destination Host -->
+        <div class="col-12 col-md-6 dst host">
+            <div class="card">
+                <div class="card-header card-header-danger">
+                    <div class="row">
+                        <h3 class="material-icons col-3">laptop_chromebook</h3>
+                        <h3 class="header-title col-9">Destination</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Destination</h4>
+                    <div class="row addresses">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="card addr">
+                                <div class="label">
+                                    <i class="material-icons">developer_board</i>
+                                    <span>MAC</span>
+                                </div>
+                                <div class="params">
+                                    <div>
+                                        <span>Address:</span>
+                                        <span class="param mac-address"></span>
+                                    </div>
+                                    <div>
+                                        <span>Vendor:</span>
+                                        <span class="param mac-vendor"></span>
+                                    </div>
+                                    <div>
+                                        <span>Company:</span>
+                                        <span class="param mac-company"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="card addr">
+                                <div class="label">
+                                    <i class="material-icons">router</i>
+                                    <span>IP</span>
+                                </div>
+                                <div class="params">
+                                    <div>
+                                        <span>Address:</span>
+                                        <a target="_blank" class="param ip-address"></a>
+                                    </div>
+                                    <div>
+                                        <span>Port:</span>
+                                        <span class="param ip-port"></span>
+                                    </div>
+                                    <div>
+                                        <span>Host:</span>
+                                        <a target="_blank" class="param ip-host"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">desktop_windows</i>
+                        <span>receiver host</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Packet Info -->
+    <div class="section">
+        <h2>Packet</h2>
+        <div class="row info" id="pkt-modal-info">
+            <div class="col-12 col-md-6 col-lg-4">
+                <ul>
+                    <li>Number: <span id="number"></span></li>
+                    <li>Protocol: <span id="protocol"></span></li>
+                    <li>Highest Layer: <span id="highest_layer"></span></li>
+                    <li>Captured Length: <span id="captured_length"></span> bytes</li>
+                    <li>Length: <span id="length"></span> bytes</li>
+                </ul>
+            </div>
+            <div class="col-12 col-md-7 col-lg-8">
+                <ul>
+                    <li>Transport Layer: <span id="transport_layer"></span></li>
+                    <li>Sniff Time: <span id="sniff_time"></span></li>
+                    <li>Sniff Timestamp: <span id="sniff_timestamp"></span></li>
+                    <li>Time: <span id="time"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Frame Info -->
+    <div class="separator row">
+        <h2>Frame Info</h2>
+        <ul id="pkt-modal-frame" class="accordion frame">
+        </ul>
+    </div>
+
+    <!-- Layers -->
+    <div class="section">
+        <h2>Layers</h2>
+        <ul id="pkt-modal-layers" class="accordion layers">
+        </ul>
     </div>
 {% endblock %}
 
@@ -285,7 +266,7 @@
     {{ block.super }}
     <!--suppress JSUnfilteredForInLoop -->
     <script type="application/javascript">
-        const $pktModal = $('#pkt-modal');
+        const $pktModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
 
         const showJobData = function(result) {
