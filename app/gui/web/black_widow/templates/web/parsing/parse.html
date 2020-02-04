@@ -59,7 +59,7 @@
     <div class="section tree">
         <h2>Tags</h2>
         <div class="tree-container">
-            <ul class="first-ul" id="tag-tree" type="{{ job.parsing_type }}">
+            <ul class="first-ul" id="tag-tree" depth="{{ job.depth }}">
                 <li><span class="caret">Beverages</span>
                     <ul class="nested">
                         <li>Water</li>
@@ -95,11 +95,6 @@
 {% endblock %}
 
 {% block card_header %}
-    <!-- TODO features:
-            - Sorting/Search filters
-            - Download ".pcap" file
-            - Keys to decrypt traffic
-    -->
     <h4 class="card-title mt-0">Web Parsing</h4>
     <div class="card-category card-info">
         <div class="card-category-label">URL:</div>
@@ -132,7 +127,7 @@
         const $jobModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
         const $tagTree = $('#tag-tree');
-        const type = $tagTree.attr('type');
+        const depth = parseInt($tagTree.attr('depth'));
 
         const showJobData = function(result) {
             for (let key in result) {
@@ -145,7 +140,7 @@
                 ], function() {
                     showPage(page);
                 });
-                if (type === 'Single Page') {
+                if (depth === 0) {
                     showPage(page);
                 }
             }
@@ -156,23 +151,71 @@
          * @param page The page Object
          */
         const showPage = function(page) {
-            // console.log(page);
-
             const anchor = '<a target="_black" href="' + page.url+'">' + page.url + '</a>';
             $jobModal.find('.modal-title').html(anchor);
-
+            $tagTree.html('');
             for (let key in page) {
-                console.log(key);
-                const tag = page[key];
-                console.log(tag);
+                if (key === 'url') {
+                    continue;
+                }
+                nestTag($tagTree, page[key]);
             }
-
-
-            // $tagTree.html('');
-
+            initTree();
             $jobModal.modal();
         };
-    </script>
 
-    {{ job.parsing_type }}
+        const nestTag = function ($parent, tag) {
+            if (Array.isArray(tag)) {
+                for (let key in tag) {
+                    nestTag($parent, tag[key]);
+                }
+                return;
+            }
+            let attrsLength;
+            if (tag.attrs) {
+                attrsLength = Object.entries(tag.attrs).length;
+            } else {
+                attrsLength = 0;
+            }
+            let html = '<li>';
+            if (tag.children || tag.attrs) {
+                html += '<span class="caret"></span>';
+            }
+            const tagName = tag.name && tag.name !== tag.tag ? ('&nbsp; <code>#' + tag.name+'</code>') : '';
+            html += '&lt;'+tag.tag+tagName;
+            if (attrsLength === 0) {
+                html += '&gt;'
+            }
+            html += '</li>';
+            const $me = $(html).appendTo($parent);
+            let childParentHtml = '<ul class="nested"></ul>';
+            const $childParent = $(childParentHtml).appendTo($me);
+            if (attrsLength > 0) {
+                for (let key in tag.attrs) {
+                    let value = tag.attrs[key];
+                    if (!value) {
+                        continue;
+                    }
+                    let attrHtml = '<li>'+key+'="'+value+'"</li>';
+                    $childParent.append(attrHtml);
+                }
+                $childParent.append('<span class="close-tag">&gt;</span>');
+            }
+            if (tag.data) {
+                let attrHtml = '<li><code>'+tag.data+'</code></li>';
+                $childParent.append(attrHtml);
+            }
+            if (tag.children) {
+                for (let key in tag.children) {
+                    nestTag($childParent, tag.children[key]);
+                }
+            }
+            if (tag.data || attrsLength > 0 || tag.children) {
+                let ltHtml = '<span class="nested nested-tag caret">';
+                ltHtml += '&lt;/'+ tag.tag +'&gt;';
+                ltHtml += '</span>';
+                $me.append(ltHtml);
+            }
+        }
+    </script>
 {% endblock %}

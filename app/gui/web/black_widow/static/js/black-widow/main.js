@@ -261,14 +261,10 @@ const initTree = function () {
     $toggler.unbind();
     $toggler.click(function () {
         const $this = $(this);
-        $this.parent().find('.nested').first().toggleClass('active');
+        const $parent = $this.parent();
+        $parent.find('.nested').first().toggleClass('active');
+        $parent.find('.nested-tag').last().toggleClass('active');
         $this.toggleClass('caret-down');
     });
-    // for (let i = 0; i < $toggler.length; i++) {
-    //     toggler[i].addEventListener("click", function() {
-    //         this.parentElement.querySelector(".nested").classList.toggle("active");
-    //         this.classList.toggle("caret-down");
-    //     });
-    // }
 };
 initTree();

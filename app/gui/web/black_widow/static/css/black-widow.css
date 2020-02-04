@@ -691,9 +691,17 @@ ul.accordion ul.inner a.toggle:hover {
     margin-right: 6px;
 }
 
+.tree .nested-tag::before {
+    color: transparent;
+}
+
 /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
 .tree .caret-down::before {
     transform: rotate(90deg);
+}
+
+.tree .nested-tag {
+    display: none;
 }
 
 /* Hide the nested list */
@@ -701,6 +709,18 @@ ul.accordion ul.inner a.toggle:hover {
     visibility: hidden;
     height: 0;
     overflow: hidden;
+}
+
+.tree .nested-tag.active {
+    display: block;
+}
+
+.tree .close-tag {
+    margin-left: -20px;
+}
+
+.tree .nested-tag {
+    pointer-events: none !important;
 }
 
 /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */

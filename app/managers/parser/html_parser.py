@@ -107,7 +107,7 @@ class HtmlParser(PyHTMLParser, ABC):
     _meta_tags.update(_xmp_tags)
 
     _tag_names = ('name', 'itemprop', 'property')
-    _tag_key_names = ('charset',)
+    _tag_key_names = ('content', 'charset')
 
     _relevant_tags = {
         'a': ['href'],
@@ -274,16 +274,14 @@ class HtmlParser(PyHTMLParser, ABC):
                     'inputs': HtmlParser.__find_inputs(parsed.get('children'))
                 }
             children = HtmlParser.find_forms(parsed.get('children'), url)
-            if children is not None:
-                if len(children) > 0:
-                    if len(form) > 0:
-                        form['children'] = children
+            if children is not None and len(children) > 0:
+                if len(form) > 0:
+                    form['children'] = children
+                else:
+                    if len(children) == 1 and children.get('method') is None:
+                        form = children.get(0)
                     else:
                         form = children
-                        # if len(children) > 1:
-                        #     form = children
-                        # else:
-                        #     form = children.get(0)
         elif type(parsed) is list:
             children = dict()
             index = 0
@@ -292,8 +290,10 @@ class HtmlParser(PyHTMLParser, ABC):
                 if len(child) > 0:
                     children[index] = child
                     index += 1
-            # noinspection PyTypeChecker
-            form.update(children)
+            if len(children) == 1 and children.get(0).get('method') is None:
+                form = children.get(0)
+            else:
+                form = children
         else:
             Log.error(str(parsed) + ' is not a valid parsed content!')
         return form
@@ -421,16 +421,14 @@ class HtmlParser(PyHTMLParser, ABC):
                 found_tag['name'] = name
             # Tag children
             children = HtmlParser.__find_tags(parsed.get('children'), tags)
-            if children is not None:
-                if len(children) > 0:
-                    if len(found_tag) > 0:
-                        found_tag['children'] = children
+            if children is not None and len(children) > 0:
+                if len(found_tag) > 0:
+                    found_tag['children'] = children
+                else:
+                    if len(children) == 1 and children.get(0).get('name') is None:
+                        found_tag = children.get(0)
                     else:
                         found_tag = children
-                        # if len(children) > 1:
-                        #     found_tag = children
-                        # else:
-                        #     found_tag = children.get(0)
         elif type(parsed) is list:
             children = dict()
             index = 0
@@ -439,8 +437,10 @@ class HtmlParser(PyHTMLParser, ABC):
                 if len(child) > 0:
                     children[index] = child
                     index += 1
-            # noinspection PyTypeChecker
-            found_tag = children
+            if len(children) == 1 and children.get(0).get('name') is None:
+                found_tag = children.get(0)
+            else:
+                found_tag = children
         else:
             Log.error(str(parsed) + ' is not a valid parsed content!')
         return found_tag
@@ -468,6 +468,8 @@ class HtmlParser(PyHTMLParser, ABC):
                 attr_value = str(attr[1])
                 if (not self.relevant) or attr_key in HtmlParser._relevant_tags.get(tag):
                     if self.base_url is not None and attr_key in HtmlParser._url_attrs and (not is_url(attr_value)):
+                        if len(attr_value) == 0:
+                            continue
                         if attr_value[0] == '#':
                             continue
                         if attr_value[0:2] == '//':
@@ -563,7 +565,6 @@ class HtmlParser(PyHTMLParser, ABC):
         :param tag_dict: A parsed-tag dictionary
         :return: void
         """
-        print(tag_dict)
         queue_tag_len = len(self.queue_tag)
         if queue_tag_len == 0:
             parent = self.tags
