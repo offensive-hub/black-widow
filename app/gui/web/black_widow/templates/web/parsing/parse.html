@@ -165,6 +165,7 @@
         };
 
         const nestTag = function ($parent, tag) {
+            // TODO: Manage form
             if (Array.isArray(tag)) {
                 for (let key in tag) {
                     nestTag($parent, tag[key]);
