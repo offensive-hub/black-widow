@@ -269,6 +269,7 @@ class HtmlParser(PyHTMLParser, ABC):
                 if method is None:
                     method = HttpRequest.Type.POST
                 form = {
+                    'tag': 'form',
                     'method': method,
                     'action': action,
                     'inputs': HtmlParser.__find_inputs(parsed.get('children'))
@@ -278,7 +279,7 @@ class HtmlParser(PyHTMLParser, ABC):
                 if len(form) > 0:
                     form['children'] = children
                 else:
-                    if len(children) == 1 and children.get('method') is None:
+                    if len(children) == 1 and children.get('tag') is None:
                         form = children.get(0)
                     else:
                         form = children
@@ -290,7 +291,7 @@ class HtmlParser(PyHTMLParser, ABC):
                 if len(child) > 0:
                     children[index] = child
                     index += 1
-            if len(children) == 1 and children.get(0).get('method') is None:
+            if len(children) == 1 and children.get(0).get('tag') is None:
                 form = children.get(0)
             else:
                 form = children
