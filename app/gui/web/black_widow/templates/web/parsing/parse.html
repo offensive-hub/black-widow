@@ -60,37 +60,41 @@
         <h2>Tags</h2>
         <div class="tree-container">
             <ul class="first-ul" id="tag-tree" depth="{{ job.depth }}">
-                <li><span class="caret">Beverages</span>
-                    <ul class="nested">
-                        <li>Water</li>
-                        <li>Coffee</li>
-                        <li><span class="caret">Tea</span>
-                            <ul class="nested">
-                                <li>Black Tea</li>
-                                <li>White Tea</li>
-                                <li><span class="caret">Green Tea</span>
-                                    <ul class="nested">
-                                        <li>Sencha</li>
-                                        <li>Gyokuro</li>
-                                        <li>Matcha</li>
-                                        <li>Pi Lo Chun</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
             </ul>
         </div>
     </div>
 
     <!-- Separator -->
     <div class="separator row">
-        <h2>Separator</h2>
+        <h2>Forms</h2>
+        <div>
+            <h4 style="width: 100%;">https://example.com/submit</h4>
+            <form>
+                <label>
+                    Example 1
+                    <input name="example-1" type="text" required="">
+                </label>
+                <label>
+                    Example 2
+                    <input name="example-2" type="text">
+                </label>
+                <label>
+                    Example 3
+                    <input name="example-3" type="password">
+                </label>
+                <label>
+                    Example 4
+                    <input name="example-4" type="checkbox">
+                </label>
+            </form>
+        </div>
     </div>
 
-    <div class="section">
-        <h2>Section</h2>
+    <div class="section tag-count">
+        <h2>Tag Count</h2>
+        <button type="button" class="btn btn-danger">
+            form <span class="badge badge-light">4</span>
+        </button>
     </div>
 {% endblock %}
 

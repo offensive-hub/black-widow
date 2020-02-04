@@ -36,6 +36,7 @@
  *       |-- 0.7) Notifications
  *       |-- 0.8) Accordion
  *       |-- 0.9) Tree
+ *       |-- 1.0) Badges
  *
  *  1) layout/base.html
  *
@@ -740,6 +741,23 @@ ul.accordion ul.inner a.toggle:hover {
 }
 
 /*****************/
+
+
+/*** 1.0) Badges ***/
+
+.tag-count .btn {
+    pointer-events: none;
+    background-color: #561515 !important;
+    text-transform: uppercase;
+}
+
+.tag-count .btn .badge {
+    font-size: 14px;
+    margin-left: 8px;
+    top: 1px !important;
+}
+
+/*******************/
 
 
 

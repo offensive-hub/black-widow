@@ -112,7 +112,7 @@ class HtmlParser(PyHTMLParser, ABC):
     _relevant_tags = {
         'a': ['href'],
         'img': ['src'],
-        'form': ['id', 'action', 'method'],
+        'form': ['id', 'action', 'method', 'name'],
         'script': ['src', 'data', 'type'],  # { 'src': '/some/script.js', 'data': 'function() ...' }
         'link': ['href'],  # { 'href': '*.xml' }
         'html': [],
@@ -260,21 +260,30 @@ class HtmlParser(PyHTMLParser, ABC):
         if parsed is None:
             return form
         if type(parsed) == dict:
+            parsed_children = parsed.get('children')
             if 'form' == parsed.get('tag'):
                 attrs = parsed.get('attrs')
                 action = attrs.get('action')
                 method = attrs.get('method')
+                name = attrs.get('name')
                 if action is None:
                     action = url
                 if method is None:
                     method = HttpRequest.Type.POST
-                form = {
-                    'tag': 'form',
+                attrs = {
                     'method': method,
                     'action': action,
-                    'inputs': HtmlParser.__find_inputs(parsed.get('children'))
+                    'name': name
                 }
-            children = HtmlParser.find_forms(parsed.get('children'), url)
+                if name is None:
+                    name = action
+                form = {
+                    'tag': 'form',
+                    'attrs': attrs,
+                    'name': name,
+                    'children': HtmlParser.__find_inputs(parsed_children)
+                }
+            children = HtmlParser.find_forms(parsed_children, url)
             if children is not None and len(children) > 0:
                 if len(form) > 0:
                     form['children'] = children
