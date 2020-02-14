@@ -128,3 +128,11 @@ class AbstractJobModel(AbstractModel):
             key=lambda e: int(e[1][self.json_sort_value]),
             reverse=True
         )))
+
+    @property
+    def total(self) -> int:
+        json_sort_value = self.json_sort_value
+        self.json_sort_value = None
+        total = len(self.json_dict)
+        self.json_sort_value = json_sort_value
+        return total
