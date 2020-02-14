@@ -125,7 +125,7 @@ class HtmlParser(PyHTMLParser, ABC):
     _url_attrs = ['href', 'src', 'action']
 
     # Not closed tags
-    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img']
+    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br']
 
     def __init__(self, relevant: bool = False):
         super().__init__()
@@ -475,34 +475,37 @@ class HtmlParser(PyHTMLParser, ABC):
         :param attrs: The attributes of opened tag like list[tuple{2}]
         """
         tag = str(tag).lower()
-        if (not self.relevant) or tag in HtmlParser._relevant_tags.keys():
-            tag_attrs = {}
-            for attr in attrs:
-                attr_key = str(attr[0]).lower()
-                attr_value = str(attr[1])
-                if (not self.relevant) or attr_key in HtmlParser._relevant_tags.get(tag):
-                    if self.base_url is not None and attr_key in HtmlParser._url_attrs and (not is_url(attr_value)):
-                        if len(attr_value) == 0:
-                            continue
-                        if attr_value[0] == '#':
-                            continue
-                        if attr_value[0:2] == '//':
-                            attr_value = self.url_scheme + ':' + attr_value
-                        else:
-                            if attr_value[0] != '/' and self.base_url[len(self.base_url) - 1] != '/':
-                                attr_value = '/' + attr_value
-                            elif attr_value[0] == '/' and self.base_url[len(self.base_url) - 1] == '/':
-                                attr_value = attr_value[1:]
-                            attr_value = self.base_url + attr_value
-                    if 'email-protection' in attr_value:
-                        attr_value = 'email-protection'
-                    tag_attrs[attr_key] = attr_value
-            cur_tag = {'tag': tag, 'attrs': tag_attrs}
-            self.queue_tag.append(cur_tag)
+        if self.relevant and tag not in HtmlParser._relevant_tags.keys():
+            self.queue_tag_ignored.append(tag)
             if tag in HtmlParser._not_closed_tags:
                 self.handle_endtag(tag)
-        else:
-            self.queue_tag_ignored.append(tag)
+            return
+        tag_attrs = {}
+        for attr in attrs:
+            attr_key = str(attr[0]).lower()
+            attr_value = str(attr[1])
+            if self.relevant and attr_key not in HtmlParser._relevant_tags.get(tag):
+                continue
+            if self.base_url is not None and attr_key in HtmlParser._url_attrs and (not is_url(attr_value)):
+                if len(attr_value) == 0:
+                    continue
+                if attr_value[0] == '#':
+                    continue
+                if attr_value[0:2] == '//':
+                    attr_value = self.url_scheme + ':' + attr_value
+                else:
+                    if attr_value[0] != '/' and self.base_url[len(self.base_url) - 1] != '/':
+                        attr_value = '/' + attr_value
+                    elif attr_value[0] == '/' and self.base_url[len(self.base_url) - 1] == '/':
+                        attr_value = attr_value[1:]
+                    attr_value = self.base_url + attr_value
+            if 'email-protection' in attr_value:
+                attr_value = 'email-protection'
+            tag_attrs[attr_key] = attr_value
+        cur_tag = {'tag': tag, 'attrs': tag_attrs}
+        self.queue_tag.append(cur_tag)
+        if tag in HtmlParser._not_closed_tags:
+            self.handle_endtag(tag)
 
     def handle_endtag(self, tag: str):
         """
@@ -556,8 +559,6 @@ class HtmlParser(PyHTMLParser, ABC):
                 html = r.text
             if r.headers is not None:
                 for k, v in r.headers.items():
-                    k: str
-                    v: str
                     if k.lower() == 'set-cookie':
                         cookies = v
             if HttpRequest.is_image(r):
