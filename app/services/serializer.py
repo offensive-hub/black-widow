@@ -95,7 +95,7 @@ class JsonSerializer:
     @staticmethod
     def add_item_to_dict(key, value, file: str):
         """
-        :param key: The dictionary key
+        :param key: The dictionary key or None
         :param value: The dictionary value
         :param file: The file where dictionary is dumped
         """

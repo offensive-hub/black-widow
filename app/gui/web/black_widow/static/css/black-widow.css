@@ -665,6 +665,7 @@ ul.accordion ul.inner a.toggle:hover {
 .tree-container {
     overflow: auto;
     margin: auto;
+    padding: 15px;
 }
 
 /* Remove default bullets */

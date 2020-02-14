@@ -182,7 +182,6 @@ class HtmlParser(PyHTMLParser, ABC):
                 return
 
             parsed_hashes.add(parsed_hash)
-
             parsed_urls.add(href)
 
             if parsing_type == HtmlParser.TYPE_FORM:
@@ -193,6 +192,11 @@ class HtmlParser(PyHTMLParser, ABC):
                 parsed_page = HtmlParser.find_meta(parsed)
             else:
                 parsed_page = parsed
+
+            if parsed_page.get('tag') is not None:
+                parsed_page = {
+                    0: parsed_page
+                }
 
             parsed_page['url'] = href
             callback(parsed_page)
@@ -485,11 +489,11 @@ class HtmlParser(PyHTMLParser, ABC):
                         if attr_value[0:2] == '//':
                             attr_value = self.url_scheme + ':' + attr_value
                         else:
-                            if attr_value[0] != '/' and self.url[len(self.url) - 1] != '/':
+                            if attr_value[0] != '/' and self.base_url[len(self.base_url) - 1] != '/':
                                 attr_value = '/' + attr_value
-                            elif attr_value[0] == '/' and self.url[len(self.url) - 1] == '/':
+                            elif attr_value[0] == '/' and self.base_url[len(self.base_url) - 1] == '/':
                                 attr_value = attr_value[1:]
-                            attr_value = self.url + attr_value
+                            attr_value = self.base_url + attr_value
                     if 'email-protection' in attr_value:
                         attr_value = 'email-protection'
                     tag_attrs[attr_key] = attr_value
