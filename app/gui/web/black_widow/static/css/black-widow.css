@@ -767,6 +767,10 @@ ul.accordion ul.inner a.toggle:hover {
     top: 1px !important;
 }
 
+.tag-count .btn:not(:first-child) {
+    margin-left: 15px;
+}
+
 /*******************/
 
 

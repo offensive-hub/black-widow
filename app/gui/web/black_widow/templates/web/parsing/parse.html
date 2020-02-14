@@ -93,9 +93,11 @@
 
     <div class="section tag-count">
         <h2>Tag Count</h2>
+        <div id="tag-count">
         <button type="button" class="btn btn-danger">
             form <span class="badge badge-light">4</span>
         </button>
+        </div>
     </div>
 {% endblock %}
 
@@ -132,7 +134,9 @@
         const $jobModal = $('#job-modal');
         const $dataTable = $('#data-table').find('table').first();
         const $tagTree = $('#tag-tree');
+        const $tagCount = $('#tag-count');
         const depth = parseInt($tagTree.attr('depth'));
+        let tagDict = {};
 
         const showJobData = function(result) {
             for (let key in result) {
@@ -159,18 +163,39 @@
             const anchor = '<a target="_black" href="' + page.url+'">' + page.url + '</a>';
             $jobModal.find('.modal-title').html(anchor);
             $tagTree.html('');
-            console.log(page);
+            tagDict = {};
             for (let key in page) {
                 if (key === 'url') {
                     continue;
                 }
-                // console.log(page[key]);
                 nestTag($tagTree, page[key]);
             }
+            tagCountBadge();
             initTree();
             $jobModal.modal();
         };
 
+        /**
+         * Creates a badge button foreach tag in tagDict
+         */
+        const tagCountBadge = function() {
+            const htmlBadgeStart='<button type="button" class="btn btn-danger">';
+            const htmlBadgeEnd='</button>';
+            $tagCount.html('');
+            for (let tagName in tagDict) {
+                let htmlBadge = htmlBadgeStart;
+                htmlBadge += tagName;
+                htmlBadge += '<span class="badge badge-light">';
+                htmlBadge += tagDict[tagName];
+                htmlBadge += '</span>';
+                $tagCount.append(htmlBadge);
+            }
+        }
+
+        /**
+         * Append a tag on $parent element and fill tagDict
+         * @param page The parent HTML jQuery object
+         */
         const nestTag = function ($parent, tag) {
             // TODO: Manage form
             if (Array.isArray(tag)) {
@@ -178,6 +203,11 @@
                     nestTag($parent, tag[key]);
                 }
                 return;
+            }
+            if (tagDict[tag.tag] !== undefined) {
+                tagDict[tag.tag]++;
+            } else {
+                tagDict[tag.tag] = 1;
             }
             let attrsLength;
             if (tag.attrs) {
