@@ -204,7 +204,8 @@
                     if (!value) {
                         continue;
                     }
-                    let attrHtml = '<li>'+key+'="'+value+'"</li>';
+                    let attrHtml = '<li><span class="tag-key">'+key+'</span>=';
+                    attrHtml += '<span class="tag-value">"'+value+'"</span></li>';
                     $childParent.append(attrHtml);
                 }
                 $childParent.append('<span class="close-tag">&gt;</span>');
