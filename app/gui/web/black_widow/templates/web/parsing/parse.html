@@ -244,9 +244,18 @@
                 let attrHtml = '<li><code>'+tag.data+'</code></li>';
                 $childParent.append(attrHtml);
             }
+            if (tag.tag === 'title') {
+                return;
+            }
             if (tag.children) {
                 for (let key in tag.children) {
                     nestTag($childParent, tag.children[key]);
+                    // TODO: remove the following code but debug
+                    // https://google-gruyere.appspot.com/481539122071012622308164458170409025612/editprofile.gtl
+                    // with "All Tags"
+                    if (tag.tag === 'title') {
+                        return;
+                    }
                 }
             }
             if (tag.data || attrsLength > 0 || tag.children) {
