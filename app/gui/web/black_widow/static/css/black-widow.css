@@ -162,6 +162,9 @@ strong {
 .black-edition .modal .close {
    color: #fff;
 }
+.modal .modal-header .modal-title {
+    word-break: break-word;
+}
 .modal .card-header .h3 {
    padding-left: 8px;
    padding-right: 8px;
@@ -818,17 +821,14 @@ ul.accordion ul.inner a.toggle:hover {
 .tag-count .btn {
     pointer-events: none;
     background-color: #561515 !important;
-    text-transform: uppercase;
+    text-transform: lowercase;
+    margin-left: 15px;
 }
 
 .tag-count .btn .badge {
     font-size: 14px;
     margin-left: 8px;
     top: 1px !important;
-}
-
-.tag-count .btn {
-    margin-left: 15px;
 }
 
 /*******************/
