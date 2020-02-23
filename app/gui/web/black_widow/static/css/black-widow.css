@@ -93,6 +93,15 @@ strong {
 .card [class*="card-header-"] .card-title+.card-category .material-icons {
   font-size: 16px;
 }
+
+.card .card-header h3:not(.material-icons) {
+    margin-top: 10px;
+}
+
+#tag-card-example {
+    display: none;
+}
+
 .card-body-primary .card-category, .card-body-primary .card-title {
     color: #fff !important;
 }
@@ -129,6 +138,19 @@ strong {
 .black-edition .card.card-rotate.bg-primary .back {
     background: linear-gradient(60deg, #d22824, #da3a36);
 }
+
+.black-edition .card.card-light .card-body .card-category,
+.black-edition .card.card-light .card-body .card-title,
+.black-edition .card.card-light label,
+.black-edition .card.card-light {
+    color: #000;
+
+}
+
+.black-edition .card.card-light {
+    background: #958e8e;
+}
+
 .black-edition .modal {
     background: rgba(11, 0, 0, 0.9);
 }
@@ -441,9 +463,38 @@ nav.pagination.dark-theme li:first-child li span {
 /*** 0.5) Forms ***/
 
 .black-edition .form-control, .is-focused .dark-edition .form-control {
-    background-image: linear-gradient(to top,
-    #b00009 2px, rgba(156, 39, 176, 0) 2px), linear-gradient(to top, rgba(180, 180, 180, 0.1) 1px,
+    background-image: linear-gradient(to top, #b00009 2px, rgba(156, 39, 176, 0) 2px),
+    linear-gradient(to top, rgba(180, 180, 180, 0.1) 1px,
     rgba(180, 180, 180, 0) 1px);
+}
+
+.black-edition .form-check .form-check-input:checked+.form-check-sign .check {
+    border-color: #4e0005;
+    background: linear-gradient(60deg,#fff, #85696a);
+}
+
+.black-edition .form-check .form-check-input:checked+.form-check-sign .check:before {
+    color: #690c09;
+}
+
+/* .card-light forms */
+.black-edition .card-light .form-control {
+    background-image: linear-gradient(to top, #b00009 2px, rgba(156, 39, 176, 0) 2px),
+    linear-gradient(to top, rgba(0, 0, 0, 0.3) 1px,
+            rgba(180, 180, 180, 0) 1px);
+}
+.dark-edition .card-light .bmd-form-group:not(.has-success):not(.has-danger) [class*=" bmd-label"].bmd-label-floating,
+.dark-edition .card-light .bmd-form-group:not(.has-success):not(.has-danger) [class^=bmd-label].bmd-label-floating,
+.dark-edition .card-light .form-group label {
+    color: rgba(0, 0, 0, 0.50);
+}
+
+.black-edition .card-light .form-control {
+    color: black;
+}
+
+.tag-card .card-header a {
+    color: inherit;
 }
 
 /******************/
@@ -833,8 +884,6 @@ ul.accordion ul.inner a.toggle:hover {
 }
 
 #job-modal .hosts .host .addresses .card.addr {
-    background: #958e8e;
-    color: #000;
     margin: 0;
     padding: 10px;
 }

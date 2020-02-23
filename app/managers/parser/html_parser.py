@@ -65,6 +65,9 @@ class HtmlParser(PyHTMLParser, ABC):
         ],
         'option': [
             'id', 'value', 'selected'
+        ],
+        'button': [
+            'id', 'name', 'type', 'form', 'value'
         ]
     }
 
