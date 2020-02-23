@@ -109,7 +109,7 @@ class HtmlParser(PyHTMLParser, ABC):
     }
     _meta_tags.update(_xmp_tags)
 
-    _tag_names = ('name', 'itemprop', 'property')
+    _tag_names = ('name', 'itemprop', 'property', 'id')
     _tag_key_names = ('content', 'charset')
 
     _relevant_tags = {

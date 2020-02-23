@@ -65,60 +65,17 @@
     </div>
 
     <!-- Separator -->
-    <div class="separator row tag-cards">
-        <h2 id="tag-cards-title">Forms</h2>
+    <div class="separator row">
 
-        <div class="col-12 col-md-6 tag-card" id="tag-card-example">
-            <div class="card card-light">
-                <div class="card-header card-header-danger">
-                    <div class="row">
-                        <h3 class="col-12 tag-card-title">[method] http://example.com</h3>
-                    </div>
-                </div>
-                <div class="card-body form-container">
-                    <form>
-                        <div class="form-group">
-                            <label class="bmd-label-floating">Email address</label>
-                            <input type="email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label class="bmd-label-floating">Password</label>
-                            <input type="password" class="form-control">
-                        </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="checkbox" value="">Example 4
-                                <span class="form-check-sign"><span class="check"></span></span>
-                            </label>
-                        </div>
-                        <div class="form-group">
-                            <label>Example multiple select</label>
-                            <select class="form-control">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Example textarea</label>
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <h2>Forms</h2>
 
-        <div id="tag-cards-container" class="row">
-
-
-        </div>
+        <ul id="tags-container" class="accordion tags">
+        </ul>
     </div>
 
     <div class="section tag-count">
         <h2>Tag Count</h2>
-        <div id="tag-count">
+        <div id="tag-count" class="row">
         <button type="button" class="btn btn-danger">
             form <span class="badge badge-light">4</span>
         </button>
@@ -160,8 +117,8 @@
         const $dataTable = $('#data-table').find('table').first();
         const $tagTree = $('#tag-tree');
         const $tagCount = $('#tag-count');
-        const $tagCardExample = $('#tag-card-example');
-        const $formCardsContainer = $('#tag-cards-container');
+        const $tagExample = $('#tag-example');
+        const $tagsContainer = $('#tags-container');
         const depth = parseInt($tagTree.attr('depth'));
         let tagDict = {};
 
@@ -190,7 +147,7 @@
             const anchor = '<a target="_black" href="' + page.url+'">' + page.url + '</a>';
             $jobModal.find('.modal-title').html(anchor);
             $tagTree.html('');
-            $formCardsContainer.html('');
+            $tagsContainer.html('');
             tagDict = {};
             for (let key in page) {
                 if (key === 'url') {
@@ -200,7 +157,7 @@
             }
             tagCountBadge();
             initTree();
-            console.log(tagDict);
+            initAccordions();
             $jobModal.modal();
         };
 
@@ -235,7 +192,7 @@
                 return;
             }
             if (tag.tag.toLowerCase() === 'form') {
-                makeFormCard(tag);
+                makeFormAccordion(tag);
             }
             if (tagDict[tag.tag] !== undefined) {
                 tagDict[tag.tag]++;
@@ -252,7 +209,7 @@
             if (tag.children || attrsLength > 0 || tag.data) {
                 html += '<span class="caret"></span>';
             }
-            const tagName = tag.name && tag.name !== tag.tag ? ('&nbsp; <code>#' + tag.name+'</code>') : '';
+            const tagName = tag.name && tag.name !== tag.tag ? ('&nbsp; <code>#' + tag.name + '</code>') : '';
             html += '&lt;'+tag.tag+tagName;
             if (attrsLength === 0) {
                 html += '&gt;'
@@ -275,8 +232,8 @@
             }
 
             if (tag.data) {
-                let attrHtml = '<li><code>'+tag.data+'</code></li>';
-                $childParent.append(attrHtml);
+                const $attrHtml = $('<li><code></code></li>').appendTo($childParent);
+                $attrHtml.find('code').text(tag.data);
             }
             if (tag.children) {
                 for (let key in tag.children) {
@@ -293,34 +250,32 @@
          *
          * @param formTag A form tag Object
          */
-        const makeFormCard = function (formTag) {
-            const $formCardHtml = $tagCardExample.clone();
-            const $form = $formCardHtml.find('form');
-
-            $form.html('');
-            $formCardHtml.attr('id', null);
-            $formCardHtml.find('.tag-card-title').html(
-                '<span>[' + formTag.attrs.method.toUpperCase() + '] </span>' +
-                '<a href="'+formTag.attrs.action+'" target="_black">' +
-                    formTag.attrs.action +
-                '</a>'
-            );
+        const makeFormAccordion = function (formTag) {
+            const htmlTagAccordion =
+                '<li class="layer">' +
+                '<a class="toggle" href="javascript:void(0);">[' +
+                formTag.attrs.method.toUpperCase() + '] ' + formTag.attrs.action +
+                '<i class="material-icons arrow">keyboard_arrow_right</i>' +
+                '</a>' +
+                '<ul class="inner"><li><form class="row"></form></li></ul>' +
+                '</li>';
+            const $formHtml = $(htmlTagAccordion).appendTo($tagsContainer);
+            const $form = $formHtml.find('form');
 
             for (let key in formTag.attrs) {
                 const keyLower = key.toLowerCase();
-                if (keyLower === 'id') {
+                if (keyLower === 'id' || keyLower === 'onsubmit') {
                     continue;
                 }
                 const value = formTag.attrs[key];
                 $form.attr(key, value);
             }
 
-            $formCardHtml.appendTo($formCardsContainer);
+            $formHtml.appendTo($tagsContainer);
             makeFormInput(formTag, $form);
         };
 
         const makeFormInput = function (formInputTag, $parent) {
-            console.log(formInputTag);
             let html = null;
             switch (formInputTag.tag.toLowerCase()) {
                 case 'textarea':
@@ -341,6 +296,7 @@
                             html = makeInputText(formInputTag);
                             break;
                         case 'button':
+                        case 'submit':
                             html = makeInputButton(formInputTag);
                             break;
                         case 'checkbox':
@@ -352,23 +308,26 @@
                     }
                     break;
                 default:
-                    if (formInputTag.children) {
-                        for (let key in formInputTag.children) {
-                            makeFormInput(formInputTag.children[key], $parent);
-                        }
-                    }
                     break;
             }
-            if (html !== null) {
+            if (html !== null && formInputTag.attrs.name) {
                 $parent.append(html);
+            }
+            if (formInputTag.children) {
+                for (let key in formInputTag.children) {
+                    makeFormInput(formInputTag.children[key], $parent);
+                }
             }
         };
 
         const attrsToHtml = function (attrs) {
+            const badAttrs = [
+                'id', 'onchange', 'onkeypress', 'onblur', 'style', 'disabled'
+            ];
             let html = '';
             for (let key in attrs) {
                 const keyLower = key.toLowerCase();
-                if (keyLower === 'id') {
+                if (badAttrs.includes(keyLower)) {
                     continue;
                 }
                 let value = attrs[key];
@@ -380,14 +339,33 @@
             return html;
         };
 
+        const getTagName = function (tag) {
+            let name = null;
+            if (tag.attrs.name) {
+                name = tag.attrs.name;
+            } else if (tag.attrs.id) {
+                name = tag.attrs.id;
+            } else if (tag.data) {
+                name = tag.data;
+            } else if (tag.attrs.type) {
+                name = tag.attrs.type;
+            } else {
+                name = tag.tag;
+            }
+            if (tag.attrs.required) {
+                name += '*';
+            }
+            return name;
+        };
+
         /**
          * Make an HTML Input Text
          * @param textTag Object
          * @returns {string}
          */
         const makeInputText = function (textTag) {
-            let html = '<div class="form-group">';
-            html += '<label>'+textTag.attrs.name+'</label>';
+            let html = '<div class="form-group col-12 col-lg-6">';
+            html += '<label>' + getTagName(textTag) + '</label>';
             html += '<input class="form-control"';
             html += attrsToHtml(textTag.attrs);
             html += '>';
@@ -401,11 +379,11 @@
          * @returns {string}
          */
         const makeInputCheckbox = function (checkboxTag) {
-            let html = '<div class="form-check form-group">';
+            let html = '<div class="form-check form-group col-12 col-lg-6">';
             html += '<label class="form-check-label">';
             html += '<input class="form-check-input" type="checkbox"';
             html +=  ' value="' + checkboxTag.attrs.name + '">';
-            html += checkboxTag.attrs.name;
+            html += getTagName(checkboxTag);
             html += '<span class="form-check-sign"><span class="check"></span></span>';
             html += '</label>';
             html += '</div>';
@@ -418,7 +396,6 @@
          * @returns {string}
          */
         const makeInputButton = function (buttonTag) {
-            console.log('making input button', buttonTag);
             let html = '<input class="btn btn-danger"';
             html += attrsToHtml(buttonTag.attrs);
             html += '>';
@@ -431,10 +408,22 @@
          * @returns {string}
          */
         const makeSelect = function (selectTag) {
-            console.log('making select', selectTag);
-            let html = '<div class="form-group">';
-            html += '<label>'+selectTag.attrs.name+'</label>';
-            // TODO: Make options
+            let html = '<div class="form-group col-12 col-lg-6">';
+            html += '<label>' + getTagName(selectTag) + '</label>';
+            html += '<select size class="form-control"';
+            html += attrsToHtml(selectTag.attrs);
+            html += '>';
+            if (selectTag.children) {
+                for (let key in selectTag.children) {
+                    const optionTag = selectTag.children[key];
+                    html += '<option value="'+optionTag.attrs.value+'">';
+                    html += optionTag.attrs.value;
+                    html += '</option>';
+                }
+            } else {
+                html += '<option value="1">EMPTY</option>'
+            }
+            html += '</select>';
             html += '</div>';
             return html;
         };
@@ -445,9 +434,8 @@
          * @returns {string}
          */
         const makeTextarea = function (textareaTag) {
-            console.log('making textarea', textareaTag);
-            let html = '<div class="form-group">';
-            html += '<label>'+textareaTag.attrs.name+'</label>';
+            let html = '<div class="form-group col-12 col-lg-6">';
+            html += '<label>' + getTagName(textareaTag) + '</label>';
             html += '<textarea class="form-control" rows="5">'+textareaTag.attrs.data+'</textarea>';
             html += '</div>';
             return html;
@@ -462,15 +450,7 @@
             let html = '<button class="btn btn-danger"';
             html += attrsToHtml(buttonTag.attrs);
             html += '>';
-            if (buttonTag.data) {
-                html += buttonTag.data;
-            } else if (buttonTag.attrs.value) {
-                html += buttonTag.attrs.value;
-            } else if (buttonTag.attrs.type) {
-                html += buttonTag.attrs.type;
-            } else {
-                html += 'Button';
-            }
+            html += getTagName(buttonTag);
             html += '</button>';
             return html;
         };

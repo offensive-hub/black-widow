@@ -98,10 +98,6 @@ strong {
     margin-top: 10px;
 }
 
-#tag-card-example {
-    display: none;
-}
-
 .card-body-primary .card-category, .card-body-primary .card-title {
     color: #fff !important;
 }
@@ -493,8 +489,21 @@ nav.pagination.dark-theme li:first-child li span {
     color: black;
 }
 
-.tag-card .card-header a {
-    color: inherit;
+#tags-container form .form-check {
+    display: flex;
+}
+
+#tags-container form .form-check label {
+    margin: auto auto auto 15px;
+}
+
+.black-edition select option {
+    background: #fff;
+    color: #000;
+}
+
+select {
+    cursor: pointer;
 }
 
 /******************/
@@ -818,7 +827,7 @@ ul.accordion ul.inner a.toggle:hover {
     top: 1px !important;
 }
 
-.tag-count .btn:not(:first-child) {
+.tag-count .btn {
     margin-left: 15px;
 }
 
