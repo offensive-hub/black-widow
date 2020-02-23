@@ -172,6 +172,7 @@
             }
             tagCountBadge();
             initTree();
+            console.log(tagDict);
             $jobModal.modal();
         };
 
@@ -188,7 +189,7 @@
                 htmlBadge += '<span class="badge badge-light">';
                 htmlBadge += tagDict[tagName];
                 htmlBadge += '</span>';
-                htmlBadge = htmlBadgeEnd;
+                htmlBadge += htmlBadgeEnd;
                 $tagCount.append(htmlBadge);
             }
         };
