@@ -166,6 +166,18 @@ def pid_exists(pid: int) -> bool:
     return True
 
 
+def is_executable(cmd_file: str) -> bool:
+    """
+    If cmd_file is a file this method checks if the current user can executes that,
+    otherwise it checks if the current user can executes the associated file
+    (returned by `type cmd_file`)
+    :param cmd_file: The command or the file to executes
+    :return: True, if the current user can executes "cmd_file", otherwise False
+    """
+    path = exec_type(cmd_file)
+    return os.access(path, os.X_OK)
+
+
 def is_root() -> bool:
     """
     If IGNORE_NON_ROOT in .env is False, this method checks if the current user is root
@@ -226,7 +238,7 @@ def set_owner_process(user: dict):
     os.environ['HOME'] = new_home
 
 
-def pexec(*args) -> list:
+def os_exec(*args) -> list:
     """
     Executes through os stdin the input commands
     :param args: cmd + args (eg1. "cmd" "[args]"), (eg2. "ls" "-l")
@@ -237,3 +249,23 @@ def pexec(*args) -> list:
     for line in p.stdout.readlines():
         list_stdout.append(str(line.decode('utf-8')).rstrip('\n'))
     return list_stdout
+
+
+def exec_type(cmd: str) -> str or None:
+    """
+    Indicate how the input "cmd" would be interpreted if used as a command name.
+    If "cmd" is a shell built-in or it does not exists, returns None
+    :param cmd: The command to check
+    :return: Usually, the interpreted path of input command
+    """
+    if type(cmd) is not str:
+        raise ValueError("cmd must be a string")
+    outputs = os_exec('type ' + cmd)
+    if len(outputs) == 0:
+        return None
+    output: str = outputs[0]
+    output_split = output.split(' ')
+    cmd_file = output_split[-1]
+    if os.path.isfile(cmd_file):
+        return cmd_file
+    return None

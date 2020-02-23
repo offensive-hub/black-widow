@@ -28,6 +28,7 @@ from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import SniffingJobModel
 from black_widow.app.helpers import network, util
+from black_widow.app.managers.sniffer import PcapSniffer
 
 from .abstract_sniffing_view import AbstractSniffingView
 
@@ -48,7 +49,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            if not util.is_root():
+            if not PcapSniffer.is_executable():
                 return render(request, self.error_templates.get('root_required'))
             view_params = {
                 'interfaces': network.get_interfaces(),
@@ -61,7 +62,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
-            if not util.is_root():
+            if not PcapSniffer.is_executable():
                 return JsonResponse({
                     'message': 'You are not #root'
                 }, status=401)
