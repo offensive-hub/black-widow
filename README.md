@@ -53,8 +53,9 @@ black-widow provides easy ways to execute many kinds of information gatherings a
     ```
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png)   PyPI installation
-
-    sudo pip3 install black-widow
+```shell
+sudo pip3 install black-widow
+```
 
 ### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/docker-hub.png)   Docker installation
 If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
