@@ -85,15 +85,15 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Run
 
-* **GUI:** `sudo ./black-widow.py -g`
-* **Command line:** `sudo ./black-widow.py <arguments>`
+* **GUI:** `black-widow -g`
+* **Command line:** `black-widow <arguments>`
 
 ### Debug
 
 * Run django \(examples\):
-  * `./black-widow.py --django runserver`
-  * `./black-widow.py --django help`
-  * `./black-widow.py --django "help createsuperuser"`
+  * `black-widow --django runserver`
+  * `black-widow --django help`
+  * `black-widow --django "help createsuperuser"`
 
 ### Project layout
 
