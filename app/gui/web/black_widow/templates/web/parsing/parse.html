@@ -188,13 +188,15 @@
                 htmlBadge += '<span class="badge badge-light">';
                 htmlBadge += tagDict[tagName];
                 htmlBadge += '</span>';
+                htmlBadge = htmlBadgeEnd;
                 $tagCount.append(htmlBadge);
             }
-        }
+        };
 
         /**
          * Append a tag on $parent element and fill tagDict
-         * @param page The parent HTML jQuery object
+         * @param $parent The parent HTML jQuery object
+         * @param tag The parsed tag
          */
         const nestTag = function ($parent, tag) {
             // TODO: Manage form
@@ -216,7 +218,7 @@
                 attrsLength = 0;
             }
             let html = '<li>';
-            if (tag.children || attrsLength > 0) {
+            if (tag.children || attrsLength > 0 || tag.data) {
                 html += '<span class="caret"></span>';
             }
             const tagName = tag.name && tag.name !== tag.tag ? ('&nbsp; <code>#' + tag.name+'</code>') : '';
@@ -240,30 +242,20 @@
                 }
                 $childParent.append('<span class="close-tag">&gt;</span>');
             }
+
             if (tag.data) {
                 let attrHtml = '<li><code>'+tag.data+'</code></li>';
                 $childParent.append(attrHtml);
             }
-            if (tag.tag === 'title') {
-                return;
-            }
             if (tag.children) {
                 for (let key in tag.children) {
                     nestTag($childParent, tag.children[key]);
-                    // TODO: remove the following code but debug
-                    // https://google-gruyere.appspot.com/481539122071012622308164458170409025612/editprofile.gtl
-                    // with "All Tags"
-                    if (tag.tag === 'title') {
-                        return;
-                    }
                 }
             }
-            if (tag.data || attrsLength > 0 || tag.children) {
-                let ltHtml = '<span class="nested nested-tag caret">';
-                ltHtml += '&lt;/'+ tag.tag +'&gt;';
-                ltHtml += '</span>';
-                $me.append(ltHtml);
-            }
+            let ltHtml = '<span class="nested nested-tag caret">';
+            ltHtml += '&lt;/'+ tag.tag +'&gt;';
+            ltHtml += '</span>';
+            $me.append(ltHtml);
         }
     </script>
 {% endblock %}
