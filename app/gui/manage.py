@@ -51,8 +51,8 @@ def django_gui():
 
 
 def django_cmd(args: list):
-    # Go to "web" directory
     if 'runserver' not in args:
+        # cd to "web" directory
         os.chdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'web'))
     elif len(args) <= 1:
         bind_host = _get_bind_socket()

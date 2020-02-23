@@ -665,6 +665,7 @@ ul.accordion ul.inner a.toggle:hover {
 .tree-container {
     overflow: auto;
     margin: auto;
+    padding: 0 20px;
 }
 
 /* Remove default bullets */
@@ -740,6 +741,15 @@ ul.accordion ul.inner a.toggle:hover {
     width: 100%;
 }
 
+.tree .tag-key {
+    color: #ff3f34;
+}
+
+.tree .tag-value {
+    color: #f3ff00;
+    font-weight: bolder;
+}
+
 /*****************/
 
 
@@ -755,6 +765,10 @@ ul.accordion ul.inner a.toggle:hover {
     font-size: 14px;
     margin-left: 8px;
     top: 1px !important;
+}
+
+.tag-count .btn:not(:first-child) {
+    margin-left: 15px;
 }
 
 /*******************/

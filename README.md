@@ -72,7 +72,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
     ```python
     #!/usr/bin/env python3
     
-    from black_widow import main
+    from black_widow.black_widow import main
     
     if __name__ == "__main__":
         main()
