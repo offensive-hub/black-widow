@@ -95,7 +95,7 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
-            if not util.is_root():
+            if not PcapSniffer.is_executable():
                 return render(request, self.error_templates.get('root_required'))
 
             return self._get_job(request, redirect_url='/sniffing')

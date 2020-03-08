@@ -75,7 +75,8 @@ class PcapSniffer:
         :param pkt_count: Max packets to sniff, or None
         :param callback: The callback method to call (or None) (@see PcapSniffer._user_callback_example)
         """
-        root_required()
+        if not PcapSniffer.is_executable():
+            raise RuntimeError('Unable to execute pcap sniffer')
         self.count = 0  # Sniffed packets
         self.max_count = pkt_count
         # Prevents the mac manufacturer lookup sniffing
