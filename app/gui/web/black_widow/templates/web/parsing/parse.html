@@ -255,7 +255,7 @@
                 formTag.attrs.method.toUpperCase() + '] ' + formTag.attrs.action +
                 '<i class="material-icons arrow">keyboard_arrow_right</i>' +
                 '</a>' +
-                '<ul class="inner"><li><form class="row"></form></li></ul>' +
+                '<ul class="inner"><li><form target="_blank" class="row"></form></li></ul>' +
                 '</li>';
             const $formHtml = $(htmlTagAccordion).appendTo($tagsContainer);
             const $form = $formHtml.find('form');
@@ -434,8 +434,9 @@
          */
         const makeTextarea = function (textareaTag) {
             let html = '<div class="form-group col-12 col-lg-6">';
+            const data = textareaTag.attrs.data ? textareaTag.attrs.data : '';
             html += '<label>' + getTagName(textareaTag) + '</label>';
-            html += '<textarea class="form-control" rows="2">'+textareaTag.attrs.data+'</textarea>';
+            html += '<textarea class="form-control" rows="2">'+data+'</textarea>';
             html += '</div>';
             return html;
         };
