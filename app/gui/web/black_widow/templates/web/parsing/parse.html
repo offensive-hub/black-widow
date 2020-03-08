@@ -340,6 +340,7 @@
         };
 
         const getTagName = function (tag) {
+            let name;
             if (tag.attrs.name) {
                 name = tag.attrs.name;
             } else if (tag.attrs.id) {
