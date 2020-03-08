@@ -116,7 +116,6 @@
         const $dataTable = $('#data-table').find('table').first();
         const $tagTree = $('#tag-tree');
         const $tagCount = $('#tag-count');
-        const $tagExample = $('#tag-example');
         const $tagsContainer = $('#tags-container');
         const depth = parseInt($tagTree.attr('depth'));
         let tagDict = {};
@@ -309,7 +308,9 @@
                 default:
                     break;
             }
-            if (html !== null && formInputTag.attrs.name) {
+            const tagName = formInputTag.attrs.name;
+            const tagType = formInputTag.attrs.type;
+            if (html !== null && (tagName || tagType === 'submit')) {
                 $parent.append(html);
             }
             if (formInputTag.children) {
@@ -339,7 +340,6 @@
         };
 
         const getTagName = function (tag) {
-            let name = null;
             if (tag.attrs.name) {
                 name = tag.attrs.name;
             } else if (tag.attrs.id) {
@@ -435,7 +435,7 @@
         const makeTextarea = function (textareaTag) {
             let html = '<div class="form-group col-12 col-lg-6">';
             html += '<label>' + getTagName(textareaTag) + '</label>';
-            html += '<textarea class="form-control" rows="5">'+textareaTag.attrs.data+'</textarea>';
+            html += '<textarea class="form-control" rows="2">'+textareaTag.attrs.data+'</textarea>';
             html += '</div>';
             return html;
         };
