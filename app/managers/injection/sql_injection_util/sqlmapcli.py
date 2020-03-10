@@ -124,12 +124,14 @@ class SqlmapClient:
         sqlmap_tasks = dict()
         Log.info('Trying injection with cookies: ' + str(cookies))
         for url, page_forms in forms.items():
-            page_forms: list    # The forms in page returned by url
-            for page_form in page_forms:
+            page_forms: dict    # The forms in page returned by url
+            # noinspection PyUnusedLocal
+            for page_form in page_forms.values():
                 page_form: dict    # The attributes and inputs of form
-                action: str = page_form.get('action')
-                inputs: dict = page_form.get('inputs')
-                method: str = page_form.get('method')
+                page_form_attrs = page_form.get('attrs')
+                action: str = page_form_attrs.get('action')
+                method: str = page_form_attrs.get('method')
+                inputs: dict = page_form.get('children')
 
                 if random_agent:
                     agent = None
@@ -204,17 +206,23 @@ class SqlmapClient:
     @staticmethod
     def __get_data(inputs: dict) -> str:
         data = ''
-        for name, input_field in inputs.items():
-            input_type = input_field.get('type').lower()
-            value = input_field.get('value')
-            if value is None or value == '':
+        for input_field in inputs.values():
+            input_attrs = input_field.get('attrs')
+            input_name: str = input_attrs.get('name')
+            if input_name is None:
+                continue
+            input_type: str = input_attrs.get('type')
+            input_value: str = input_attrs.get('value')
+            if input_type is not None:
+                input_type = input_type.lower()
+            if input_value is None or input_value == '':
                 if input_type == 'email':
-                    value = 'email@example.com'
+                    input_value = 'email@example.com'
                 elif type == 'password':
-                    value = rand_str()
+                    input_value = rand_str()
                 else:
-                    value = '1'
-            data += name + '=' + value + '&'
+                    input_value = '1'
+            data += input_name + '=' + input_value + '&'
         if len(data) > 0:
             # Remove last "&"
             data = data[0:-1]

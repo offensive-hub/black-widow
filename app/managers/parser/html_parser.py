@@ -383,6 +383,15 @@ class HtmlParser(PyHTMLParser, ABC):
         )
 
     @staticmethod
+    def type_descriptions() -> dict:
+        return {
+            HtmlParser.TYPE_ALL: 'Parse all tags',
+            HtmlParser.TYPE_RELEVANT: 'Parse anchor, script, links, forms, images',
+            HtmlParser.TYPE_FORM: 'Parse forms',
+            HtmlParser.TYPE_META: 'Parse metadata'
+        }
+
+    @staticmethod
     def __abstract_parse(url: str, html: str, relevant: bool, cookies: str = None) -> (dict, str):
         """
         Make an HTML/URL parsing

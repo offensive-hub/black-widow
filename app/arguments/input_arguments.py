@@ -50,7 +50,7 @@ def create_parser():
     options.add_argument("--django", help="Run django manager (eg. `--django 'help'`)",
                          type=str, metavar='ARGS')
 
-    # Sniffing
+    # Packet Sniffing
     options_pcap = options.add_argument_group("Sniffing")
     options_pcap.add_argument("--pcap", help="Sniff Packages", action="store_true")
     options_pcap.add_argument("--pcap-src", help="The .pcap source file", type=argparse.FileType('r'),
@@ -63,12 +63,18 @@ def create_parser():
     options_pcap.add_argument("--pcap-limit", help="Max field lengths of each packet", type=int, metavar='INTEGER')
     options_pcap.add_argument("--pcap-count", help="Max packets to sniff", type=int, metavar='INTEGER')
 
+    # Web Parsing
+    options_sql = options.add_argument_group("Web Parsing")
+    options_sql.add_argument("--crawl", help="Crawl a website", action="store_true")
+    options_sql.add_argument("--crawl-url", help="The url to crawl", type=str, metavar='URL')
+    options_sql.add_argument("--crawl-type", help="The crawl type", type=str, metavar='TYPE')
+    options_sql.add_argument("--crawl-depth", help="The crawl depth", type=int, metavar='INTEGER', default=0)
+
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
     options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
-    options_sql.add_argument("--sql-deep", help="Crawl the website in search for forms", action="store_true")
     options_sql.add_argument("--sql-url", help="The url where search for forms", type=str, metavar='URL')
-    options_sql.add_argument("--sql-depth", help="Max crawling depth", type=int, metavar='INTEGER')
+    options_sql.add_argument("--sql-depth", help="Max crawling depth", type=int, metavar='INTEGER', default=0)
     options_sql.add_argument("--sql-forms", help="Parse the forms on page", action="store_true")
 
     return parser

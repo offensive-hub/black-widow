@@ -90,18 +90,34 @@ def main_cmd(arguments):
         if not app.helpers.validators.is_url(arguments.sql_url):
             print('"' + arguments.sql_url + '" is not a valid URL!\n')
             sys.exit(1)
-        if arguments.sql_deep:
-            app.managers.injection.SqlInjection.deep_inject_form(
-                arguments.sql_url,
-                arguments.sql_depth,
-                listen=True
-            )
-        else:
-            if arguments.sql_forms:
-                fun = app.managers.injection.SqlInjection.inject_form
-            else:
-                fun = app.managers.injection.SqlInjection.inject_url
-            fun(arguments.sql_url, listen=True)
+        app.managers.injection.SqlInjection.inject(
+            arguments.sql_forms,
+            arguments.sql_url,
+            arguments.sql_depth,
+            True
+        )
+    elif arguments.crawl:
+        if arguments.crawl_url is None:
+            print('Specify an url! (eg. --crawl-url=https://black-widow.io)\n')
+            sys.exit(1)
+        if not app.helpers.validators.is_url(arguments.crawl_url):
+            print('"' + arguments.crawl_url + '" is not a valid URL!\n')
+            sys.exit(1)
+        crawl_types = app.managers.parser.HtmlParser.types()
+        if arguments.crawl_type not in crawl_types:
+            print('Specify a crawling type! (eg. --crawl-type=form_parse)\n')
+            print('Accepted types:')
+            type_desc = app.managers.parser.HtmlParser.type_descriptions()
+            for crawl_type in crawl_types:
+                print('    - ' + crawl_type + ' (' + type_desc[crawl_type] + ')')
+            print('')
+            sys.exit(1)
+        app.managers.parser.HtmlParser.crawl(
+            arguments.crawl_url,
+            arguments.crawl_type,
+            app.managers.parser.HtmlParser.print_parsed,
+            arguments.crawl_depth
+        )
 
 
 # Main function generic app

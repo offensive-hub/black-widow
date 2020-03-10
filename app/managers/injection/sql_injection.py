@@ -22,6 +22,7 @@
 *                                                                               *
 *********************************************************************************
 """
+
 from pprint import pprint
 from time import sleep
 from urllib.parse import urlparse
@@ -42,51 +43,42 @@ class SqlInjection:
 
     @staticmethod
     def inject(
-            deep: bool,
             forms: bool,
             url: str = None,
-            html: str = None,
             max_depth: int = None,
             listen: bool = False
-    ):
-        # TODO: implement method:
-        #       this method should be the only one public
-        return
-
-    @staticmethod
-    def inject_url(url: str, listen: bool = False) -> SqlmapTask:
-        task = SqlmapClient.try_inject_url(url)
-        if listen:
-            SqlInjection.__listen_task(task)
-        return task
-
-    @staticmethod
-    def deep_inject_url(url: str, listen: bool = False) -> SqlmapTask:
-        pass
-
-    @staticmethod
-    def inject_form(url: str = None, html: str = None, listen: bool = False) -> dict:
+    ) -> dict:
         """
-        Search a form in the page returned by url (or inside the html).
-        :param listen: True if this method should listen and print the SQL tasks, otherwise False
-        :param url: str The url to visit (or None)
-        :param html: str the html code to analyze (or None)
-        :return A dictionary of SQL injection tasks
+        Try SQL injection
+        :param forms: True if you want to search forms in provided url
+        :param url: The url to inject, or the url to visit in search for forms
+        :param max_depth: The max crawling depth (if forms is False, it is skipped)
+        :param listen: True, if you want to show the results in the console, otherwise False
+        :return: A dictionary of SqlmapTask
         """
-        parsed_forms = dict()
-        parsed_forms[url], cookies = HtmlParser.form_parse(url, html)
-        Log.success('Html parsed! Found '+str(len(parsed_forms[url]))+' forms')
-        tasks = SqlmapClient.try_inject_forms(parsed_forms, cookies)
+        if not forms:
+            # Inject directly the provided url
+            task = SqlInjection.__inject_url(url)
+            tasks = {
+                task.id: task
+            }
+        else:
+            tasks = SqlInjection.__inject_forms(url, max_depth)
+        # Search forms inside the provided url
         if listen:
             SqlInjection.__listen_tasks(tasks)
-        return tasks
+        else:
+            return tasks
 
     @staticmethod
-    def deep_inject_form(url, max_depth, listen: bool = False) -> dict:
+    def __inject_url(url: str) -> SqlmapTask:
+        return SqlmapClient.try_inject_url(url)
+
+    @staticmethod
+    def __inject_forms(url, max_depth) -> dict:
         """
         Search a form in the page returned by url.
         If it doesn't find a form, or the injection can't be done, it visit the website in search for other forms
-        :param listen: True if this method should listen and print the SQL tasks, otherwise False
         :param url: str The url to visit
         :param max_depth: int The max depth during the visit
         :return A dictionary of SQL injection tasks
@@ -96,7 +88,7 @@ class SqlInjection:
         parsed_forms = dict()
         out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
 
-        def _deep_inject_form(href, depth=1):
+        def deep_inject_form(href, depth=0):
             # Check the domain
             if href in parsed_forms or \
                     urlparse(href).netloc != base_url or \
@@ -119,34 +111,26 @@ class SqlInjection:
             # Visit adjacent links
             for link in links:
                 # print('link: '+link)
-                child_request_cookies = _deep_inject_form(link, depth+1)
+                child_request_cookies = deep_inject_form(link, depth+1)
                 if len(child_request_cookies) > len(request_cookies):
                     request_cookies = child_request_cookies
 
             return request_cookies
 
-        cookies = _deep_inject_form(url)
+        cookies = deep_inject_form(url)
         Log.info('Writing result in ' + out_file + '...')
         JsonSerializer.set_dictionary(parsed_forms, out_file)
         Log.success('Result wrote in ' + out_file)
         Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')
         tasks = SqlmapClient.try_inject_forms(parsed_forms, cookies)
-        if listen:
-            SqlInjection.__listen_tasks(tasks)
         return tasks
 
     @staticmethod
     def __listen_tasks(tasks: dict):
         while True:
-            sleep(5)
+            sleep(3)
             for task_id, task in tasks.items():
                 SqlInjection.__print_task(task)
-
-    @staticmethod
-    def __listen_task(task: SqlmapTask):
-        while True:
-            sleep(5)
-            SqlInjection.__print_task(task)
 
     @staticmethod
     def __print_task(task: SqlmapTask):
