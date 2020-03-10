@@ -125,8 +125,14 @@ class SqlmapClient:
         Log.info('Trying injection with cookies: ' + str(cookies))
         for url, page_forms in forms.items():
             page_forms: dict    # The forms in page returned by url
+            if page_forms.get('tag') == 'form':
+                page_forms_in_loop = {
+                    0: page_forms
+                }
+            else:
+                page_forms_in_loop = page_forms
             # noinspection PyUnusedLocal
-            for page_form in page_forms.values():
+            for page_form in page_forms_in_loop.values():
                 page_form: dict    # The attributes and inputs of form
                 page_form_attrs = page_form.get('attrs')
                 action: str = page_form_attrs.get('action')

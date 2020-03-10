@@ -584,6 +584,8 @@ class HtmlParser(PyHTMLParser, ABC):
         else:
             sorted_html, errors = tidy_document(html)   # Sort html (and fix errors)
         self.feed(sorted_html)
+        if cookies is None:
+            cookies = ''
         return self.tags, cookies
 
     def __nest_tag(self, tag_dict: dict):
