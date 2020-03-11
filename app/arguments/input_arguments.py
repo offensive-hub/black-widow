@@ -64,16 +64,17 @@ def create_parser():
     options_pcap.add_argument("--pcap-count", help="Max packets to sniff", type=int, metavar='INTEGER')
 
     # Web Parsing
+    crawl_types = '|'.join(app.managers.parser.HtmlParser.types())
     options_sql = options.add_argument_group("Web Parsing")
     options_sql.add_argument("--crawl", help="Crawl a website", action="store_true")
     options_sql.add_argument("--crawl-url", help="The url to crawl", type=str, metavar='URL')
-    options_sql.add_argument("--crawl-type", help="The crawl type", type=str, metavar='TYPE')
+    options_sql.add_argument("--crawl-type", help=crawl_types, type=str, metavar='TYPE')
     options_sql.add_argument("--crawl-depth", help="The crawl depth", type=int, metavar='INTEGER', default=0)
 
     # SQL Injection
     options_sql = options.add_argument_group("SQL Injection")
     options_sql.add_argument("--sql", help="Try injection in a website", action="store_true")
-    options_sql.add_argument("--sql-url", help="The url where search for forms", type=str, metavar='URL')
+    options_sql.add_argument("--sql-url", help="The url where search for forms or to inject", type=str, metavar='URL')
     options_sql.add_argument("--sql-depth", help="Max crawling depth", type=int, metavar='INTEGER', default=0)
     options_sql.add_argument("--sql-forms", help="Parse the forms on page", action="store_true")
 
