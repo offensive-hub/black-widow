@@ -448,11 +448,13 @@
          * @returns {string}
          */
         const makeButton = function (buttonTag) {
-            let html = '<button class="btn btn-danger"';
+            let html = '<div class="form-group col-12">';
+            html += '<button class="btn btn-danger"';
             html += attrsToHtml(buttonTag.attrs);
             html += '>';
             html += getTagName(buttonTag);
             html += '</button>';
+            html += '</div>';
             return html;
         };
     </script>

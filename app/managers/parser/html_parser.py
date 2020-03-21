@@ -427,6 +427,8 @@ class HtmlParser(PyHTMLParser, ABC):
                 found_tag_attrs = dict()
                 for key, value in attrs.items():
                     found_tag_attrs[key] = value.strip()
+                if HtmlParser._input_tags == tags and found_tag_attrs.get('type') is None:
+                    found_tag_attrs['type'] = 'input'
                 found_tag['attrs'] = found_tag_attrs
                 # Tag data
                 found_tag['data'] = parsed.get('data')
