@@ -138,7 +138,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Links
 
-* Homepage: [https://black-widow.io](https://black-widow.io)
+* Homepage: [https://black-widow.eu](https://black-widow.eu)
 * PyPI: [https://pypi.org/project/black-widow](https://pypi.org/project/black-widow/)
 * GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
 * Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
