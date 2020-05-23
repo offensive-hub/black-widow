@@ -301,7 +301,8 @@
                             html = makeInputCheckbox(formInputTag);
                             break;
                         default:
-                            console.error('Unsupported input ' + formInputTag.attrs.type);
+                            formInputTag.attrs.type = 'text';
+                            html = makeInputText(formInputTag);
                             break;
                     }
                     break;
