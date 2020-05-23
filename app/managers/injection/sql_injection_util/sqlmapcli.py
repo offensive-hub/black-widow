@@ -107,6 +107,24 @@ class SqlmapClient:
         return sqlmap_task
 
     @staticmethod
+    def try_inject_form(
+            url: str,
+            form: dict,
+            cookies: str = '',
+            delay: int = 1,
+            random_agent: bool = False
+    ) -> SqlmapTask:
+        # noinspection PyUnresolvedReferences
+        return list(SqlmapClient.try_inject_forms(
+            {
+                url: form
+            },
+            cookies,
+            delay,
+            random_agent
+        ).values())[0]
+
+    @staticmethod
     def try_inject_forms(
             forms: dict,
             cookies: str = '',

@@ -93,8 +93,7 @@ def main_cmd(arguments):
         app.managers.injection.SqlInjection.inject(
             arguments.sql_forms,
             arguments.sql_url,
-            arguments.sql_depth,
-            True
+            arguments.sql_depth
         )
     elif arguments.crawl:
         if arguments.crawl_url is None:

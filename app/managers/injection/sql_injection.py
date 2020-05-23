@@ -27,11 +27,9 @@ from pprint import pprint
 from time import sleep
 from urllib.parse import urlparse
 
-from black_widow.app.env import APP_STORAGE_OUT
 from black_widow.app.managers.injection.sql_injection_util.sqlmaptask import SqlmapTask
 from black_widow.app.managers.parser import HtmlParser
-from black_widow.app.services import Log, JsonSerializer
-from black_widow.app.helpers.util import now
+from black_widow.app.services import Log
 
 from .sql_injection_util import SqlmapClient
 
@@ -46,14 +44,14 @@ class SqlInjection:
             forms: bool,
             url: str = None,
             max_depth: int = None,
-            listen: bool = False
+            user_callback: callable = None
     ) -> dict:
         """
         Try SQL injection
         :param forms: True if you want to search forms in provided url
         :param url: The url to inject, or the url to visit in search for forms
         :param max_depth: The max crawling depth (if forms is False, it is skipped)
-        :param listen: True, if you want to show the results in the console, otherwise False
+        :param user_callback: The callback method to call (or None) (@see SqlInjection._user_callback_example)
         :return: A dictionary of SqlmapTask
         """
         if not forms:
@@ -65,10 +63,22 @@ class SqlInjection:
         else:
             tasks = SqlInjection.__inject_forms(url, max_depth)
         # Search forms inside the provided url
-        if listen:
+        if user_callback is None:
             SqlInjection.__listen_tasks(tasks)
         else:
-            return tasks
+            return user_callback(tasks)
+
+    # noinspection PyUnusedLocal
+    @staticmethod
+    def _user_callback_example(tasks: dict):
+        """
+        This is an user_callback example method.
+        It manages the tasks dictionary
+        :param tasks: A dictionary of SqlmapTask
+        :return: None
+        """
+        # Manage tasks
+        return None
 
     @staticmethod
     def __inject_url(url: str) -> SqlmapTask:
@@ -86,7 +96,7 @@ class SqlInjection:
 
         base_url = urlparse(url).netloc
         parsed_forms = dict()
-        out_file = APP_STORAGE_OUT + '/' + now() + '_DEEP_FORMS_' + base_url + '.json'
+        tasks = dict()
 
         def deep_inject_form(href, depth=0):
             # Check the domain
@@ -101,12 +111,13 @@ class SqlInjection:
             # Find forms in page
             parsed_forms[href] = HtmlParser.find_forms(parsed_relevant, href)
 
+            # Execute Sqlmap task
+            task = SqlmapClient.try_inject_form(href, parsed_forms, request_cookies)
+            tasks[task.id] = task
+            Log.success('SQL injection of "' + href + '" started!')
+
             # Find adjacent links
             links = HtmlParser.find_links(parsed_relevant)
-
-            if len(parsed_forms) % 10 == 0:
-                Log.info('Writing result in ' + out_file + '...')
-                JsonSerializer.set_dictionary(parsed_forms, out_file)
 
             # Visit adjacent links
             for link in links:
@@ -115,21 +126,21 @@ class SqlInjection:
                 if len(child_request_cookies) > len(request_cookies):
                     request_cookies = child_request_cookies
 
-            return request_cookies
-
-        cookies = deep_inject_form(url)
-        Log.info('Writing result in ' + out_file + '...')
-        JsonSerializer.set_dictionary(parsed_forms, out_file)
-        Log.success('Result wrote in ' + out_file)
-        Log.success('Website crawled! Found '+str(len(parsed_forms))+' pages')
-        tasks = SqlmapClient.try_inject_forms(parsed_forms, cookies)
+        Log.success('SQL injection started!')
+        deep_inject_form(url)
+        Log.success('Website crawled! Found '+str(len(parsed_forms))+' forms')
         return tasks
 
     @staticmethod
     def __listen_tasks(tasks: dict):
+        task_statuses = dict()
         while True:
             sleep(3)
             for task_id, task in tasks.items():
+                task_status = str(task.scan_data()) + str(task.scan_log())
+                if task_statuses.get(task_id) == task_status:
+                    continue
+                task_statuses[task_id] = task_status
                 SqlInjection.__print_task(task)
 
     @staticmethod
@@ -137,9 +148,12 @@ class SqlInjection:
         scan_log = task.scan_log()
         scan_data = task.scan_data()
         print('')
+        print('[SQL injection] Scan Url: ' + task.base_url)
+        print('')
         print('[SQL injection] Scan Log:')
         pprint(scan_log)
         print('')
         print('[SQL injection] Scan Data:')
         pprint(scan_data)
+        print('')
         print('')
