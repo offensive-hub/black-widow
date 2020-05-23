@@ -742,9 +742,11 @@ ul.accordion ul.inner a.toggle:hover {
     word-break: keep-all;
 }
 
-/* Style the caret/arrow */
-.tree .caret {
+/* Style the toggler, caret/arrow */
+.tree .toggler {
     cursor: pointer;
+}
+.tree .caret {
     user-select: none; /* Prevent text selection */
 }
 
@@ -756,9 +758,13 @@ ul.accordion ul.inner a.toggle:hover {
     margin-right: 6px;
 }
 
+.tree .nested-tag {
+    margin-left: 18px;
+}
 .tree .nested-tag::before {
     color: transparent;
 }
+
 
 /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
 .tree .caret-down::before {

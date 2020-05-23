@@ -205,12 +205,16 @@
             }
             let html = '<li>';
             if (tag.children || attrsLength > 0 || tag.data) {
+                html += '<span class="toggler">';
                 html += '<span class="caret"></span>';
             }
             const tagName = tag.name && tag.name !== tag.tag ? ('&nbsp; <code>#' + tag.name + '</code>') : '';
             html += '&lt;'+tag.tag+tagName;
             if (attrsLength === 0) {
                 html += '&gt;'
+            }
+            if (tag.children || attrsLength > 0 || tag.data) {
+                html += '</span>';
             }
             html += '</li>';
             const $me = $(html).appendTo($parent);
@@ -238,7 +242,7 @@
                     nestTag($childParent, tag.children[key]);
                 }
             }
-            let ltHtml = '<span class="nested nested-tag caret">';
+            let ltHtml = '<span class="nested nested-tag toggle">';
             ltHtml += '&lt;/'+ tag.tag +'&gt;';
             ltHtml += '</span>';
             $me.append(ltHtml);

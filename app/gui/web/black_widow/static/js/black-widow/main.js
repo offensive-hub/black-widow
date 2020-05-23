@@ -257,14 +257,15 @@ const initAccordions = function () {
 initAccordions();
 
 const initTree = function () {
-    const $toggler = $(".tree").find('.caret');
+    const $toggler = $(".tree").find('.toggler');
     $toggler.unbind();
     $toggler.click(function () {
         const $this = $(this);
         const $parent = $this.parent();
+        console.log($parent);
         $parent.find('.nested').first().toggleClass('active');
         $parent.find('.nested-tag').last().toggleClass('active');
-        $this.toggleClass('caret-down');
+        $this.find('.caret').toggleClass('caret-down');
     });
 };
 initTree();
