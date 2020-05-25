@@ -17,7 +17,7 @@ do
 done
 
 # Executes migrations
-./black-widow.py --django migrate
+./black-widow.py --django migrate > /dev/null 2>&1
 
 if ( "${gui}" );then
     cd black_widow/app/gui || exit 1
