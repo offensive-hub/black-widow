@@ -25,6 +25,7 @@ RUN mkdir ./black_widow
 COPY . ./black_widow/
 
 # Install required pip modules
+RUN pip3 install --upgrade pip
 RUN pip3 install --no-cache-dir -r ./black_widow/docker/alpine_requirements.txt -U && rm ./black_widow/docker/alpine_requirements.txt
 
 RUN mv ./black_widow/docker/* ./ && rm -rf ./black_widow/docker
