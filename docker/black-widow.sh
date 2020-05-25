@@ -1,6 +1,7 @@
 #!/bin/sh
 
 gui=false
+args=$@
 
 while [ $# -ne 0 ]
 do
@@ -22,5 +23,5 @@ if ( "${gui}" );then
     cd black_widow/app/gui || exit 1
     gunicorn -b :80 web.wsgi:application
 else
-    ./black-widow.py "$@"
+    ./black-widow.py ${args}
 fi
