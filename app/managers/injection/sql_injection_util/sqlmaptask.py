@@ -59,10 +59,11 @@ class SqlmapTask:
         """
         r_data = SqlmapTask._request(api_url + '/admin/list')
         task_dict = SqlmapTask.__TASKS.get(api_url)
+        active_task_keys = r_data['tasks'].keys()
         if task_dict is None:
             return dict()
         for task_id, task in task_dict.items():
-            if task_id not in r_data['tasks'].keys():
+            if task_id not in active_task_keys:
                 SqlmapTask.__TASKS.pop(task_id)
         return SqlmapTask.__TASKS
 
