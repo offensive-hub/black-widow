@@ -148,7 +148,7 @@ class SqlInjection:
         scan_log = task.scan_log()
         scan_data = task.scan_data()
         print('')
-        print('[SQL injection] Scan Url: ' + task.base_url)
+        print('[SQL injection] Scan Url: ' + task.target_url)
         print('')
         print('[SQL injection] Scan Log:')
         pprint(scan_log)

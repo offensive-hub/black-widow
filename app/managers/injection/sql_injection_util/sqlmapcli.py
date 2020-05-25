@@ -101,7 +101,7 @@ class SqlmapClient:
             'randomAgent': random_agent,
             'url': url,
         }
-        sqlmap_task = SqlmapClient._task_new()
+        sqlmap_task = SqlmapClient._task_new(url)
         sqlmap_task.option_set(task_options)
         sqlmap_task.scan_start()
         return sqlmap_task
@@ -187,7 +187,7 @@ class SqlmapClient:
                 #     print('---------- ' + key + ': ----------')
                 #     print(value)
 
-                sqlmap_task = SqlmapClient._task_new()
+                sqlmap_task = SqlmapClient._task_new(action)
                 sqlmap_task.option_set(task_options)
                 sqlmap_tasks[sqlmap_task.id] = sqlmap_task
 
@@ -207,12 +207,13 @@ class SqlmapClient:
         return SqlmapClient._client
 
     @staticmethod
-    def _task_new() -> SqlmapTask:
+    def _task_new(target_url: str) -> SqlmapTask:
         """
+        :param target_url: The target URL
         :return: The new task
         """
         client = SqlmapClient._get_client()
-        return SqlmapTask.task_new(client.base_url)
+        return SqlmapTask.task_new(client.base_url, target_url)
 
     @staticmethod
     def __get_csrf_token(inputs: dict) -> dict:

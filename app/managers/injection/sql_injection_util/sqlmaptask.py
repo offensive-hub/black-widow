@@ -34,9 +34,14 @@ class SqlmapTask:
     The SqlmapTask class
     """
 
-    def __init__(self, task_id: str, base_url: str):
+    __TASKS = dict()
+
+    def __init__(self, task_id: str, api_url: str, target_url: str):
         self.id = task_id
-        self.base_url = base_url
+        self.api_url = api_url
+        self.target_url = target_url
+        SqlmapTask.__TASKS[api_url] = dict()
+        SqlmapTask.__TASKS[api_url][task_id] = self
 
     """ Public static methods """
 
@@ -45,39 +50,43 @@ class SqlmapTask:
     ##########################
 
     @staticmethod
-    def task_list(base_url: str):
+    def task_list(api_url: str):
         """
         Pull task list
-        :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
+        :param api_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
         :rtype: dict
         """
-        r_data = SqlmapTask._request(base_url + '/admin/list')
-        tasks = dict()
-        for task_id, task in r_data['tasks'].items():
-            tasks[task_id] = SqlmapTask(task_id, base_url)
-        return tasks
+        r_data = SqlmapTask._request(api_url + '/admin/list')
+        task_dict = SqlmapTask.__TASKS.get(api_url)
+        if task_dict is None:
+            return dict()
+        for task_id, task in task_dict.items():
+            if task_id not in r_data['tasks'].keys():
+                SqlmapTask.__TASKS.pop(task_id)
+        return SqlmapTask.__TASKS
 
     @staticmethod
-    def task_flush(base_url: str):
+    def task_flush(api_url: str):
         """
         Flush task spool (delete all tasks)
-        :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
+        :param api_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
         """
-        SqlmapTask._request(base_url + '/admin/flush')
+        SqlmapTask._request(api_url + '/admin/flush')
 
     #############################
     # Task management functions #
     #############################
 
     @staticmethod
-    def task_new(base_url: str):
+    def task_new(api_url: str, target_url: str):
         """
         Create a new task
-        :param base_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
+        :param api_url: The base_url of sqlmap-api (eg. "http://127.0.0.1:8775")
+        :param target_url: The target url
         :rtype: SqlmapTask
         """
-        r_data = SqlmapTask._request(base_url + '/task/new')
-        return SqlmapTask(r_data['taskid'], base_url)
+        r_data = SqlmapTask._request(api_url + '/task/new')
+        return SqlmapTask(r_data['taskid'], api_url, target_url)
 
     ###############
     # Delete task #
@@ -187,7 +196,7 @@ class SqlmapTask:
         :param json: The json to send
         :rtype: dict
         """
-        url = self.base_url + path
+        url = self.api_url + path
         return SqlmapTask._request(url, request_type, json)
 
     def __option_request(
