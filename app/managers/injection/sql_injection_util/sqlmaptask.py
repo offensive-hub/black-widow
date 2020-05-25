@@ -40,7 +40,8 @@ class SqlmapTask:
         self.id = task_id
         self.api_url = api_url
         self.target_url = target_url
-        SqlmapTask.__TASKS[api_url] = dict()
+        if SqlmapTask.__TASKS.get(api_url) is None:
+            SqlmapTask.__TASKS[api_url] = dict()
         SqlmapTask.__TASKS[api_url][task_id] = self
 
     """ Public static methods """
