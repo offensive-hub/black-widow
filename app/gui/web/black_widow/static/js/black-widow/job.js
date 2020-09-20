@@ -35,6 +35,7 @@ $(function() {
     const $stopBtn = $('#stop-btn');
     const $deleteBtn = $('#delete-btn');
     const $restartBtn = $('#restart-btn');
+    const $downloadBtn = $('#download-btn');
     const $pagination = $('#pagination');
     const $mainBody = $('#main-body');
     const parentUrl = $('ol.breadcrumb').find('.parent').attr('href');
@@ -99,6 +100,7 @@ $(function() {
                         $pauseBtn.removeClass('disabled').invisible();
                         $playBtn.addClass('disabled').invisible();
                         $stopBtn.addClass('disabled').invisible();
+                        $downloadBtn.removeClass('disabled').prop('disabled', false);
                     }
                 }
 

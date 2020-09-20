@@ -87,6 +87,16 @@ strong {
     font-weight: bold;
 }
 
+.job-header {
+    display: flex;
+}
+.job-header .download-btn-container {
+    display: contents;
+}
+.job-header .download-btn-container #download-btn {
+    margin: auto;
+}
+
 
 /*** 0.1) Cards ***/
 
