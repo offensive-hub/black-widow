@@ -35,6 +35,7 @@ $(function() {
     const $stopBtn = $('#stop-btn');
     const $deleteBtn = $('#delete-btn');
     const $restartBtn = $('#restart-btn');
+    const $downloadBtn = $('#download-btn');
     const $pagination = $('#pagination');
     const $mainBody = $('#main-body');
     const parentUrl = $('ol.breadcrumb').find('.parent').attr('href');
@@ -82,23 +83,24 @@ $(function() {
                     lastProcessStatus = data.job.status;
                     if (data.job.status === 'SIGCONT') {
                         // Process running
-                        $pauseBtn.removeClass('disabled').show().visible();
-                        $playBtn.addClass('disabled').hide().invisible();
-                        $stopBtn.removeClass('disabled').visible();
+                        $pauseBtn.removeClass('disabled').show();
+                        $playBtn.addClass('disabled').hide();
+                        $stopBtn.removeClass('disabled');
                         emptyCount = 0;
                     } else if (data.job.status === 'SIGSTOP') {
                         // Process paused
-                        $pauseBtn.addClass('disabled').hide().invisible();
-                        $playBtn.removeClass('disabled').show().visible();
-                        $stopBtn.removeClass('disabled').visible();
+                        $pauseBtn.addClass('disabled').hide();
+                        $playBtn.removeClass('disabled').show();
+                        $stopBtn.removeClass('disabled');
                     } else if (data.job.status === 'SIGKILL') {
                         // Process stopped
                         if (showingSpinner()) {
                             stopSpinner();
                         }
-                        $pauseBtn.removeClass('disabled').invisible();
-                        $playBtn.addClass('disabled').invisible();
-                        $stopBtn.addClass('disabled').invisible();
+                        $pauseBtn.addClass('disabled').hide();
+                        $playBtn.addClass('disabled').show();
+                        $stopBtn.addClass('disabled');
+                        $downloadBtn.removeClass('disabled');
                     }
                 }
 
@@ -189,7 +191,9 @@ $(function() {
     const restartJob = function() {
         $mainBody.spinner('Restarting job...');
         jobRestarted = true;
-        pauseJob();
+        $pauseBtn.show().addClass('disabled');
+        $playBtn.hide().addClass('disabled');
+        pauseJob(false);
         $dataTable.find('tbody').html('');
         $pagination.pagination({
             dataSource: [],
@@ -203,10 +207,14 @@ $(function() {
         lastJobDataCount = 0;
         lastJobDataPage = -1;
         emptyCount = 0;
+        lastProcessStatus = null;
         // 0 = SIGRESTART (custom signal)
         signJob(0, function(data) {
             jobId = data.id;
             history.pushState('data', '', window.location.pathname + '?id=' + jobId);
+            $downloadBtn.attr('href', $downloadBtn.attr('base_href') + '?id=' + jobId);
+            $playBtn.hide();
+            $pauseBtn.show();
             $mainBody.spinner('Waiting data...');
             setTimeout(function() {
                 jobRestarted = false;
@@ -223,9 +231,9 @@ $(function() {
     const stopJob = function() {
         // 9 = SIGKILL
         signJob(9, function() {
-            $stopBtn.addClass('disabled').invisible();
-            $pauseBtn.addClass('disabled').invisible();
-            $playBtn.addClass('disabled').invisible();
+            $stopBtn.addClass('disabled');
+            $pauseBtn.addClass('disabled').hide();
+            $playBtn.addClass('disabled').show();
         });
     };
     $stopBtn.click(stopJob);
@@ -233,12 +241,14 @@ $(function() {
     /**
      * Send a SIGSTOP to the current job
      */
-    const pauseJob = function() {
+    const pauseJob = function(changeButtonStatus = true) {
         // 19 = SIGSTOP
         signJob(19, function() {
-            $playBtn.removeClass('disabled').show().visible();
-            $pauseBtn.addClass('disabled').hide().invisible();
-            $stopBtn.removeClass('disabled').visible();
+            if (changeButtonStatus) {
+                $playBtn.removeClass('disabled').show();
+                $pauseBtn.addClass('disabled').hide();
+            }
+            $stopBtn.removeClass('disabled');
         });
 
     };
@@ -250,9 +260,9 @@ $(function() {
     const playJob = function() {
         // 18 = SIGCONT
         signJob(18, function() {
-            $playBtn.addClass('disabled').hide().invisible();
-            $pauseBtn.removeClass('disabled').show().visible();
-            $stopBtn.removeClass('disabled').visible();
+            $playBtn.addClass('disabled').hide();
+            $pauseBtn.removeClass('disabled').show();
+            $stopBtn.removeClass('disabled');
             updateData(300, true);
         });
     };

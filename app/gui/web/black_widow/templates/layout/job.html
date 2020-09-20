@@ -71,6 +71,7 @@
     </div>
 
     <!-- Job Management -->
+    <input type="hidden" id="job_id" value="{{ job.id }}">
     <div class="row">
         <div class="col-md-12">
             <div class="card card-job">
@@ -80,17 +81,15 @@
                     {% endblock %}
 
                     <button id="play-btn" type="button" class="btn btn-success btn-action disabled" title="Start job"
-                            style="display: none; visibility: hidden;">
+                            style="display: none;">
                         <i class="material-icons" style="padding: 0;">play_arrow</i>
                     </button>
 
-                    <button id="pause-btn" type="button" class="btn btn-warning btn-action" title="Pause job"
-                            style="visibility: hidden;">
+                    <button id="pause-btn" type="button" class="btn btn-warning btn-action" title="Pause job">
                         <i class="material-icons" style="padding: 0;">pause</i>
                     </button>
 
-                    <button id="stop-btn" type="button" class="btn btn-danger btn-action" title="Stop job"
-                            style="visibility: hidden;">
+                    <button id="stop-btn" type="button" class="btn btn-danger btn-action" title="Stop job">
                         <i class="material-icons" style="padding: 0;">stop</i>
                     </button>
 

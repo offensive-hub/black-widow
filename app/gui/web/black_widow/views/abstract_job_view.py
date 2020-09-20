@@ -57,9 +57,8 @@ class AbstractJobView(AbstractView):
 
         Log.info("Showing job #" + str(job_id))
 
-        try:
-            job = self.model_class.objects.get(id=job_id)
-        except ObjectDoesNotExist:
+        job = self._get_job_model(job_id)
+        if job is None:
             return redirect(redirect_url)
 
         return render(request, self.template_name, {
@@ -77,7 +76,7 @@ class AbstractJobView(AbstractView):
         job_id = request_params.get('id')
         try:
             job_id = int(job_id)
-            job = self.model_class.objects.get(id=job_id)
+            job = self._get_job_model(job_id)
         except ValueError:
             pass
         except Exception as e:
@@ -130,3 +129,15 @@ class AbstractJobView(AbstractView):
 
     def _copy_job(self, job: AbstractJobModel) -> AbstractJobModel:
         raise NotImplementedError("Abstract method _copy_job")
+
+    def _get_job_model(self, job_id: int) -> AbstractJobModel or None:
+        """
+        Get the job with id job_id
+        :param job_id: An id of job
+        :return: The searched job, or None
+        """
+        try:
+            job = self.model_class.objects.get(id=job_id)
+        except ObjectDoesNotExist:
+            return None
+        return job

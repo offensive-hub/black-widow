@@ -128,7 +128,9 @@ class HtmlParser(PyHTMLParser, ABC):
     _url_attrs = ['href', 'src', 'action']
 
     # Not closed tags
-    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br']
+    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br', 'source']
+
+    _unacceptable_content_types = ['application/zip']
 
     def __init__(self, relevant: bool = False):
         super().__init__()
@@ -169,18 +171,28 @@ class HtmlParser(PyHTMLParser, ABC):
         parsed_hashes = set()
 
         def _crawl(href: str, curr_depth: int = 0):
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
+            if parsed_href.query != '':
+                href += '?' + parsed_href.query
             if href in parsed_urls or \
-                    urlparse(href).netloc not in base_urls or \
+                    parsed_href.netloc not in base_urls or \
+                    'mailto:' in parsed_href.path or \
                     (0 <= depth and (depth < curr_depth)):
                 return
 
+            print(parsed_href.netloc + ' not in ' + str(base_urls) + ':')
+            print(parsed_href.netloc not in base_urls)
+
             # Visit the current href
             if parsing_type == HtmlParser.TYPE_ALL:
+                print('parsed_href:', parsed_href)
+                print('href:', href)
                 parsed, _ = HtmlParser.all_parse(href, cookies=cookies)
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
 
-            parsed_hash = hash(JsonSerializer.dump_json(parsed))
+            parsed_hash = hash(JsonSerializer.dumps_json(parsed))
             if parsed_hash in parsed_hashes:
                 return
 
@@ -565,6 +577,8 @@ class HtmlParser(PyHTMLParser, ABC):
             self.base_url = self.url_scheme + '://' + str(url_parsed.netloc)
             r = HttpRequest.request(url, cookies=cookies)
             if r is None:
+                return None
+            if r.status_code >= 400 or r.headers.get('Content-Type') in HtmlParser._unacceptable_content_types:
                 return None
             try:
                 html = r.json()

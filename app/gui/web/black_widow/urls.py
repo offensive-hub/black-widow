@@ -38,6 +38,7 @@ urlpatterns = [
     # --- WEB PARSING --- #
     path('web/parsing', views.WebParsing.SettingsView.as_view(), name='web parsing'),
     path('web/parsing/parse', views.WebParsing.ParseView.as_view(), name='web parsing'),
+    path('web/parsing/download', views.WebParsing.DownloadView.as_view(), name='web parsing'),
 
     # --- SQL INJECTION --- #
     path('sql', views.Sql.SettingsView.as_view(), name='sql injection'),

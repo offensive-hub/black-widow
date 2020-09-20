@@ -22,11 +22,13 @@
 *                                                                               *
 *********************************************************************************
 """
-from django.http import JsonResponse
+
+from django.http import JsonResponse, FileResponse
 from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import WebParsingJobModel
 from black_widow.app.gui.web.black_widow.views.web.parsing.abstract_web_parsing_view import AbstractWebParsingView
+from black_widow.app.services import Log
 
 
 class WebParsing:
@@ -87,3 +89,30 @@ class WebParsing:
             :return: django.http.JsonResponse
             """
             return self._post_job(request)
+
+    class DownloadView(AbstractWebParsingView):
+        """
+        Web Parsing Parse View
+        """
+        name = 'web parsing'
+        template_name = 'web/parsing/parse.html'
+
+        def get(self, request, *args, **kwargs):
+            """
+            :type request: django.core.handlers.wsgi.WSGIRequest
+            :return: django.http.HttpResponse
+            """
+
+            request_params: dict = request.GET.dict()
+
+            try:
+                job_id = int(request_params.get('id'))
+            except (ValueError, TypeError) as e:
+                Log.error(str(e))
+                return redirect('/web/parsing')
+
+            job = self._get_job_model(job_id)
+            if job is None:
+                return redirect('/web/parsing/parse?id=' + str(job_id))
+
+            return FileResponse(open(job.json_file, 'rb'), as_attachment=True)

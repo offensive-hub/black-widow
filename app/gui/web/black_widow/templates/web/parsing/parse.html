@@ -84,13 +84,24 @@
 
 {% block card_header %}
     <h4 class="card-title mt-0">Web Parsing</h4>
-    <div class="card-category card-info">
-        <div class="card-category-label">URL:</div>
-        <span class="card-category-content"><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></span>
-    </div>
-    <div class="card-category card-info">
-        <div class="card-category-label">Tags:</div>
-        <span class="card-category-content">{{ job.parsing_tags }}</span>
+    <div class="job-header">
+        <div class="job-info-container col-sm-12 col-md-8 col-lg-10">
+            <div class="card-category card-info">
+                <div class="card-category-label">URL:</div>
+                <span class="card-category-content"><a href="{{ job.url }}" target="_blank">{{ job.url }}</a></span>
+            </div>
+            <div class="card-category card-info">
+                <div class="card-category-label">Tags:</div>
+                <span class="card-category-content">{{ job.parsing_tags }}</span>
+            </div>
+        </div>
+        <div class="download-btn-container col-sm-12 col-md-4 col-lg-2">
+            <a id="download-btn" type="button" class="btn btn-info disabled"
+                    title="Download Results" href="/web/parsing/download?id={{ job.id }}"
+                    base_href="/web/parsing/download">
+                <i class="material-icons" style="padding: 0;">save</i>
+            </a>
+        </div>
     </div>
 {% endblock %}
 
@@ -131,9 +142,11 @@
                 ], function() {
                     showPage(page);
                 });
+                /*
                 if (depth === 0) {
                     showPage(page);
                 }
+                 */
             }
         };
 
@@ -253,6 +266,9 @@
          * @param formTag A form tag Object
          */
         const makeFormAccordion = function (formTag) {
+            if (!formTag.attrs.method) {
+                return;
+            }
             const htmlTagAccordion =
                 '<li class="layer">' +
                 '<a class="toggle" href="javascript:void(0);">[' +

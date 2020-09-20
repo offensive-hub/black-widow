@@ -90,6 +90,7 @@ class WebParsingJobModel(AbstractJobModel):
     def __str__(self) -> str:
         return 'WebParsingJobModel(' + str({
             'id': self.id,
+            'json_file': self.json_file,
             'pid': self.pid,
             'pid_file': self.pid_file,
             'status': self.status_name,
