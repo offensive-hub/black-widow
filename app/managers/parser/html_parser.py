@@ -169,8 +169,12 @@ class HtmlParser(PyHTMLParser, ABC):
         parsed_hashes = set()
 
         def _crawl(href: str, curr_depth: int = 0):
+            parsed_href = urlparse(href)
+            href = parsed_href.scheme + '://' + parsed_href.netloc + parsed_href.path
+            if parsed_href.query != '':
+                href += '?' + parsed_href.query
             if href in parsed_urls or \
-                    urlparse(href).netloc not in base_urls or \
+                    parsed_href.netloc not in base_urls or \
                     (0 <= depth and (depth < curr_depth)):
                 return
 
@@ -564,7 +568,6 @@ class HtmlParser(PyHTMLParser, ABC):
             self.url_scheme = str(url_parsed.scheme)
             self.base_url = self.url_scheme + '://' + str(url_parsed.netloc)
             r = HttpRequest.request(url, cookies=cookies)
-            print('STATUS CODE', r.status_code)
             if r is None:
                 return None
             if r.status_code >= 400:
