@@ -128,7 +128,7 @@ class HtmlParser(PyHTMLParser, ABC):
     _url_attrs = ['href', 'src', 'action']
 
     # Not closed tags
-    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br']
+    _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br', 'source']
 
     def __init__(self, relevant: bool = False):
         super().__init__()
@@ -564,7 +564,10 @@ class HtmlParser(PyHTMLParser, ABC):
             self.url_scheme = str(url_parsed.scheme)
             self.base_url = self.url_scheme + '://' + str(url_parsed.netloc)
             r = HttpRequest.request(url, cookies=cookies)
+            print('STATUS CODE', r.status_code)
             if r is None:
+                return None
+            if r.status_code >= 400:
                 return None
             try:
                 html = r.json()
