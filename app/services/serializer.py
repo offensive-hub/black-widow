@@ -27,7 +27,7 @@ import json
 import os
 import pickle
 
-from black_widow.app.helpers import storage
+from black_widow.app.services import Log
 
 
 class PickleSerializer:
@@ -80,8 +80,9 @@ class JsonSerializer:
         :return: A dictionary
         """
         if not os.path.isfile(file):
+            Log.error(file + ' is not a file')
             return dict()
-        return JsonSerializer.load_json(storage.read_file(file))
+        return JsonSerializer.load_json(file)
 
     @staticmethod
     def set_dictionary(dictionary: dict, file: str):
@@ -128,12 +129,14 @@ class JsonSerializer:
             return ""
 
     @staticmethod
-    def load_json(string: str) -> dict:
+    def load_json(file: str) -> dict:
         """
-        :param string: The string to transform in json
+        :param file: The file to read
         :return: A dictionary
         """
         try:
-            return json.loads(string)
-        except json.decoder.JSONDecodeError:
+            with open(file, 'r') as infile:
+                return json.load(infile)
+        except json.decoder.JSONDecodeError as e:
+            Log.error(str(e))
             return dict()
