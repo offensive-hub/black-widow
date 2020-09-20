@@ -97,8 +97,10 @@ strong {
 }
 .job-header .download-btn-container {
     text-align: center;
+    display: flex;
 }
 .job-header .download-btn-container #download-btn {
+    margin: auto;
 }
 
 

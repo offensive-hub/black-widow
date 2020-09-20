@@ -209,6 +209,7 @@ $(function() {
         signJob(0, function(data) {
             jobId = data.id;
             history.pushState('data', '', window.location.pathname + '?id=' + jobId);
+            $downloadBtn.attr('href', $downloadBtn.attr('base_href') + '?id=' + jobId);
             $mainBody.spinner('Waiting data...');
             setTimeout(function() {
                 jobRestarted = false;
