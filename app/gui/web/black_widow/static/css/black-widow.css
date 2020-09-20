@@ -88,13 +88,17 @@ strong {
 }
 
 .job-header {
-    display: flex;
+    height: auto;
+    display: inline-flex;
+    min-width: 100%;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
 }
 .job-header .download-btn-container {
-    display: contents;
+    text-align: center;
 }
 .job-header .download-btn-container #download-btn {
-    margin: auto;
 }
 
 

@@ -83,24 +83,24 @@ $(function() {
                     lastProcessStatus = data.job.status;
                     if (data.job.status === 'SIGCONT') {
                         // Process running
-                        $pauseBtn.removeClass('disabled').show().visible();
-                        $playBtn.addClass('disabled').hide().invisible();
-                        $stopBtn.removeClass('disabled').visible();
+                        $pauseBtn.removeClass('disabled').show();
+                        $playBtn.addClass('disabled').hide();
+                        $stopBtn.removeClass('disabled');
                         emptyCount = 0;
                     } else if (data.job.status === 'SIGSTOP') {
                         // Process paused
-                        $pauseBtn.addClass('disabled').hide().invisible();
-                        $playBtn.removeClass('disabled').show().visible();
-                        $stopBtn.removeClass('disabled').visible();
+                        $pauseBtn.addClass('disabled').hide();
+                        $playBtn.removeClass('disabled').show();
+                        $stopBtn.removeClass('disabled');
                     } else if (data.job.status === 'SIGKILL') {
                         // Process stopped
                         if (showingSpinner()) {
                             stopSpinner();
                         }
-                        $pauseBtn.removeClass('disabled').invisible();
-                        $playBtn.addClass('disabled').invisible();
-                        $stopBtn.addClass('disabled').invisible();
-                        $downloadBtn.removeClass('disabled').prop('disabled', false);
+                        $pauseBtn.addClass('disabled');
+                        $playBtn.addClass('disabled');
+                        $stopBtn.addClass('disabled');
+                        $downloadBtn.removeClass('disabled');
                     }
                 }
 
@@ -225,9 +225,9 @@ $(function() {
     const stopJob = function() {
         // 9 = SIGKILL
         signJob(9, function() {
-            $stopBtn.addClass('disabled').invisible();
-            $pauseBtn.addClass('disabled').invisible();
-            $playBtn.addClass('disabled').invisible();
+            $stopBtn.addClass('disabled');
+            $pauseBtn.addClass('disabled');
+            $playBtn.addClass('disabled');
         });
     };
     $stopBtn.click(stopJob);
@@ -238,9 +238,9 @@ $(function() {
     const pauseJob = function() {
         // 19 = SIGSTOP
         signJob(19, function() {
-            $playBtn.removeClass('disabled').show().visible();
-            $pauseBtn.addClass('disabled').hide().invisible();
-            $stopBtn.removeClass('disabled').visible();
+            $playBtn.removeClass('disabled').show();
+            $pauseBtn.addClass('disabled').hide();
+            $stopBtn.removeClass('disabled');
         });
 
     };
@@ -252,9 +252,9 @@ $(function() {
     const playJob = function() {
         // 18 = SIGCONT
         signJob(18, function() {
-            $playBtn.addClass('disabled').hide().invisible();
-            $pauseBtn.removeClass('disabled').show().visible();
-            $stopBtn.removeClass('disabled').visible();
+            $playBtn.addClass('disabled').hide();
+            $pauseBtn.removeClass('disabled').show();
+            $stopBtn.removeClass('disabled');
             updateData(300, true);
         });
     };
