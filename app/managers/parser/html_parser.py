@@ -130,6 +130,8 @@ class HtmlParser(PyHTMLParser, ABC):
     # Not closed tags
     _not_closed_tags = ['input', 'link', 'meta', 'hr', 'img', 'br', 'source']
 
+    _unacceptable_content_types = ['application/zip']
+
     def __init__(self, relevant: bool = False):
         super().__init__()
         self.tags = {}
@@ -175,11 +177,17 @@ class HtmlParser(PyHTMLParser, ABC):
                 href += '?' + parsed_href.query
             if href in parsed_urls or \
                     parsed_href.netloc not in base_urls or \
+                    'mailto:' in parsed_href.path or \
                     (0 <= depth and (depth < curr_depth)):
                 return
 
+            print(parsed_href.netloc + ' not in ' + str(base_urls) + ':')
+            print(parsed_href.netloc not in base_urls)
+
             # Visit the current href
             if parsing_type == HtmlParser.TYPE_ALL:
+                print('parsed_href:', parsed_href)
+                print('href:', href)
                 parsed, _ = HtmlParser.all_parse(href, cookies=cookies)
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
@@ -570,7 +578,7 @@ class HtmlParser(PyHTMLParser, ABC):
             r = HttpRequest.request(url, cookies=cookies)
             if r is None:
                 return None
-            if r.status_code >= 400:
+            if r.status_code >= 400 or r.headers.get('Content-Type') in HtmlParser._unacceptable_content_types:
                 return None
             try:
                 html = r.json()

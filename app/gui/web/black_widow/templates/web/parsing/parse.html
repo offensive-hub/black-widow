@@ -142,9 +142,11 @@
                 ], function() {
                     showPage(page);
                 });
+                /*
                 if (depth === 0) {
                     showPage(page);
                 }
+                 */
             }
         };
 
@@ -264,6 +266,9 @@
          * @param formTag A form tag Object
          */
         const makeFormAccordion = function (formTag) {
+            if (!formTag.attrs.method) {
+                return;
+            }
             const htmlTagAccordion =
                 '<li class="layer">' +
                 '<a class="toggle" href="javascript:void(0);">[' +

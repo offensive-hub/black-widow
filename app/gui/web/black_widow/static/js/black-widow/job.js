@@ -97,8 +97,8 @@ $(function() {
                         if (showingSpinner()) {
                             stopSpinner();
                         }
-                        $pauseBtn.addClass('disabled');
-                        $playBtn.addClass('disabled');
+                        $pauseBtn.addClass('disabled').hide();
+                        $playBtn.addClass('disabled').show();
                         $stopBtn.addClass('disabled');
                         $downloadBtn.removeClass('disabled');
                     }
@@ -191,7 +191,9 @@ $(function() {
     const restartJob = function() {
         $mainBody.spinner('Restarting job...');
         jobRestarted = true;
-        pauseJob();
+        $pauseBtn.show().addClass('disabled');
+        $playBtn.hide().addClass('disabled');
+        pauseJob(false);
         $dataTable.find('tbody').html('');
         $pagination.pagination({
             dataSource: [],
@@ -205,11 +207,14 @@ $(function() {
         lastJobDataCount = 0;
         lastJobDataPage = -1;
         emptyCount = 0;
+        lastProcessStatus = null;
         // 0 = SIGRESTART (custom signal)
         signJob(0, function(data) {
             jobId = data.id;
             history.pushState('data', '', window.location.pathname + '?id=' + jobId);
             $downloadBtn.attr('href', $downloadBtn.attr('base_href') + '?id=' + jobId);
+            $playBtn.hide();
+            $pauseBtn.show();
             $mainBody.spinner('Waiting data...');
             setTimeout(function() {
                 jobRestarted = false;
@@ -227,8 +232,8 @@ $(function() {
         // 9 = SIGKILL
         signJob(9, function() {
             $stopBtn.addClass('disabled');
-            $pauseBtn.addClass('disabled');
-            $playBtn.addClass('disabled');
+            $pauseBtn.addClass('disabled').hide();
+            $playBtn.addClass('disabled').show();
         });
     };
     $stopBtn.click(stopJob);
@@ -236,11 +241,13 @@ $(function() {
     /**
      * Send a SIGSTOP to the current job
      */
-    const pauseJob = function() {
+    const pauseJob = function(changeButtonStatus = true) {
         // 19 = SIGSTOP
         signJob(19, function() {
-            $playBtn.removeClass('disabled').show();
-            $pauseBtn.addClass('disabled').hide();
+            if (changeButtonStatus) {
+                $playBtn.removeClass('disabled').show();
+                $pauseBtn.addClass('disabled').hide();
+            }
             $stopBtn.removeClass('disabled');
         });
 
