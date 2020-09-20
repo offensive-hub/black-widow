@@ -89,8 +89,7 @@ class JsonSerializer:
         :param dictionary: The dictionary to dump in file
         :param file: The file where dumps the object
         """
-        dumped_json = JsonSerializer.dump_json(dictionary)
-        storage.overwrite_file(dumped_json, file)
+        JsonSerializer.dump_json(dictionary, file)
 
     @staticmethod
     def add_item_to_dict(key, value, file: str):
@@ -106,8 +105,20 @@ class JsonSerializer:
         JsonSerializer.set_dictionary(dictionary, file)
 
     @staticmethod
-    def dump_json(obj) -> str:
+    def dump_json(obj, file: str):
         """
+        Write the input object into the input file
+        :param file: The output json file
+        :type obj: dict or list
+        :return: The dumped json of object
+        """
+        with open(file, 'w') as outfile:
+            json.dump(obj, outfile, indent=2)
+
+    @staticmethod
+    def dumps_json(obj) -> str:
+        """
+        Convert the input object into a json string
         :type obj: dict or list
         :return: The dumped json of object
         """

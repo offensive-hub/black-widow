@@ -184,7 +184,7 @@ class HtmlParser(PyHTMLParser, ABC):
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
 
-            parsed_hash = hash(JsonSerializer.dump_json(parsed))
+            parsed_hash = hash(JsonSerializer.dumps_json(parsed))
             if parsed_hash in parsed_hashes:
                 return
 
