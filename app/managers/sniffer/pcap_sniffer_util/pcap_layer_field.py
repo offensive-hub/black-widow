@@ -26,6 +26,8 @@
 from anytree import Node
 from pyshark.packet.fields import LayerField
 
+from black_widow.app.services import Log
+
 
 class PcapLayerField(Node):
     """
@@ -82,7 +84,12 @@ class PcapLayerField(Node):
         if not field_value:
             field_value = self.field.get_default_value()
         if field_value is not None:
-            field_value = field_value.encode('utf-8').decode('unicode-escape').replace('Âµs', 'µs')
+            try:
+                field_value = field_value.encode('utf-8').decode('unicode-escape').replace('Âµs', 'µs')
+            except UnicodeDecodeError as e:
+                Log.error('Unable to decode field_value ' + str(field_value))
+                Log.error(str(e))
+                field_value = self.field.get_default_value()
         return field_value
 
     @property
@@ -111,7 +118,6 @@ class PcapLayerField(Node):
                 'name': self.sanitized_name
             })
         for child in self.children:
-            child: PcapLayerField
             node_dict['children'].append(child.get_dict())
         return node_dict
 
@@ -131,7 +137,6 @@ class PcapLayerField(Node):
         pcap_layer_field_row += ', key=' + self.name + ', name' + self.sanitized_name + \
                                 ', size=' + str(self.size) + ', pos=' + str(self.pos)
         for pcap_layer_field_child in self.children:
-            pcap_layer_field_child: PcapLayerField
             pcap_layer_field_row += "    \n" + pcap_layer_field_child.__str__(depth+1)
         if len(self.children) > 0:
             pcap_layer_field_row += "   |\n" + pcap_layer_field_header

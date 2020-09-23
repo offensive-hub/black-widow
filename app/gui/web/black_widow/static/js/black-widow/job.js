@@ -234,6 +234,7 @@ $(function() {
             $stopBtn.addClass('disabled');
             $pauseBtn.addClass('disabled').hide();
             $playBtn.addClass('disabled').show();
+            stopSpinner();
         });
     };
     $stopBtn.click(stopJob);

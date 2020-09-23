@@ -29,7 +29,7 @@ from black_widow.app.env import APP_STORAGE_OUT
 from black_widow.app.helpers.storage import check_folder
 from black_widow.app.helpers.util import now
 from black_widow.app.managers.sniffer import PcapSniffer
-from black_widow.app.services import JsonSerializer, MultiTask
+from black_widow.app.services import MultiTask
 
 from black_widow.app.gui.web.black_widow.models import SniffingJobModel
 from black_widow.app.gui.web.black_widow.views.abstract_job_view import AbstractJobView
@@ -59,7 +59,8 @@ class AbstractSniffingView(AbstractJobView):
             This method writes the sniffed packets in a json file
             :param pkt: The sniffed packet
             """
-            JsonSerializer.add_item_to_dict(pkt['number'], pkt, job.json_file)
+            job.add_item_to_dict(pkt['number'], pkt)
+            # JsonSerializer.add_item_to_dict(pkt['number'], pkt, job.json_file)
 
         pcap_sniffer = PcapSniffer(
             filters=job.filters,

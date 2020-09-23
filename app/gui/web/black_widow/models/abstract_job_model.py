@@ -60,7 +60,6 @@ class AbstractJobModel(AbstractModel):
         """
         jobs = model_class.objects.all().order_by('-id')
         for job in jobs:
-            job: AbstractJobModel
             job.self_check()
         return jobs
 
@@ -109,6 +108,9 @@ class AbstractJobModel(AbstractModel):
         if not storage.delete(self.pid_file):
             return False
         return super(AbstractJobModel, self).delete(using, keep_parents)
+
+    def add_item_to_dict(self, key, value):
+        JsonSerializer.add_item_to_dict(key, value, self.json_file)
 
     @property
     def json_dict(self) -> dict:
