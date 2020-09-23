@@ -27,7 +27,6 @@ from abc import ABC
 from html.parser import HTMLParser as PyHTMLParser
 from urllib.parse import urlparse
 from tidylib import tidy_document
-import pdb
 
 from black_widow.app.managers.request import HttpRequest
 from black_widow.app.services import Log, JsonSerializer
