@@ -27,6 +27,7 @@ from abc import ABC
 from html.parser import HTMLParser as PyHTMLParser
 from urllib.parse import urlparse
 from tidylib import tidy_document
+import pdb
 
 from black_widow.app.managers.request import HttpRequest
 from black_widow.app.services import Log, JsonSerializer
@@ -181,13 +182,8 @@ class HtmlParser(PyHTMLParser, ABC):
                     (0 <= depth and (depth < curr_depth)):
                 return
 
-            print(parsed_href.netloc + ' not in ' + str(base_urls) + ':')
-            print(parsed_href.netloc not in base_urls)
-
             # Visit the current href
             if parsing_type == HtmlParser.TYPE_ALL:
-                print('parsed_href:', parsed_href)
-                print('href:', href)
                 parsed, _ = HtmlParser.all_parse(href, cookies=cookies)
             else:
                 parsed, _ = HtmlParser.relevant_parse(href, cookies=cookies)
