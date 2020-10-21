@@ -43,7 +43,7 @@ Usually, every relational database table has the column "**id**"
 (a diminuitive of **identifier**), because every record needs to have
 an unique identifier, to identify easily and fastly that.
 
-For example, imagine to have have the database "**shop**" inside your
+For example, imagine to have the database "**shop**" inside your
 computer.
 It has the following tables:
  * **product_categories**
