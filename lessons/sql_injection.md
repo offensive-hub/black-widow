@@ -36,7 +36,7 @@ Now there are **3 categories** of database:
 To explain the **SQL injection**, I'll focus only on **relational**
 databases.
 
-An SQL database is primarily a set of tables.
+A SQL database is primarily a set of tables.
 Each table contains records, which can referer to records from other
 tables. This is the reason of the name "relation database".
 Usually, every relational database table has the column "**id**"
