@@ -147,7 +147,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Contacts
 
-* [offensive-hub@protonmail.com](mailto:offensive-hub@protonmail.com)
+* [fabrizio@fubelli.org](mailto:fabrizio@fubelli.org)
 
 ### Authors
 
@@ -161,7 +161,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Follow Us
 
-  [![Facebook](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/facebook-icon.png)](https://www.facebook.com/OffensiveHub/)   [![Instagram](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/instagram-icon.png)](https://www.instagram.com/0ffens1ve_hub/)   [![Twitter](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)   [![YouTube](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/youtube-icon.png)](https://www.youtube.com/playlist?list=PLUrUcT-zI_BfkAagJ5eAgOW8TcVYY5gB6&fbclid=IwAR1hWrMt1vchrDTr8MbAyrOk3l2KZ09uogc8tl38D052w3F1bSk5HyVXn-8)
+  [![Facebook](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/facebook-icon.png)](https://www.facebook.com/OffensiveHub/)   [![Instagram](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/instagram-icon.png)](https://www.instagram.com/0ffens1ve_hub/)   [![Twitter](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)
 
 # SPONSORS
 
