@@ -1,0 +1,4 @@
+packaging/build/
+packaging/dist/
+packaging/src/black_widow.egg-info/
+packaging/README.md
