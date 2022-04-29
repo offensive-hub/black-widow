@@ -41,7 +41,7 @@ from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
 from black_widow.app.services import Log
-from black_widow.app.helpers.util import regex_is_string, root_required, is_executable as exec_is_executable
+from black_widow.app.helpers.util import regex_is_string, root_required, is_executable as exec_is_executable, os_exec
 from black_widow.app.helpers.validators import is_hex, is_mac, is_int, is_ip
 
 from .pcap_sniffer_util import MacManufacturer
@@ -156,7 +156,18 @@ class PcapSniffer:
 
     @staticmethod
     def is_executable() -> bool:
-        return exec_is_executable('tshark') and exec_is_executable('dumpcap')
+        if not exec_is_executable('tshark') or not exec_is_executable('dumpcap'):
+            return False
+        tshark_out = os_exec('tshark -c 1')
+        for out_line in tshark_out:
+            if 'permission' in out_line.lower():
+                return False
+        dumpcap_out = os_exec('dumpcap -c 1')
+        for out_line in dumpcap_out:
+            if 'permission' in out_line.lower():
+                return False
+        return True
+
 
     def _callback(self, pkt: Packet):
         """
