@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 = '-t' ];then
+if [[ "$1" = '-t' ]];then
   repo_url='https://test.pypi.org/legacy/'
 else
   repo_url='https://pypi.org/'
