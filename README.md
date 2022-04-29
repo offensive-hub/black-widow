@@ -81,7 +81,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
     ```
  6) `git clone git@github.com:offensive-hub/black-widow.git black_widow`
  7) `sudo pip3 install -U -r black_widow/requirements.txt`
- 8) `./black-widow.py --django migrate`
+ 8) `./black-widow.py --django migrate black_widow`
  9) Now you can run **black-widow** with: `./black-widow.py <arguments>`
 
 ### Run
