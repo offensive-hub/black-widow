@@ -33,17 +33,16 @@
 *********************************************************************************
 """
 
-import pyshark
 import socket
 
+import pyshark
 from pyshark.packet.fields import LayerField
 from pyshark.packet.layer import Layer
 from pyshark.packet.packet import Packet
 
-from black_widow.app.services import Log
-from black_widow.app.helpers.util import regex_is_string, root_required, is_executable as exec_is_executable, os_exec
+from black_widow.app.helpers.util import regex_is_string, is_executable as exec_is_executable, os_exec
 from black_widow.app.helpers.validators import is_hex, is_mac, is_int, is_ip
-
+from black_widow.app.services import Log
 from .pcap_sniffer_util import MacManufacturer
 from .pcap_sniffer_util import PcapLayerField
 
@@ -54,6 +53,8 @@ class PcapSniffer:
     """
 
     _IGNORED_DOMAINS = (MacManufacturer.MANUFACTURERS_DOMAIN,)
+
+    _is_executable = None
 
     def __init__(
             self,
@@ -86,7 +87,9 @@ class PcapSniffer:
         self.limit_length = limit_length
         self.user_callback = callback
         self.interfaces = interfaces
+
         Log.info('Analyzing filters: ' + str(self.filters))
+
         if self.src_file is not None:
             Log.info('Analyzing file: ' + self.src_file)
             self._capture = pyshark.FileCapture(
@@ -156,18 +159,36 @@ class PcapSniffer:
 
     @staticmethod
     def is_executable() -> bool:
+        Log.info('[PcapSniffer] is_executable')
+
+        if PcapSniffer._is_executable is not None:
+            return PcapSniffer._is_executable
+
         if not exec_is_executable('tshark') or not exec_is_executable('dumpcap'):
+            Log.info('[PcapSniffer] thsark or dumpcap are not executable')
             return False
-        tshark_out = os_exec('tshark -c 1')
+
+        Log.info('[PcapSniffer] analyzing tshark output')
+        tshark_out = os_exec('tshark -c 1 -a duration:1')
+
         for out_line in tshark_out:
             if 'permission' in out_line.lower():
-                return False
-        dumpcap_out = os_exec('dumpcap -c 1')
+                Log.info('[PcapSniffer] missing permission to execute tshark_out')
+                PcapSniffer._is_executable = False
+                return PcapSniffer._is_executable
+
+        Log.info('[PcapSniffer] analyzing dumpcap output')
+        dumpcap_out = os_exec('dumpcap -c 1 -a duration:1')
+
         for out_line in dumpcap_out:
             if 'permission' in out_line.lower():
-                return False
-        return True
+                Log.info('[PcapSniffer] missing permission to execute dumpcap')
+                PcapSniffer._is_executable = False
+                return PcapSniffer._is_executable
 
+        PcapSniffer._is_executable = True
+
+        return PcapSniffer._is_executable
 
     def _callback(self, pkt: Packet):
         """

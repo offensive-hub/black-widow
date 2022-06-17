@@ -27,9 +27,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from black_widow.app.gui.web.black_widow.models import SniffingJobModel
-from black_widow.app.helpers import network, util
+from black_widow.app.helpers import network
 from black_widow.app.managers.sniffer import PcapSniffer
-
+from black_widow.app.services.logger import Log
 from .abstract_sniffing_view import AbstractSniffingView
 
 
@@ -37,6 +37,7 @@ class Sniffing:
     """
     Sniffing Container View
     """
+
     class SettingsView(AbstractSniffingView):
         """
         Sniffing Settings View
@@ -49,12 +50,19 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponse
             """
+            Log.info("[SniffingView] GET")
+
             if not PcapSniffer.is_executable():
                 return render(request, self.error_templates.get('root_required'))
+
+            Log.info("[SniffingView] GET - getting view_params")
             view_params = {
                 'interfaces': network.get_interfaces(),
                 'jobs': SniffingJobModel.all()
             }
+
+            Log.info("[SniffingView] GET - rendering response")
+
             return render(request, self.template_name, view_params)
 
         def post(self, request):
@@ -62,14 +70,19 @@ class Sniffing:
             :type request: django.core.handlers.wsgi.WSGIRequest
             :return: django.http.HttpResponseRedirect
             """
+            Log.info("[SniffingView] POST")
+
             if not PcapSniffer.is_executable():
                 return JsonResponse({
                     'message': 'You are not #root'
                 }, status=401)
+
             request_params: dict = request.POST.dict()
             if request_params.get('interfaces') is not None:
                 request_params['interfaces'] = request.POST.getlist('interfaces')
+
             pcap_file = request.FILES.get('pcap')
+
             if pcap_file is not None:
                 request_params['pcap'] = self.upload_file(pcap_file)
             else:
