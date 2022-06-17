@@ -448,14 +448,19 @@ class PcapSniffer:
     def _get_filters(user_filters: str):
         if type(user_filters) is not str:
             user_filters = ''
+
         ignored_hosts = PcapSniffer._ignored_hosts()
+        Log.info(f'[PcapSniffer] _get_filters - ignored_hosts: {ignored_hosts}')
         filters = ''
+
         for host in ignored_hosts:
             filters += 'ip.src != ' + host + ' and ip.dst != ' + host + ' and '
+
         if user_filters == '' and len(filters) > 0:
             filters = filters[:-5]  # remove last " and "
         else:
             filters += '(' + user_filters + ')'
+
         return filters
 
     @staticmethod
@@ -464,7 +469,8 @@ class PcapSniffer:
         for domain in PcapSniffer._IGNORED_DOMAINS:
             try:
                 ignored_hosts += (socket.gethostbyname(domain),)
-            except (socket.herror, socket.gaierror):
+            except (socket.herror, socket.gaierror) as e:
+                Log.error(f'[PcapSniffer] _ignored_hosts() - {domain}: {e}')
                 pass
         return ignored_hosts
 
