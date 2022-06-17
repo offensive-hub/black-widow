@@ -12,7 +12,7 @@ with open(black_widow_src + "/requirements.txt", "r") as fh:
 
 setup(
     name="black-widow",
-    version="1.8.3",
+    version="1.9.0",
     author="Fabrizio Fubelli",
     author_email="fabrizio@fubelli.org",
     description="Offensive penetration testing tool",
