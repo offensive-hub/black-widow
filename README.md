@@ -6,7 +6,7 @@ description: >-
 
 # black-widow
 
-[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
+[![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE)
 
 ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/black-widow.jpg)
 
@@ -40,12 +40,12 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 
 ### ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/logos/tux.png)   APT installation (other distro)
 
- 1) Put the following text on `/etc/apt/sources.list.d/black-widow.list` file:
+  1) Put the following text on `/etc/apt/sources.list.d/black-widow.list` file:
     ```text
     deb http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu focal main 
     deb-src http://ppa.launchpad.net/offensive-hub/black-widow/ubuntu focal main 
     ```
- 2) Execute the following commands:
+  2) Execute the following commands:
     ```text
     sudo sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5D26C76613E84EA9
     sudo apt-get update
@@ -65,11 +65,11 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Manual installation
 
- 1) `sudo apt-get update && sudo apt-get install tidy clang tshark`
- 2) `mkdir black-widow`
- 3) `cd black-widow`
- 4) `touch black-widow.py && chmod +x black-widow.py`
- 5) Copy and paste the following code in file `black-widow.py`:
+  1) `sudo apt-get update && sudo apt-get install tidy clang tshark`
+  2) `mkdir black-widow`
+  3) `cd black-widow`
+  4) `touch black-widow.py && chmod +x black-widow.py`
+  5) Copy and paste the following code in file `black-widow.py`:
     ```python
     #!/usr/bin/env python3
     
@@ -79,10 +79,10 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
         main()
     
     ```
- 6) `git clone git@github.com:FabrizioFubelli/black-widow.git black_widow`
- 7) `sudo pip3 install -U -r black_widow/requirements.txt`
- 8) `./black-widow.py --django migrate black_widow`
- 9) Now you can run **black-widow** with: `./black-widow.py <arguments>`
+  6) `git clone git@github.com:FabrizioFubelli/black-widow.git black_widow`
+  7) `sudo pip3 install -U -r black_widow/requirements.txt`
+  8) `./black-widow.py --django migrate black_widow`
+  9) Now you can run **black-widow** with: `./black-widow.py <arguments>`
 
 ### Run
 
@@ -133,6 +133,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
   |
   |-- .env              # Environment variables
   |
+  |
   |-- black-widow.py    # Main executable
 ```
 
@@ -154,21 +155,3 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 * [PyShark](https://github.com/KimiNewt/pyshark)
 * [Sqlmap](https://github.com/sqlmapproject/sqlmap)
 * [Material Dashboard](https://github.com/creativetimofficial/material-dashboard)
-
-### Follow Us
-
-  [![Facebook](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/facebook-icon.png)](https://www.facebook.com/OffensiveHub/)   [![Instagram](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/instagram-icon.png)](https://www.instagram.com/0ffens1ve_hub/)   [![Twitter](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)
-
-# SPONSORS
-
-### 1st level Sponsors
-
-  [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=140)](https://offensivehub.org)
-
-#### 2nd level Sponsors
-
-  [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=70)](https://offensivehub.org)
-
-##### 3th level Sponsors
-
-  [![Offensive Hub](https://avatars3.githubusercontent.com/u/35137101?s=35)](https://offensivehub.org)
