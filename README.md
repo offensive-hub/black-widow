@@ -8,7 +8,7 @@ description: >-
 
 [![Python 3.x](https://img.shields.io/badge/python-3.x-yellow.svg)](https://www.python.org/) [![License](https://img.shields.io/badge/license-GPLv3-red.svg)](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/offensive/black-widow.svg)](https://hub.docker.com/r/offensive/black-widow)
 
-![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/black-widow.jpg)
+![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/black-widow.jpg)
 
 ## Offensive penetration testing tool \(Open Source\)
 
@@ -32,13 +32,13 @@ black-widow provides easy ways to execute many kinds of information gatherings a
 * [ ] Multiple targets management
 * [ ] Useful CTF features
 
-### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation (ubutu/debian)
+### ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/logos/tux.png)   APT installation (ubutu/debian)
 
     sudo add-apt-repository ppa:offensive-hub/black-widow
     sudo apt-get update
     sudo apt-get install black-widow
 
-### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/tux.png)   APT installation (other distro)
+### ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/logos/tux.png)   APT installation (other distro)
 
  1) Put the following text on `/etc/apt/sources.list.d/black-widow.list` file:
     ```text
@@ -52,12 +52,12 @@ black-widow provides easy ways to execute many kinds of information gatherings a
     sudo apt-get install black-widow
     ```
 
-### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/pypi.png)   PyPI installation
+### ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/logos/pypi.png)   PyPI installation
 ```shell
 sudo pip3 install black-widow
 ```
 
-### ![](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/logos/docker-hub.png)   Docker installation
+### ![](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/logos/docker-hub.png)   Docker installation
 If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker-ce/ubuntu)
   * GUI: `docker run -d -p 8095:80 offensive/black-widow -g`
     * Than visit: [http://localhost:8095](http://localhost:8095/)
@@ -79,7 +79,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
         main()
     
     ```
- 6) `git clone git@github.com:offensive-hub/black-widow.git black_widow`
+ 6) `git clone git@github.com:FabrizioFubelli/black-widow.git black_widow`
  7) `sudo pip3 install -U -r black_widow/requirements.txt`
  8) `./black-widow.py --django migrate black_widow`
  9) Now you can run **black-widow** with: `./black-widow.py <arguments>`
@@ -140,18 +140,14 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 * Homepage: [https://black-widow.it](https://black-widow.it)
 * PyPI: [https://pypi.org/project/black-widow](https://pypi.org/project/black-widow/)
-* GitHub: [https://github.com/offensive-hub/black-widow](https://github.com/offensive-hub/black-widow)
+* GitHub: [https://github.com/FabrizioFubelli/black-widow](https://github.com/FabrizioFubelli/black-widow)
 * Docker Registry: [https://hub.docker.com/r/offensive/black-widow](https://hub.docker.com/r/offensive/black-widow)
 * PPA: [Launchpad.net](https://launchpad.net/~offensive-hub/+archive/ubuntu/black-widow)
 * Free Software Directory: [https://directory.fsf.org/wiki/Black-widow](https://directory.fsf.org/wiki/black-widow)
 
-### Contacts
-
-* [fabrizio@fubelli.org](mailto:fabrizio@fubelli.org)
-
 ### Authors
 
-* [Fabrizio Fubelli](https://fabrizio.fubelli.org)
+* Fabrizio Fubelli
 
 ### Thanks to
 
@@ -161,7 +157,7 @@ If you haven't Docker, [install it](https://docs.docker.com/install/linux/docker
 
 ### Follow Us
 
-  [![Facebook](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/facebook-icon.png)](https://www.facebook.com/OffensiveHub/)   [![Instagram](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/instagram-icon.png)](https://www.instagram.com/0ffens1ve_hub/)   [![Twitter](https://raw.githubusercontent.com/offensive-hub/black-widow/master/resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)
+  [![Facebook](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/facebook-icon.png)](https://www.facebook.com/OffensiveHub/)   [![Instagram](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/instagram-icon.png)](https://www.instagram.com/0ffens1ve_hub/)   [![Twitter](https://raw.githubusercontent.com/FabrizioFubelli/black-widow/master/resources/social/twitter-icon.png)](https://twitter.com/Offensive_Hub)
 
 # SPONSORS
 
