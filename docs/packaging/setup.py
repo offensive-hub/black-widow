@@ -18,7 +18,7 @@ setup(
     description="Offensive penetration testing tool",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://black-widow.it",
+    url="https://offensive-hub.github.io/black-widow-landing/",
     packages=find_namespace_packages(
         'src',
         include=(
