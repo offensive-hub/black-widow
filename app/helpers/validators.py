@@ -38,7 +38,7 @@ def is_ip(ip_address: str) -> bool:
     """
     if type(ip_address) != str:
         return False
-    regex = '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+    regex = '^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$'
     reg = re.compile(regex)
     return reg.match(ip_address) is not None
 
@@ -51,7 +51,7 @@ def is_mac(mac_address: str) -> bool:
     """
     if type(mac_address) != str:
         return False
-    regex = '^\w{2}:\w{2}:\w{2}:\w{2}:\w{2}:\w{2}$'
+    regex = '^\\w{2}:\\w{2}:\\w{2}:\\w{2}:\\w{2}:\\w{2}$'
     reg = re.compile(regex)
     return reg.match(mac_address) is not None
 
