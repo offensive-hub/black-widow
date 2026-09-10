@@ -282,7 +282,7 @@ class PcapSniffer:
         field_label = field.label
         equal_index = field_label.find(' = ')
         binary_key = field_label[0:equal_index]
-        return equal_index >= 0 and regex_is_string('^(\.| |0|1)+$', binary_key)
+        return equal_index >= 0 and regex_is_string('^(\\.| |0|1)+$', binary_key)
 
     # noinspection PyProtectedMember
     @staticmethod
